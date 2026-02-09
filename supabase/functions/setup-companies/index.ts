@@ -47,7 +47,7 @@ Deno.serve(async (req) => {
         }
       },
       {
-        name: 'TrafikBoost',
+        name: 'Sentrisk',
         consent_settings: {
           consent_mode: 'opt-out',
           data_retention_days: 730,
@@ -124,11 +124,11 @@ Deno.serve(async (req) => {
             api_key: results.find(r => r.name === 'AI Search Optimization')?.api_key,
             platform: 'ai-search-opt'
           },
-          trafikboost: {
-            url: 'https://trafikboost.lovable.app',
-            company_id: results.find(r => r.name === 'TrafikBoost')?.company_id,
-            api_key: results.find(r => r.name === 'TrafikBoost')?.api_key,
-            platform: 'trafikboost'
+          sentrisk: {
+            url: 'https://sentrisk.lovable.app',
+            company_id: results.find(r => r.name === 'Sentrisk')?.company_id,
+            api_key: results.find(r => r.name === 'Sentrisk')?.api_key,
+            platform: 'sentrisk'
           }
         },
         next_steps: [

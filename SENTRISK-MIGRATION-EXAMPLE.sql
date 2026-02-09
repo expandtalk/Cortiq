@@ -1,5 +1,5 @@
--- TrafikBoost Integration Migration for CortIQ (tidigare Web Focus Analyzer)
--- Run this in your TrafikBoost Supabase project
+-- Sentrisk Integration Migration for CortIQ (tidigare Web Focus Analyzer)
+-- Run this in your Sentrisk Supabase project
 
 -- ============================================================================
 -- 1. CortIQ Sites Table (huvudtabell för integration, behåller wfa_sites för bakåtkompatibilitet)
@@ -36,7 +36,7 @@ CREATE TABLE IF NOT EXISTS public.wfa_sites (
   CONSTRAINT unique_company_domain UNIQUE(company_id, domain)
 );
 
-COMMENT ON TABLE public.wfa_sites IS 'CortIQ sites connected to TrafikBoost companies (behåller wfa_sites för bakåtkompatibilitet)';
+COMMENT ON TABLE public.wfa_sites IS 'CortIQ sites connected to Sentrisk companies (behåller wfa_sites för bakåtkompatibilitet)';
 COMMENT ON COLUMN public.wfa_sites.tracking_id IS 'Unique tracking ID used in WordPress plugin and tracking scripts';
 COMMENT ON COLUMN public.wfa_sites.wfa_config IS 'Site-specific configuration for CortIQ features';
 
@@ -117,7 +117,7 @@ ON public.wfa_sites(domain);
 -- 4. Trigger för updated_at
 -- ============================================================================
 
--- Förutsätter att du har denna funktion i TrafikBoost
+-- Förutsätter att du har denna funktion i Sentrisk
 -- Om inte, skapa den först:
 CREATE OR REPLACE FUNCTION public.update_updated_at_column()
 RETURNS TRIGGER AS $$

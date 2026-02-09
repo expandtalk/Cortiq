@@ -73,10 +73,10 @@ WFATracker.trackConversion('export-optimized-content', {
 
 ---
 
-### 3. TrafikBoost
+### 3. Sentrisk
 Integration för AI-genererat content tracking
 
-**A. För TrafikBoost's egen sajt:**
+**A. För Sentrisk's egen sajt:**
 ```html
 <script>
   window.wfaConfig = {
@@ -84,7 +84,7 @@ Integration för AI-genererat content tracking
     apiKey: '[API_KEY_FRÅN_SETUP]',
     apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
     contentType: 'page',
-    platform: 'trafikboost'
+    platform: 'sentrisk'
   };
 </script>
 <script src="https://cortiq.se/spa-tracking.js"></script>
@@ -93,16 +93,16 @@ Integration för AI-genererat content tracking
 **B. För att tracka AI-genererat content (bilder, formulär, events):**
 
 ```javascript
-// När användare genererar content i TrafikBoost
+// När användare genererar content i Sentrisk
 async function trackGeneratedContent(contentId, contentType, platform) {
   const response = await fetch('https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/track-event', {
     method: 'POST',
     headers: {
-      'Authorization': 'Bearer [TRAFIKBOOST_API_KEY]',
+      'Authorization': 'Bearer [SENTRISK_API_KEY]',
       'Content-Type': 'application/json'
     },
     body: JSON.stringify({
-      company_id: '[TRAFIKBOOST_COMPANY_ID]',
+      company_id: '[SENTRISK_COMPANY_ID]',
       content_type: contentType, // 'image' | 'form' | 'event' | 'survey' | 'chatbot'
       content_id: contentId,
       event_type: 'view', // eller 'click', 'conversion', 'submission'
@@ -193,7 +193,7 @@ Alla sajter är konfigurerade med:
 - ✅ **IP-anonymisering** aktiverad
 - ✅ **Opt-out mode** (tracking tillåtet om inte användare säger nej)
 - ✅ **730 dagars data retention**
-- ✅ **User agent sparas EJ** (utom TrafikBoost)
+- ✅ **User agent sparas EJ** (utom Sentrisk)
 - ✅ **Referrer sparas** (för traffic source analysis)
 
 ---

@@ -1,6 +1,6 @@
 /**
- * TrafikBoost Integration - Component Examples
- * Copy these components to your TrafikBoost project
+ * Sentrisk Integration - Component Examples
+ * Copy these components to your Sentrisk project
  */
 
 import { useState } from 'react';

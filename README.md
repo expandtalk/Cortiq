@@ -2,69 +2,69 @@
 
 <div align="center">
 
-**Världens första analysplattform dedikerad för AI-agenter och Agentic Web**
+**World's first analytics platform dedicated to AI agents and the Agentic Web**
 
 [![License](https://img.shields.io/badge/license-Private-red.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase)](https://supabase.com/)
 
-[Website](https://cortiq.se) · [Dokumentation](./CLAUDE.md) · [Deployment](./DEPLOYMENT.md)
+[Website](https://cortiq.se) · [Documentation](./CLAUDE.md) · [Deployment](./DEPLOYMENT.md)
 
 </div>
 
 ---
 
-## 🚀 Om CortIQ
+## 🚀 About CortIQ
 
-CortIQ är en avancerad webbanalysplattform som kombinerar traditionell analytics med **banbrytande AI-agent tracking** - första i sitt slag på marknaden. Plattformen hjälper företag att förstå och optimera för den nya eran av agentic web, där AI-agenter som ChatGPT Browser, Perplexity Comet och Claude Browser blir en allt större del av webbtrafiken.
+CortIQ is an advanced web analytics platform that combines traditional analytics with **groundbreaking AI-agent tracking** - the first of its kind on the market. The platform helps businesses understand and optimize for the new era of agentic web, where AI agents like ChatGPT Browser, Perplexity Comet, and Claude Browser are becoming an increasingly significant part of web traffic.
 
-### 🌟 Unika Fördelar
+### 🌟 Unique Advantages
 
-- **🤖 First-Mover Advantage**: Första plattformen med dedikerad AI-agent tracking
-- **🔒 Cookie-Free Analytics**: 100% GDPR-compliant server-side tracking (PTS-godkänd)
-- **🔌 WordPress Plugin**: Unik 1-click installation och djup integration
-- **🎯 Nudging Technology**: Smart cookie banners för högre samtyckesfrekvens
-- **📊 Comprehensive Solution**: Allt-i-ett plattform för modern webbanalys
+- **🤖 First-Mover Advantage**: First platform with dedicated AI-agent tracking
+- **🔒 Cookie-Free Analytics**: 100% GDPR-compliant server-side tracking (PTS-approved)
+- **🔌 WordPress Plugin**: Unique 1-click installation and deep integration
+- **🎯 Nudging Technology**: Smart cookie banners for higher consent rates
+- **📊 Comprehensive Solution**: All-in-one platform for modern web analytics
 
 ---
 
-## ✨ Huvudfunktioner
+## ✨ Key Features
 
 ### 1. 🤖 Agentic Browser Analytics (World First!)
 
-Spåra och analysera AI-agenter som besöker din webbplats:
+Track and analyze AI agents visiting your website:
 
-- **Stödda AI-agenter**: ChatGPT Browser, Perplexity Comet, Claude Browser, Google Gemini, Microsoft Copilot, You.com, Phind
-- **Agent-specifika dashboards**: Se hur AI-agenter interagerar med din webbplats
-- **Session tracking**: Full resa från första request till konvertering
-- **Browser-typ analys**: Visual browser vs headless vs text-based
-- **Conversion attribution**: Mät ROI från AI-driven trafik
-- **Journey funnel**: Visualisera var AI-agenter hoppar av
+- **Supported AI Agents**: ChatGPT Browser, Perplexity Comet, Claude Browser, Google Gemini, Microsoft Copilot, You.com, Phind
+- **Agent-specific dashboards**: See how AI agents interact with your website
+- **Session tracking**: Complete journey from first request to conversion
+- **Browser-type analysis**: Visual browser vs headless vs text-based
+- **Conversion attribution**: Measure ROI from AI-driven traffic
+- **Journey funnel**: Visualize where AI agents drop off
 
 ### 2. 🔒 Cookie-Free Server-Side Analytics
 
-- Eliminera cookie banners helt för vissa användningsområden
-- 100% GDPR-compliant tracking utan cookies
-- Server-side processing utan personuppgifter i webbläsaren
-- Bättre konvertering utan irriterande cookie-disruptioner
-- PTS-godkänd lösning (Post- och telestyrelsen)
+- Eliminate cookie banners completely for certain use cases
+- 100% GDPR-compliant tracking without cookies
+- Server-side processing without personal data in the browser
+- Better conversion rates without intrusive cookie disruptions
+- PTS-approved solution (Swedish Post and Telecom Authority)
 
 ### 3. 🗺️ Visual Analytics (Heatmaps)
 
-- **Click heatmaps**: Se exakt var användare klickar
-- **Scroll heatmaps**: Förstå scroll-beteende
-- **Attention maps**: Visualisera fokusområden
-- **Device-specific views**: Separata heatmaps för desktop, tablet, mobile
-- **AI agent heatmaps**: Visuell interaktion från AI-agenter
+- **Click heatmaps**: See exactly where users click
+- **Scroll heatmaps**: Understand scroll behavior
+- **Attention maps**: Visualize focus areas
+- **Device-specific views**: Separate heatmaps for desktop, tablet, mobile
+- **AI agent heatmaps**: Visual interaction from AI agents
 
 ### 4. 🧪 A/B Testing & Optimization
 
-- Multivariate testing med flera varianter
-- Automatisk statistisk signifikansberäkning
+- Multivariate testing with multiple variants
+- Automatic statistical significance calculation
 - Audience segmentation
 - ROI measurement
-- Agent-specific testing för AI-trafik
+- Agent-specific testing for AI traffic
 
 ### 5. 📝 Form Analytics
 
@@ -76,25 +76,25 @@ Spåra och analysera AI-agenter som besöker din webbplats:
 
 ### 6. 🛡️ GDPR & Cookie Management (CMP)
 
-- Nudging cookie banners med smart teknologi
+- Nudging cookie banners with smart technology
 - First-party cookie management
 - Consent management platform
 - Data retention policies
-- IP-anonymisering
+- IP anonymization
 - GDPR-compliant data handling
 
 ### 7. 🔌 WordPress Integration
 
 - 1-click installation via WordPress plugin
-- Djup integration med WordPress
-- Automatisk tracking utan konfiguration
-- Dashboard direkt i WordPress admin
-- **Huvudsaklig konkurrensfördel**
+- Deep integration with WordPress
+- Automatic tracking without configuration
+- Dashboard directly in WordPress admin
+- **Primary competitive advantage**
 
 ### 8. 📈 Advanced Analytics
 
-- Real-time analytics med live-insikter
-- Anpassningsbara KPI dashboards
+- Real-time analytics with live insights
+- Customizable KPI dashboards
 - Traffic source analysis
 - Conversion tracking
 - User journey analysis
@@ -107,12 +107,12 @@ Spåra och analysera AI-agenter som besöker din webbplats:
 - Google Search Console
 - Google SiteKit
 - Bing Webmaster Tools
-- Server log import och analys
+- Server log import and analysis
 - E-commerce tracking
 
 ---
 
-## 🏗️ Teknisk Stack
+## 🏗️ Tech Stack
 
 ### Frontend
 - **Framework**: React 18.3.1
@@ -126,8 +126,8 @@ Spåra och analysera AI-agenter som besöker din webbplats:
 
 ### Backend
 - **Platform**: Supabase
-- **Database**: PostgreSQL (62 tabeller)
-- **Edge Functions**: 51 Deno-baserade functions
+- **Database**: PostgreSQL (62 tables)
+- **Edge Functions**: 51 Deno-based functions
 - **Database Functions**: 43 PostgreSQL functions
 - **Authentication**: Supabase Auth
 - **Storage**: Supabase Storage
@@ -135,130 +135,131 @@ Spåra och analysera AI-agenter som besöker din webbplats:
 
 ### Deployment
 - **Frontend**: cortiq.se (Apache/SPA)
-- **Backend**: Supabase Cloud (redan i produktion)
+- **Backend**: Supabase Cloud (already in production)
 - **Tracking Scripts**: CDN via cortiq.se
 
 ---
 
-## 🚀 Kom igång
+## 🚀 Getting Started
 
-### Förutsättningar
+### Prerequisites
 
-- Node.js 18+ eller Bun
-- npm eller bun package manager
+- Node.js 18+ or Bun
+- npm or bun package manager
 
 ### Installation
 
 ```bash
-# Klona repository
+# Clone repository
 git clone https://github.com/expandtalk/cortiq.git
 cd cortiq
 
-# Installera dependencies
+# Install dependencies
 npm install
-# eller
+# or
 bun install
 
-# Kopiera environment-variabel mall
+# Copy environment variable template
 cp .env.example .env
-# Redigera .env och fyll i dina Supabase-credentials
+# Edit .env and fill in your Supabase credentials
 
-# Starta utvecklingsserver
+# Start development server
 npm run dev
-# eller
+# or
 bun run dev
 ```
 
-Applikationen körs nu på `http://localhost:8080`
+The application now runs on `http://localhost:8080`
 
-### Bygga för Produktion
+### Build for Production
 
 ```bash
-# Bygg produktionsversion
+# Build production version
 npm run build
 
-# Innehållet i dist/ är redo för deployment
+# Contents of dist/ are ready for deployment
 ```
 
 ---
 
-## 📚 Dokumentation
+## 📚 Documentation
 
-- **[CLAUDE.md](./CLAUDE.md)** - Fullständig projektdokumentation och arkitektur
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment-instruktioner och troubleshooting
-- **[INTEGRATION-GUIDE.md](./INTEGRATION-GUIDE.md)** - Guide för externa integrationer
-- **[PRIVACY-POLICY-GUIDE.md](./PRIVACY-POLICY-GUIDE.md)** - GDPR och integritetspolicy
-- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Felsökningsguide
+- **[CLAUDE.md](./CLAUDE.md)** - Complete project documentation and architecture
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment instructions and troubleshooting
+- **[INTEGRATION-GUIDE.md](./INTEGRATION-GUIDE.md)** - Guide for external integrations
+- **[SENTRISK-INTEGRATION.md](./SENTRISK-INTEGRATION.md)** - Sentrisk integration guide
+- **[PRIVACY-POLICY-GUIDE.md](./PRIVACY-POLICY-GUIDE.md)** - GDPR and privacy policy
+- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Troubleshooting guide
 
 ---
 
-## 🗂️ Projektstruktur
+## 🗂️ Project Structure
 
 ```
 cortiq/
 ├── src/
-│   ├── components/         # React-komponenter
-│   │   ├── dashboard/      # Dashboard-komponenter (78 filer)
-│   │   ├── gdpr/           # GDPR/CMP komponenter
-│   │   └── ui/             # shadcn-ui komponenter
+│   ├── components/         # React components
+│   │   ├── dashboard/      # Dashboard components (78 files)
+│   │   ├── gdpr/           # GDPR/CMP components
+│   │   └── ui/             # shadcn-ui components
 │   ├── hooks/              # Custom React hooks
-│   ├── pages/              # Sidor (Index, Dashboard, Auth, etc.)
+│   ├── pages/              # Pages (Index, Dashboard, Auth, etc.)
 │   ├── lib/                # Utility functions
 │   ├── integrations/
-│   │   └── supabase/       # Supabase client och types
+│   │   └── supabase/       # Supabase client and types
 │   └── types/              # TypeScript type definitions
 ├── supabase/
 │   ├── functions/          # 51 Edge Functions
-│   └── migrations/         # 60 databasmigrations
+│   └── migrations/         # 60 database migrations
 ├── public/
-│   ├── spa-tracking.js     # Huvud tracking script
+│   ├── spa-tracking.js     # Main tracking script
 │   ├── ai-tracking-unified.js  # AI-agent tracking
-│   └── ...                 # Andra tracking scripts
+│   └── ...                 # Other tracking scripts
 ├── wordpress-plugin/       # WordPress plugin
-└── dist/                   # Build output (genereras)
+└── dist/                   # Build output (generated)
 ```
 
 ---
 
-## 🔐 Säkerhet
+## 🔐 Security
 
-- `.env` filen innehåller känsliga credentials och är **ALDRIG** inkluderad i git
-- Använd `.env.example` som mall för nya installationer
-- Supabase Row Level Security (RLS) aktiverad på alla tabeller
-- IP-anonymisering som standard
+- `.env` file contains sensitive credentials and is **NEVER** included in git
+- Use `.env.example` as a template for new installations
+- Supabase Row Level Security (RLS) enabled on all tables
+- IP anonymization by default
 - GDPR-compliant data handling
 
 ---
 
 ## 🤝 Contributing
 
-Detta är ett privat repository. För frågor eller support, kontakta projektteamet.
+This is a private repository. For questions or support, contact the project team.
 
 ---
 
 ## 📄 License
 
-Proprietary - All rights reserved. Detta projekt är privat och confidential.
+Proprietary - All rights reserved. This project is private and confidential.
 
 ---
 
 ## 🌐 Production
 
 - **Website**: https://cortiq.se
-- **Status**: ✅ I produktion
+- **Status**: ✅ In production
 - **Backend**: Supabase Cloud
 
 ---
 
 ## 📞 Support
 
-För teknisk support eller frågor, vänligen kontakta utvecklingsteamet.
+For technical support or questions, please contact the development team.
 
 ---
 
 <div align="center">
 
-**Byggt med ❤️ för Agentic Web**
+**Built with ❤️ for the Agentic Web**
 
 CortIQ © 2025
 

@@ -374,7 +374,7 @@ npm run build
 - **README.md**: Översikt och snabbstart
 - **DEPLOYMENT.md**: Deployment-instruktioner
 - **INTEGRATION-GUIDE.md**: Guide för externa integrationer
-- **TRAFIKBOOST-INTEGRATION.md**: TrafikBoost-integration
+- **SENTRISK-INTEGRATION.md**: Sentrisk-integration
 - **claude.md**: Denna fil - projektöversikt
 
 ### WordPress Plugin

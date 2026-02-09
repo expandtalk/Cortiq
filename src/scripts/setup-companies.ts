@@ -39,14 +39,14 @@ const companies = [
     }
   },
   {
-    name: 'TrafikBoost',
+    name: 'Sentrisk',
     consent_settings: {
       consent_mode: 'opt-out',
       data_retention_days: 730,
       anonymize_ip: true,
       allowed_event_types: ['view', 'click', 'conversion', 'submission'],
       gdpr_settings: {
-        store_user_agent: true, // TrafikBoost kanske behöver mer data för analytics
+        store_user_agent: true, // Sentrisk kanske behöver mer data för analytics
         store_referrer: true,
         geographic_restrictions: []
       }

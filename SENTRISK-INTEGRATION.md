@@ -1,23 +1,23 @@
-# TrafikBoost + CortIQ Integration Guide
+# Sentrisk + CortIQ Integration Guide
 
 ## Översikt
-Guide för att integrera CortIQ (tidigare Web Focus Analyzer) i TrafikBoost multi-tenant plattformen.
+Guide för att integrera CortIQ (tidigare Web Focus Analyzer) i Sentrisk multi-tenant plattformen.
 
 ## Arkitektur
 
 ```
-TrafikBoost (Multi-tenant)
+Sentrisk (Multi-tenant)
 ├── companies (tenant isolation)
 ├── wfa_sites (kopplar CortIQ-sites till companies)
 └── API Proxy → CortIQ Edge Functions
 ```
 
-## Steg 1: Databasschema för TrafikBoost
+## Steg 1: Databasschema för Sentrisk
 
 ### Migration: Lägg till WFA-integration
 
 ```sql
--- CortIQ sites table i TrafikBoost (behåller wfa_sites för bakåtkompatibilitet)
+-- CortIQ sites table i Sentrisk (behåller wfa_sites för bakåtkompatibilitet)
 CREATE TABLE public.wfa_sites (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   company_id UUID NOT NULL REFERENCES public.companies(id) ON DELETE CASCADE,
@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
       throw new Error('Missing authorization header');
     }
 
-    // Verifiera användare i TrafikBoost
+    // Verifiera användare i Sentrisk
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_ANON_KEY')!,
@@ -157,7 +157,7 @@ Deno.serve(async (req) => {
 });
 ```
 
-## Steg 3: TrafikBoost Frontend Integration
+## Steg 3: Sentrisk Frontend Integration
 
 ### Hook: `useCortIQAnalytics.tsx` (eller behåll useWFAAnalytics för bakåtkompatibilitet)
 
@@ -256,10 +256,10 @@ export function WFADashboard({ trackingId }: WFADashboardProps) {
 
 ## Steg 4: WordPress Plugin Distribution
 
-### TrafikBoost: Generera plugin-konfiguration
+### Sentrisk: Generera plugin-konfiguration
 
 ```typescript
-// I TrafikBoost när kund skapar CortIQ site
+// I Sentrisk när kund skapar CortIQ site
 const generateCortIQPluginConfig = (wfaSite: WFASite) => {
   return {
     tracking_id: wfaSite.tracking_id,
@@ -288,10 +288,10 @@ const downloadConfiguredPlugin = async (wfaSiteId: string) => {
 };
 ```
 
-## Steg 5: Navigation i TrafikBoost
+## Steg 5: Navigation i Sentrisk
 
 ```typescript
-// I TrafikBoost LoggedInLayout
+// I Sentrisk LoggedInLayout
 const navigation = [
   { name: 'Översikt', href: '/dashboard' },
   { name: 'Leads', href: '/leads' },
@@ -335,13 +335,13 @@ const getCachedAnalytics = async (trackingId: string) => {
 
 ## Deployment Checklist
 
-- [ ] Kör migration i TrafikBoost Supabase
+- [ ] Kör migration i Sentrisk Supabase
 - [ ] Deploya `wfa-proxy` edge function
-- [ ] Lägg till `CORTIQ_SUPABASE_ANON_KEY` (eller `WFA_SUPABASE_ANON_KEY` för bakåtkompatibilitet) i TrafikBoost secrets
-- [ ] Skapa `/analytics` route i TrafikBoost
-- [ ] Importera WFA komponenter till TrafikBoost
+- [ ] Lägg till `CORTIQ_SUPABASE_ANON_KEY` (eller `WFA_SUPABASE_ANON_KEY` för bakåtkompatibilitet) i Sentrisk secrets
+- [ ] Skapa `/analytics` route i Sentrisk
+- [ ] Importera WFA komponenter till Sentrisk
 - [ ] Testa med test-company och test-domain
-- [ ] Konfigurera CORS i CortIQ för TrafikBoost domain
+- [ ] Konfigurera CORS i CortIQ för Sentrisk domain
 - [ ] Dokumentera för kunder hur de aktiverar CortIQ
 
 ## Support & Troubleshooting
@@ -353,7 +353,7 @@ const getCachedAnalytics = async (trackingId: string) => {
 - Verifiera att användaren har access till company
 
 **Problem:** "CORS error"
-- Lägg till TrafikBoost domain i WFA CORS-inställningar
+- Lägg till Sentrisk domain i WFA CORS-inställningar
 - Kontrollera corsHeaders i edge functions
 
 **Problem:** "No data showing"
@@ -363,4 +363,4 @@ const getCachedAnalytics = async (trackingId: string) => {
 
 ## Kontakt
 - CortIQ Team: [kontaktinfo]
-- TrafikBoost Team: [kontaktinfo]
+- Sentrisk Team: [kontaktinfo]
