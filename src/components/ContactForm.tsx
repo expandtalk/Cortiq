@@ -1,35 +1,50 @@
 import { useState } from 'react';
+import { useForm } from 'react-hook-form';
+import { zodResolver } from '@hookform/resolvers/zod';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/components/ui/card';
 import { useToast } from '@/hooks/use-toast';
-import { Mail, User, MessageSquare, Send, Loader2 } from 'lucide-react';
+import { Mail, User, MessageSquare, Send, Loader2, AlertCircle } from 'lucide-react';
+import { ContactFormSchema, type ContactForm as ContactFormType } from '@/types/validation';
 
 export default function ContactForm() {
   const [isLoading, setIsLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    message: ''
-  });
   const { toast } = useToast();
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
+  const {
+    register,
+    handleSubmit,
+    reset,
+    formState: { errors },
+  } = useForm<ContactFormType>({
+    resolver: zodResolver(ContactFormSchema),
+  });
+
+  const onSubmit = async (data: ContactFormType) => {
     setIsLoading(true);
 
-    // Simulate API call
-    await new Promise(resolve => setTimeout(resolve, 1500));
+    try {
+      // Simulate API call
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-    toast({
-      title: "Message sent!",
-      description: "We'll get back to you within 24 hours."
-    });
+      toast({
+        title: "Message sent!",
+        description: "We'll get back to you within 24 hours."
+      });
 
-    setFormData({ name: '', email: '', message: '' });
-    setIsLoading(false);
+      reset();
+    } catch (error) {
+      toast({
+        title: "Error",
+        description: "Failed to send message. Please try again.",
+        variant: "destructive"
+      });
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -41,7 +56,7 @@ export default function ContactForm() {
         </CardDescription>
       </CardHeader>
       <CardContent>
-        <form onSubmit={handleSubmit} className="space-y-6">
+        <form onSubmit={handleSubmit(onSubmit)} className="space-y-6">
           <div className="space-y-2">
             <Label htmlFor="name" className="text-base font-semibold">Name</Label>
             <div className="relative">
@@ -50,12 +65,16 @@ export default function ContactForm() {
                 id="name"
                 type="text"
                 placeholder="Your name"
-                value={formData.name}
-                onChange={(e) => setFormData(prev => ({ ...prev, name: e.target.value }))}
-                className="pl-10 h-12"
-                required
+                {...register('name')}
+                className={`pl-10 h-12 ${errors.name ? 'border-red-500' : ''}`}
               />
             </div>
+            {errors.name && (
+              <div className="flex items-center gap-2 text-sm text-red-500">
+                <AlertCircle className="h-4 w-4" />
+                {errors.name.message}
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -66,12 +85,16 @@ export default function ContactForm() {
                 id="email"
                 type="email"
                 placeholder="your@email.com"
-                value={formData.email}
-                onChange={(e) => setFormData(prev => ({ ...prev, email: e.target.value }))}
-                className="pl-10 h-12"
-                required
+                {...register('email')}
+                className={`pl-10 h-12 ${errors.email ? 'border-red-500' : ''}`}
               />
             </div>
+            {errors.email && (
+              <div className="flex items-center gap-2 text-sm text-red-500">
+                <AlertCircle className="h-4 w-4" />
+                {errors.email.message}
+              </div>
+            )}
           </div>
 
           <div className="space-y-2">
@@ -81,16 +104,20 @@ export default function ContactForm() {
               <Textarea
                 id="message"
                 placeholder="Tell us about your company and why you're interested in CortIQ..."
-                value={formData.message}
-                onChange={(e) => setFormData(prev => ({ ...prev, message: e.target.value }))}
-                className="pl-10 min-h-[150px] resize-none"
-                required
+                {...register('message')}
+                className={`pl-10 min-h-[150px] resize-none ${errors.message ? 'border-red-500' : ''}`}
               />
             </div>
+            {errors.message && (
+              <div className="flex items-center gap-2 text-sm text-red-500">
+                <AlertCircle className="h-4 w-4" />
+                {errors.message.message}
+              </div>
+            )}
           </div>
 
-          <Button 
-            type="submit" 
+          <Button
+            type="submit"
             disabled={isLoading}
             className="w-full h-12 text-lg bg-gradient-primary hover-scale hover-glow"
           >
