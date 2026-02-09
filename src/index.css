@@ -1,0 +1,336 @@
+@import url('https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&display=swap');
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Sharp & Minimal Design System with Monospace Typography
+ * Elegant card backgrounds and professional SaaS aesthetic
+ * All colors MUST be HSL.
+ */
+
+@layer base {
+  :root {
+    /* Light mode - Clean & Professional */
+    --background: 0 0% 100%;
+    --foreground: 240 10% 3.9%;
+
+    /* Card System - Clean Light Cards */
+    --card: 0 0% 100%;
+    --card-foreground: 240 10% 3.9%;
+    --card-elevated: 0 0% 96%;
+    --card-glass: 0 0% 100% / 0.9;
+
+    /* Popover */
+    --popover: 0 0% 100%;
+    --popover-foreground: 240 10% 3.9%;
+
+    /* Primary Brand - Darker Blue for headings */
+    --primary: 217 91% 45%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 217 91% 55%;
+
+    /* Secondary - Light Gray */
+    --secondary: 0 0% 96%;
+    --secondary-foreground: 240 10% 3.9%;
+
+    /* Muted - Subtle Light Backgrounds */
+    --muted: 0 0% 96%;
+    --muted-foreground: 240 5% 45%;
+
+    /* Accent - Adjusted for light mode */
+    --accent: 142 70% 35%;
+    --accent-foreground: 0 0% 98%;
+    --accent-glow: 142 70% 45%;
+
+    /* Status Colors */
+    --destructive: 0 84% 50%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 70% 35%;
+    --warning: 38 92% 40%;
+    --info: 217 91% 45%;
+
+    /* Z-index scale for organized layering - Core Web Vitals optimized */
+    --z-base: 1;
+    --z-dropdown: 100;
+    --z-sticky: 200;
+    --z-modal-backdrop: 800;
+    --z-modal: 900;
+    --z-cookie-banner: 950;
+    --z-cookie-modal: 1000;
+    --z-tooltip: 1100;
+    --z-notification: 1200;
+
+    /* Borders & Inputs */
+    --border: 240 6% 88%;
+    --input: 240 6% 94%;
+    --ring: 217 91% 45%;
+
+    /* Light Card Gradients */
+    --gradient-card-1: linear-gradient(145deg, hsl(0 0% 100%), hsl(0 0% 96%));
+    --gradient-card-2: linear-gradient(145deg, hsl(217 91% 45% / 0.05), hsl(0 0% 98%));
+    --gradient-card-3: linear-gradient(145deg, hsl(142 70% 35% / 0.05), hsl(0 0% 98%));
+    --gradient-card-4: linear-gradient(145deg, hsl(38 92% 40% / 0.05), hsl(0 0% 98%));
+    
+    /* Landing Page Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 45%), hsl(217 91% 55%));
+    --gradient-accent: linear-gradient(135deg, hsl(142 70% 35%), hsl(142 70% 45%));
+    --gradient-hero: linear-gradient(135deg, hsl(0 0% 98%), hsl(0 0% 96%));
+    --gradient-card: linear-gradient(145deg, hsl(0 0% 100%), hsl(0 0% 96%));
+    
+    /* Glass Effects */
+    --glass-bg: hsl(0 0% 100% / 0.9);
+    --glass-border: hsl(240 6% 88% / 0.5);
+
+    /* Shadows - Light mode */
+    --shadow-card: 0 4px 16px hsl(240 10% 8% / 0.08);
+    --shadow-elevated: 0 8px 32px hsl(240 10% 8% / 0.12);
+    --shadow-glow: 0 0 32px hsl(217 91% 45% / 0.15);
+
+    --radius: 8px;
+
+    /* Sidebar - Light Theme */
+    --sidebar-background: 0 0% 100%;
+    --sidebar-foreground: 240 10% 3.9%;
+    --sidebar-primary: 217 91% 45%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 0 0% 96%;
+    --sidebar-accent-foreground: 240 10% 3.9%;
+    --sidebar-border: 240 6% 88%;
+    --sidebar-ring: 217 91% 45%;
+  }
+
+  .dark {
+    /* Core Background & Text - Keep dark as default */
+    --background: 240 10% 3.9%;
+    --foreground: 0 0% 98%;
+
+    /* Card System - Elegant Dark Cards */
+    --card: 240 10% 3.9%;
+    --card-foreground: 0 0% 98%;
+    --card-elevated: 240 8% 6%;
+    --card-glass: 240 6% 8% / 0.8;
+
+    /* Popover */
+    --popover: 240 10% 3.9%;
+    --popover-foreground: 0 0% 98%;
+
+    /* Primary Brand - Tech Blue */
+    --primary: 217 91% 60%;
+    --primary-foreground: 0 0% 98%;
+    --primary-glow: 217 91% 70%;
+
+    /* Secondary - Elegant Gray */
+    --secondary: 240 4% 16%;
+    --secondary-foreground: 0 0% 98%;
+
+    /* Muted - Subtle Backgrounds */
+    --muted: 240 5% 10%;
+    --muted-foreground: 240 5% 65%;
+
+    /* Accent - Tech Green */
+    --accent: 142 70% 45%;
+    --accent-foreground: 0 0% 98%;
+    --accent-glow: 142 70% 55%;
+
+    /* Status Colors */
+    --destructive: 0 84% 60%;
+    --destructive-foreground: 0 0% 98%;
+    --success: 142 70% 45%;
+    --warning: 38 92% 50%;
+    --info: 217 91% 60%;
+
+    /* Borders & Inputs */
+    --border: 240 6% 14%;
+    --input: 240 6% 14%;
+    --ring: 217 91% 60%;
+
+    /* Elegant Card Gradients */
+    --gradient-card-1: linear-gradient(145deg, hsl(240 8% 6%), hsl(240 6% 8%));
+    --gradient-card-2: linear-gradient(145deg, hsl(217 91% 60% / 0.08), hsl(240 8% 6%));
+    --gradient-card-3: linear-gradient(145deg, hsl(142 70% 45% / 0.08), hsl(240 8% 6%));
+    --gradient-card-4: linear-gradient(145deg, hsl(38 92% 50% / 0.08), hsl(240 8% 6%));
+    
+    /* Landing Page Gradients */
+    --gradient-primary: linear-gradient(135deg, hsl(217 91% 60%), hsl(217 91% 70%));
+    --gradient-accent: linear-gradient(135deg, hsl(142 70% 45%), hsl(142 70% 55%));
+    --gradient-hero: linear-gradient(135deg, hsl(240 10% 3.9%), hsl(240 8% 6%));
+    --gradient-card: linear-gradient(145deg, hsl(240 8% 6%), hsl(240 6% 8%));
+    
+    /* Glass Effects */
+    --glass-bg: hsl(240 8% 6% / 0.8);
+    --glass-border: hsl(240 6% 14% / 0.3);
+
+    /* Shadows - Elegant & Minimal */
+    --shadow-card: 0 4px 16px hsl(240 10% 3.9% / 0.3);
+    --shadow-elevated: 0 8px 32px hsl(240 10% 3.9% / 0.4);
+    --shadow-glow: 0 0 32px hsl(217 91% 60% / 0.2);
+
+    /* Sidebar - Consistent Dark Theme */
+    --sidebar-background: 240 10% 3.9%;
+    --sidebar-foreground: 0 0% 98%;
+    --sidebar-primary: 217 91% 60%;
+    --sidebar-primary-foreground: 0 0% 98%;
+    --sidebar-accent: 240 5% 10%;
+    --sidebar-accent-foreground: 0 0% 98%;
+    --sidebar-border: 240 6% 14%;
+    --sidebar-ring: 217 91% 60%;
+  }
+}
+
+@layer base {
+  * {
+    @apply border-border;
+  }
+
+  body {
+    @apply bg-background text-foreground;
+    font-family: 'JetBrains Mono', 'Monaco', 'Menlo', 'Ubuntu Mono', monospace;
+    font-feature-settings: 'liga' off;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
+  }
+
+  /* Force dark theme for professional SaaS look */
+}
+
+@layer utilities {
+  /* Sharp & Minimal Card Variants */
+  .card-variant-1 {
+    background: var(--gradient-card-1);
+    border: 1px solid hsl(var(--border));
+    box-shadow: var(--shadow-card);
+  }
+  
+  .card-variant-2 {
+    background: var(--gradient-card-2);
+    border: 1px solid hsl(217 91% 60% / 0.1);
+    box-shadow: var(--shadow-card);
+  }
+  
+  .card-variant-3 {
+    background: var(--gradient-card-3);
+    border: 1px solid hsl(142 70% 45% / 0.1);
+    box-shadow: var(--shadow-card);
+  }
+  
+  .card-variant-4 {
+    background: var(--gradient-card-4);
+    border: 1px solid hsl(38 92% 50% / 0.1);
+    box-shadow: var(--shadow-card);
+  }
+
+  /* Glass morphism for elevated elements */
+  .glass {
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+  }
+
+  /* Hover effects - minimal but elegant */
+  .hover-scale {
+    @apply transition-transform duration-200 hover:scale-[1.02];
+  }
+  
+  .hover-glow {
+    @apply transition-shadow duration-300 hover:shadow-[0_0_32px_hsl(217_91%_60%_/_0.2)];
+  }
+  
+  .hover-lift {
+    @apply transition-all duration-200 hover:-translate-y-1;
+  }
+
+  /* Landing Page Gradient Classes */
+  .bg-gradient-primary {
+    background: var(--gradient-primary);
+  }
+
+  .bg-gradient-accent {
+    background: var(--gradient-accent);
+  }
+
+  .bg-gradient-hero {
+    background: var(--gradient-hero);
+  }
+
+  .bg-gradient-card {
+    background: var(--gradient-card);
+  }
+
+  .text-gradient-primary {
+    background: var(--gradient-primary);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .text-gradient-accent {
+    background: var(--gradient-accent);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  /* Fix dropdown z-index and spacing */
+  .dropdown-content {
+    @apply z-[9999] bg-popover border border-border shadow-elevated;
+  }
+
+  /* Ensure navigation menus are always on top */
+  .nav-dropdown {
+    @apply z-[9999] !important;
+  }
+
+  /* Fix any overlapping issues */
+  .tabs-content {
+    @apply relative z-10;
+  }
+
+  /* Better spacing for professional look */
+  .card-spacing {
+    @apply p-6 space-y-4;
+  }
+
+  .section-spacing {
+    @apply space-y-6;
+  }
+
+  /* Typography - Monospace variants */
+  .font-mono-medium {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-feature-settings: 'liga' off;
+  }
+  
+  .font-mono-bold {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-feature-settings: 'liga' off;
+  }
+
+  /* Animations - Subtle & Professional */
+  .animate-fade-in {
+    animation: fade-in 0.4s ease-out;
+  }
+  
+  .animate-slide-up {
+    animation: slide-up 0.5s ease-out;
+  }
+  
+  /* Status indicators */
+  .status-dot {
+    @apply w-2 h-2 rounded-full inline-block;
+  }
+  
+  .status-online {
+    @apply bg-green-500 shadow-[0_0_8px_hsl(142_70%_45%_/_0.5)];
+  }
+  
+  .status-warning {
+    @apply bg-yellow-500 shadow-[0_0_8px_hsl(38_92%_50%_/_0.5)];
+  }
+  
+  .status-error {
+    @apply bg-red-500 shadow-[0_0_8px_hsl(0_84%_60%_/_0.5)];
+  }
+}

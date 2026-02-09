@@ -1,0 +1,15 @@
+# Enable Rewrite Engine
+<IfModule mod_rewrite.c>
+  RewriteEngine On
+  RewriteBase /
+  
+  # Don't rewrite if file exists
+  RewriteCond %{REQUEST_FILENAME} !-f
+  # Don't rewrite if directory exists
+  RewriteCond %{REQUEST_FILENAME} !-d
+  # Don't rewrite if it's already index.html
+  RewriteCond %{REQUEST_URI} !^/index\.html$
+  # Rewrite everything else to index.html
+  RewriteRule ^(.*)$ /index.html [L]
+</IfModule>
+

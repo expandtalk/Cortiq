@@ -1,0 +1,52 @@
+project_id = "cxmkdtgfocgbfizawlwa"
+
+[functions.server-log-import]
+verify_jwt = false
+
+[functions.ai-bot-tracker]
+verify_jwt = false
+
+[functions.pixel-tracking]
+verify_jwt = false
+
+[functions.supabase-detected-cookies]
+verify_jwt = false
+
+[functions.store-consent]
+verify_jwt = false
+
+[functions.ga4-kpi-dashboard]
+verify_jwt = false
+
+[functions.ga4-traffic-sources]
+verify_jwt = false
+
+[functions.ga4-search-terms]
+verify_jwt = false
+
+[functions.ga4-segment-data]
+verify_jwt = false
+
+[functions.ecommerce-tracking]
+verify_jwt = false
+
+[functions.user-lifetime-value]
+verify_jwt = true
+
+[functions.event-debugger]
+verify_jwt = false
+
+[functions.funnel-analyzer]
+verify_jwt = true
+
+[functions.ai-search-tracker]
+verify_jwt = false
+
+[functions.track-event]
+verify_jwt = false
+
+[functions.analytics-content]
+verify_jwt = false
+
+[functions.setup-companies]
+verify_jwt = false

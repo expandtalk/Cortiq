@@ -1,0 +1,92 @@
+/* Print styles for KPI Dashboard */
+@media print {
+  /* Page setup */
+  @page {
+    size: A4 landscape;
+    margin: 0.5cm;
+  }
+
+  /* Hide non-essential elements */
+  .no-print,
+  button,
+  select,
+  .select {
+    display: none !important;
+  }
+
+  /* Ensure table is visible */
+  table {
+    page-break-inside: avoid;
+    width: 100% !important;
+  }
+
+  /* Make sure text is readable */
+  body, * {
+    color: black !important;
+    background: white !important;
+    -webkit-print-color-adjust: exact !important;
+    color-adjust: exact !important;
+  }
+
+  /* Executive cards styling for print */
+  .border-l-blue-500 {
+    border-left-color: #3b82f6 !important;
+    background: linear-gradient(135deg, #dbeafe 0%, #f8fafc 100%) !important;
+  }
+
+  .border-l-green-500 {
+    border-left-color: #10b981 !important;
+    background: linear-gradient(135deg, #d1fae5 0%, #f8fafc 100%) !important;
+  }
+
+  .border-l-purple-500 {
+    border-left-color: #8b5cf6 !important;
+    background: linear-gradient(135deg, #e9d5ff 0%, #f8fafc 100%) !important;
+  }
+
+  .border-l-orange-500 {
+    border-left-color: #f59e0b !important;
+    background: linear-gradient(135deg, #fef3c7 0%, #f8fafc 100%) !important;
+  }
+
+  /* Table row backgrounds for print */
+  .bg-blue-50\/30 {
+    background: #dbeafe !important;
+  }
+
+  .bg-green-50\/30 {
+    background: #d1fae5 !important;
+  }
+
+  .bg-purple-50\/30 {
+    background: #e9d5ff !important;
+  }
+
+  .bg-orange-50\/30 {
+    background: #fef3c7 !important;
+  }
+
+  .bg-yellow-50\/30 {
+    background: #fef7cd !important;
+  }
+
+  /* Table header styling for print */
+  .bg-slate-900 {
+    background-color: #1e293b !important;
+  }
+
+  .text-white {
+    color: white !important;
+  }
+
+  /* Cards should have borders */
+  .card {
+    border: 1px solid #ccc !important;
+    box-shadow: none !important;
+  }
+
+  /* Ensure gradients don't interfere */
+  .gradient {
+    background: white !important;
+  }
+}

@@ -1,0 +1,1228 @@
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Badge } from "@/components/ui/badge";
+import { Link } from "react-router-dom";
+import { useEffect } from "react";
+import PublicNavigation from "@/components/PublicNavigation";
+import ContactForm from "@/components/ContactForm";
+import heroImage from "@/assets/analytics-dashboard-hero.jpg";
+import analyticsIllustration from "@/assets/analytics-illustration.jpg";
+import { 
+  Shield, 
+  BarChart3, 
+  MousePointer, 
+  FormInput, 
+  TestTube, 
+  Globe, 
+  Cookie,
+  Users,
+  TrendingUp,
+  CheckCircle,
+  ArrowRight,
+  Play,
+  Bot,
+  Sparkles,
+  Zap,
+  Brain,
+  Code,
+  AlertTriangle,
+  Lock
+} from "lucide-react";
+
+// Declare WFATracker on window
+declare global {
+  interface Window {
+    WFATracker?: {
+      trackView: (contentId: string) => void;
+    };
+  }
+}
+
+const Index = () => {
+  // Track page view when component mounts
+  useEffect(() => {
+    if (window.WFATracker) {
+      window.WFATracker.trackView('homepage');
+    }
+  }, []);
+
+  const features = [
+    {
+      icon: Bot,
+      title: "Agentic Browser Analytics",
+      description: "Track and analyze AI agents like ChatGPT Browser, Perplexity Comet, and Claude Browser. First on the market with dedicated agent tracking."
+    },
+    {
+      icon: BarChart3,
+      title: "Advanced KPI Dashboards",
+      description: "Real-time analytics with customizable KPIs, traffic analysis, and conversion data from multiple sources including AI traffic."
+    },
+    {
+      icon: MousePointer,
+      title: "Visual Analytics",
+      description: "Visualize user interactions with click-maps, scroll-maps, and attention-maps for both human and AI agents."
+    },
+    {
+      icon: TestTube,
+      title: "A/B Testing & Optimization",
+      description: "Built-in A/B testing platform to optimize conversion and user experience in the new agentic web."
+    },
+    {
+      icon: Cookie,
+      title: "Nudging Cookie Banners & 1st Party Data",
+      description: "Smart nudging technology in cookie banners for higher consent rates plus accurate data with 1st party cookies."
+    },
+    {
+      icon: Globe,
+      title: "WordPress Integration",
+      description: "Unique WordPress plugin with 1-click installation and deep integration. Our main competitive advantage."
+    }
+  ];
+
+  const benefits = [
+    "First on the market with agentic browser analytics",
+    "Track ChatGPT Browser, Perplexity Comet, and Claude Browser",
+    "Agent-specific dashboards and insights",
+    "Nudging cookie banners for higher consent rates", 
+    "Accurate data with 1st party cookies",
+    "WordPress plugin as competitive advantage",
+    "Real-time analytics for both humans and AI agents",
+    "Ready for the future web before competitors understand it"
+  ];
+
+  return (
+    <div className="min-h-screen bg-background">
+      {/* Navigation */}
+      <PublicNavigation />
+      
+      {/* Proof of Concept Badges */}
+      <section className="container mx-auto px-4 pt-8 pb-4">
+        <div className="flex flex-wrap justify-center gap-4">
+          <Badge variant="outline" className="px-6 py-3 text-base border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors">
+            <Brain className="h-5 w-5 mr-2 text-primary" />
+            <span className="font-semibold">AI First</span>
+          </Badge>
+          <Badge variant="outline" className="px-6 py-3 text-base border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors">
+            <Shield className="h-5 w-5 mr-2 text-primary" />
+            <span className="font-semibold">EU First (GDPR)</span>
+          </Badge>
+          <Badge variant="outline" className="px-6 py-3 text-base border-2 border-primary/20 bg-primary/5 hover:bg-primary/10 transition-colors">
+            <Code className="h-5 w-5 mr-2 text-primary" />
+            <span className="font-semibold">API First</span>
+          </Badge>
+        </div>
+      </section>
+
+      {/* Hero Section */}
+      <section className="relative py-32 px-4 overflow-hidden">
+        {/* Animated background */}
+        <div className="absolute inset-0 bg-gradient-hero">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_20%,hsl(var(--primary)/0.1),transparent)] animate-pulse"></div>
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_80%,hsl(var(--accent)/0.1),transparent)] animate-pulse delay-1000"></div>
+        </div>
+        
+        {/* Floating decorative elements */}
+        <div className="absolute top-20 left-10 w-20 h-20 bg-primary/10 rounded-full animate-float"></div>
+        <div className="absolute top-40 right-20 w-16 h-16 bg-accent/10 rounded-full animate-float delay-1000"></div>
+        <div className="absolute bottom-20 left-1/4 w-12 h-12 bg-primary/5 rounded-full animate-float delay-2000"></div>
+        
+        <div className="container mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="text-center lg:text-left">
+              <Badge className="mb-8 animate-fade-in bg-gradient-primary hover-scale hover-glow text-white border-0">
+                🤖 First with Agentic Browser Analytics
+              </Badge>
+              <h1 className="text-4xl md:text-6xl font-black mb-8 animate-slide-up text-gradient-primary leading-tight">
+                The future of web and bot analytics starts here
+              </h1>
+              <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto lg:mx-0 animate-fade-in leading-relaxed">
+                Track AI agents like ChatGPT Browser, Perplexity Comet & Claude Browser. 
+                Plus 100% banner-free server-side analytics (PTS-approved) or hybrid with smart nudging cookie banners. 
+                WordPress plugin as main advantage. Heatmaps, A/B testing, GDPR compliant.
+              </p>
+              <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center animate-scale-in">
+                <Link to="/auth">
+                  <Button size="lg" className="group bg-gradient-primary hover-scale hover-glow text-lg px-8 py-4 h-auto">
+                    Request Invitation
+                    <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+                  </Button>
+                </Link>
+                <Link to="/features">
+                  <Button variant="outline" size="lg" className="group glass hover-lift text-lg px-8 py-4 h-auto">
+                    <BarChart3 className="mr-3 h-5 w-5 group-hover:scale-110 transition-transform" />
+                    See All Features
+                  </Button>
+                </Link>
+              </div>
+            </div>
+            
+            <div className="relative animate-scale-in">
+              <div className="relative aspect-video rounded-3xl overflow-hidden shadow-elegant hover-glow group">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 to-accent/20"></div>
+                <img 
+                  src={heroImage}
+                  alt="Analytics Dashboard - Heatmap and user analysis"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/30 via-transparent to-transparent"></div>
+                
+                {/* Floating stats indicators */}
+                <div className="absolute top-4 right-4 glass px-3 py-2 rounded-lg animate-float">
+                  <div className="flex items-center space-x-2">
+                    <div className="w-2 h-2 bg-accent rounded-full animate-pulse"></div>
+                    <span className="text-sm font-medium">Live Analytics</span>
+                  </div>
+                </div>
+              </div>
+              
+              {/* Decorative elements */}
+              <div className="absolute -top-4 -left-4 w-24 h-24 bg-gradient-primary rounded-full opacity-20 animate-pulse"></div>
+              <div className="absolute -bottom-4 -right-4 w-32 h-32 bg-gradient-accent rounded-full opacity-15 animate-pulse delay-1000"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Server-Side Analytics Section */}
+      <section className="py-32 px-4 relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, hsl(var(--accent)) 1px, transparent 0)',
+            backgroundSize: '32px 32px'
+          }}></div>
+        </div>
+
+        <div className="container mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="animate-fade-in">
+              <Badge className="mb-6 bg-gradient-primary text-white hover-scale">
+                <Shield className="h-4 w-4 mr-2 inline" />
+                100% Banner-Free
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black mb-8 text-gradient-primary">
+                True banner-free analytics - legally compliant
+              </h2>
+              <p className="text-xl text-muted-foreground mb-8 leading-relaxed">
+                Server-side analytics with ONLY aggregated data. No cookies, no IP storage, no fingerprinting. 
+                Works with server logs for complete banner-free tracking. Plus heatmaps and advanced tracking via hybrid solution with smart nudging. 
+                100% compliant with Swedish PTS and EU ePrivacy.
+              </p>
+
+              <div className="space-y-6 mb-12">
+                <Card className="border-primary/20 bg-background/50 backdrop-blur">
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Shield className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg mb-2">True Banner-Free Analytics</h3>
+                        <p className="text-muted-foreground">
+                          Only aggregated, anonymous server data. NO cookies, IP storage, or fingerprinting. 100% banner-free per PTS/ePrivacy.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-accent/20 bg-background/50 backdrop-blur">
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-gradient-accent rounded-xl flex items-center justify-center flex-shrink-0">
+                        <Zap className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg mb-2">Hybrid Solution</h3>
+                        <p className="text-muted-foreground">
+                          Banner-free base analytics + smart nudging for opt-in advanced tracking. Best of both worlds.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="border-primary/20 bg-background/50 backdrop-blur">
+                  <CardContent className="p-6">
+                    <div className="flex items-start space-x-4">
+                      <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center flex-shrink-0">
+                        <BarChart3 className="h-6 w-6 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="font-bold text-lg mb-2">Privacy-First Solution</h3>
+                        <p className="text-muted-foreground">
+                          Same privacy-first principles - aggregated data, no user tracking, EU hosting, fully GDPR compliant.
+                        </p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
+
+              <Link to="/auth">
+                <Button size="lg" className="group bg-gradient-primary hover-scale hover-glow text-lg px-8 py-4 h-auto">
+                  <Shield className="mr-2 h-5 w-5" />
+                  Try banner-free analytics
+                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+                </Button>
+              </Link>
+            </div>
+
+            <div className="relative animate-scale-in">
+              <Card className="border-2 border-primary/20 shadow-elegant hover-lift bg-gradient-card">
+                <CardHeader className="text-center pb-6">
+                  <Badge className="mb-4 bg-gradient-accent text-white mx-auto">
+                    Comparison
+                  </Badge>
+                  <CardTitle className="text-2xl">Traditional vs Banner-Free Server-Side</CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-6">
+                  <div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold">Cookie Banner</span>
+                      <div className="flex items-center space-x-3">
+                        <Badge variant="destructive">Required</Badge>
+                        <Badge className="bg-primary text-primary-foreground">Not needed ✓</Badge>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold">GDPR Compliance</span>
+                      <div className="flex items-center space-x-3">
+                        <Badge variant="outline">Complex</Badge>
+                        <Badge className="bg-primary text-primary-foreground">Simpler ✓</Badge>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold">User Experience</span>
+                      <div className="flex items-center space-x-3">
+                        <Badge variant="outline">Disruptive</Badge>
+                        <Badge className="bg-primary text-primary-foreground">Smoother ✓</Badge>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold">User Tracking</span>
+                      <div className="flex items-center space-x-3">
+                        <Badge variant="outline">Yes (cookies)</Badge>
+                        <Badge className="bg-primary text-primary-foreground">No (aggregated) ✓</Badge>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between mb-3">
+                      <span className="font-semibold">Conversion</span>
+                      <div className="flex items-center space-x-3">
+                        <Badge variant="destructive">Lower</Badge>
+                        <Badge className="bg-primary text-primary-foreground">Higher ✓</Badge>
+                      </div>
+                    </div>
+                    <div className="flex items-center justify-between">
+                      <span className="font-semibold">Setup Time</span>
+                      <div className="flex items-center space-x-3">
+                        <Badge variant="outline">Days</Badge>
+                        <Badge className="bg-primary text-primary-foreground">5 min ✓</Badge>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="pt-6 border-t">
+                    <div className="bg-gradient-primary/10 rounded-xl p-4 text-center">
+                      <p className="font-bold text-lg mb-2">Want advanced tracking?</p>
+                      <p className="text-sm text-muted-foreground">
+                        Add opt-in banner with smart nudging for sessions, heatmaps, and conversions. Banner-free base + advanced tracking = hybrid solution.
+                      </p>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+
+              {/* Decorative elements */}
+              <div className="absolute -top-6 -right-6 w-20 h-20 bg-primary/10 rounded-full animate-pulse"></div>
+              <div className="absolute -bottom-6 -left-6 w-24 h-24 bg-accent/10 rounded-full animate-pulse delay-1000"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Security & Bot Detection Section */}
+      <section className="py-32 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-background to-primary/5"></div>
+        
+        <div className="container mx-auto relative z-10">
+          <div className="text-center mb-16 animate-fade-in">
+            <Badge className="mb-6 bg-gradient-accent text-white">
+              <AlertTriangle className="h-4 w-4 mr-2 inline" />
+              Security & Compliance
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6 text-gradient-primary">
+              Bot security requires NO cookie banner
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              According to ePrivacy Art. 5.3, security measures are "strictly necessary" - DDoS protection, spy bots, and scrapers can be measured without consent.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+            {/* DDoS & Attack Prevention */}
+            <Card className="glass shadow-elegant hover-lift border-primary/20">
+              <CardHeader>
+                <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mb-4">
+                  <Shield className="h-6 w-6 text-white" />
+                </div>
+                <CardTitle className="text-xl">DDoS Protection</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Identify and block malicious bots attempting to overload your website. 
+                  Legal without consent under ePrivacy Art. 5.3 (strictly necessary).
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Spy Bots & Scrapers */}
+            <Card className="glass shadow-elegant hover-lift border-accent/20">
+              <CardHeader>
+                <div className="w-12 h-12 bg-gradient-accent rounded-xl flex items-center justify-center mb-4">
+                  <AlertTriangle className="h-6 w-6 text-white" />
+                </div>
+                <CardTitle className="text-xl">Spy Bots</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Detect competitor scrapers and spy tools attempting to steal your content or pricing. 
+                  Security-necessary under GDPR Art. 6.1.f.
+                </p>
+              </CardContent>
+            </Card>
+
+            {/* Fraud Prevention */}
+            <Card className="glass shadow-elegant hover-lift border-primary/20">
+              <CardHeader>
+                <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center mb-4">
+                  <Lock className="h-6 w-6 text-white" />
+                </div>
+                <CardTitle className="text-xl">Fraud Prevention</CardTitle>
+              </CardHeader>
+              <CardContent>
+                <p className="text-muted-foreground">
+                  Prevent click-fraud, fake registrations, and fraudulent transactions. 
+                  PTS and Swedish law allow this without cookie banners.
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          {/* Legal Framework */}
+          <Card className="glass shadow-elegant border-2 border-primary/20 max-w-4xl mx-auto">
+            <CardHeader className="text-center">
+              <Badge className="mb-4 bg-gradient-primary text-white mx-auto">
+                Legal Framework
+              </Badge>
+              <CardTitle className="text-2xl">Why bot security is legal without consent</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-3">
+                  <h4 className="font-bold flex items-center">
+                    <CheckCircle className="h-5 w-5 text-primary mr-2" />
+                    ePrivacy Art. 5.3
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    EU ePrivacy Directive states that techniques "strictly necessary" for security do not require consent. 
+                    Bot detection, DDoS protection, and fraud prevention qualify.
+                  </p>
+                </div>
+                <div className="space-y-3">
+                  <h4 className="font-bold flex items-center">
+                    <CheckCircle className="h-5 w-5 text-primary mr-2" />
+                    GDPR Art. 6.1.f
+                  </h4>
+                  <p className="text-sm text-muted-foreground">
+                    Legitimate interest to protect your website and users from threats and fraud. 
+                    Proportionate and minimal according to Swedish PTS.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-primary/5 p-6 rounded-lg">
+                <h4 className="font-bold mb-3 flex items-center">
+                  <Bot className="h-5 w-5 text-primary mr-2" />
+                  What we measure for security (WITHOUT cookie banner)
+                </h4>
+                <ul className="grid md:grid-cols-2 gap-3 text-sm text-muted-foreground">
+                  <li className="flex items-start">
+                    <span className="mr-2">✓</span>
+                    Bot signature (User-Agent patterns)
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2">✓</span>
+                    Request frequency (rate limiting)
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2">✓</span>
+                    Suspicious behavior patterns
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2">✓</span>
+                    IP reputation for threat sources
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2">✓</span>
+                    Automated scraping
+                  </li>
+                  <li className="flex items-start">
+                    <span className="mr-2">✓</span>
+                    Click-fraud and fake traffic
+                  </li>
+                </ul>
+              </div>
+
+              <div className="bg-accent/5 p-4 rounded-lg">
+                <p className="text-sm text-muted-foreground">
+                  <strong className="text-foreground">Important:</strong> All security data is stored anonymously and aggregated. 
+                  Used ONLY for security and fraud prevention - never for marketing or user tracking.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* AI Agent Intelligence Section */}
+      <section className="py-32 px-4 relative overflow-hidden bg-gradient-to-br from-primary/5 via-background to-accent/5">
+        <div className="absolute inset-0 opacity-10">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'radial-gradient(circle at 2px 2px, hsl(var(--primary)) 1px, transparent 0)',
+            backgroundSize: '40px 40px'
+          }}></div>
+        </div>
+
+        <div className="container mx-auto relative z-10">
+          <div className="text-center mb-16 animate-fade-in">
+            <Badge className="mb-6 bg-gradient-primary text-white">
+              <Bot className="h-4 w-4 mr-2 inline" />
+              AI Agent Intelligence
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6 text-gradient-primary">
+              Mät och förstå AI-agenters beteende
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Först på marknaden med dedikerad AI-agentanalys. Se hur ChatGPT, Perplexity, Claude och andra AI-agenter interagerar med din sajt.
+            </p>
+          </div>
+
+          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
+            <Card className="glass shadow-elegant hover-lift border-primary/20 text-center">
+              <CardContent className="pt-8 pb-6">
+                <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Bot className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-2">ChatGPT Browser</h3>
+                <p className="text-sm text-muted-foreground">
+                  Spåra hur OpenAIs browser-agent crawlar och citerar ditt innehåll
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="glass shadow-elegant hover-lift border-accent/20 text-center">
+              <CardContent className="pt-8 pb-6">
+                <div className="w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Sparkles className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-2">Perplexity</h3>
+                <p className="text-sm text-muted-foreground">
+                  Analysera trafik från Perplexity AI och dess citeringsbeteende
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="glass shadow-elegant hover-lift border-primary/20 text-center">
+              <CardContent className="pt-8 pb-6">
+                <div className="w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Brain className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-2">Claude Browser</h3>
+                <p className="text-sm text-muted-foreground">
+                  Följ Anthropics Claude-agent och dess interaktioner
+                </p>
+              </CardContent>
+            </Card>
+
+            <Card className="glass shadow-elegant hover-lift border-accent/20 text-center">
+              <CardContent className="pt-8 pb-6">
+                <div className="w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+                <h3 className="font-bold text-lg mb-2">Egna agenter</h3>
+                <p className="text-sm text-muted-foreground">
+                  Registrera och mät dina egna AI-agenter och botar
+                </p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="glass shadow-elegant border-2 border-primary/20 max-w-4xl mx-auto">
+            <CardHeader className="text-center">
+              <Badge className="mb-4 bg-gradient-accent text-white mx-auto">
+                Agent Registry
+              </Badge>
+              <CardTitle className="text-2xl">Vad du kan mäta med CortIQ Agent Intelligence</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="grid md:grid-cols-2 gap-6">
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold">Agent Journey Tracking</h4>
+                      <p className="text-sm text-muted-foreground">Följ hela resan från landing till konvertering för varje AI-agent</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold">Citeringsanalys</h4>
+                      <p className="text-sm text-muted-foreground">Se när och hur AI-agenter citerar ditt innehåll</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold">Browsertyp-detektion</h4>
+                      <p className="text-sm text-muted-foreground">Skilj mellan visuella, headless och textbaserade agenter</p>
+                    </div>
+                  </div>
+                </div>
+                <div className="space-y-4">
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold">Konverteringsmål</h4>
+                      <p className="text-sm text-muted-foreground">Mät om AI-agenter leder till faktiska affärsresultat</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold">Custom Agent Registry</h4>
+                      <p className="text-sm text-muted-foreground">Registrera Copilot, Google AI Studio och egna botar</p>
+                    </div>
+                  </div>
+                  <div className="flex items-start space-x-3">
+                    <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
+                    <div>
+                      <h4 className="font-semibold">Säkerhetsanalys</h4>
+                      <p className="text-sm text-muted-foreground">Identifiera potentiellt skadliga botar vs legitima AI-agenter</p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <div className="bg-primary/5 p-6 rounded-lg text-center">
+                <p className="text-muted-foreground mb-4">
+                  <strong className="text-foreground">Varför är detta viktigt?</strong> AI-agenter står för en växande del av webbtrafiken. 
+                  Utan dedikerad mätning missar du viktig data om hur AI interagerar med ditt innehåll.
+                </p>
+                <Link to="/auth">
+                  <Button className="bg-gradient-primary hover-scale hover-glow">
+                    <Bot className="mr-2 h-4 w-4" />
+                    Börja mäta AI-agenter
+                    <ArrowRight className="ml-2 h-4 w-4" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Google Analytics Alternative Section */}
+      <section className="py-32 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-accent/5 via-background to-primary/5"></div>
+        
+        <div className="container mx-auto relative z-10">
+          <div className="text-center mb-16 animate-fade-in">
+            <Badge className="mb-6 bg-gradient-accent text-white">
+              <BarChart3 className="h-4 w-4 mr-2 inline" />
+              Analytics Your Way
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6 text-gradient-primary">
+              Banner-free or hybrid with GA4
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Choose our 100% banner-free server-side analytics, or hybrid solution with GA4 server-side + smart consent management.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-2 gap-8 max-w-6xl mx-auto">
+            {/* Our Bannerfri Server-Side Analytics */}
+            <Card className="group border-2 border-primary/20 shadow-elegant hover-lift bg-gradient-card relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
+              
+              <CardHeader className="text-center pb-6 relative z-10">
+                <div className="mx-auto w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Shield className="h-8 w-8 text-white" />
+                </div>
+                <Badge className="mb-4 bg-gradient-primary text-white mx-auto">
+                  Recommended
+                </Badge>
+                <CardTitle className="text-2xl font-bold">Our Cookiefree Analytics</CardTitle>
+                <CardDescription className="text-base mt-2">
+                  Built for the agentic web from day one
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 relative z-10">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Track AI agents (ChatGPT, Perplexity, Claude Browser)</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Zero cookies - no banner needed</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">100% GDPR compliant automatically</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Better data quality (100% vs ~60%)</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Built-in heatmaps and A/B testing</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">WordPress plugin for easy setup</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">No data sampling or limits</span>
+                </div>
+              </CardContent>
+              
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-primary opacity-10 rounded-tr-full"></div>
+            </Card>
+
+            {/* GA4 Server-Side */}
+            <Card className="group border-2 border-accent/20 shadow-elegant hover-lift bg-gradient-card relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-accent opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
+              
+              <CardHeader className="text-center pb-6 relative z-10">
+                <div className="mx-auto w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Globe className="h-8 w-8 text-white" />
+                </div>
+                <Badge className="mb-4 bg-gradient-accent text-white mx-auto">
+                  Also Available
+                </Badge>
+                <CardTitle className="text-2xl font-bold">GA4 Server-Side</CardTitle>
+                <CardDescription className="text-base mt-2">
+                  Keep Google Analytics without cookies
+                </CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-4 relative z-10">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Keep your existing GA4 setup</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">We run it server-side for you</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">No cookies, no banner needed</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Same GA4 reports you're used to</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">GDPR compliant tracking</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Easy migration from client-side GA4</span>
+                </div>
+                <div className="space-y-2 pt-4">
+                  <div className="bg-muted/50 rounded-lg p-3 text-sm text-muted-foreground">
+                    Note: No AI agent tracking with GA4
+                  </div>
+                </div>
+              </CardContent>
+              
+              <div className="absolute bottom-0 right-0 w-24 h-24 bg-gradient-accent opacity-10 rounded-tl-full"></div>
+            </Card>
+          </div>
+
+          <div className="mt-16 text-center">
+            <Card className="max-w-3xl mx-auto border-2 border-primary/20 bg-gradient-card shadow-elegant">
+              <CardContent className="p-8">
+                <h3 className="text-2xl font-bold mb-4 text-gradient-primary">Use both together</h3>
+                <p className="text-lg text-muted-foreground mb-6 leading-relaxed">
+                  Many of our customers run both solutions simultaneously. Get the best of both worlds - 
+                  our agentic analytics for future-proof insights, plus GA4 server-side for familiar reporting.
+                </p>
+                <Link to="/auth">
+                  <Button size="lg" className="group bg-gradient-primary hover-scale hover-glow text-lg px-8 py-4 h-auto">
+                    Get Started
+                    <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+                  </Button>
+                </Link>
+              </CardContent>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Remarketing Solution Section */}
+      <section className="py-32 px-4 relative overflow-hidden">
+        <div className="absolute inset-0 bg-gradient-to-br from-muted/20 via-background to-primary/5"></div>
+        
+        <div className="container mx-auto relative z-10">
+          <div className="text-center mb-16 animate-fade-in">
+            <Badge className="mb-6 bg-gradient-primary text-white">
+              <Zap className="h-4 w-4 mr-2 inline" />
+              Smart Remarketing
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6 text-gradient-primary">
+              Cookiefree remarketing that actually works
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              Run Google Ads, Facebook, and TikTok remarketing without cookies - using server-side conversion APIs and privacy-safe user matching.
+            </p>
+          </div>
+
+          <div className="grid lg:grid-cols-3 gap-8 max-w-6xl mx-auto mb-16">
+            <Card className="border-2 border-primary/20 shadow-elegant hover-lift bg-gradient-card">
+              <CardHeader className="text-center pb-6">
+                <div className="mx-auto w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mb-6 hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Globe className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold">Google Ads Remarketing</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Server-side conversion tracking via Google Ads API</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Enhanced conversions with hashed email matching</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Customer Match lists for precise targeting</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">No cookies needed on the website</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-accent/20 shadow-elegant hover-lift bg-gradient-card">
+              <CardHeader className="text-center pb-6">
+                <div className="mx-auto w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mb-6 hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Users className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold">Meta (Facebook/Instagram)</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Facebook Conversions API integration</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Server-side event tracking without pixel</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Custom Audiences with privacy-safe matching</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-accent flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Higher attribution accuracy than cookies</span>
+                </div>
+              </CardContent>
+            </Card>
+
+            <Card className="border-2 border-primary/20 shadow-elegant hover-lift bg-gradient-card">
+              <CardHeader className="text-center pb-6">
+                <div className="mx-auto w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mb-6 hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <TrendingUp className="h-8 w-8 text-white" />
+                </div>
+                <CardTitle className="text-xl font-bold">TikTok & Other Platforms</CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">TikTok Events API for cookiefree tracking</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">LinkedIn, Pinterest, Snapchat support</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">Universal server-side architecture</span>
+                </div>
+                <div className="flex items-start space-x-3">
+                  <CheckCircle className="h-5 w-5 text-primary flex-shrink-0 mt-1" />
+                  <span className="text-foreground">One integration for all platforms</span>
+                </div>
+              </CardContent>
+            </Card>
+          </div>
+
+          <Card className="max-w-4xl mx-auto border-2 border-primary/20 bg-gradient-card shadow-elegant">
+            <CardContent className="p-8">
+              <h3 className="text-2xl font-bold mb-4 text-gradient-primary">Why server-side remarketing is better</h3>
+              <div className="grid md:grid-cols-2 gap-6 mb-6">
+                <div>
+                  <h4 className="font-bold text-lg mb-3 flex items-center">
+                    <CheckCircle className="h-5 w-5 text-primary mr-2" />
+                    Privacy-First
+                  </h4>
+                  <p className="text-muted-foreground">
+                    No cookies on user devices. Data processing happens server-side with proper consent and encryption.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg mb-3 flex items-center">
+                    <CheckCircle className="h-5 w-5 text-primary mr-2" />
+                    Better Attribution
+                  </h4>
+                  <p className="text-muted-foreground">
+                    Server-side APIs aren't blocked by ad blockers, giving you 100% accurate conversion tracking instead of ~60%.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg mb-3 flex items-center">
+                    <CheckCircle className="h-5 w-5 text-primary mr-2" />
+                    Higher Match Rates
+                  </h4>
+                  <p className="text-muted-foreground">
+                    Using hashed emails and phone numbers provides better audience matching than cookie-based tracking.
+                  </p>
+                </div>
+                <div>
+                  <h4 className="font-bold text-lg mb-3 flex items-center">
+                    <CheckCircle className="h-5 w-5 text-primary mr-2" />
+                    Future-Proof
+                  </h4>
+                  <p className="text-muted-foreground">
+                    Works today and will keep working when third-party cookies are completely gone.
+                  </p>
+                </div>
+              </div>
+              <div className="text-center">
+                <Link to="/auth">
+                  <Button size="lg" className="group bg-gradient-primary hover-scale hover-glow text-lg px-8 py-4 h-auto">
+                    <Zap className="mr-2 h-5 w-5" />
+                    Set up cookiefree remarketing
+                    <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+                  </Button>
+                </Link>
+              </div>
+            </CardContent>
+          </Card>
+        </div>
+      </section>
+
+      {/* Features Section */}
+
+      <section className="py-32 px-4 relative">
+        {/* Background pattern */}
+        <div className="absolute inset-0 opacity-5">
+          <div className="absolute inset-0" style={{
+            backgroundImage: 'radial-gradient(circle at 1px 1px, hsl(var(--primary)) 1px, transparent 0)',
+            backgroundSize: '24px 24px'
+          }}></div>
+        </div>
+        
+        <div className="container mx-auto relative z-10">
+          <div className="text-center mb-20 animate-fade-in">
+            <Badge className="mb-6 bg-gradient-accent text-white">
+              Agentic Web Ready • AI-Native Analytics
+            </Badge>
+            <h2 className="text-4xl md:text-6xl font-black mb-6 text-gradient-primary">
+              Analytics for the agentic web
+            </h2>
+            <p className="text-xl md:text-2xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
+              When AI agents start browsing the web for users, you need to know what's happening. 
+              We're first on the market with dedicated agentic browser tracking.
+            </p>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {features.map((feature, index) => (
+              <Card key={index} className="group bg-gradient-card border-0 shadow-elegant hover-lift hover-glow relative overflow-hidden">
+                {/* Gradient overlay on hover */}
+                <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
+                
+                <CardHeader className="text-center pb-6 relative z-10">
+                  <div className="mx-auto w-16 h-16 bg-gradient-primary rounded-2xl flex items-center justify-center mb-6 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                    <feature.icon className="h-8 w-8 text-white" />
+                  </div>
+                  <CardTitle className="text-xl font-bold group-hover:text-primary transition-colors">
+                    {feature.title}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="relative z-10">
+                  <CardDescription className="text-center leading-relaxed text-base">
+                    {feature.description}
+                  </CardDescription>
+                </CardContent>
+                
+                {/* Decorative corner gradient */}
+                <div className="absolute top-0 right-0 w-20 h-20 bg-gradient-primary opacity-10 rounded-bl-full"></div>
+              </Card>
+            ))}
+          </div>
+          
+          {/* Agentic Web Card */}
+          <div className="mt-16 max-w-4xl mx-auto">
+            <Card className="group bg-gradient-to-br from-primary/5 via-background to-accent/5 border-2 border-primary/20 shadow-elegant hover-lift hover-glow relative overflow-hidden">
+              <div className="absolute inset-0 bg-gradient-primary opacity-0 group-hover:opacity-5 transition-opacity duration-500"></div>
+              
+              <CardHeader className="text-center pb-6 relative z-10">
+                <div className="mx-auto w-20 h-20 bg-gradient-primary rounded-3xl flex items-center justify-center mb-8 group-hover:scale-110 transition-transform duration-300 shadow-lg">
+                  <Bot className="h-10 w-10 text-white" />
+                </div>
+                <Badge className="mb-4 bg-gradient-accent text-white">
+                  <Sparkles className="h-4 w-4 mr-2 inline" />
+                  Future-Proof Analytics
+                </Badge>
+                <CardTitle className="text-3xl font-bold group-hover:text-primary transition-colors mb-4">
+                  Ready for the agentic web
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="relative z-10 text-center">
+                <CardDescription className="leading-relaxed text-lg mb-6">
+                  When ChatGPT Browser, Perplexity Comet, and Claude Browser start browsing your website 
+                  for users, you want to know what's happening. We track everything - from bot behavior to 
+                  structured data readiness and agent conversion attribution.
+                </CardDescription>
+                <div className="flex justify-center">
+                  <Link to="/auth">
+                    <Button className="group bg-gradient-primary hover-scale hover-glow text-lg px-8 py-3 h-auto">
+                      <Zap className="mr-2 h-5 w-5" />
+                      Stay ahead of your competitors
+                      <ArrowRight className="ml-2 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+                    </Button>
+                  </Link>
+                </div>
+              </CardContent>
+              
+              {/* Decorative elements */}
+              <div className="absolute top-0 right-0 w-32 h-32 bg-gradient-primary opacity-10 rounded-bl-full"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-gradient-accent opacity-10 rounded-tr-full"></div>
+            </Card>
+          </div>
+        </div>
+      </section>
+
+      {/* Benefits Section */}
+      <section className="py-32 px-4 relative overflow-hidden">
+        {/* Dynamic background */}
+        <div className="absolute inset-0 bg-gradient-to-br from-muted/20 via-background to-accent/5">
+          <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_48%,hsl(var(--primary)/0.03)_49%,hsl(var(--primary)/0.03)_51%,transparent_52%)]"></div>
+        </div>
+        
+        <div className="container mx-auto relative z-10">
+          <div className="grid lg:grid-cols-2 gap-16 items-center">
+            <div className="animate-fade-in">
+              <Badge className="mb-6 bg-gradient-accent text-white hover-scale">
+                <Bot className="h-4 w-4 mr-2 inline" />
+                Agent-Ready Analytics
+              </Badge>
+              <h2 className="text-4xl md:text-5xl font-black mb-8 text-gradient-primary">
+                First tool for the agentic web
+              </h2>
+              <p className="text-xl text-muted-foreground mb-12 leading-relaxed">
+                History shows that every major browser shift comes with a new promise. 
+                Agentic browsers promise speed and automation - but only if they can trust your data. 
+                We help you become visible to AI agents before your competitors even understand what's happening.
+              </p>
+              
+              <div className="space-y-6 mb-12">
+                {benefits.map((benefit, index) => (
+                  <div key={index} className="flex items-center space-x-4 group animate-slide-up" style={{animationDelay: `${index * 100}ms`}}>
+                    <div className="flex-shrink-0 w-8 h-8 bg-gradient-primary rounded-full flex items-center justify-center group-hover:scale-110 transition-transform">
+                      <CheckCircle className="h-5 w-5 text-white" />
+                    </div>
+                    <span className="text-foreground text-lg group-hover:text-primary transition-colors">{benefit}</span>
+                  </div>
+                ))}
+              </div>
+
+              <Link to="/auth">
+                <Button size="lg" className="group bg-gradient-primary hover-scale hover-glow text-lg px-8 py-4 h-auto">
+                  Request Invitation
+                  <ArrowRight className="ml-3 h-5 w-5 group-hover:translate-x-2 transition-transform duration-300" />
+                </Button>
+              </Link>
+            </div>
+            
+            <div className="relative animate-scale-in">
+              <div className="relative aspect-square rounded-3xl overflow-hidden shadow-elegant hover-glow group">
+                <div className="absolute inset-0 bg-gradient-to-br from-primary/10 to-accent/10"></div>
+                <img 
+                  src={analyticsIllustration}
+                  alt="Analytics Illustration - Person analyzing data"
+                  className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-700"
+                />
+                <div className="absolute inset-0 bg-gradient-to-t from-black/20 via-transparent to-transparent"></div>
+              </div>
+              
+              {/* Enhanced floating stats cards */}
+              <Card className="absolute -top-6 -left-6 glass shadow-elegant hover-lift animate-float">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-gradient-primary rounded-xl flex items-center justify-center">
+                      <Users className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-3xl font-black text-gradient-primary">12,847</div>
+                      <div className="text-sm text-muted-foreground font-medium">Visitors this month</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              <Card className="absolute -bottom-6 -right-6 glass shadow-elegant hover-lift animate-float delay-1000">
+                <CardContent className="p-6">
+                  <div className="flex items-center space-x-3">
+                    <div className="w-12 h-12 bg-gradient-accent rounded-xl flex items-center justify-center">
+                      <TrendingUp className="h-6 w-6 text-white" />
+                    </div>
+                    <div>
+                      <div className="text-3xl font-black text-gradient-accent">+23%</div>
+                      <div className="text-sm text-muted-foreground font-medium">Conversion</div>
+                    </div>
+                  </div>
+                </CardContent>
+              </Card>
+              
+              {/* Decorative elements */}
+              <div className="absolute top-1/4 -right-8 w-16 h-16 bg-primary/10 rounded-full animate-pulse"></div>
+              <div className="absolute bottom-1/4 -left-8 w-20 h-20 bg-accent/10 rounded-full animate-pulse delay-1000"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+
+
+      {/* CTA Section */}
+      <section className="py-32 px-4 relative overflow-hidden">
+        {/* Animated gradient background */}
+        <div className="absolute inset-0 bg-gradient-to-r from-primary via-accent to-primary bg-[length:200%_100%] animate-[gradient_8s_ease-in-out_infinite]"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_30%_30%,rgba(255,255,255,0.1),transparent)] animate-pulse"></div>
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_70%_70%,rgba(255,255,255,0.1),transparent)] animate-pulse delay-2000"></div>
+        
+        {/* Floating elements */}
+        <div className="absolute top-10 left-10 w-24 h-24 bg-white/10 rounded-full animate-float"></div>
+        <div className="absolute top-20 right-20 w-16 h-16 bg-white/10 rounded-full animate-float delay-1000"></div>
+        <div className="absolute bottom-20 left-1/4 w-20 h-20 bg-white/10 rounded-full animate-float delay-2000"></div>
+        
+        <div className="container mx-auto text-center text-white relative z-10">
+          <div className="animate-fade-in">
+            <h2 className="text-4xl md:text-6xl font-black mb-8">
+              Build for tomorrow's web, today
+            </h2>
+            <p className="text-xl md:text-2xl mb-12 opacity-95 max-w-4xl mx-auto leading-relaxed">
+              When AI agents become mainstream, 10-15% of all web traffic will come from bots within three years. 
+              Brands that make their data easy to choose, summarize, and act on will win. 
+              This is the early moment - experiment while risk is low.
+            </p>
+          </div>
+          
+          <div className="flex flex-col lg:flex-row gap-8 justify-center items-center animate-scale-in">
+            <Link to="/auth">
+              <Button size="lg" variant="secondary" className="group glass hover-scale hover-glow text-lg px-10 py-5 h-auto font-bold">
+                <Bot className="mr-3 h-6 w-6" />
+                Get Started Now
+                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-2 transition-transform duration-300" />
+              </Button>
+            </Link>
+            <div className="glass px-6 py-4 rounded-xl text-sm font-medium text-foreground">
+              🤖 Agentic Browser Tracking • ✅ Complete Analytics • ✅ GDPR-Ready
+            </div>
+          </div>
+        </div>
+      </section>
+
+      {/* Footer */}
+      <footer className="relative border-t bg-gradient-card backdrop-blur-sm py-16 px-4">
+        <div className="absolute inset-0 bg-[linear-gradient(45deg,transparent_48%,hsl(var(--primary)/0.02)_49%,hsl(var(--primary)/0.02)_51%,transparent_52%)]"></div>
+        
+        <div className="container mx-auto relative z-10">
+          <div className="grid md:grid-cols-4 gap-12">
+            <div className="md:col-span-2">
+              <div className="flex items-center space-x-3 mb-6">
+                <div className="w-10 h-10 bg-gradient-primary rounded-xl flex items-center justify-center">
+                  <BarChart3 className="h-6 w-6 text-white" />
+                </div>
+                <span className="font-black text-xl text-gradient-primary">CortIQ</span>
+              </div>
+              <p className="text-muted-foreground leading-relaxed mb-6 max-w-md">
+                GDPR-compliant analytics that helps you understand your users without compromising privacy.
+              </p>
+              <div className="flex space-x-4">
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center hover-scale cursor-pointer">
+                  <Globe className="h-5 w-5 text-primary" />
+                </div>
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center hover-scale cursor-pointer">
+                  <Users className="h-5 w-5 text-primary" />
+                </div>
+                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center hover-scale cursor-pointer">
+                  <Cookie className="h-5 w-5 text-primary" />
+                </div>
+              </div>
+            </div>
+            
+            <div>
+              <h4 className="font-bold mb-6 text-gradient-primary">Product</h4>
+              <ul className="space-y-3 text-muted-foreground">
+                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Features</Link></li>
+                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Pricing</Link></li>
+                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Integration</Link></li>
+              </ul>
+            </div>
+            
+            <div>
+              <h4 className="font-bold mb-6 text-gradient-primary">Support</h4>
+              <ul className="space-y-3 text-muted-foreground">
+                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Documentation</Link></li>
+                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Help Center</Link></li>
+                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Kontakt</Link></li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </footer>
+
+      {/* Contact Section */}
+      <section id="contact" className="py-24 px-4 bg-gradient-subtle">
+        <div className="container mx-auto">
+          <div className="text-center mb-16 animate-fade-in">
+            <Badge className="mb-6 bg-gradient-primary text-white">
+              📧 Contact Us
+            </Badge>
+            <h2 className="text-4xl md:text-5xl font-black mb-6 text-gradient-primary">
+              Ready to get started?
+            </h2>
+            <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
+              Send us a message and we'll get back to you within 24 hours with information about invite-only access.
+            </p>
+          </div>
+          
+          <ContactForm />
+        </div>
+      </section>
+    </div>
+  );
+};
+
+export default Index;
