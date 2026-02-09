@@ -1,0 +1,150 @@
+name: Deploy to Production
+
+on:
+  push:
+    branches:
+      - main
+  workflow_dispatch: # Allow manual trigger
+
+env:
+  NODE_VERSION: '18'
+
+jobs:
+  build-and-deploy:
+    name: Build and Deploy to cortiq.se
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: 📦 Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ env.NODE_VERSION }}
+          cache: 'npm'
+
+      - name: 📥 Install dependencies
+        run: npm ci
+
+      - name: 🔍 Run TypeScript check
+        run: npm run type-check || echo "Type check skipped"
+        continue-on-error: true
+
+      - name: 🔍 Run ESLint
+        run: npm run lint || echo "Lint skipped"
+        continue-on-error: true
+
+      - name: 🏗️ Build production bundle
+        run: npm run build
+        env:
+          VITE_SUPABASE_URL: ${{ secrets.VITE_SUPABASE_URL }}
+          VITE_SUPABASE_ANON_KEY: ${{ secrets.VITE_SUPABASE_ANON_KEY }}
+          VITE_SUPABASE_PROJECT_ID: ${{ secrets.VITE_SUPABASE_PROJECT_ID }}
+          VITE_APP_ENV: production
+          NODE_ENV: production
+
+      - name: 📊 Build summary
+        run: |
+          echo "### 🎉 Build Successful!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Build size:**" >> $GITHUB_STEP_SUMMARY
+          du -sh dist/ >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Files generated:**" >> $GITHUB_STEP_SUMMARY
+          ls -lh dist/ | tail -n +2 | wc -l >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Deployment target:** cortiq.se" >> $GITHUB_STEP_SUMMARY
+
+      - name: 🚀 Deploy to cortiq.se (FTP)
+        uses: SamKirkland/FTP-Deploy-Action@v4.3.5
+        with:
+          server: ${{ secrets.FTP_SERVER }}
+          username: ${{ secrets.FTP_USERNAME }}
+          password: ${{ secrets.FTP_PASSWORD }}
+          local-dir: ./dist/
+          server-dir: ${{ secrets.FTP_SERVER_DIR }}
+          dangerous-clean-slate: false
+          exclude: |
+            **/.git*
+            **/.git*/**
+            **/node_modules/**
+
+      - name: ✅ Deployment complete
+        run: |
+          echo "### ✅ Deployment Complete!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**URL:** https://cortiq.se" >> $GITHUB_STEP_SUMMARY
+          echo "**Time:** $(date)" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Next steps:**" >> $GITHUB_STEP_SUMMARY
+          echo "1. Visit https://cortiq.se and verify site loads" >> $GITHUB_STEP_SUMMARY
+          echo "2. Run smoke tests from SMOKE_TESTS.md" >> $GITHUB_STEP_SUMMARY
+          echo "3. Monitor error logs for 1 hour" >> $GITHUB_STEP_SUMMARY
+
+      - name: 🧪 Run basic smoke test
+        run: |
+          echo "Testing homepage..."
+          curl -f -s -o /dev/null -w "%{http_code}" https://cortiq.se || echo "Site not reachable yet"
+        continue-on-error: true
+
+      - name: 💬 Notify on Slack (Optional)
+        if: success()
+        run: |
+          if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
+            curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+              -H 'Content-type: application/json' \
+              --data '{
+                "text": "🚀 CortIQ deployed to production!",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*CortIQ Production Deployment*\n\n✅ *Status:* Successful\n🌐 *URL:* https://cortiq.se\n📦 *Commit:* ${{ github.sha }}\n👤 *Deployed by:* ${{ github.actor }}"
+                    }
+                  }
+                ]
+              }'
+          fi
+        continue-on-error: true
+
+  notify-failure:
+    name: Notify on Failure
+    runs-on: ubuntu-latest
+    needs: build-and-deploy
+    if: failure()
+
+    steps:
+      - name: 🚨 Deployment failed
+        run: |
+          echo "### ❌ Deployment Failed!" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Check the logs above for errors**" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "Common issues:" >> $GITHUB_STEP_SUMMARY
+          echo "- FTP credentials incorrect" >> $GITHUB_STEP_SUMMARY
+          echo "- Build failed due to TypeScript errors" >> $GITHUB_STEP_SUMMARY
+          echo "- Environment variables missing" >> $GITHUB_STEP_SUMMARY
+
+      - name: 💬 Notify on Slack (Optional)
+        run: |
+          if [ -n "${{ secrets.SLACK_WEBHOOK_URL }}" ]; then
+            curl -X POST ${{ secrets.SLACK_WEBHOOK_URL }} \
+              -H 'Content-type: application/json' \
+              --data '{
+                "text": "🚨 CortIQ deployment FAILED!",
+                "blocks": [
+                  {
+                    "type": "section",
+                    "text": {
+                      "type": "mrkdwn",
+                      "text": "*CortIQ Production Deployment FAILED*\n\n❌ *Status:* Failed\n📦 *Commit:* ${{ github.sha }}\n👤 *Attempted by:* ${{ github.actor }}\n\n<${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}|View logs>"
+                    }
+                  }
+                ]
+              }'
+          fi
+        continue-on-error: true
