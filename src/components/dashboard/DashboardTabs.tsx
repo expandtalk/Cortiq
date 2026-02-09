@@ -37,8 +37,8 @@ export function DashboardTabs({ selectedSite, analytics, dateRange }: DashboardT
   const settingsOptions = [
     { value: 'setup', label: 'Setup', icon: Settings },
     { value: 'gdpr', label: 'GDPR', icon: Settings },
-    { value: 'integrations', label: 'Externa Integrationer', icon: ExternalLink },
-    { value: 'api-keys', label: 'API-nycklar', icon: Key }
+    { value: 'integrations', label: 'External Integrations', icon: ExternalLink },
+    { value: 'api-keys', label: 'API Keys', icon: Key }
   ];
 
   const currentSettingsTab = settingsOptions.find(option => option.value === activeTab);
@@ -48,49 +48,49 @@ export function DashboardTabs({ selectedSite, analytics, dateRange }: DashboardT
       <div className="flex items-center gap-2 border-b pb-2 flex-wrap">
         <TabsList className="flex flex-wrap gap-1 bg-transparent border-0 h-auto p-0">
           <TabsTrigger value="overview" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Översikt
+            Overview
           </TabsTrigger>
           <TabsTrigger value="analytics" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
             Analytics
           </TabsTrigger>
           <TabsTrigger value="paid-ads" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Annonser (GA4)
+            Ads (GA4)
           </TabsTrigger>
           <TabsTrigger value="paid-ads-server" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Annonser (Server-Side)
+            Ads (Server-Side)
           </TabsTrigger>
           <TabsTrigger value="cookiefree" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Cookiefri
+            Cookie-Free
           </TabsTrigger>
           <TabsTrigger value="heatmap" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
             Heatmap
           </TabsTrigger>
           <TabsTrigger value="forms" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Formulär
+            Forms
           </TabsTrigger>
           <TabsTrigger value="abtesting" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            A/B Test
+            A/B Testing
           </TabsTrigger>
           <TabsTrigger value="ai" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
             AI Traffic
           </TabsTrigger>
           <TabsTrigger value="ai-bots" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            AI Bots
+            AI Agents
           </TabsTrigger>
           <TabsTrigger value="kpi" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            KPI
+            KPI Dashboard
           </TabsTrigger>
           <TabsTrigger value="kpi-catalog" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            KPI Katalog
+            KPI Catalog
           </TabsTrigger>
           <TabsTrigger value="segments" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Segment
+            Segments
           </TabsTrigger>
           <TabsTrigger value="navigation" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Navigering
+            Navigation
           </TabsTrigger>
           <TabsTrigger value="alerts" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Varningar
+            Alerts
           </TabsTrigger>
         </TabsList>
 
@@ -102,7 +102,7 @@ export function DashboardTabs({ selectedSite, analytics, dateRange }: DashboardT
               className="flex items-center gap-2 h-10 px-4 py-2 whitespace-nowrap"
             >
               <Settings className="h-4 w-4" />
-              {currentSettingsTab ? currentSettingsTab.label : 'Inställningar'}
+              {currentSettingsTab ? currentSettingsTab.label : 'Settings'}
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>

@@ -31,7 +31,7 @@ interface KPITabProps {
 }
 
 export function KPITab({ selectedSite }: KPITabProps) {
-  const [selectedYear, setSelectedYear] = useState(2025);
+  const [selectedYear, setSelectedYear] = useState(new Date().getFullYear());
   
   // Debug logging for site selection
   console.log('🎯 KPI Tab rendered with site:', {
@@ -311,7 +311,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium flex items-center text-blue-700">
                 <Users className="h-5 w-5 mr-2" />
-                Aktiva Användare (år {selectedYear})
+                Active Users (year {selectedYear})
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -323,7 +323,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium flex items-center text-green-700">
                 <MousePointer className="h-5 w-5 mr-2" />
-                Sessioner (år {selectedYear})
+                Sessions (year {selectedYear})
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -335,7 +335,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
             <CardHeader className="pb-3">
               <CardTitle className="text-sm font-medium flex items-center text-purple-700">
                 <BarChart3 className="h-5 w-5 mr-2" />
-                Sidvisningar (år {selectedYear})
+                Page Views (year {selectedYear})
               </CardTitle>
             </CardHeader>
             <CardContent>

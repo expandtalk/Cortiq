@@ -40,7 +40,7 @@ export default function PluginDownloader({ trackingId }: PluginDownloaderProps) 
       if (isZipFile) {
         uploadAndDownloadPlugin(file);
       } else {
-        alert('Vänligen välj en ZIP-fil');
+        alert('Please select a ZIP file');
       }
     }
     // Reset input
@@ -86,12 +86,12 @@ export default function PluginDownloader({ trackingId }: PluginDownloaderProps) 
           className="flex items-center gap-2 px-8 py-4 text-lg"
         >
           <Download className="h-5 w-5" />
-          Ladda ner WordPress Plugin (ZIP)
+          Download WordPress Plugin (ZIP)
         </Button>
         <p className="text-sm text-muted-foreground mt-2">
           {hasUploadedFiles 
-            ? `Använder dina uppladdade filer (${Object.keys(uploadedFiles!).length} filer)`
-            : 'Komplett WordPress-plugin med alla nödvändiga filer'
+            ? `Using your uploaded files (${Object.keys(uploadedFiles!).length} files)`
+            : 'Complete WordPress plugin with all necessary files'
           }
         </p>
       </div>
@@ -104,9 +104,9 @@ export default function PluginDownloader({ trackingId }: PluginDownloaderProps) 
               <div className="flex items-start gap-2">
                 <FileText className="h-5 w-5 text-green-600 mt-0.5" />
                 <div>
-                  <p className="font-medium text-green-800">Anpassade filer aktiva</p>
+                  <p className="font-medium text-green-800">Custom Files Active</p>
                   <p className="text-sm text-green-700 mt-1">
-                    Nedladdningen använder nu dina uppladdade filer ({Object.keys(uploadedFiles!).length} filer)
+                    Download now uses your uploaded files ({Object.keys(uploadedFiles!).length} files)
                   </p>
                 </div>
               </div>
@@ -160,31 +160,31 @@ export default function PluginDownloader({ trackingId }: PluginDownloaderProps) 
       {/* Detailed File List */}
       <Card>
         <CardContent className="p-6">
-          <h3 className="font-semibold text-lg mb-4">📁 Alla filer i ZIP-paketet</h3>
-          <p className="text-sm text-muted-foreground mb-4">Alla filer uppdaterades senast: {lastUpdated}</p>
+          <h3 className="font-semibold text-lg mb-4">📁 All Files in ZIP Package</h3>
+          <p className="text-sm text-muted-foreground mb-4">All files last updated: {lastUpdated}</p>
           
           <div className="overflow-x-auto">
-            <table className="w-full border-collapse border border-gray-200 rounded-lg overflow-hidden">
-              <thead className="bg-gray-50">
+            <table className="w-full border-collapse border border-gray-300 rounded-lg overflow-hidden">
+              <thead className="bg-gray-800 dark:bg-gray-900">
                 <tr>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Fil</th>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Storlek</th>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Beskrivning</th>
-                  <th className="border border-gray-200 px-4 py-2 text-left font-semibold">Status</th>
+                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-white">File</th>
+                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-white">Size</th>
+                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-white">Description</th>
+                  <th className="border border-gray-300 px-4 py-3 text-left font-semibold text-white">Status</th>
                 </tr>
               </thead>
               <tbody>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">heatmap-analytics.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">1.2 KB</td>
-                  <td className="border border-gray-200 px-4 py-2 text-sm">Huvudplugin-fil</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2 text-sm">Main plugin file</td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-heatmap-analytics-core.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">3.8 KB</td>
-                  <td className="border border-gray-200 px-4 py-2 text-sm">Kärn-funktionalitet</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2 text-sm">Core functionality</td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-admin-settings.php</td>
@@ -202,7 +202,7 @@ export default function PluginDownloader({ trackingId }: PluginDownloaderProps) 
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-supabase-sync.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">12.6 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Supabase API-integration</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-enhanced-cookie-banner.php</td>
@@ -214,61 +214,61 @@ export default function PluginDownloader({ trackingId }: PluginDownloaderProps) 
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-tracking-manager.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">15.2 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Spårning & analytics</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-cookie-manager.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">7.3 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Cookie-hantering</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-cookie-banner.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">7.3 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Grundläggande cookie-banner</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-data-retention.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">4.1 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Data-retention</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-google-analytics.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">5.4 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Google Analytics-integration</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-pixel-detector.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">3.9 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Pixel-detektor</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">includes/class-plugin-scanner.php</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">2.8 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Plugin-scanner</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">assets/tracking-script.js</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">11.7 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Frontend tracking-script</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">assets/external-consent.js</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">3.2 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">Extern consent-script</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
                 <tr className="hover:bg-gray-50">
                   <td className="border border-gray-200 px-4 py-2 font-mono text-sm">readme.txt</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">2.1 KB</td>
                   <td className="border border-gray-200 px-4 py-2 text-sm">WordPress plugin-readme</td>
-                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Inkluderad</span></td>
+                  <td className="border border-gray-200 px-4 py-2"><span className="text-green-600 text-sm">✓ Included</span></td>
                 </tr>
               </tbody>
             </table>
@@ -313,9 +313,9 @@ export default function PluginDownloader({ trackingId }: PluginDownloaderProps) 
           <div className="flex items-start gap-2">
             <Calendar className="h-5 w-5 text-blue-600 mt-0.5" />
             <div>
-              <p className="font-medium text-blue-800">Filuppdateringar</p>
+              <p className="font-medium text-blue-800">File Updates</p>
               <p className="text-sm text-blue-700 mt-1">
-                Alla filer uppdaterades senast: <strong>{lastUpdated}</strong>
+                All files last updated: <strong>{lastUpdated}</strong>
               </p>
               <p className="text-xs text-blue-600 mt-1">
                 Inkluderar alla dina ursprungliga filer med full Supabase-integration.

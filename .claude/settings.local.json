@@ -15,7 +15,15 @@
       "Bash(npm audit:*)",
       "Bash(npm install:*)",
       "Bash(npm run lint:*)",
-      "Bash(npm info:*)"
+      "Bash(npm info:*)",
+      "Bash(grep:*)",
+      "Bash(npx tsc:*)",
+      "Bash(npx eslint:*)",
+      "Bash(npx madge:*)",
+      "Bash(python3:*)",
+      "Bash(npm run build:*)",
+      "Bash(echo:*)",
+      "Bash(curl:*)"
     ]
   }
 }

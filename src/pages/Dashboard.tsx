@@ -39,12 +39,12 @@ export default function Dashboard() {
           />
         ) : (
           <div className="text-center py-12">
-            <h2 className="text-xl font-semibold mb-4">Välj en webbsida för att se analytics</h2>
+            <h2 className="text-xl font-semibold mb-4">Select a website to view analytics</h2>
             <p className="text-muted-foreground mb-6">
-              Du behöver först lägga till en webbsida för att börja analysera data
+              You need to add a website first to start analyzing data
             </p>
             <Button onClick={() => navigate('/installation')}>
-              Lägg till webbsida
+              Add Website
             </Button>
           </div>
         )}
