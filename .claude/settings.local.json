@@ -12,7 +12,10 @@
       "Bash(git branch:*)",
       "Bash(git push:*)",
       "Bash(npm update:*)",
-      "Bash(npm audit:*)"
+      "Bash(npm audit:*)",
+      "Bash(npm install:*)",
+      "Bash(npm run lint:*)",
+      "Bash(npm info:*)"
     ]
   }
 }

@@ -13,6 +13,7 @@ export default function PublicNavigation() {
     { to: "/cmp", label: "CMP Solution" },
     { to: "/features", label: "Features" },
     { to: "/pricing", label: "Pricing" },
+    { to: "/api", label: "API" },
     { to: "/privacy", label: "Privacy" },
     { to: "/#contact", label: "Contact" }
   ];

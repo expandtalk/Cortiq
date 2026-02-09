@@ -12,6 +12,7 @@ import CMP from "./pages/CMP";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import Privacy from "./pages/Privacy";
+import ApiDocs from "./pages/ApiDocs";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
 import Navigation from "./pages/Navigation";
@@ -35,6 +36,7 @@ const App = () => (
               <Route path="/cmp" element={<CMP />} />
               <Route path="/features" element={<Features />} />
               <Route path="/pricing" element={<Pricing />} />
+              <Route path="/api" element={<ApiDocs />} />
               <Route path="/privacy" element={<Privacy />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={
