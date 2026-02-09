@@ -131,33 +131,45 @@ export class ConsentEnforcer {
   }
 
   private getExternalScriptConfigs(): Record<string, Array<{src: string, onload?: () => void}>> {
-    return {
-      analytics: [
-        {
-          src: 'https://www.googletagmanager.com/gtag/js?id=G-XXXX',
-          onload: () => {
-            if ((window as any).gtag) {
-              (window as any).gtag('js', new Date());
-              (window as any).gtag('config', 'G-XXXX', { 
-                anonymize_ip: true,
-                allow_google_signals: false 
-              });
-            }
-          }
-        }
-      ],
-      marketing: [
-        {
-          src: 'https://connect.facebook.net/en_US/fbevents.js',
-          onload: () => {
-            if ((window as any).fbq) {
-              (window as any).fbq('init', 'YOUR_PIXEL_ID');
-              (window as any).fbq('track', 'PageView');
-            }
-          }
-        }
-      ]
+    // Get configuration from window object (set by site admin)
+    const ga4MeasurementId = (window as any).HEATMAP_GA4_ID;
+    const fbPixelId = (window as any).HEATMAP_FB_PIXEL_ID;
+
+    const configs: Record<string, Array<{src: string, onload?: () => void}>> = {
+      analytics: [],
+      marketing: []
     };
+
+    // Add GA4 script if measurement ID is provided
+    if (ga4MeasurementId) {
+      configs.analytics.push({
+        src: `https://www.googletagmanager.com/gtag/js?id=${ga4MeasurementId}`,
+        onload: () => {
+          if ((window as any).gtag) {
+            (window as any).gtag('js', new Date());
+            (window as any).gtag('config', ga4MeasurementId, {
+              anonymize_ip: true,
+              allow_google_signals: false
+            });
+          }
+        }
+      });
+    }
+
+    // Add Facebook Pixel if pixel ID is provided
+    if (fbPixelId) {
+      configs.marketing.push({
+        src: 'https://connect.facebook.net/en_US/fbevents.js',
+        onload: () => {
+          if ((window as any).fbq) {
+            (window as any).fbq('init', fbPixelId);
+            (window as any).fbq('track', 'PageView');
+          }
+        }
+      });
+    }
+
+    return configs;
   }
 
   private updateGoogleConsentMode(choices: ConsentChoices): void {

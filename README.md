@@ -1,102 +1,265 @@
-# CortIQ - Analytics för Agentic Web
+# CortIQ - Agentic Browser Analytics
 
-CortIQ är en avancerad webbanalysplattform med AI-agent tracking, cookie-free tracking och GDPR-compliant CMP-lösning för Agentic Web.
+<div align="center">
 
-**Produktions-URL**: https://cortiq.se
+**Världens första analysplattform dedikerad för AI-agenter och Agentic Web**
 
-## Arkitektur
+[![License](https://img.shields.io/badge/license-Private-red.svg)](LICENSE)
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase)](https://supabase.com/)
 
-Detta projekt använder **Supabase** som backend (redan i produktion):
-- **Frontend**: React/Vite app 
-  - Körs lokalt för utveckling (`npm run dev`)
-  - Deployas till cortiq.se för produktion
-- **Backend**: Supabase (Edge Functions + Database) - **Redan i produktion**
-  - Project: **Expandtalk analytics**
-  - Project ID: `cxmkdtgfocgbfizawlwa`
-  - URL: `https://cxmkdtgfocgbfizawlwa.supabase.co`
-  - Dashboard: https://supabase.com/dashboard/project/cxmkdtgfocgbfizawlwa
-  - **62 tabeller** och **43 database functions** är redan deployade
-  - **51 Edge Functions** är redan deployade
+[Website](https://cortiq.se) · [Dokumentation](./CLAUDE.md) · [Deployment](./DEPLOYMENT.md)
 
-## Lokal utveckling
+</div>
 
-Detta projekt är konfigurerat för lokal utveckling med Supabase som backend.
+---
 
-**Se [DEPLOYMENT.md](./DEPLOYMENT.md) för detaljerade instruktioner om deployment.**
+## 🚀 Om CortIQ
 
-### Snabbstart
+CortIQ är en avancerad webbanalysplattform som kombinerar traditionell analytics med **banbrytande AI-agent tracking** - första i sitt slag på marknaden. Plattformen hjälper företag att förstå och optimera för den nya eran av agentic web, där AI-agenter som ChatGPT Browser, Perplexity Comet och Claude Browser blir en allt större del av webbtrafiken.
 
-```sh
+### 🌟 Unika Fördelar
+
+- **🤖 First-Mover Advantage**: Första plattformen med dedikerad AI-agent tracking
+- **🔒 Cookie-Free Analytics**: 100% GDPR-compliant server-side tracking (PTS-godkänd)
+- **🔌 WordPress Plugin**: Unik 1-click installation och djup integration
+- **🎯 Nudging Technology**: Smart cookie banners för högre samtyckesfrekvens
+- **📊 Comprehensive Solution**: Allt-i-ett plattform för modern webbanalys
+
+---
+
+## ✨ Huvudfunktioner
+
+### 1. 🤖 Agentic Browser Analytics (World First!)
+
+Spåra och analysera AI-agenter som besöker din webbplats:
+
+- **Stödda AI-agenter**: ChatGPT Browser, Perplexity Comet, Claude Browser, Google Gemini, Microsoft Copilot, You.com, Phind
+- **Agent-specifika dashboards**: Se hur AI-agenter interagerar med din webbplats
+- **Session tracking**: Full resa från första request till konvertering
+- **Browser-typ analys**: Visual browser vs headless vs text-based
+- **Conversion attribution**: Mät ROI från AI-driven trafik
+- **Journey funnel**: Visualisera var AI-agenter hoppar av
+
+### 2. 🔒 Cookie-Free Server-Side Analytics
+
+- Eliminera cookie banners helt för vissa användningsområden
+- 100% GDPR-compliant tracking utan cookies
+- Server-side processing utan personuppgifter i webbläsaren
+- Bättre konvertering utan irriterande cookie-disruptioner
+- PTS-godkänd lösning (Post- och telestyrelsen)
+
+### 3. 🗺️ Visual Analytics (Heatmaps)
+
+- **Click heatmaps**: Se exakt var användare klickar
+- **Scroll heatmaps**: Förstå scroll-beteende
+- **Attention maps**: Visualisera fokusområden
+- **Device-specific views**: Separata heatmaps för desktop, tablet, mobile
+- **AI agent heatmaps**: Visuell interaktion från AI-agenter
+
+### 4. 🧪 A/B Testing & Optimization
+
+- Multivariate testing med flera varianter
+- Automatisk statistisk signifikansberäkning
+- Audience segmentation
+- ROI measurement
+- Agent-specific testing för AI-trafik
+
+### 5. 📝 Form Analytics
+
+- Form funnel visualization
+- Drop-off point identification
+- Field-level analytics
+- Completion rate tracking
+- Conversion optimization
+
+### 6. 🛡️ GDPR & Cookie Management (CMP)
+
+- Nudging cookie banners med smart teknologi
+- First-party cookie management
+- Consent management platform
+- Data retention policies
+- IP-anonymisering
+- GDPR-compliant data handling
+
+### 7. 🔌 WordPress Integration
+
+- 1-click installation via WordPress plugin
+- Djup integration med WordPress
+- Automatisk tracking utan konfiguration
+- Dashboard direkt i WordPress admin
+- **Huvudsaklig konkurrensfördel**
+
+### 8. 📈 Advanced Analytics
+
+- Real-time analytics med live-insikter
+- Anpassningsbara KPI dashboards
+- Traffic source analysis
+- Conversion tracking
+- User journey analysis
+- Navigation flow analytics
+- Behavioral alerts
+
+### 9. 🔗 External Integrations
+
+- Google Analytics 4 (GA4)
+- Google Search Console
+- Google SiteKit
+- Bing Webmaster Tools
+- Server log import och analys
+- E-commerce tracking
+
+---
+
+## 🏗️ Teknisk Stack
+
+### Frontend
+- **Framework**: React 18.3.1
+- **Build Tool**: Vite 5.4.1
+- **Language**: TypeScript 5.5.3
+- **UI Library**: shadcn-ui (Radix UI)
+- **Styling**: Tailwind CSS 3.4.11
+- **Routing**: React Router 6.26.2
+- **State Management**: TanStack Query (React Query) 5.56.2
+- **Charts**: Recharts 2.12.7
+
+### Backend
+- **Platform**: Supabase
+- **Database**: PostgreSQL (62 tabeller)
+- **Edge Functions**: 51 Deno-baserade functions
+- **Database Functions**: 43 PostgreSQL functions
+- **Authentication**: Supabase Auth
+- **Storage**: Supabase Storage
+- **Real-time**: Supabase Realtime
+
+### Deployment
+- **Frontend**: cortiq.se (Apache/SPA)
+- **Backend**: Supabase Cloud (redan i produktion)
+- **Tracking Scripts**: CDN via cortiq.se
+
+---
+
+## 🚀 Kom igång
+
+### Förutsättningar
+
+- Node.js 18+ eller Bun
+- npm eller bun package manager
+
+### Installation
+
+```bash
+# Klona repository
+git clone https://github.com/expandtalk/cortiq.git
+cd cortiq
+
 # Installera dependencies
 npm install
 # eller
 bun install
 
-# Starta utvecklingsservern
+# Kopiera environment-variabel mall
+cp .env.example .env
+# Redigera .env och fyll i dina Supabase-credentials
+
+# Starta utvecklingsserver
 npm run dev
 # eller
 bun run dev
 ```
 
-Projektet körs på `http://localhost:8080`
+Applikationen körs nu på `http://localhost:8080`
 
-### Supabase CLI-kommandon
+### Bygga för Produktion
 
-**OBS**: Supabase-backend körs redan i produktion. Du behöver bara dessa kommandon om du gör ändringar i backend.
-
-```sh
-# Länka till Supabase-projektet (första gången)
-npm run supabase:link
-
-# Deploya alla Edge Functions (endast om du ändrar functions)
-npm run supabase:deploy
-
-# Pusha databasmigrations (endast om du har nya migrations)
-npm run supabase:db:push
-
-# Reset lokala migrations (för test lokalt)
-npm run supabase:db:reset
-```
-
-**Viktigt**: 
-- Backend körs redan i produktion på Supabase
-- Du behöver bara deploya frontend till cortiq.se
-- Se [Supabase Dashboard](https://supabase.com/dashboard/project/cxmkdtgfocgbfizawlwa) för att se databasstrukturen
-
-### Bygga för produktion
-
-```sh
+```bash
+# Bygg produktionsversion
 npm run build
+
+# Innehållet i dist/ är redo för deployment
 ```
 
-Detta skapar en `dist/` mapp med optimerade filer.
+---
 
-## Teknologier
+## 📚 Dokumentation
 
-Detta projekt är byggt med:
+- **[CLAUDE.md](./CLAUDE.md)** - Fullständig projektdokumentation och arkitektur
+- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment-instruktioner och troubleshooting
+- **[INTEGRATION-GUIDE.md](./INTEGRATION-GUIDE.md)** - Guide för externa integrationer
+- **[PRIVACY-POLICY-GUIDE.md](./PRIVACY-POLICY-GUIDE.md)** - GDPR och integritetspolicy
+- **[TROUBLESHOOTING.md](./TROUBLESHOOTING.md)** - Felsökningsguide
 
-- **Vite** - Build tool och dev server
-- **TypeScript** - Typad JavaScript
-- **React** - UI-bibliotek
-- **shadcn-ui** - UI-komponenter
-- **Tailwind CSS** - Styling
-- **Supabase** - Backend och databas
-- **React Router** - Routing
+---
 
-## Deployment
+## 🗂️ Projektstruktur
 
-Se [DEPLOYMENT.md](./DEPLOYMENT.md) för detaljerade instruktioner om hur du deployer till cortiq.se.
+```
+cortiq/
+├── src/
+│   ├── components/         # React-komponenter
+│   │   ├── dashboard/      # Dashboard-komponenter (78 filer)
+│   │   ├── gdpr/           # GDPR/CMP komponenter
+│   │   └── ui/             # shadcn-ui komponenter
+│   ├── hooks/              # Custom React hooks
+│   ├── pages/              # Sidor (Index, Dashboard, Auth, etc.)
+│   ├── lib/                # Utility functions
+│   ├── integrations/
+│   │   └── supabase/       # Supabase client och types
+│   └── types/              # TypeScript type definitions
+├── supabase/
+│   ├── functions/          # 51 Edge Functions
+│   └── migrations/         # 60 databasmigrations
+├── public/
+│   ├── spa-tracking.js     # Huvud tracking script
+│   ├── ai-tracking-unified.js  # AI-agent tracking
+│   └── ...                 # Andra tracking scripts
+├── wordpress-plugin/       # WordPress plugin
+└── dist/                   # Build output (genereras)
+```
 
-## Dokumentation
+---
 
-- [Integration Guide](./INTEGRATION-GUIDE.md) - Guide för att integrera tracking på externa sajter
-- [TrafikBoost Integration](./TRAFIKBOOST-INTEGRATION.md) - Guide för TrafikBoost-integration
-- [Deployment Guide](./DEPLOYMENT.md) - Instruktioner för lokal utveckling och deployment
+## 🔐 Säkerhet
 
-## Projektnamn
+- `.env` filen innehåller känsliga credentials och är **ALDRIG** inkluderad i git
+- Använd `.env.example` som mall för nya installationer
+- Supabase Row Level Security (RLS) aktiverad på alla tabeller
+- IP-anonymisering som standard
+- GDPR-compliant data handling
 
-Detta projekt hette tidigare:
-- **Web Focus Analyzer** (WFA)
-- **Heatmap Analyzer**
+---
 
-Nu heter det **CortIQ**.
+## 🤝 Contributing
+
+Detta är ett privat repository. För frågor eller support, kontakta projektteamet.
+
+---
+
+## 📄 License
+
+Proprietary - All rights reserved. Detta projekt är privat och confidential.
+
+---
+
+## 🌐 Production
+
+- **Website**: https://cortiq.se
+- **Status**: ✅ I produktion
+- **Backend**: Supabase Cloud
+
+---
+
+## 📞 Support
+
+För teknisk support eller frågor, vänligen kontakta utvecklingsteamet.
+
+---
+
+<div align="center">
+
+**Byggt med ❤️ för Agentic Web**
+
+CortIQ © 2025
+
+</div>

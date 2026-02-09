@@ -70,14 +70,6 @@ export function FlowVisualization({
 
   const currentScreenshot = getScreenshotForPage(screenshots, selectedUrl, filters?.deviceType || 'desktop');
   
-  // Debug logging
-  console.log('FlowVisualization Debug:', {
-    selectedUrl,
-    deviceType: filters?.deviceType || 'desktop',
-    screenshots,
-    currentScreenshot
-  });
-  
   const getViewportSize = (deviceType: string) => {
     switch (deviceType?.toLowerCase()) {
       case 'mobile': return { width: 375, height: 667 };
