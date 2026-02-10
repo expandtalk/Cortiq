@@ -23,7 +23,12 @@
       "Bash(python3:*)",
       "Bash(npm run build:*)",
       "Bash(echo:*)",
-      "Bash(curl:*)"
+      "Bash(curl:*)",
+      "Bash(supabase db diff:*)",
+      "Bash(supabase link:*)",
+      "Bash(supabase db push:*)",
+      "Bash(supabase functions deploy:*)",
+      "Bash(supabase db execute:*)"
     ]
   }
 }

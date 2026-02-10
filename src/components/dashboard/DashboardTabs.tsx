@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Settings, Download, ExternalLink, Key } from 'lucide-react';
+import { ChevronDown, Settings, Download, ExternalLink, Key, Zap, Code2, Play, Globe, Database, DollarSign, TrendingUp } from 'lucide-react';
 import { OverviewTab } from './tabs/OverviewTab';
 import { HeatmapTab } from './tabs/HeatmapTab';
 import { AnalyticsTab } from './tabs/AnalyticsTab';
@@ -22,6 +22,12 @@ import { ApiKeysTab } from './tabs/ApiKeysTab';
 import { GDPRTab } from './tabs/GDPRTab';
 import { NavigationTab } from './tabs/NavigationTab';
 import { BehavioralAlertsTab } from './tabs/BehavioralAlertsTab';
+import { UserLTVTab } from './tabs/UserLTVTab';
+import { TagManager } from './TagManager';
+import { SessionRecordingList } from './SessionRecordingList';
+import { GeolocationDashboard } from './GeolocationDashboard';
+import { WarehouseConnectorManager } from './WarehouseConnectorManager';
+import { FinalFas3Features } from './FinalFas3Features';
 import type { Site, Analytics } from '@/types/dashboard';
 
 interface DashboardTabsProps {
@@ -41,7 +47,17 @@ export function DashboardTabs({ selectedSite, analytics, dateRange }: DashboardT
     { value: 'api-keys', label: 'API Keys', icon: Key }
   ];
 
+  const advancedOptions = [
+    { value: 'tag-manager', label: 'Tag Manager', icon: Code2 },
+    { value: 'session-recording', label: 'Session Recording', icon: Play },
+    { value: 'geolocation', label: 'Geolocation Maps', icon: Globe },
+    { value: 'warehouse', label: 'Data Warehouse', icon: Database },
+    { value: 'user-ltv', label: 'User LTV & Cohorts', icon: DollarSign },
+    { value: 'advanced-features', label: 'Web Vitals & White Label', icon: TrendingUp }
+  ];
+
   const currentSettingsTab = settingsOptions.find(option => option.value === activeTab);
+  const currentAdvancedTab = advancedOptions.find(option => option.value === activeTab);
 
   return (
     <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
@@ -97,7 +113,7 @@ export function DashboardTabs({ selectedSite, analytics, dateRange }: DashboardT
         {/* Settings Dropdown */}
         <DropdownMenu>
           <DropdownMenuTrigger asChild>
-            <Button 
+            <Button
               variant={settingsOptions.some(opt => opt.value === activeTab) ? "default" : "ghost"}
               className="flex items-center gap-2 h-10 px-4 py-2 whitespace-nowrap"
             >
@@ -106,12 +122,42 @@ export function DashboardTabs({ selectedSite, analytics, dateRange }: DashboardT
               <ChevronDown className="h-4 w-4" />
             </Button>
           </DropdownMenuTrigger>
-          <DropdownMenuContent 
-            align="end" 
+          <DropdownMenuContent
+            align="end"
             className="w-48 bg-card border shadow-lg z-[100]"
             sideOffset={5}
           >
             {settingsOptions.map((option) => (
+              <DropdownMenuItem
+                key={option.value}
+                onClick={() => setActiveTab(option.value)}
+                className={`cursor-pointer ${activeTab === option.value ? 'bg-muted' : ''}`}
+              >
+                <option.icon className="mr-2 h-4 w-4" />
+                {option.label}
+              </DropdownMenuItem>
+            ))}
+          </DropdownMenuContent>
+        </DropdownMenu>
+
+        {/* Advanced Features Dropdown */}
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button
+              variant={advancedOptions.some(opt => opt.value === activeTab) ? "default" : "ghost"}
+              className="flex items-center gap-2 h-10 px-4 py-2 whitespace-nowrap"
+            >
+              <Zap className="h-4 w-4" />
+              {currentAdvancedTab ? currentAdvancedTab.label : 'Advanced'}
+              <ChevronDown className="h-4 w-4" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent
+            align="end"
+            className="w-56 bg-card border shadow-lg z-[100]"
+            sideOffset={5}
+          >
+            {advancedOptions.map((option) => (
               <DropdownMenuItem
                 key={option.value}
                 onClick={() => setActiveTab(option.value)}
@@ -203,6 +249,40 @@ export function DashboardTabs({ selectedSite, analytics, dateRange }: DashboardT
 
       <TabsContent value="setup" className="space-y-6">
         <SetupTab selectedSite={selectedSite} />
+      </TabsContent>
+
+      {/* Advanced Features Tabs */}
+      <TabsContent value="tag-manager" className="space-y-6">
+        <TagManager siteId={selectedSite.id} />
+      </TabsContent>
+
+      <TabsContent value="session-recording" className="space-y-6">
+        <SessionRecordingList siteId={selectedSite.id} />
+      </TabsContent>
+
+      <TabsContent value="geolocation" className="space-y-6">
+        <GeolocationDashboard
+          siteId={selectedSite.id}
+          dateRange={{
+            from: dateRange?.from?.toISOString() || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+            to: dateRange?.to?.toISOString() || new Date().toISOString()
+          }}
+        />
+      </TabsContent>
+
+      <TabsContent value="warehouse" className="space-y-6">
+        <WarehouseConnectorManager siteId={selectedSite.id} />
+      </TabsContent>
+
+      <TabsContent value="user-ltv" className="space-y-6">
+        <UserLTVTab selectedSiteId={selectedSite.id} />
+      </TabsContent>
+
+      <TabsContent value="advanced-features" className="space-y-6">
+        <FinalFas3Features
+          siteId={selectedSite.id}
+          companyId={selectedSite.company_id || selectedSite.id}
+        />
       </TabsContent>
     </Tabs>
   );
