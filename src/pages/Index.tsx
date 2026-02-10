@@ -4,16 +4,15 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
 import PublicNavigation from "@/components/PublicNavigation";
-import ContactForm from "@/components/ContactForm";
 import heroImage from "@/assets/analytics-dashboard-hero.jpg";
 import analyticsIllustration from "@/assets/analytics-illustration.jpg";
-import { 
-  Shield, 
-  BarChart3, 
-  MousePointer, 
-  FormInput, 
-  TestTube, 
-  Globe, 
+import {
+  Shield,
+  BarChart3,
+  MousePointer,
+  FormInput,
+  TestTube,
+  Globe,
   Cookie,
   Users,
   TrendingUp,
@@ -26,7 +25,8 @@ import {
   Brain,
   Code,
   AlertTriangle,
-  Lock
+  Lock,
+  Mail
 } from "lucide-react";
 
 // Declare WFATracker on window
@@ -500,10 +500,10 @@ const Index = () => {
               AI Agent Intelligence
             </Badge>
             <h2 className="text-4xl md:text-5xl font-black mb-6 text-gradient-primary">
-              Mät och förstå AI-agenters beteende
+              Measure and Understand AI Agent Behavior
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              Först på marknaden med dedikerad AI-agentanalys. Se hur ChatGPT, Perplexity, Claude och andra AI-agenter interagerar med din sajt.
+              First on the market with dedicated AI agent analytics. See how ChatGPT, Perplexity, Claude and other AI agents interact with your site.
             </p>
           </div>
 
@@ -515,7 +515,7 @@ const Index = () => {
                 </div>
                 <h3 className="font-bold text-lg mb-2">ChatGPT Browser</h3>
                 <p className="text-sm text-muted-foreground">
-                  Spåra hur OpenAIs browser-agent crawlar och citerar ditt innehåll
+                  Track how OpenAI's browser agent crawls and cites your content
                 </p>
               </CardContent>
             </Card>
@@ -527,7 +527,7 @@ const Index = () => {
                 </div>
                 <h3 className="font-bold text-lg mb-2">Perplexity</h3>
                 <p className="text-sm text-muted-foreground">
-                  Analysera trafik från Perplexity AI och dess citeringsbeteende
+                  Analyze traffic from Perplexity AI and its citation behavior
                 </p>
               </CardContent>
             </Card>
@@ -539,7 +539,7 @@ const Index = () => {
                 </div>
                 <h3 className="font-bold text-lg mb-2">Claude Browser</h3>
                 <p className="text-sm text-muted-foreground">
-                  Följ Anthropics Claude-agent och dess interaktioner
+                  Follow Anthropic's Claude agent and its interactions
                 </p>
               </CardContent>
             </Card>
@@ -549,9 +549,9 @@ const Index = () => {
                 <div className="w-16 h-16 bg-gradient-accent rounded-2xl flex items-center justify-center mx-auto mb-4">
                   <Users className="h-8 w-8 text-white" />
                 </div>
-                <h3 className="font-bold text-lg mb-2">Egna agenter</h3>
+                <h3 className="font-bold text-lg mb-2">Custom Agents</h3>
                 <p className="text-sm text-muted-foreground">
-                  Registrera och mät dina egna AI-agenter och botar
+                  Register and measure your own AI agents and bots
                 </p>
               </CardContent>
             </Card>
@@ -562,7 +562,7 @@ const Index = () => {
               <Badge className="mb-4 bg-gradient-accent text-white mx-auto">
                 Agent Registry
               </Badge>
-              <CardTitle className="text-2xl">Vad du kan mäta med CortIQ Agent Intelligence</CardTitle>
+              <CardTitle className="text-2xl">What You Can Measure with CortIQ Agent Intelligence</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="grid md:grid-cols-2 gap-6">
@@ -571,21 +571,21 @@ const Index = () => {
                     <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <div>
                       <h4 className="font-semibold">Agent Journey Tracking</h4>
-                      <p className="text-sm text-muted-foreground">Följ hela resan från landing till konvertering för varje AI-agent</p>
+                      <p className="text-sm text-muted-foreground">Track the complete journey from landing to conversion for each AI agent</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold">Citeringsanalys</h4>
-                      <p className="text-sm text-muted-foreground">Se när och hur AI-agenter citerar ditt innehåll</p>
+                      <h4 className="font-semibold">Citation Analysis</h4>
+                      <p className="text-sm text-muted-foreground">See when and how AI agents cite your content</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold">Browsertyp-detektion</h4>
-                      <p className="text-sm text-muted-foreground">Skilj mellan visuella, headless och textbaserade agenter</p>
+                      <h4 className="font-semibold">Browser Type Detection</h4>
+                      <p className="text-sm text-muted-foreground">Distinguish between visual, headless and text-based agents</p>
                     </div>
                   </div>
                 </div>
@@ -593,22 +593,22 @@ const Index = () => {
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold">Konverteringsmål</h4>
-                      <p className="text-sm text-muted-foreground">Mät om AI-agenter leder till faktiska affärsresultat</p>
+                      <h4 className="font-semibold">Conversion Goals</h4>
+                      <p className="text-sm text-muted-foreground">Measure if AI agents lead to actual business results</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <div>
                       <h4 className="font-semibold">Custom Agent Registry</h4>
-                      <p className="text-sm text-muted-foreground">Registrera Copilot, Google AI Studio och egna botar</p>
+                      <p className="text-sm text-muted-foreground">Register Copilot, Google AI Studio and custom bots</p>
                     </div>
                   </div>
                   <div className="flex items-start space-x-3">
                     <CheckCircle className="h-5 w-5 text-primary mt-0.5 flex-shrink-0" />
                     <div>
-                      <h4 className="font-semibold">Säkerhetsanalys</h4>
-                      <p className="text-sm text-muted-foreground">Identifiera potentiellt skadliga botar vs legitima AI-agenter</p>
+                      <h4 className="font-semibold">Security Analysis</h4>
+                      <p className="text-sm text-muted-foreground">Identify potentially harmful bots vs legitimate AI agents</p>
                     </div>
                   </div>
                 </div>
@@ -616,13 +616,13 @@ const Index = () => {
 
               <div className="bg-primary/5 p-6 rounded-lg text-center">
                 <p className="text-muted-foreground mb-4">
-                  <strong className="text-foreground">Varför är detta viktigt?</strong> AI-agenter står för en växande del av webbtrafiken. 
-                  Utan dedikerad mätning missar du viktig data om hur AI interagerar med ditt innehåll.
+                  <strong className="text-foreground">Why is this important?</strong> AI agents account for a growing portion of web traffic.
+                  Without dedicated measurement, you're missing critical data about how AI interacts with your content.
                 </p>
                 <Link to="/auth">
                   <Button className="bg-gradient-primary hover-scale hover-glow">
                     <Bot className="mr-2 h-4 w-4" />
-                    Börja mäta AI-agenter
+                    Start Measuring AI Agents
                     <ArrowRight className="ml-2 h-4 w-4" />
                   </Button>
                 </Link>
@@ -1214,11 +1214,46 @@ const Index = () => {
               Ready to get started?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Send us a message and we'll get back to you within 24 hours with information about invite-only access.
+              Get in touch with us at Expandtalk for information about invite-only access.
             </p>
           </div>
-          
-          <ContactForm />
+
+          <Card className="max-w-2xl mx-auto border-2 border-primary/20 shadow-elegant">
+            <CardHeader className="text-center">
+              <CardTitle className="text-3xl text-gradient-primary">Contact Information</CardTitle>
+              <CardDescription className="text-base">
+                CortIQ is developed by Expandtalk
+              </CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-6">
+              <div className="text-center space-y-4">
+                <div className="space-y-2">
+                  <p className="text-lg font-semibold text-foreground">Daniel Larsson</p>
+                  <p className="text-muted-foreground">Expandtalk</p>
+                </div>
+
+                <div className="pt-6">
+                  <a
+                    href="https://expandtalk.se/kontakt/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-block"
+                  >
+                    <Button className="bg-gradient-primary hover-scale hover-glow text-lg px-8 py-6 h-auto">
+                      <Mail className="mr-2 h-5 w-5" />
+                      Visit Expandtalk Contact Page
+                      <ArrowRight className="ml-2 h-5 w-5" />
+                    </Button>
+                  </a>
+                </div>
+
+                <div className="pt-4 text-sm text-muted-foreground">
+                  <p>For inquiries about CortIQ and invite-only access,</p>
+                  <p>please reach out through our contact page.</p>
+                </div>
+              </div>
+            </CardContent>
+          </Card>
         </div>
       </section>
     </div>

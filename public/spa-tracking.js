@@ -1,15 +1,12 @@
 /**
- * SPA Tracking Script for CortIQ
- * Cookieless tracking for single-page JavaScript applications
- * 
+ * CortIQ Advanced Tracking Script
+ * Unified visitor profiling with AI agent detection
+ *
  * Usage:
  * <script>
- *   window.wfaConfig = {
- *     companyId: 'your-company-uuid',
- *     apiKey: 'your-api-key',
- *     apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
- *     contentType: 'page', // or 'image', 'form', etc.
- *     platform: 'web'
+ *   window.cortiqConfig = {
+ *     siteId: 'your-site-uuid',
+ *     apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1'
  *   };
  * </script>
  * <script src="/spa-tracking.js"></script>
@@ -19,32 +16,42 @@
   'use strict';
 
   // Configuration
-  const config = window.wfaConfig || {};
+  const config = window.cortiqConfig || window.wfaConfig || {};
   const API_URL = config.apiUrl || 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1';
-  const COMPANY_ID = config.companyId;
+  const SITE_ID = config.siteId || config.companyId;
   const API_KEY = config.apiKey;
   const CONTENT_TYPE = config.contentType || 'page';
   const PLATFORM = config.platform || 'web';
 
-  if (!COMPANY_ID || !API_KEY) {
-    console.error('CortIQ Tracking: Missing companyId or apiKey in window.wfaConfig');
+  if (!SITE_ID) {
+    console.error('CortIQ Tracking: Missing siteId in window.cortiqConfig');
     return;
   }
 
-  // Generate browser fingerprint (cookieless session ID)
+  // Global state
+  let VISITOR_ID = null;
+  let VISITOR_PROFILE = null;
+  let IDENTIFICATION_COMPLETE = false;
+
+  // Generate enhanced browser fingerprint
   function generateFingerprint() {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     ctx.textBaseline = 'top';
     ctx.font = '14px Arial';
-    ctx.fillText('fingerprint', 2, 2);
-    
+    ctx.fillStyle = '#f60';
+    ctx.fillRect(125, 1, 62, 20);
+    ctx.fillStyle = '#069';
+    ctx.fillText('CortIQ Fingerprint', 2, 15);
+
     const fingerprint = [
       navigator.userAgent,
       navigator.language,
       screen.colorDepth,
       screen.width + 'x' + screen.height,
       new Date().getTimezoneOffset(),
+      navigator.hardwareConcurrency || 'unknown',
+      navigator.deviceMemory || 'unknown',
       canvas.toDataURL()
     ].join('|');
 
@@ -58,6 +65,52 @@
     return 'fp_' + Math.abs(hash).toString(36);
   }
 
+  // Get canvas fingerprint
+  function getCanvasFingerprint() {
+    try {
+      const canvas = document.createElement('canvas');
+      const ctx = canvas.getContext('2d');
+      ctx.textBaseline = 'top';
+      ctx.font = '14px Arial';
+      ctx.fillStyle = '#f60';
+      ctx.fillRect(125, 1, 62, 20);
+      ctx.fillStyle = '#069';
+      ctx.fillText('CortIQ', 2, 15);
+      return canvas.toDataURL();
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Get WebGL fingerprint
+  function getWebGLFingerprint() {
+    try {
+      const canvas = document.createElement('canvas');
+      const gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl');
+      if (!gl) return null;
+
+      const debugInfo = gl.getExtension('WEBGL_debug_renderer_info');
+      if (!debugInfo) return null;
+
+      return {
+        vendor: gl.getParameter(debugInfo.UNMASKED_VENDOR_WEBGL),
+        renderer: gl.getParameter(debugInfo.UNMASKED_RENDERER_WEBGL)
+      };
+    } catch (e) {
+      return null;
+    }
+  }
+
+  // Extract UTM parameters from URL
+  function getUTMParams() {
+    const urlParams = new URLSearchParams(window.location.search);
+    return {
+      utmSource: urlParams.get('utm_source'),
+      utmMedium: urlParams.get('utm_medium'),
+      utmCampaign: urlParams.get('utm_campaign')
+    };
+  }
+
   const SESSION_ID = generateFingerprint();
 
   // Get device type
@@ -68,32 +121,118 @@
     return 'desktop';
   }
 
+  // Identify visitor (called once on page load)
+  async function identifyVisitor() {
+    try {
+      const utm = getUTMParams();
+      const webgl = getWebGLFingerprint();
+
+      const payload = {
+        siteId: SITE_ID,
+        sessionId: SESSION_ID,
+        userAgent: navigator.userAgent,
+        screenResolution: `${screen.width}x${screen.height}`,
+        viewport: `${window.innerWidth}x${window.innerHeight}`,
+        timezone: new Date().getTimezoneOffset(),
+        language: navigator.language,
+        platform: navigator.platform,
+        referrer: document.referrer,
+        currentUrl: window.location.href,
+        utmSource: utm.utmSource,
+        utmMedium: utm.utmMedium,
+        utmCampaign: utm.utmCampaign,
+        canvasFingerprint: getCanvasFingerprint(),
+        webglFingerprint: webgl ? JSON.stringify(webgl) : null
+      };
+
+      const response = await fetch(`${API_URL}/visitor-identification`, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json'
+        },
+        body: JSON.stringify(payload)
+      });
+
+      if (response.ok) {
+        const result = await response.json();
+        if (result.success) {
+          VISITOR_ID = result.visitor.visitorId;
+          VISITOR_PROFILE = result.visitor;
+          IDENTIFICATION_COMPLETE = true;
+
+          console.log('CortIQ Visitor identified:', {
+            id: VISITOR_ID,
+            type: result.visitor.visitorType,
+            isNew: result.visitor.isNewVisitor,
+            segments: result.visitor.segments
+          });
+
+          // Fire custom event for other scripts to listen to
+          window.dispatchEvent(new CustomEvent('cortiq:visitor-identified', {
+            detail: result.visitor
+          }));
+
+          return result.visitor;
+        }
+      } else {
+        console.warn('CortIQ Visitor identification failed:', await response.text());
+      }
+    } catch (error) {
+      console.error('CortIQ Visitor identification error:', error);
+    }
+
+    IDENTIFICATION_COMPLETE = true;
+    return null;
+  }
+
+  // Wait for visitor identification before tracking
+  async function waitForIdentification() {
+    if (IDENTIFICATION_COMPLETE) return;
+
+    // Wait max 3 seconds for identification
+    const timeout = 3000;
+    const start = Date.now();
+
+    while (!IDENTIFICATION_COMPLETE && (Date.now() - start) < timeout) {
+      await new Promise(resolve => setTimeout(resolve, 100));
+    }
+  }
+
   // Track event
   async function trackEvent(eventType, contentId, additionalMetadata = {}) {
     try {
+      // Wait for visitor identification
+      await waitForIdentification();
+
       const metadata = {
         user_agent: navigator.userAgent,
         referrer: document.referrer,
         device_type: getDeviceType(),
         url: window.location.href,
+        visitor_id: VISITOR_ID,
+        visitor_type: VISITOR_PROFILE?.visitorType,
         ...additionalMetadata
       };
 
       const payload = {
-        company_id: COMPANY_ID,
+        company_id: SITE_ID, // Support old config
+        site_id: SITE_ID,
         content_type: CONTENT_TYPE,
         content_id: contentId || window.location.pathname,
         event_type: eventType,
         platform: PLATFORM,
         session_id: SESSION_ID,
+        visitor_id: VISITOR_ID,
         metadata: metadata,
         timestamp: Date.now()
       };
 
       const response = await fetch(`${API_URL}/track-event`, {
         method: 'POST',
-        headers: {
+        headers: API_KEY ? {
           'Authorization': `Bearer ${API_KEY}`,
+          'Content-Type': 'application/json'
+        } : {
           'Content-Type': 'application/json'
         },
         body: JSON.stringify(payload)
@@ -171,27 +310,39 @@
   window.addEventListener('popstate', checkPathChange);
 
   // Public API
-  window.WFATracker = {
+  window.CortIQ = window.WFATracker = {
     track: trackEvent,
     trackView: trackPageView,
     trackClick: (contentId, metadata) => trackEvent('click', contentId, metadata),
     trackConversion: (contentId, metadata) => trackEvent('conversion', contentId, metadata),
-    getSessionId: () => SESSION_ID
+    getSessionId: () => SESSION_ID,
+    getVisitorId: () => VISITOR_ID,
+    getVisitorProfile: () => VISITOR_PROFILE,
+    identify: identifyVisitor
   };
 
   // Initialize
-  console.log('CortIQ Tracking initialized for company:', COMPANY_ID);
-  console.log('Session ID:', SESSION_ID);
+  async function initialize() {
+    console.log('CortIQ Tracking initialized');
+    console.log('Site ID:', SITE_ID);
+    console.log('Session ID:', SESSION_ID);
 
-  // Track initial page view
-  if (document.readyState === 'loading') {
-    document.addEventListener('DOMContentLoaded', trackPageView);
-  } else {
+    // Identify visitor first
+    await identifyVisitor();
+
+    // Track initial page view
     trackPageView();
+
+    // Setup automatic tracking
+    setupClickTracking();
+    setupConversionTracking();
   }
 
-  // Setup automatic tracking
-  setupClickTracking();
-  setupConversionTracking();
+  // Start initialization
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initialize);
+  } else {
+    initialize();
+  }
 
 })();

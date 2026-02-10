@@ -1,6 +1,6 @@
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
-import { BarChart3, Menu, X } from "lucide-react";
+import { BarChart3, Menu, X, Github } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
 import { useState } from "react";
@@ -15,7 +15,7 @@ export default function PublicNavigation() {
     { to: "/pricing", label: "Pricing" },
     { to: "/api", label: "API" },
     { to: "/privacy", label: "Privacy" },
-    { to: "/#contact", label: "Contact" }
+    { to: "/contact", label: "Contact" }
   ];
 
   return (
@@ -32,9 +32,9 @@ export default function PublicNavigation() {
         {/* Desktop Navigation Links */}
         <div className="hidden md:flex items-center space-x-8">
           {navLinks.map((link) => (
-            <Link 
+            <Link
               key={link.to}
-              to={link.to} 
+              to={link.to}
               className="text-foreground hover:text-primary transition-colors font-medium"
             >
               {link.label}
@@ -44,6 +44,14 @@ export default function PublicNavigation() {
         
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center space-x-4">
+          <a
+            href="https://github.com/expandtalk/cortiq"
+            target="_blank"
+            rel="noopener noreferrer"
+            className="text-foreground hover:text-primary transition-colors"
+          >
+            <Github className="h-5 w-5" />
+          </a>
           <ThemeToggle />
           <Link to="/auth">
             <Button variant="ghost" className="hover-lift">Log in</Button>
@@ -85,6 +93,16 @@ export default function PublicNavigation() {
 
                 {/* Mobile Actions */}
                 <div className="flex flex-col space-y-3 pt-6 border-t">
+                  <a
+                    href="https://github.com/expandtalk/cortiq"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center space-x-2 text-foreground hover:text-primary transition-colors py-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    <Github className="h-5 w-5" />
+                    <span className="font-medium">GitHub</span>
+                  </a>
                   <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
                     <Button variant="outline" className="w-full">
                       Log in

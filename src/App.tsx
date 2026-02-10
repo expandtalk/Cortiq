@@ -12,6 +12,7 @@ import CMP from "./pages/CMP";
 import Features from "./pages/Features";
 import Pricing from "./pages/Pricing";
 import Privacy from "./pages/Privacy";
+import Contact from "./pages/Contact";
 import ApiDocs from "./pages/ApiDocs";
 import Dashboard from "./pages/Dashboard";
 import Auth from "./pages/Auth";
@@ -38,6 +39,7 @@ const App = () => (
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/api" element={<ApiDocs />} />
               <Route path="/privacy" element={<Privacy />} />
+              <Route path="/contact" element={<Contact />} />
               <Route path="/auth" element={<Auth />} />
               <Route path="/dashboard" element={
                 <ProtectedRoute>
