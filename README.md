@@ -1,328 +1,249 @@
-# CortIQ - Agentic Browser Analytics
+# CortIQ - Agentic Browser Analytics Platform
 
 <div align="center">
 
-**World's first analytics platform dedicated to AI agents and the Agentic Web**
+**World's first analytics platform with dedicated AI agent tracking**
 
 [![License](https://img.shields.io/badge/license-Private-red.svg)](LICENSE)
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase)](https://supabase.com/)
 
-[Website](https://cortiq.se) · [Documentation](./CLAUDE.md) · [Deployment](./DEPLOYMENT.md)
+[🌐 Website](https://cortiq.se) · [📚 Full Documentation](./CLAUDE.md) · [🚀 Deployment Guide](./DEPLOYMENT.md) · [📖 Docs Index](./docs/INDEX.md)
 
 </div>
 
 ---
 
+## 📋 Table of Contents
+
+- [About CortIQ](#-about-cortiq)
+- [Key Features](#-key-features)
+- [Dashboard Overview](#-dashboard-overview)
+- [Tech Stack](#-tech-stack)
+- [Getting Started](#-getting-started)
+- [Development](#-development)
+- [Deployment](#-deployment)
+- [Documentation](#-documentation)
+- [Project Structure](#-project-structure)
+
+---
+
 ## 🚀 About CortIQ
 
-CortIQ is an advanced web analytics platform that combines traditional analytics with **groundbreaking AI-agent tracking** - the first of its kind on the market. The platform helps businesses understand and optimize for the new era of agentic web, where AI agents like ChatGPT Browser, Perplexity Comet, and Claude Browser are becoming an increasingly significant part of web traffic.
+CortIQ is an advanced web analytics platform designed for the **Agentic Web** - the new era where AI agents (ChatGPT Browser, Perplexity, Claude, etc.) are becoming a significant portion of web traffic. Industry forecasts predict that 10-15% of all web traffic will come from AI agents within three years.
 
-### 🌟 Unique Advantages
+### 🎯 Mission
 
-- **🤖 First-Mover Advantage**: First platform with dedicated AI-agent tracking
-- **🔒 Cookie-Free Analytics**: 100% GDPR-compliant server-side tracking (PTS-approved)
-- **🔌 WordPress Plugin**: Unique 1-click installation and deep integration
-- **🎯 Nudging Technology**: Smart cookie banners for higher consent rates
-- **📊 Comprehensive Solution**: All-in-one platform for modern web analytics
+Be the first platform to help businesses understand, optimize for, and capitalize on AI-driven web traffic.
+
+### 🌟 Unique Value Propositions
+
+| Feature | Benefit |
+|---------|---------|
+| 🤖 **AI Agent Analytics** | First-mover advantage with dedicated AI agent tracking |
+| 🔒 **Cookie-Free Tracking** | 100% GDPR-compliant server-side analytics (PTS-approved) |
+| 🔌 **WordPress Plugin** | Unique 1-click installation with deep integration |
+| 📊 **Comprehensive Platform** | All-in-one solution: heatmaps, A/B tests, forms, sessions |
+| 🎯 **Advanced Features** | Tag Manager, Session Recording, Data Warehouse, LTV/Cohorts |
+
+### 📈 Production Status
+
+- **Live Production**: https://cortiq.se
+- **Backend**: Supabase (Expandtalk Analytics)
+- **Database**: 62 tables, 43 database functions
+- **Edge Functions**: 51 serverless functions
+- **Frontend Build**: 2.4 MB optimized bundle
 
 ---
 
 ## ✨ Key Features
 
-### 🎯 **FAS 1: Foundation Features (8 tasks)**
+### 🤖 Agentic Browser Analytics (World First!)
 
-#### 1. 📊 Core Analytics
-- **Dashboard & Session Tracking**: Real-time visitor dashboard with session overview
-- **Traffic Sources**: UTM tracking, source attribution, traffic analysis
-- **Device & Browser Analytics**: Device detection, browser versions, OS tracking
-- **Geographic Analytics**: Country-level, region tracking with location insights
-- **User Journeys**: Multi-step path analysis, funnel visualization
-- **Conversion Funnels**: Multi-step funnel creation, completion tracking
-- **Landing Page Performance**: Entry page analysis, bounce rates
-- **Goal Tracking**: Goal definition, completion metrics, goal-based reporting
+**The industry's first dedicated AI agent analytics:**
 
----
+- Track ChatGPT Browser, Perplexity Comet, Claude Browser, Gemini, and more
+- AI agent journey funnels (see where agents drop off)
+- Browser type detection (Visual vs Headless vs Text-based)
+- Citation tracking and training crawler identification
+- Agent-specific conversion attribution
+- Agent conversion rate optimization
 
-### 🚀 **FAS 2: Advanced Analytics (14 tasks)**
-
-#### 2. 🤖 Agentic Browser Analytics (World First!)
-
-Track and analyze AI agents visiting your website:
-
-- **Supported AI Agents**: ChatGPT Browser, Perplexity Comet, Claude Browser, Google Gemini, Microsoft Copilot, You.com, Phind
-- **Agent-specific dashboards**: See how AI agents interact with your website
-- **Session tracking**: Complete journey from first request to conversion
-- **Browser-type analysis**: Visual browser vs headless vs text-based
-- **Conversion attribution**: Measure ROI from AI-driven traffic
-- **Journey funnel**: Visualize where AI agents drop off
-
-#### 3. 💡 Real-time Analytics
-- Live visitor counter and event stream
-- Instant notifications for key events
-- Real-time conversion tracking
-- Live heatmap updates
-
-#### 4. 🗺️ Visual Analytics (Heatmaps & Recording)
-
-- **Click heatmaps**: See exactly where users click
-- **Scroll heatmaps**: Understand scroll behavior
-- **Attention maps**: Visualize focus areas
-- **Session recording**: Full session playback with rrweb
-- **Device-specific views**: Separate heatmaps for desktop, tablet, mobile
-- **AI agent heatmaps**: Visual interaction from AI agents
-
-#### 5. 📝 Form Analytics
-
-- Form funnel visualization
-- Drop-off point identification
-- Field-level analytics
-- Completion rate tracking
-- Conversion optimization
-- Field interaction tracking
-
-#### 6. 🧪 A/B Testing & Experimentation
-
-- Multivariate testing with multiple variants
-- Automatic statistical significance calculation
-- Audience segmentation
-- ROI measurement
-- Agent-specific testing for AI traffic
-- Version control and rollback
-
-#### 7. 🔍 Event & Behavior Analytics
-
-- Custom event tracking
-- Behavioral pattern detection
-- User segmentation
-- Behavioral alerts
-- Anomaly detection
-
-#### 8. 📈 Attribution & Analytics
-
-- Marketing attribution (first-click, last-click, linear, time-decay)
-- Multi-touch attribution
-- ROI analysis
-- Channel performance
-- Custom report builder
-
-#### 9. 🗺️ Advanced Geolocation with Map
-
-- Interactive world map with Leaflet.js
-- Country-level heatmaps
-- Geographic drill-down analytics
-- Visitor clustering
-- Geographic hierarchy analysis
-- Custom geographic segments
-
-#### 10. 🔌 Platform Integrations
-
-- **WordPress Integration**: 1-click plugin installation, deep WordPress integration
-- **Google Analytics 4**: Full GA4 API integration, data synchronization
-- **Google Search Console**: Keyword tracking, search performance
-- **Server-side Tracking**: Server log import and analysis
-- **Media Analytics**: Video/audio tracking with engagement metrics
-  - Play/pause/seek tracking
-  - Completion rates
-  - Quality distribution
-  - Engagement metrics
-
-#### 11. 💾 Data Warehouse Connectors
-
-- **BigQuery Integration**: Google BigQuery data sync
-- **Snowflake Integration**: Snowflake data warehouse connection
-- **Redshift Integration**: AWS Redshift data sync
-- **PostgreSQL Integration**: Direct PostgreSQL database sync
-- **MySQL Integration**: MySQL database connection
-- **Databricks Integration**: Databricks analytics sync
-- Connection testing, schema import, automated sync jobs
-
-#### 12. 📍 Advanced Content Tracking
-
-- Element-level interaction tracking
-- Content performance analytics
-- Form field analytics with drop-off
-- Scroll depth tracking
-- Content heatmap visualization
-- Content recommendations engine
+**Accessible via:** `AI Traffic` and `AI Agents` tabs
 
 ---
 
-### 👑 **FAS 3: Enterprise Features (10 tasks)**
+### 🎯 Core Analytics
 
-#### 13. 🔐 Security & Code Injection Prevention
+**Standard analytics done right:**
 
-- Comprehensive security guidelines (OWASP Top 10)
-- SQL injection prevention
-- XSS prevention measures
-- CSRF protection
-- Rate limiting middleware
-- ESLint security rules
-- Security audit report
+- Real-time visitor dashboard
+- Traffic sources & UTM tracking
+- Device & browser analytics
+- Geographic analytics
+- User journey analysis
+- Conversion funnel tracking
+- KPI dashboards with customization
+- Behavioral alerts & anomaly detection
 
-#### 14. 🎨 White Label Customization
-
-- Custom company branding
-- Logo upload and configuration
-- Primary/secondary color customization
-- Custom domain support
-- Custom footer text
-- CortIQ branding toggle
-- Complete white-label experience
-
-#### 15. 👥 Cohort Analysis
-
-- Cohort creation and management
-- User grouping and segmentation
-- Week-by-week retention rates
-- Retention curve analysis
-- Cohort comparison
-- Cohort lifecycle tracking
-
-#### 16. ⚡ SEO Web Vitals
-
-- Core Web Vitals tracking (LCP, FID, CLS, FCP, TTFB)
-- Performance scoring (0-100)
-- SEO score calculation
-- Performance trend analysis
-- Device-specific vitals
-- Performance recommendations
-
-#### 17. 🔐 Enterprise Security (SAML SSO)
-
-- SAML 2.0 single sign-on
-- Attribute mapping
-- Enterprise authentication
-- Session management
-- Multi-provider support
-- Secure credential handling
-
-#### 18. 🔒 Cookie Management (GDPR/CMP)
-
-- Nudging cookie banners with smart technology
-- First-party cookie management
-- Consent management platform
-- Data retention policies
-- IP anonymization
-- GDPR-compliant data handling
-- PTS-approved solution (Swedish Post and Telecom Authority)
-
-#### 19. 📊 Custom Reports
-
-- Report builder interface
-- Custom metric selection
-- Scheduled report delivery
-- Report templating
-- Export to PDF/CSV/Excel
-- Email delivery automation
-
-#### 20. 🏢 Advanced User Segmentation
-
-- Complex rule engine
-- AND/OR logic combinations
-- Dynamic segmentation
-- Segment-based metrics
-- Real-time segment updates
-- Behavioral segment triggers
-
-#### 21. 🏷️ Tag Manager System
-
-- Tag creation and management
-- Tag firing rules with conditions
-- Data layer variable management
-- Tag templates for popular services
-- Tag versioning and rollback
-- Tag testing (preview/QA/production)
-- Audit logging for all tag changes
-- Pre-built templates:
-  - Google Analytics
-  - Meta Pixel
-  - Hotjar
-  - Intercom
-  - Segment
-  - Klaviyo
-  - Custom HTML/JavaScript
-
-#### 22. 📈 Advanced Segmentation & Analytics
-
-- Segment performance tracking
-- Conversion rates by segment
-- Segment-specific KPIs
-- Segment lifetime value
-- Behavioral segment analysis
-- Custom segment metrics
+**Accessible via:** `Overview`, `Analytics`, `KPI Dashboard`, `Segments`, `Navigation`, `Alerts` tabs
 
 ---
 
-## 🏗️ Tech Stack
+### 🔒 Privacy-First Analytics
+
+**GDPR-compliant tracking without compromise:**
+
+- **Cookie-Free Analytics**: Server-side tracking without browser cookies
+- **GDPR Compliance**: PTS-approved, no personal data in browser
+- **Cookie Consent Management (CMP)**: Smart nudging technology
+- **IP Anonymization**: Automatic IP address anonymization
+- **Data Retention**: Configurable per-site (default: 730 days)
+
+**Accessible via:** `Cookie-Free` tab, Settings → `GDPR`
+
+---
+
+### 🎨 Visual Analytics
+
+**See what users see:**
+
+- **Click Heatmaps**: Exact click positions with density visualization
+- **Device-Specific Views**: Separate heatmaps for desktop/tablet/mobile
+- **Session Recording**: Full session replay with rrweb player
+- **AI Agent Recording**: Record AI agent interactions
+
+**Accessible via:** `Heatmap` tab, Advanced → `Session Recording`
+
+---
+
+### 🧪 Optimization Tools
+
+**Test, optimize, convert:**
+
+- **A/B Testing**: Statistical significance calculations
+- **Form Analytics**: Field-level drop-off analysis
+- **Conversion Funnels**: Multi-step funnel visualization
+- **Page Performance**: Landing page optimization
+
+**Accessible via:** `A/B Testing`, `Forms` tabs
+
+---
+
+### ⚡ Advanced Features (Advanced Dropdown)
+
+Professional-grade features for power users:
+
+| Feature | Description | Status |
+|---------|-------------|--------|
+| **Tag Manager** | Manage tracking tags without code | ✅ Production |
+| **Session Recording** | Full session replay with rrweb | ✅ Production |
+| **Geolocation Maps** | Interactive Leaflet.js world map | ✅ Production |
+| **Data Warehouse** | Sync to BigQuery, Snowflake, Redshift | ✅ Production |
+| **User LTV & Cohorts** | Lifetime value + cohort analysis | ✅ Production |
+| **Web Vitals** | Core Web Vitals (LCP, FID, CLS) | ✅ Production |
+| **White Label** | Custom branding & colors | ✅ Production |
+
+**Accessible via:** Advanced dropdown (⚡ button in dashboard)
+
+---
+
+### 🔌 Integrations
+
+**Connect with your existing tools:**
+
+- Google Analytics 4 (full API integration)
+- Google Search Console (keyword tracking)
+- Google SiteKit (WordPress integration)
+- Bing Webmaster Tools
+- Server log import
+- E-commerce tracking
+
+**Accessible via:** Settings → `External Integrations`
+
+---
+
+## 📊 Dashboard Overview
+
+### Main Navigation (15 Tabs)
+
+```
+┌─ Overview          → Dashboard summary
+├─ Analytics         → Traffic sources, devices, funnels
+├─ Ads (GA4)         → Google Analytics paid ads
+├─ Ads (Server)      → Server-side ad tracking
+├─ Cookie-Free       → Cookieless analytics
+├─ Heatmap           → Click heatmaps
+├─ Forms             → Form analytics
+├─ A/B Testing       → Experiments & tests
+├─ AI Traffic        → AI agent analytics
+├─ AI Agents         → AI bot intelligence
+├─ KPI Dashboard     → Custom KPIs
+├─ KPI Catalog       → Predefined KPIs
+├─ Segments          → User segmentation
+├─ Navigation        → Navigation flow
+└─ Alerts            → Behavioral alerts
+```
+
+### Settings Dropdown (4 Options)
+
+```
+⚙️ Settings
+├─ Setup              → Site configuration
+├─ GDPR               → Privacy & compliance
+├─ External Integrations → GA4, Search Console
+└─ API Keys           → API access management
+```
+
+### Advanced Dropdown (6 Options)
+
+```
+⚡ Advanced
+├─ Tag Manager        → Manage tracking tags
+├─ Session Recording  → Session replay
+├─ Geolocation Maps   → Geographic analytics
+├─ Data Warehouse     → Data sync
+├─ User LTV & Cohorts → Lifetime value
+└─ Web Vitals         → Performance metrics
+```
+
+---
+
+## 🛠 Tech Stack
 
 ### Frontend
-- **Framework**: React 18.3.1
-- **Build Tool**: Vite 5.4.1
-- **Language**: TypeScript 5.5.3
-- **UI Library**: shadcn-ui (Radix UI)
-- **Styling**: Tailwind CSS 3.4.11
-- **Routing**: React Router 6.26.2
-- **State Management**: TanStack Query (React Query) 5.56.2
-- **Charts**: Recharts 2.12.7
-- **Mapping**: Leaflet.js 1.9+ with React Leaflet
-- **Session Recording**: rrweb (session replay)
-- **Icons**: Lucide React (462+ icons)
-- **Forms**: React Hook Form 7.53.0
-- **Validation**: Zod 3.23.8 (TypeScript-first schema validation)
+
+| Technology | Version | Purpose |
+|------------|---------|---------|
+| **React** | 18.3.1 | UI framework |
+| **TypeScript** | 5.5.3 | Type safety |
+| **Vite** | 5.4.1 | Build tool |
+| **Tailwind CSS** | 3.4.11 | Styling |
+| **shadcn/ui** | Latest | UI components (Radix UI) |
+| **TanStack Query** | 5.56.2 | Data fetching & caching |
+| **React Router** | 6.26.2 | Routing |
+| **Recharts** | 2.12.7 | Data visualization |
+| **Leaflet.js** | 1.9.4 | Map visualization |
+| **rrweb** | 2.0.0-alpha.11 | Session recording |
 
 ### Backend
-- **Platform**: Supabase
-- **Database**: PostgreSQL (62+ tables, 100+ indexes)
-- **Edge Functions**: 51+ Deno-based serverless functions
-- **Database Functions**: 43+ PostgreSQL stored functions
-- **Authentication**: Supabase Auth + SAML 2.0
-- **Storage**: Supabase Storage (file uploads)
-- **Real-time**: Supabase Realtime (WebSocket subscriptions)
-- **Row Level Security**: 50+ RLS policies for multi-tenancy
-- **Rate Limiting**: Custom middleware with sliding window algorithm
 
-### Data Integrations
-- **Google Analytics 4**: Full API integration
-- **Google Search Console**: Keyword tracking
-- **BigQuery**: Data warehouse sync
-- **Snowflake**: Data warehouse sync
-- **AWS Redshift**: Data warehouse sync
-- **PostgreSQL**: Database connector
-- **MySQL**: Database connector
-- **Databricks**: Data warehouse sync
-- **WordPress**: Plugin + tracking integration
+| Technology | Purpose |
+|------------|---------|
+| **Supabase** | Backend-as-a-Service |
+| **PostgreSQL** | Database (62 tables) |
+| **Edge Functions** | Serverless compute (51 functions) |
+| **Row Level Security** | Data access control |
+| **Supabase Auth** | Authentication |
+| **Supabase Storage** | File storage |
 
-### Deployment
-- **Frontend**: cortiq.se (Apache/SPA)
-- **Backend**: Supabase Cloud (production)
-- **Tracking Scripts**: CDN via cortiq.se
-- **Database**: PostgreSQL in Supabase Cloud
-- **Edge Functions**: Deno runtime in Supabase
+### Infrastructure
 
----
-
-## 📊 Project Completion Status
-
-### ✅ **32/32 Tasks Complete (100%)**
-
-| Phase | Tasks | Status |
-|-------|-------|--------|
-| **Fas 1** - Foundation | 8 | ✅ Complete |
-| **Fas 2** - Advanced Analytics | 14 | ✅ Complete |
-| **Fas 3** - Enterprise Features | 10 | ✅ Complete |
-| **TOTAL** | **32** | **✅ 100%** |
-
-### Implementation Statistics
-- **Database Tables**: 62+ with 100+ indexes
-- **Edge Functions**: 51+ serverless functions
-- **React Components**: 95+ dashboard components
-- **Type Definition Files**: 11+ TypeScript files
-- **Utility Libraries**: 15+ helper modules
-- **Documentation**: 22+ markdown guides
-- **Lines of Code**: 50,000+
-- **Code Quality**: 98% TypeScript coverage, 92% JSDoc coverage
+- **Production URL**: https://cortiq.se
+- **Supabase Project**: `cxmkdtgfocgbfizawlwa`
+- **Database Functions**: 43 custom PL/pgSQL functions
+- **Edge Functions**: 51 Deno TypeScript functions
 
 ---
 
@@ -330,236 +251,273 @@ Track and analyze AI agents visiting your website:
 
 ### Prerequisites
 
-- Node.js 18+ or Bun
-- npm or bun package manager
+```bash
+Node.js >= 18.x
+npm >= 9.x
+Git
+```
 
 ### Installation
 
 ```bash
-# Clone repository
+# Clone repository (private)
 git clone https://github.com/expandtalk/cortiq.git
 cd cortiq
 
 # Install dependencies
 npm install
-# or
-bun install
-
-# Copy environment variable template
-cp .env.example .env
-# Edit .env and fill in your Supabase credentials
 
 # Start development server
 npm run dev
-# or
-bun run dev
 ```
 
-The application now runs on `http://localhost:8080`
+The application will be available at `http://localhost:8080`
 
-### Build for Production
+### Environment Setup
+
+The project uses Supabase in production. Environment variables are handled automatically via Vite:
+
+```env
+VITE_SUPABASE_URL="https://cxmkdtgfocgbfizawlwa.supabase.co"
+VITE_SUPABASE_PUBLISHABLE_KEY="eyJ..." # Client-side anon key
+```
+
+**Note**: The `.env` file is gitignored. Service role keys are NEVER committed to the repository.
+
+---
+
+## 💻 Development
+
+### Available Scripts
 
 ```bash
-# Build production version
+# Development
+npm run dev              # Start dev server (http://localhost:8080)
+npm run build            # Build for production
+npm run preview          # Preview production build
+
+# Supabase
+npm run supabase:link    # Link to Supabase project
+npm run supabase:deploy  # Deploy edge functions
+npm run supabase:db:push # Push database migrations
+
+# Code Quality
+npm run lint             # Run ESLint
+```
+
+### Development Workflow
+
+1. **Make changes** in `src/` directory
+2. **Test locally** with `npm run dev`
+3. **Build** with `npm run build` to verify
+4. **Commit** changes with descriptive messages
+5. **Push** to GitHub
+
+### Code Style
+
+- TypeScript strict mode enabled
+- ESLint + Security plugin configured
+- Prettier for formatting
+- Component structure: shadcn/ui conventions
+
+---
+
+## 🚀 Deployment
+
+### Frontend Deployment
+
+```bash
+# 1. Build production bundle
 npm run build
 
-# Contents of dist/ are ready for deployment
+# 2. Output: dist/ directory (2.4 MB optimized)
+
+# 3. Deploy to cortiq.se via FTP/SFTP or CI/CD
 ```
+
+### Backend (Supabase)
+
+Backend is already in production. For updates:
+
+```bash
+# Deploy edge functions
+npm run supabase:deploy
+
+# Run database migrations (manual via Dashboard)
+# See DEPLOYMENT.md for detailed instructions
+```
+
+**Full deployment guide**: [DEPLOYMENT.md](./DEPLOYMENT.md)
 
 ---
 
 ## 📚 Documentation
 
-### Project Overview
-- **[CLAUDE.md](./CLAUDE.md)** - Complete project documentation and architecture
-- **[FINAL_COMPLETION_REPORT.md](./FINAL_COMPLETION_REPORT.md)** - 100% project completion report (all 32 tasks)
-- **[PROJECT_STATUS.txt](./PROJECT_STATUS.txt)** - Comprehensive project status and metrics
+### Core Documentation
 
-### Deployment & Configuration
-- **[DEPLOYMENT.md](./DEPLOYMENT.md)** - Deployment instructions and troubleshooting
-- **[INTEGRATION-GUIDE.md](./INTEGRATION-GUIDE.md)** - Guide for external integrations
-- **[SENTRISK-INTEGRATION.md](./SENTRISK-INTEGRATION.md)** - Sentrisk integration guide
+| Document | Description |
+|----------|-------------|
+| **[CLAUDE.md](./CLAUDE.md)** | Complete project documentation (Swedish) |
+| **[DEPLOYMENT.md](./DEPLOYMENT.md)** | Production deployment guide |
+| **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** | System architecture & design |
 
-### Feature Implementation Guides
-- **[GEOLOCATION_GUIDE.md](./GEOLOCATION_GUIDE.md)** - Advanced geolocation with maps implementation
-- **[MEDIA_ANALYTICS_GUIDE.md](./MEDIA_ANALYTICS_GUIDE.md)** - Media analytics (video/audio) setup
-- **[DATA_WAREHOUSE_GUIDE.md](./DATA_WAREHOUSE_GUIDE.md)** - Data warehouse connector configuration
-- **[CONTENT_TRACKING_ADVANCED_GUIDE.md](./CONTENT_TRACKING_ADVANCED_GUIDE.md)** - Advanced content tracking
+### Feature Guides
 
-### Security & Compliance
-- **[security-guidelines.md](./security-guidelines.md)** - OWASP Top 10 security guidelines
-- **[SECURITY_AUDIT_REPORT.md](./SECURITY_AUDIT_REPORT.md)** - Complete security audit findings
-- **[SECURITY_IMPLEMENTATION_SUMMARY.md](./SECURITY_IMPLEMENTATION_SUMMARY.md)** - Security implementation details
-- **[RLS_POLICIES_TEMPLATE.md](./RLS_POLICIES_TEMPLATE.md)** - Row Level Security policy templates
+| Guide | Topic |
+|-------|-------|
+| **[DATA_WAREHOUSE_GUIDE.md](./DATA_WAREHOUSE_GUIDE.md)** | Data warehouse connectors |
+| **[GEOLOCATION_GUIDE.md](./GEOLOCATION_GUIDE.md)** | Geolocation analytics |
+| **[CONTENT_TRACKING_ADVANCED_GUIDE.md](./CONTENT_TRACKING_ADVANCED_GUIDE.md)** | Content tracking |
+| **[MEDIA_ANALYTICS_GUIDE.md](./MEDIA_ANALYTICS_GUIDE.md)** | Video/audio analytics |
 
-### API & Reference
-- **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** - REST API reference and examples
-- **[FAS_2_COMPLETION_SUMMARY.md](./FAS_2_COMPLETION_SUMMARY.md)** - Detailed Fas 2 completion summary
+### Integration Guides
 
-### Privacy & Legal
-- **[PRIVACY-POLICY-GUIDE.md](./PRIVACY-POLICY-GUIDE.md)** - GDPR and privacy policy guidance
+| Guide | Topic |
+|-------|-------|
+| **[INTEGRATION-GUIDE.md](./INTEGRATION-GUIDE.md)** | External integrations |
+| **[API_DOCUMENTATION.md](./API_DOCUMENTATION.md)** | API reference |
+
+### Operational
+
+| Document | Purpose |
+|----------|---------|
+| **[DEPLOYMENT_CHECKLIST.md](./DEPLOYMENT_CHECKLIST.md)** | Pre-deployment checklist |
+| **[MONITORING_SETUP.md](./MONITORING_SETUP.md)** | Monitoring & alerts |
+| **[QA_ACTION_ITEMS.md](./QA_ACTION_ITEMS.md)** | Quality assurance |
+
+**Full documentation index**: [docs/INDEX.md](./docs/INDEX.md)
 
 ---
 
-## 🗂️ Project Structure
+## 📁 Project Structure
 
 ```
 cortiq/
 ├── src/
 │   ├── components/
-│   │   ├── dashboard/           # 95+ Dashboard components (all features)
-│   │   │   ├── tabs/            # Dashboard tab components
-│   │   │   ├── charts/          # Chart visualizations
-│   │   │   ├── maps/            # Geolocation maps
-│   │   │   ├── integrations/    # Integration components
-│   │   │   ├── GeolocationDashboard.tsx      # Maps & geolocation
-│   │   │   ├── HeatmapAnalytics.tsx          # Heatmap visualizations
-│   │   │   ├── MediaAnalyticsDashboard.tsx   # Video/audio analytics
-│   │   │   ├── WarehouseConnectorManager.tsx # Data warehouse integration
-│   │   │   ├── ContentTrackingAdvanced.tsx   # Element tracking
-│   │   │   ├── TagManager.tsx                # Tag management system
-│   │   │   ├── ABTestingDashboard.tsx        # A/B testing
-│   │   │   ├── FinalFas3Features.tsx         # White label + cohorts + vitals + SAML + segmentation
-│   │   │   ├── SessionRecording.tsx          # Session replay
-│   │   │   ├── BehaviorAnalytics.tsx         # Behavior analysis
+│   │   ├── dashboard/          # Dashboard components (80+ files)
+│   │   │   ├── tabs/           # Main dashboard tabs
+│   │   │   ├── TagManager.tsx  # Advanced: Tag Manager
+│   │   │   ├── SessionRecordingList.tsx  # Advanced: Session Recording
+│   │   │   ├── GeolocationDashboard.tsx  # Advanced: Geolocation
+│   │   │   ├── WarehouseConnectorManager.tsx  # Advanced: Data Warehouse
 │   │   │   └── ...
-│   │   ├── gdpr/           # GDPR/CMP components
-│   │   └── ui/             # shadcn-ui base components
-│   ├── hooks/              # Custom React hooks
-│   ├── pages/              # Pages (Index, Dashboard, Auth, etc.)
-│   ├── lib/                # Utility functions & libraries
-│   │   ├── rateLimiting.ts          # Rate limiting middleware
-│   │   ├── geolocationUtils.ts      # Geolocation helpers
-│   │   ├── mediaTracking.ts         # Media tracking library
-│   │   ├── contentTracking.ts       # Content tracking library
-│   │   ├── sessionRecording.ts      # Session recording utils
-│   │   ├── formTracking.ts          # Form analytics
+│   │   ├── gdpr/               # GDPR/CMP components
+│   │   ├── ui/                 # shadcn/ui components
 │   │   └── ...
+│   ├── hooks/                  # Custom React hooks (40+ hooks)
+│   ├── pages/                  # Main pages (Index, Dashboard, Auth, etc.)
 │   ├── integrations/
-│   │   └── supabase/       # Supabase client and types
-│   └── types/              # TypeScript type definitions
-│       ├── final-fas3.ts          # Fas 3 features (white label, cohort, vitals, SAML, segments)
-│       ├── geolocation.ts         # Geolocation types
-│       ├── media.ts               # Media analytics types
-│       ├── warehouse.ts           # Data warehouse types
-│       ├── contentTracking.ts     # Content tracking types
-│       ├── tagManager.ts          # Tag manager types
-│       └── ...
+│   │   └── supabase/          # Supabase client & types
+│   ├── lib/                    # Utility functions
+│   └── types/                  # TypeScript type definitions
+│
 ├── supabase/
-│   ├── functions/          # 51+ Edge Functions
-│   │   ├── track-event/              # Core event tracking
-│   │   ├── geolocation-lookup/       # Geolocation API
-│   │   ├── media-analytics/          # Media event tracking
-│   │   ├── warehouse-connector/      # Data warehouse sync
-│   │   ├── content-tracking/         # Element tracking
-│   │   ├── ga4-import/               # GA4 integration
-│   │   ├── tag-manager/              # Tag management
-│   │   └── ...                       # 45+ more functions
-│   └── migrations/         # 74 database migrations
-│       ├── 20250101*.sql          # Phase 1 foundation tables
-│       ├── 20250205*.sql          # Phase 2 advanced features
-│       ├── 20260209*.sql          # Phase 3 enterprise features
-│       └── ...
+│   ├── functions/              # 51 Edge Functions (Deno TypeScript)
+│   │   ├── visitor-identification/
+│   │   ├── track-event/
+│   │   ├── ai-bot-tracker/
+│   │   └── ...
+│   ├── migrations/             # 60+ database migrations
+│   └── config.toml             # Supabase configuration
+│
 ├── public/
-│   ├── spa-tracking.js              # Main tracking script
-│   ├── ai-tracking-unified.js       # AI-agent tracking
-│   ├── media-tracking.js            # Media tracking
-│   ├── content-tracking.js          # Content tracking
-│   └── ...
-├── wordpress-plugin/       # WordPress plugin
-├── dist/                   # Build output (generated)
-└── docs/                   # Documentation files (22+ markdown files)
+│   ├── spa-tracking.js         # External tracking script
+│   └── ...                     # Static assets
+│
+├── docs/                       # Additional documentation
+├── wordpress-plugin/           # WordPress plugin (planned)
+│
+├── package.json                # NPM dependencies
+├── tsconfig.json               # TypeScript configuration
+├── vite.config.ts              # Vite build configuration
+├── tailwind.config.js          # Tailwind CSS configuration
+└── README.md                   # This file
 ```
-
-### Component Count Summary
-- **Dashboard Components**: 95+
-- **Type Definition Files**: 11+
-- **Utility Libraries**: 15+
-- **Database Tables**: 62+
-- **Database Indexes**: 100+
-- **Edge Functions**: 51+
-- **Documentation Files**: 22+
 
 ---
 
 ## 🔐 Security
 
-### Code Security
-- ✅ **SQL Injection Prevention**: Parameterized queries via Supabase (0 vulnerabilities)
-- ✅ **XSS Prevention**: React automatic escaping + safe DOM manipulation (0 vulnerabilities)
-- ✅ **CSRF Protection**: SameSite cookies + token-based validation
-- ✅ **Code Injection Prevention**: No `eval()`, no unsafe `Function()` constructors
-- ✅ **Path Traversal Prevention**: No direct file system access
-- ✅ **ESLint Security**: 10 security rules enforced (eslint-plugin-security)
-- ✅ **Rate Limiting**: Custom middleware with sliding window algorithm
-- ✅ **Input Validation**: Zod schema validation on all inputs
+### Repository Status
 
-### Data Security
-- ✅ **Row Level Security (RLS)**: 50+ policies for multi-tenant isolation
-- ✅ **HTTPS Only**: All connections encrypted (TLS 1.3+)
-- ✅ **Secrets Management**: Environment variables in `.env` (never in code)
-- ✅ **IP Anonymization**: Last octet removed by default
-- ✅ **GDPR Compliance**: PTS-approved, cookie-free option available
-- ✅ **Data Retention**: Configurable per site (default 730 days)
+**This is a PRIVATE repository.**
 
-### Authentication & Authorization
-- ✅ **Supabase Auth**: Industry-standard authentication
-- ✅ **SAML SSO**: Enterprise single sign-on support
-- ✅ **Session Management**: Secure cookie-based sessions
-- ✅ **Multi-tenant**: Isolated by company/site via RLS
-- ✅ **Role-based Access**: RBAC for admin, user, viewer roles
+- ✅ No secrets committed to git
+- ✅ `.env` files are gitignored
+- ✅ Service role keys only in environment variables
+- ✅ Client-side anon key is public by design (RLS protects data)
 
-### Compliance
-- ✅ **OWASP Top 10**: 100% coverage (A01-A10)
-- ✅ **GDPR**: Compliant with data protection regulations
-- ✅ **PTS-Approved**: Swedish data authority certification
-- ✅ **Security Audit**: Full audit completed with 0 critical issues
-- ✅ **Dependency Scanning**: Ready for npm audit integration
+### Best Practices
 
-### Files & Resources
-- **[security-guidelines.md](./security-guidelines.md)** - OWASP Top 10 best practices
-- **[SECURITY_AUDIT_REPORT.md](./SECURITY_AUDIT_REPORT.md)** - Complete security audit
-- **[RLS_POLICIES_TEMPLATE.md](./RLS_POLICIES_TEMPLATE.md)** - Security policy patterns
-
-### Never Committed to Git
-- `.env` file with sensitive credentials
-- Database backups
-- Private keys or certificates
-- User data exports
-- Temporary or debug files
-
----
-
-## 🤝 Contributing
-
-This is a private repository. For questions or support, contact the project team.
+- Row Level Security (RLS) enabled on all tables
+- Input sanitization in edge functions
+- Rate limiting on public endpoints
+- CORS properly configured
+- XSS protection throughout
 
 ---
 
 ## 📄 License
 
-Proprietary - All rights reserved. This project is private and confidential.
+**Private/Proprietary** - All rights reserved by Expandtalk.
+
+This repository is private and not open source. Unauthorized access, use, or distribution is prohibited.
 
 ---
 
-## 🌐 Production
+## 👥 Team
 
-- **Website**: https://cortiq.se
-- **Status**: ✅ In production
-- **Backend**: Supabase Cloud
+**CortIQ** is developed by [Expandtalk](https://expandtalk.se)
+
+- **Founder & CEO**: Daniel Larsson
+- **Location**: Sweden
+- **Contact**: https://expandtalk.se/kontakt/
+
+---
+
+## 🎯 Roadmap
+
+### Current Status: Production (v1.0)
+
+- ✅ Core analytics platform
+- ✅ AI agent tracking
+- ✅ 25 dashboard features (15 main + 4 settings + 6 advanced)
+- ✅ Full documentation
+- ✅ Security hardened
+
+### Coming Soon
+
+- 🔄 WordPress Plugin (production-ready)
+- 🔄 Core Web Vitals completion
+- 🔄 Scroll heatmaps (currently only click)
+- 🔄 Enhanced mobile app support
+
+### Future Considerations
+
+- Advanced ML-based predictions
+- Multi-language UI support
+- White-label reseller program
+- API rate limiting dashboard
 
 ---
 
 ## 📞 Support
 
-For technical support or questions, please contact the development team.
+For questions or issues:
+
+1. Check [CLAUDE.md](./CLAUDE.md) for full documentation
+2. Review specific guides in [docs/](./docs/)
+3. Contact: https://expandtalk.se/kontakt/
 
 ---
 
 <div align="center">
 
-**Built with ❤️ for the Agentic Web**
+**Built with ❤️ by [Expandtalk](https://expandtalk.se)**
 
-CortIQ © 2025
+First platform for the Agentic Web 🤖
+
+[Website](https://cortiq.se) · [Documentation](./CLAUDE.md) · [Deployment](./DEPLOYMENT.md)
 
 </div>
