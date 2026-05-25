@@ -35,7 +35,6 @@ import { ExportButton } from './ExportButton';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { LineChart, Line, BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, Legend, ResponsiveContainer, ScatterChart, Scatter } from 'recharts';
 import { Zap, MousePointer, FormInput, TrendingUp, Eye } from 'lucide-react';
-import { toast } from 'sonner';
 
 interface ContentPerformance {
   element_id: string;
@@ -104,51 +103,104 @@ export function ContentTrackingAdvanced({
     try {
       setLoading(true);
 
-      // Load content performance
-      const perfResponse = await fetch(
-        `/api/content-tracking/performance?site_id=${siteId}&from=${dateRange.from.split('T')[0]}&to=${dateRange.to.split('T')[0]}`
-      );
+      // Fetch page views for this site in the selected date range
+      const { data: pvData } = await supabase
+        .from('page_views')
+        .select('id, url, viewed_at')
+        .eq('site_id', siteId)
+        .gte('viewed_at', dateRange.from)
+        .lte('viewed_at', dateRange.to)
+        .limit(500);
 
-      if (perfResponse.ok) {
-        const { data } = await perfResponse.json();
-        setContentPerformance(data || []);
-        if (data && data.length > 0 && !selectedPage) {
-          setSelectedPage(data[0].page_url);
+      const pvIds = (pvData || []).map(p => p.id);
+      const pvUrlMap = new Map((pvData || []).map(p => [p.id, p.url as string]));
+
+      if (pvIds.length > 0) {
+        const { data: interactions } = await supabase
+          .from('user_interactions')
+          .select('element_id, element_tag, element_text, interaction_type, page_view_id, created_at')
+          .in('page_view_id', pvIds.slice(0, 300));
+
+        // Aggregate by element + page
+        const elementMap = new Map<string, ContentPerformance>();
+        for (const ia of interactions || []) {
+          const pageUrl = pvUrlMap.get(ia.page_view_id) ?? 'Unknown';
+          const elemId = ia.element_id || ia.element_tag || 'element';
+          const key = `${pageUrl}::${elemId}`;
+          if (!elementMap.has(key)) {
+            elementMap.set(key, {
+              element_id: elemId,
+              element_type: ia.element_tag || 'element',
+              page_url: pageUrl,
+              date: ia.created_at.split('T')[0],
+              views: 0, clicks: 0, ctr: 0,
+              hover_rate: 0, avg_view_duration: 0, engagement_score: 0,
+            });
+          }
+          const e = elementMap.get(key)!;
+          if (ia.interaction_type === 'click') e.clicks++;
+          else e.views++;
+        }
+        const perfData = Array.from(elementMap.values()).map(e => ({
+          ...e,
+          ctr: e.views > 0 ? (e.clicks / e.views) * 100 : 0,
+          hover_rate: e.views > 0 ? (e.views / (e.views + e.clicks + 1)) * 100 : 0,
+          engagement_score: Math.min(100, e.clicks * 10 + e.views * 2),
+        }));
+        setContentPerformance(perfData);
+        if (perfData.length > 0 && !selectedPage) {
+          setSelectedPage(perfData[0].page_url);
         }
       }
 
-      // Load form analytics
-      const formResponse = await fetch(
-        `/api/content-tracking/forms?site_id=${siteId}&from=${dateRange.from.split('T')[0]}&to=${dateRange.to.split('T')[0]}`
-      );
+      // Form field analytics from real table
+      const { data: fieldData } = await supabase
+        .from('form_field_analytics')
+        .select('*')
+        .eq('site_id', siteId);
 
-      if (formResponse.ok) {
-        const { data } = await formResponse.json();
-        setFormAnalytics(data || []);
-        if (data && data.length > 0 && !selectedForm) {
-          setSelectedForm(data[0].form_name);
-        }
+      if (fieldData && fieldData.length > 0) {
+        const formData: FormAnalytics[] = fieldData.map(f => ({
+          form_name: f.form_id,
+          field_name: f.field_name,
+          field_type: f.field_type || 'text',
+          date: new Date().toISOString().split('T')[0],
+          impressions: f.total_interactions + f.total_skips,
+          interactions: f.total_interactions,
+          completed: f.total_interactions - f.total_errors,
+          abandoned: f.total_skips,
+          validation_errors: f.total_errors,
+          avg_time_to_fill: f.avg_focus_time,
+        }));
+        setFormAnalytics(formData);
+        if (!selectedForm) setSelectedForm(formData[0].form_name);
       }
     } catch (error) {
-      console.error('Error loading data:', error);
-      toast.error('Failed to load content tracking data');
+      console.error('Error loading content tracking data:', error);
     } finally {
       setLoading(false);
     }
   }
 
   async function loadHeatmapData() {
+    if (!selectedPage) return;
     try {
-      if (!selectedPage) return;
+      const { data } = await supabase
+        .from('heatmap_data')
+        .select('x_coordinate, y_coordinate, intensity')
+        .eq('site_id', siteId)
+        .eq('url', selectedPage)
+        .eq('interaction_type', selectedInteractionType)
+        .gte('created_at', dateRange.from)
+        .lte('created_at', dateRange.to)
+        .limit(500);
 
-      const heatmapResponse = await fetch(
-        `/api/content-tracking/heatmap?site_id=${siteId}&page_url=${encodeURIComponent(selectedPage)}&interaction_type=${selectedInteractionType}&date=${dateRange.to.split('T')[0]}`
-      );
-
-      if (heatmapResponse.ok) {
-        const { data } = await heatmapResponse.json();
-        setHeatmapData(data || []);
-      }
+      setHeatmapData((data || []).map(p => ({
+        x_coordinate: p.x_coordinate,
+        y_coordinate: p.y_coordinate,
+        intensity: p.intensity,
+        count: 1,
+      })));
     } catch (error) {
       console.error('Error loading heatmap data:', error);
     }

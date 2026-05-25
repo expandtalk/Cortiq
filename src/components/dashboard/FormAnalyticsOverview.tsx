@@ -4,8 +4,9 @@ import { Badge } from '@/components/ui/badge';
 import { Progress } from '@/components/ui/progress';
 import { Button } from '@/components/ui/button';
 import { Separator } from '@/components/ui/separator';
-import { useFormAnalytics, useFormPerformanceMetrics } from '@/hooks/useFormAnalytics';
+import { useFormAnalytics, useFormPerformanceMetrics, useFormSessionMetrics } from '@/hooks/useFormAnalytics';
 import type { Site } from '@/types/dashboard';
+import type { DateRange } from 'react-day-picker';
 import { 
   FileText, 
   Users, 
@@ -23,11 +24,23 @@ import {
 
 interface FormAnalyticsOverviewProps {
   selectedSite: Site;
+  dateRange?: DateRange;
 }
 
-export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewProps) {
+export function FormAnalyticsOverview({ selectedSite, dateRange }: FormAnalyticsOverviewProps) {
   const { data: forms, isLoading: formsLoading } = useFormAnalytics(selectedSite.id);
-  const { data: metrics, isLoading: metricsLoading } = useFormPerformanceMetrics(selectedSite.id);
+  const allTimeMetrics = useFormPerformanceMetrics(selectedSite.id);
+  const rangeMetrics = useFormSessionMetrics(
+    selectedSite.id,
+    dateRange?.from?.toISOString(),
+    dateRange?.to?.toISOString(),
+  );
+
+  const usingRange = !!(dateRange?.from && dateRange?.to);
+  const metrics = usingRange
+    ? (rangeMetrics.data ? { ...allTimeMetrics.data, ...rangeMetrics.data, formsCount: allTimeMetrics.data?.formsCount } : null)
+    : allTimeMetrics.data;
+  const metricsLoading = usingRange ? rangeMetrics.isLoading : allTimeMetrics.isLoading;
 
   if (formsLoading || metricsLoading) {
     return <div className="animate-pulse">Loading form analytics...</div>;
@@ -39,27 +52,27 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            Formuläranalys
+            Form Analytics
           </CardTitle>
           <CardDescription>
-            Inga formulär detekterade. Kontrollera att formulär finns på webbplatsen och att tracking-skriptet är installerat.
+            No forms detected. Make sure forms exist on the website and that the tracking script is installed.
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8">
             <AlertTriangle className="h-12 w-12 mx-auto mb-4 text-orange-500" />
-            <h3 className="text-lg font-semibold mb-2">Inga formulär detekterade</h3>
+            <h3 className="text-lg font-semibold mb-2">No forms detected</h3>
             <p className="text-muted-foreground mb-4">
-              För Contact Form 7: Kontrollera att shortcodes som [contact-form-7 id="15a2a0e" title="Contact form 1"] finns på sidan.
+              For Contact Form 7: Make sure shortcodes like [contact-form-7 id="15a2a0e" title="Contact form 1"] exist on the page.
             </p>
             <p className="text-muted-foreground mb-4">
-              För Traffikboost: Kontrollera att shortcodes som [traffikboost_form type="contact"] finns på sidan.
+              For Traffikboost: Make sure shortcodes like [traffikboost_form type="contact"] exist on the page.
             </p>
-            <Button 
-              variant="outline" 
+            <Button
+              variant="outline"
               onClick={() => window.open('/installation', '_blank')}
             >
-              Se installationsguide
+              View installation guide
             </Button>
           </div>
         </CardContent>
@@ -89,7 +102,7 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
       case 'woocommerce_checkout':
         return 'WooCommerce Checkout';
       default:
-        return 'Anpassat formulär';
+        return 'Custom form';
     }
   };
 
@@ -106,26 +119,31 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
     return `${minutes}m ${remainingSeconds}s`;
   };
 
+  const periodLabel = usingRange && dateRange?.from && dateRange?.to
+    ? `${dateRange.from.toLocaleDateString('sv-SE')} – ${dateRange.to.toLocaleDateString('sv-SE')}`
+    : 'All time';
+
   return (
     <div className="space-y-6">
+      <p className="text-xs text-muted-foreground">Period: {periodLabel}</p>
       {/* Performance Overview */}
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Totala starter</CardTitle>
+            <CardTitle className="text-sm font-medium">Total starts</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{metrics?.totalStarts.toLocaleString()}</div>
+            <div className="text-2xl font-bold">{metrics?.totalStarts.toLocaleString('sv-SE')}</div>
             <p className="text-xs text-muted-foreground">
-              från {metrics?.formsCount} formulär
+              from {metrics?.formsCount} forms
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Genomsnittlig konvertering</CardTitle>
+            <CardTitle className="text-sm font-medium">Average conversion</CardTitle>
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -133,14 +151,14 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
               {metrics?.avgConversionRate.toFixed(1)}%
             </div>
             <p className="text-xs text-muted-foreground">
-              {metrics?.totalCompletions} slutförda
+              {metrics?.totalCompletions} completed
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Genomsnittlig tid</CardTitle>
+            <CardTitle className="text-sm font-medium">Average time</CardTitle>
             <Clock className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -148,22 +166,22 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
               {formatTime(metrics?.avgCompletionTime || 0)}
             </div>
             <p className="text-xs text-muted-foreground">
-              till slutförande
+              to completion
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Avhopp</CardTitle>
+            <CardTitle className="text-sm font-medium">Abandonments</CardTitle>
             <XCircle className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">
-              {metrics?.totalAbandons.toLocaleString()}
+              {metrics?.totalAbandons.toLocaleString('sv-SE')}
             </div>
             <p className="text-xs text-muted-foreground">
-              användare hoppade av
+              users abandoned
             </p>
           </CardContent>
         </Card>
@@ -176,7 +194,7 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
             <CardHeader>
               <CardTitle className="text-sm font-medium flex items-center gap-2">
                 <TrendingUp className="h-4 w-4 text-green-600" />
-                Bästa formulär
+                Best form
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -191,7 +209,7 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
                   <div className="text-lg font-bold text-green-600">
                     {metrics.bestForm.conversion_rate.toFixed(1)}%
                   </div>
-                  <p className="text-xs text-muted-foreground">konvertering</p>
+                  <p className="text-xs text-muted-foreground">conversion</p>
                 </div>
               </div>
             </CardContent>
@@ -201,7 +219,7 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
             <CardHeader>
               <CardTitle className="text-sm font-medium flex items-center gap-2">
                 <TrendingDown className="h-4 w-4 text-red-600" />
-                Behöver förbättring
+                Needs improvement
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -216,7 +234,7 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
                   <div className="text-lg font-bold text-red-600">
                     {metrics.worstForm.conversion_rate.toFixed(1)}%
                   </div>
-                  <p className="text-xs text-muted-foreground">konvertering</p>
+                  <p className="text-xs text-muted-foreground">conversion</p>
                 </div>
               </div>
             </CardContent>
@@ -229,10 +247,10 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <BarChart3 className="h-5 w-5" />
-            Formulärprestanda
+            Form performance
           </CardTitle>
           <CardDescription>
-            Detaljerad analys av varje formulär på din webbplats
+            Detailed analysis of every form on your website
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -251,29 +269,29 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
                   </div>
                   <div className="flex items-center gap-2">
                     <Badge variant={form.conversion_rate >= 70 ? 'default' : form.conversion_rate >= 40 ? 'secondary' : 'destructive'}>
-                      {form.conversion_rate.toFixed(1)}% konvertering
+                      {form.conversion_rate.toFixed(1)}% conversion
                     </Badge>
                     <Button variant="outline" size="sm">
-                      Detaljvy
+                      Detail view
                     </Button>
                   </div>
                 </div>
 
                 <div className="grid gap-4 md:grid-cols-4">
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Starter</p>
-                    <p className="text-lg font-semibold">{form.total_starts.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground">Starts</p>
+                    <p className="text-lg font-semibold">{form.total_starts.toLocaleString('sv-SE')}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Slutförda</p>
-                    <p className="text-lg font-semibold text-green-600">{form.total_completions.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground">Completed</p>
+                    <p className="text-lg font-semibold text-green-600">{form.total_completions.toLocaleString('sv-SE')}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Avhopp</p>
-                    <p className="text-lg font-semibold text-red-600">{form.total_abandons.toLocaleString()}</p>
+                    <p className="text-sm text-muted-foreground">Abandonments</p>
+                    <p className="text-lg font-semibold text-red-600">{form.total_abandons.toLocaleString('sv-SE')}</p>
                   </div>
                   <div className="space-y-1">
-                    <p className="text-sm text-muted-foreground">Genomsnittlig tid</p>
+                    <p className="text-sm text-muted-foreground">Average time</p>
                     <p className="text-lg font-semibold">{formatTime(form.avg_completion_time)}</p>
                   </div>
                 </div>
@@ -282,7 +300,7 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
 
                 <div className="space-y-2">
                   <div className="flex justify-between text-sm">
-                    <span>Konvertering</span>
+                    <span>Conversion</span>
                     <span className={getPerformanceColor(form.conversion_rate)}>
                       {form.conversion_rate.toFixed(1)}%
                     </span>
@@ -294,7 +312,7 @@ export function FormAnalyticsOverview({ selectedSite }: FormAnalyticsOverviewPro
                   <div className="mt-3 p-2 bg-yellow-50 border border-yellow-200 rounded flex items-center gap-2">
                     <AlertTriangle className="h-4 w-4 text-yellow-600" />
                     <p className="text-sm text-yellow-800">
-                      Låg konvertering - överväg att analysera fältspecifik data för förbättringsmöjligheter
+                      Low conversion — consider analyzing field-specific data for improvement opportunities
                     </p>
                   </div>
                 )}

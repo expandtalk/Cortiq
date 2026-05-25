@@ -1,34 +1,56 @@
-import React, { useState } from 'react';
+import React, { lazy, Suspense, useState } from 'react';
+import { TabErrorBoundary } from './TabErrorBoundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
 import { Button } from '@/components/ui/button';
-import { ChevronDown, Settings, Download, ExternalLink, Key, Zap, Code2, Play, Globe, Database, DollarSign, TrendingUp } from 'lucide-react';
+import { ChevronDown, Settings, ExternalLink, Key, Zap, Code2, Play, Globe, Database, DollarSign, TrendingUp, ShieldAlert, BarChart2, Bot, Sliders, Target, Shield, Users, Megaphone, FlaskConical, Bell, FileText, Flame, Network, Share2, Filter, AlertTriangle, BookOpen, Sparkles, ShoppingCart, Server, Activity, Cpu, Layers, PieChart } from 'lucide-react';
+import { UTMSegmentProvider } from '@/contexts/UTMSegmentContext';
+import { UTMSegmentBar } from './UTMSegmentBar';
 import { OverviewTab } from './tabs/OverviewTab';
-import { HeatmapTab } from './tabs/HeatmapTab';
-import { AnalyticsTab } from './tabs/AnalyticsTab';
-import { PaidAdsTab } from './tabs/PaidAdsTab';
-import { ServerSidePaidAdsTab } from './tabs/ServerSidePaidAdsTab';
-import { FormAnalyticsTab } from './tabs/FormAnalyticsTab';
-import { ABTestingTab } from './tabs/ABTestingTab';
-import { AITab } from './tabs/AITab';
-import { AIBotTab } from './tabs/AIBotTab';
-import { KPITab } from './tabs/KPITab';
-import { KPICatalogTab } from './tabs/KPICatalogTab';
-import { SegmentsTab } from './tabs/SegmentsTab';
-import { SetupTab } from './tabs/SetupTab';
-import { ExternalIntegrationsTab } from './tabs/ExternalIntegrationsTab';
-import { CookiefreeAnalyticsTab } from './tabs/CookiefreeAnalyticsTab';
-import { ApiKeysTab } from './tabs/ApiKeysTab';
-import { GDPRTab } from './tabs/GDPRTab';
-import { NavigationTab } from './tabs/NavigationTab';
-import { BehavioralAlertsTab } from './tabs/BehavioralAlertsTab';
-import { UserLTVTab } from './tabs/UserLTVTab';
-import { TagManager } from './TagManager';
-import { SessionRecordingList } from './SessionRecordingList';
-import { GeolocationDashboard } from './GeolocationDashboard';
-import { WarehouseConnectorManager } from './WarehouseConnectorManager';
-import { FinalFas3Features } from './FinalFas3Features';
 import type { Site, Analytics } from '@/types/dashboard';
+
+const HeatmapTab               = lazy(() => import('./tabs/HeatmapTab').then(m => ({ default: m.HeatmapTab })));
+const AnalyticsTab             = lazy(() => import('./tabs/AnalyticsTab').then(m => ({ default: m.AnalyticsTab })));
+const PaidAdsTab               = lazy(() => import('./tabs/PaidAdsTab').then(m => ({ default: m.PaidAdsTab })));
+const ServerSidePaidAdsTab     = lazy(() => import('./tabs/ServerSidePaidAdsTab').then(m => ({ default: m.ServerSidePaidAdsTab })));
+const FormAnalyticsTab         = lazy(() => import('./tabs/FormAnalyticsTab').then(m => ({ default: m.FormAnalyticsTab })));
+const ABTestingTab             = lazy(() => import('./tabs/ABTestingTab').then(m => ({ default: m.ABTestingTab })));
+const AITab                    = lazy(() => import('./tabs/AITab').then(m => ({ default: m.AITab })));
+const AIBotTab                 = lazy(() => import('./tabs/AIBotTab').then(m => ({ default: m.AIBotTab })));
+const KPITab                   = lazy(() => import('./tabs/KPITab').then(m => ({ default: m.KPITab })));
+const KPICatalogTab            = lazy(() => import('./tabs/KPICatalogTab').then(m => ({ default: m.KPICatalogTab })));
+const SegmentsTab              = lazy(() => import('./tabs/SegmentsTab').then(m => ({ default: m.SegmentsTab })));
+const SetupTab                 = lazy(() => import('./tabs/SetupTab').then(m => ({ default: m.SetupTab })));
+const ExternalIntegrationsTab  = lazy(() => import('./tabs/ExternalIntegrationsTab').then(m => ({ default: m.ExternalIntegrationsTab })));
+const CookiefreeAnalyticsTab   = lazy(() => import('./tabs/CookiefreeAnalyticsTab').then(m => ({ default: m.CookiefreeAnalyticsTab })));
+const ApiKeysTab               = lazy(() => import('./tabs/ApiKeysTab').then(m => ({ default: m.ApiKeysTab })));
+const GDPRTab                  = lazy(() => import('./tabs/GDPRTab').then(m => ({ default: m.GDPRTab })));
+const NavigationTab            = lazy(() => import('./tabs/NavigationTab').then(m => ({ default: m.NavigationTab })));
+const BehavioralAlertsTab      = lazy(() => import('./tabs/BehavioralAlertsTab').then(m => ({ default: m.BehavioralAlertsTab })));
+const UserLTVTab               = lazy(() => import('./tabs/UserLTVTab').then(m => ({ default: m.UserLTVTab })));
+const ClickFraudTab            = lazy(() => import('./tabs/ClickFraudTab').then(m => ({ default: m.ClickFraudTab })));
+const TagManager               = lazy(() => import('./TagManager').then(m => ({ default: m.TagManager })));
+const SessionRecordingList     = lazy(() => import('./SessionRecordingList').then(m => ({ default: m.SessionRecordingList })));
+const GeolocationDashboard     = lazy(() => import('./GeolocationDashboard').then(m => ({ default: m.GeolocationDashboard })));
+const WarehouseConnectorManager = lazy(() => import('./WarehouseConnectorManager').then(m => ({ default: m.WarehouseConnectorManager })));
+const FinalFas3Features        = lazy(() => import('./FinalFas3Features').then(m => ({ default: m.FinalFas3Features })));
+const IPSegmentsTab                = lazy(() => import('./tabs/IPSegmentsTab').then(m => ({ default: m.IPSegmentsTab })));
+const AgentOpsTab                  = lazy(() => import('./tabs/AgentOpsTab').then(m => ({ default: m.AgentOpsTab })));
+const ZeroClickRiskIndex           = lazy(() => import('./ZeroClickRiskIndex').then(m => ({ default: m.ZeroClickRiskIndex })));
+const AIVisibilityTab              = lazy(() => import('./tabs/AIVisibilityTab').then(m => ({ default: m.AIVisibilityTab })));
+const NotificationChannelsConfig   = lazy(() => import('./NotificationChannelsConfig').then(m => ({ default: m.NotificationChannelsConfig })));
+const SocialMediaTab               = lazy(() => import('./tabs/SocialMediaTab').then(m => ({ default: m.SocialMediaTab })));
+const UTMSegmentsTab               = lazy(() => import('./tabs/UTMSegmentsTab').then(m => ({ default: m.UTMSegmentsTab })));
+const AgentMacroManager            = lazy(() => import('./AgentMacroManager').then(m => ({ default: m.AgentMacroManager })));
+const AgentRegistry                = lazy(() => import('./AgentRegistry').then(m => ({ default: m.AgentRegistry })));
+const EcommerceTab                 = lazy(() => import('./tabs/EcommerceTab').then(m => ({ default: m.EcommerceTab })));
+const CampaignDashboard            = lazy(() => import('./CampaignDashboard').then(m => ({ default: m.CampaignDashboard })));
+const ContentPerformance           = lazy(() => import('./ContentPerformance').then(m => ({ default: m.ContentPerformance })));
+const ContentTrackingAdvanced      = lazy(() => import('./ContentTrackingAdvanced').then(m => ({ default: m.ContentTrackingAdvanced })));
+const ConversionGoalsConfig        = lazy(() => import('./ConversionGoalsConfig').then(m => ({ default: m.ConversionGoalsConfig })));
+const ReportBuilder                = lazy(() => import('./ReportBuilder').then(m => ({ default: m.ReportBuilder })));
+const ServerLogAnalytics           = lazy(() => import('./ServerLogAnalytics').then(m => ({ default: m.ServerLogAnalytics })));
+const RealTimeWidget               = lazy(() => import('./RealTimeWidget').then(m => ({ default: m.RealTimeWidget })));
 
 interface DashboardTabsProps {
   selectedSite: Site;
@@ -36,254 +58,535 @@ interface DashboardTabsProps {
   dateRange?: import('react-day-picker').DateRange;
 }
 
-export function DashboardTabs({ selectedSite, analytics, dateRange }: DashboardTabsProps) {
+type NavOption = { value: string; label: string; icon: React.ComponentType<{ className?: string }> };
+type NavGroup = { label: string; icon: React.ComponentType<{ className?: string }>; options: NavOption[] };
+
+const NAV_GROUPS: NavGroup[] = [
+  {
+    label: 'Rapport',
+    icon: BookOpen,
+    options: [
+      { value: 'kpi',       label: 'KPI Dashboard',      icon: Target },
+      { value: 'kpi-catalog', label: 'AI KPI Overview',  icon: DollarSign },
+      { value: 'user-ltv',  label: 'User LTV & Cohorts', icon: Users },
+    ],
+  },
+  {
+    label: 'Traffic',
+    icon: BarChart2,
+    options: [
+      { value: 'analytics',    label: 'Analytics',      icon: BarChart2 },
+      { value: 'cookiefree',   label: 'Cookie-Free',    icon: Shield },
+      { value: 'geolocation',  label: 'Geolocation',    icon: Globe },
+      { value: 'social-media', label: 'Social Media',   icon: Share2 },
+    ],
+  },
+  {
+    label: 'Ads',
+    icon: Megaphone,
+    options: [
+      { value: 'paid-ads',        label: 'Ads (GA4)',        icon: Megaphone },
+      { value: 'paid-ads-server', label: 'Ads (Server-Side)', icon: Database },
+      { value: 'click-fraud',     label: 'Click Fraud',      icon: ShieldAlert },
+    ],
+  },
+  {
+    label: 'GEO',
+    icon: Sparkles,
+    options: [
+      { value: 'ai-visibility',   label: 'AI Visibility',   icon: Sparkles },
+      { value: 'zero-click-risk', label: 'Zero-Click Risk', icon: AlertTriangle },
+    ],
+  },
+  {
+    label: 'AI',
+    icon: Bot,
+    options: [
+      { value: 'ai',             label: 'AI Traffic',      icon: TrendingUp },
+      { value: 'ai-bots',        label: 'AI Agents',       icon: Bot },
+      { value: 'agent-ops',      label: 'Agent Ops',       icon: Zap },
+      { value: 'agent-macros',   label: 'Agent Macros',    icon: Cpu },
+      { value: 'agent-registry', label: 'Agent Registry',  icon: Server },
+    ],
+  },
+  {
+    label: 'Commerce',
+    icon: ShoppingCart,
+    options: [
+      { value: 'ecommerce',           label: 'E-commerce',        icon: ShoppingCart },
+      { value: 'campaigns',           label: 'Campaigns',         icon: Megaphone },
+      { value: 'content-performance', label: 'Content',           icon: FileText },
+      { value: 'content-tracking',    label: 'Content Tracking',  icon: Layers },
+      { value: 'conversion-goals',    label: 'Conversion Goals',  icon: Target },
+    ],
+  },
+  {
+    label: 'Optimize',
+    icon: Sliders,
+    options: [
+      { value: 'heatmap',           label: 'Heatmap',           icon: Flame },
+      { value: 'forms',             label: 'Forms',             icon: FileText },
+      { value: 'abtesting',         label: 'A/B Testing',       icon: FlaskConical },
+      { value: 'session-recording', label: 'Session Recording', icon: Play },
+    ],
+  },
+];
+
+const SETTINGS_OPTIONS: NavOption[] = [
+  { value: 'alerts',            label: 'Alerts',                  icon: Bell },
+  { value: 'navigation',        label: 'Navigation flow',         icon: TrendingUp },
+  { value: 'segments',          label: 'Segments',                icon: Users },
+  { value: 'tag-manager',       label: 'Tag Manager',             icon: Code2 },
+  { value: 'warehouse',         label: 'Data Warehouse',          icon: Database },
+  { value: 'advanced-features', label: 'Web Vitals & White Label', icon: TrendingUp },
+  { value: 'setup',             label: 'Setup & tracking script', icon: Code2 },
+  { value: 'integrations',      label: 'Integrations',            icon: ExternalLink },
+  { value: 'api-keys',          label: 'API Keys',                icon: Key },
+  { value: 'gdpr',              label: 'GDPR',                    icon: Shield },
+  { value: 'notifications',     label: 'Notifications',           icon: Bell },
+  { value: 'ip-segments',       label: 'Network Segments',        icon: Network },
+  { value: 'utm-segments',      label: 'UTM Segments',            icon: Filter },
+  { value: 'report-builder',    label: 'Report Builder',          icon: PieChart },
+  { value: 'server-logs',       label: 'Server Logs',             icon: Server },
+  { value: 'realtime',          label: 'Real-Time',               icon: Activity },
+];
+
+function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTabsProps) {
   const [activeTab, setActiveTab] = useState('overview');
-  // const { insights, highPriorityCount } = useDashboardInsights(selectedSite.id);
 
-  const settingsOptions = [
-    { value: 'setup', label: 'Setup', icon: Settings },
-    { value: 'gdpr', label: 'GDPR', icon: Settings },
-    { value: 'integrations', label: 'External Integrations', icon: ExternalLink },
-    { value: 'api-keys', label: 'API Keys', icon: Key }
-  ];
+  function NavGroupDropdown({ group }: { group: NavGroup }) {
+    const activeOption = group.options.find(o => o.value === activeTab);
+    const GroupIcon = group.icon;
+    return (
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>
+          <Button
+            variant={activeOption ? 'default' : 'ghost'}
+            className="flex items-center gap-2 h-10 px-4 py-2 whitespace-nowrap"
+          >
+            <GroupIcon className="h-4 w-4" />
+            {group.label}
+            {activeOption && <span className="h-2 w-2 rounded-full bg-current opacity-60 shrink-0" />}
+            <ChevronDown className="h-4 w-4" />
+          </Button>
+        </DropdownMenuTrigger>
+        <DropdownMenuContent align="start" className="w-52 bg-card border shadow-lg z-[100]" sideOffset={5}>
+          {group.options.map((option) => (
+            <DropdownMenuItem
+              key={option.value}
+              onClick={() => setActiveTab(option.value)}
+              className={`cursor-pointer ${activeTab === option.value ? 'bg-muted' : ''}`}
+            >
+              <option.icon className="mr-2 h-4 w-4" />
+              {option.label}
+            </DropdownMenuItem>
+          ))}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    );
+  }
 
-  const advancedOptions = [
-    { value: 'tag-manager', label: 'Tag Manager', icon: Code2 },
-    { value: 'session-recording', label: 'Session Recording', icon: Play },
-    { value: 'geolocation', label: 'Geolocation Maps', icon: Globe },
-    { value: 'warehouse', label: 'Data Warehouse', icon: Database },
-    { value: 'user-ltv', label: 'User LTV & Cohorts', icon: DollarSign },
-    { value: 'advanced-features', label: 'Web Vitals & White Label', icon: TrendingUp }
-  ];
-
-  const currentSettingsTab = settingsOptions.find(option => option.value === activeTab);
-  const currentAdvancedTab = advancedOptions.find(option => option.value === activeTab);
+  const currentSettingsTab = SETTINGS_OPTIONS.find(o => o.value === activeTab);
 
   return (
-    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-      <div className="flex items-center gap-2 border-b pb-2 flex-wrap">
-        <TabsList className="flex flex-wrap gap-1 bg-transparent border-0 h-auto p-0">
+    <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6 max-w-screen-2xl mx-auto w-full">
+      <div className="flex items-center gap-1 border-b pb-2 overflow-x-auto sticky top-0 z-40 bg-background [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+        {/* Overview — always visible */}
+        <TabsList aria-label="Dashboard navigation" className="bg-transparent border-0 h-auto p-0 shrink-0">
           <TabsTrigger value="overview" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
             Overview
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Analytics
-          </TabsTrigger>
-          <TabsTrigger value="paid-ads" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Ads (GA4)
-          </TabsTrigger>
-          <TabsTrigger value="paid-ads-server" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Ads (Server-Side)
-          </TabsTrigger>
-          <TabsTrigger value="cookiefree" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Cookie-Free
-          </TabsTrigger>
-          <TabsTrigger value="heatmap" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Heatmap
-          </TabsTrigger>
-          <TabsTrigger value="forms" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Forms
-          </TabsTrigger>
-          <TabsTrigger value="abtesting" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            A/B Testing
-          </TabsTrigger>
-          <TabsTrigger value="ai" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            AI Traffic
-          </TabsTrigger>
-          <TabsTrigger value="ai-bots" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            AI Agents
-          </TabsTrigger>
-          <TabsTrigger value="kpi" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            KPI Dashboard
-          </TabsTrigger>
-          <TabsTrigger value="kpi-catalog" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            KPI Catalog
-          </TabsTrigger>
-          <TabsTrigger value="segments" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Segments
-          </TabsTrigger>
-          <TabsTrigger value="navigation" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Navigation
-          </TabsTrigger>
-          <TabsTrigger value="alerts" className="data-[state=active]:bg-background data-[state=active]:shadow-sm whitespace-nowrap">
-            Alerts
-          </TabsTrigger>
         </TabsList>
 
-        {/* Settings Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant={settingsOptions.some(opt => opt.value === activeTab) ? "default" : "ghost"}
-              className="flex items-center gap-2 h-10 px-4 py-2 whitespace-nowrap"
-            >
-              <Settings className="h-4 w-4" />
-              {currentSettingsTab ? currentSettingsTab.label : 'Settings'}
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-48 bg-card border shadow-lg z-[100]"
-            sideOffset={5}
-          >
-            {settingsOptions.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => setActiveTab(option.value)}
-                className={`cursor-pointer ${activeTab === option.value ? 'bg-muted' : ''}`}
-              >
-                <option.icon className="mr-2 h-4 w-4" />
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+        {/* Grouped dropdowns */}
+        {NAV_GROUPS.map(group => (
+          <div key={group.label} className="shrink-0">
+            <NavGroupDropdown group={group} />
+          </div>
+        ))}
 
-        {/* Advanced Features Dropdown */}
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button
-              variant={advancedOptions.some(opt => opt.value === activeTab) ? "default" : "ghost"}
-              className="flex items-center gap-2 h-10 px-4 py-2 whitespace-nowrap"
-            >
-              <Zap className="h-4 w-4" />
-              {currentAdvancedTab ? currentAdvancedTab.label : 'Advanced'}
-              <ChevronDown className="h-4 w-4" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent
-            align="end"
-            className="w-56 bg-card border shadow-lg z-[100]"
-            sideOffset={5}
-          >
-            {advancedOptions.map((option) => (
-              <DropdownMenuItem
-                key={option.value}
-                onClick={() => setActiveTab(option.value)}
-                className={`cursor-pointer ${activeTab === option.value ? 'bg-muted' : ''}`}
+        {/* Settings / More Dropdown — pushed to right with ml-auto but no shrink */}
+        <div className="shrink-0 ml-auto pl-2">
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button
+                variant={currentSettingsTab ? 'default' : 'ghost'}
+                className="flex items-center gap-2 h-10 px-4 py-2 whitespace-nowrap"
               >
-                <option.icon className="mr-2 h-4 w-4" />
-                {option.label}
-              </DropdownMenuItem>
-            ))}
-          </DropdownMenuContent>
-        </DropdownMenu>
+                <Settings className="h-4 w-4" />
+                {currentSettingsTab ? currentSettingsTab.label : 'Settings'}
+                <ChevronDown className="h-4 w-4" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end" className="w-56 bg-card border shadow-lg z-[100]" sideOffset={5}>
+              {/* Analytics & Tools */}
+              {SETTINGS_OPTIONS.slice(0, 5).map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => setActiveTab(option.value)}
+                  className={`cursor-pointer ${activeTab === option.value ? 'bg-muted' : ''}`}
+                >
+                  <option.icon className="mr-2 h-4 w-4" />
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              {/* Site Config */}
+              {SETTINGS_OPTIONS.slice(5, 9).map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => setActiveTab(option.value)}
+                  className={`cursor-pointer ${activeTab === option.value ? 'bg-muted' : ''}`}
+                >
+                  <option.icon className="mr-2 h-4 w-4" />
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
+              <DropdownMenuSeparator />
+              {/* Segments & Advanced */}
+              {SETTINGS_OPTIONS.slice(9).map((option) => (
+                <DropdownMenuItem
+                  key={option.value}
+                  onClick={() => setActiveTab(option.value)}
+                  className={`cursor-pointer ${activeTab === option.value ? 'bg-muted' : ''}`}
+                >
+                  <option.icon className="mr-2 h-4 w-4" />
+                  {option.label}
+                </DropdownMenuItem>
+              ))}
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
 
+      {/* UTM Segment chip-bar — below nav, above all tab content */}
+      <UTMSegmentBar className="pb-1" />
+
       <TabsContent value="overview" className="space-y-6">
-        <OverviewTab analytics={analytics} siteId={selectedSite.id} selectedSite={selectedSite} dateRange={dateRange} />
+        <TabErrorBoundary tabName="Overview">
+          <OverviewTab
+            analytics={analytics}
+            siteId={selectedSite.id}
+            selectedSite={selectedSite}
+            dateRange={dateRange}
+            onNavigateToAI={() => setActiveTab('ai-bots')}
+            onNavigateToSetup={() => setActiveTab('setup')}
+            onNavigateToIntegrations={() => setActiveTab('integrations')}
+          />
+        </TabErrorBoundary>
       </TabsContent>
 
+      <Suspense fallback={<div className="py-12 text-center text-sm text-muted-foreground">Loading...</div>}>
+
       <TabsContent value="heatmap" className="space-y-6">
-        <HeatmapTab siteId={selectedSite.id} selectedSite={selectedSite} dateRange={dateRange} />
+        <TabErrorBoundary tabName="Heatmap">
+          <HeatmapTab siteId={selectedSite.id} selectedSite={selectedSite} dateRange={dateRange} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="forms" className="space-y-6">
-        <FormAnalyticsTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="Forms">
+          <FormAnalyticsTab selectedSite={selectedSite} dateRange={dateRange} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="abtesting" className="space-y-6">
-        <ABTestingTab siteId={selectedSite.id} />
+        <TabErrorBoundary tabName="A/B Testing">
+          <ABTestingTab siteId={selectedSite.id} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="ai" className="space-y-6">
-        <AITab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="AI Traffic">
+          <AITab selectedSite={selectedSite} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="ai-bots" className="space-y-6">
-        <AIBotTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="AI Agents">
+          <AIBotTab selectedSite={selectedSite} dateRange={dateRange} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="agent-ops" className="space-y-6">
+        <TabErrorBoundary tabName="Agent Ops">
+          <AgentOpsTab
+            companyId={selectedSite.company_id ?? null}
+            dateRange={dateRange}
+          />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="zero-click-risk" className="space-y-6">
+        <TabErrorBoundary tabName="Zero-Click Risk">
+          <ZeroClickRiskIndex siteId={selectedSite.id} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="ai-visibility" className="space-y-6">
+        <TabErrorBoundary tabName="AI Visibility">
+          <AIVisibilityTab siteId={selectedSite.id} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="kpi" className="space-y-6">
-        <KPITab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="KPI Dashboard">
+          <KPITab selectedSite={selectedSite} onNavigateToIntegrations={() => setActiveTab('integrations')} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="kpi-catalog" className="space-y-6">
-        <KPICatalogTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="AI KPI Overview">
+          <KPICatalogTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="segments" className="space-y-6">
-        <SegmentsTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="Segments">
+          <SegmentsTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="navigation" className="space-y-6">
-        <NavigationTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="Navigation">
+          <NavigationTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="alerts" className="space-y-6">
-        <BehavioralAlertsTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="Alerts">
+          <BehavioralAlertsTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="analytics" className="space-y-6">
-        <AnalyticsTab analytics={analytics} dateRange={dateRange} />
+        <TabErrorBoundary tabName="Analytics">
+          <AnalyticsTab analytics={analytics} dateRange={dateRange} onNavigateToIntegrations={() => setActiveTab('integrations')} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="paid-ads" className="space-y-6">
-        <PaidAdsTab selectedSite={selectedSite.id} kpiData={null} />
+        <TabErrorBoundary tabName="Ads (GA4)">
+          <PaidAdsTab selectedSite={selectedSite.id} kpiData={null} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="paid-ads-server" className="space-y-6">
-        <ServerSidePaidAdsTab 
-          selectedSite={selectedSite.id}
-          startDate={dateRange?.from?.toISOString().split('T')[0]}
-          endDate={dateRange?.to?.toISOString().split('T')[0]}
-        />
+        <TabErrorBoundary tabName="Ads (Server-Side)">
+          <ServerSidePaidAdsTab
+            selectedSite={selectedSite.id}
+            startDate={dateRange?.from?.toISOString().split('T')[0]}
+            endDate={dateRange?.to?.toISOString().split('T')[0]}
+          />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="cookiefree" className="space-y-6">
-        <CookiefreeAnalyticsTab selectedSite={selectedSite} dateRange={dateRange} />
+        <TabErrorBoundary tabName="Cookie-Free">
+          <CookiefreeAnalyticsTab selectedSite={selectedSite} dateRange={dateRange} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="integrations" className="space-y-6">
-        <ExternalIntegrationsTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="Integrations">
+          <ExternalIntegrationsTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="api-keys" className="space-y-6">
-        <ApiKeysTab />
+        <TabErrorBoundary tabName="API Keys">
+          <ApiKeysTab siteId={selectedSite.id} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="gdpr" className="space-y-6">
-        <GDPRTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="GDPR">
+          <GDPRTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="setup" className="space-y-6">
-        <SetupTab selectedSite={selectedSite} />
+        <TabErrorBoundary tabName="Setup">
+          <SetupTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
       </TabsContent>
 
       {/* Advanced Features Tabs */}
       <TabsContent value="tag-manager" className="space-y-6">
-        <TagManager siteId={selectedSite.id} />
+        <TabErrorBoundary tabName="Tag Manager">
+          <TagManager siteId={selectedSite.id} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="session-recording" className="space-y-6">
-        <SessionRecordingList siteId={selectedSite.id} />
+        <TabErrorBoundary tabName="Session Recording">
+          <SessionRecordingList siteId={selectedSite.id} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="geolocation" className="space-y-6">
-        <GeolocationDashboard
-          siteId={selectedSite.id}
-          dateRange={{
-            from: dateRange?.from?.toISOString() || new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-            to: dateRange?.to?.toISOString() || new Date().toISOString()
-          }}
-        />
+        <TabErrorBoundary tabName="Geolocation">
+          <GeolocationDashboard
+            siteId={selectedSite.id}
+            dateRange={{
+              from: dateRange?.from?.toISOString() ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+              to: dateRange?.to?.toISOString() ?? new Date().toISOString()
+            }}
+          />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="warehouse" className="space-y-6">
-        <WarehouseConnectorManager siteId={selectedSite.id} />
+        <TabErrorBoundary tabName="Data Warehouse">
+          <WarehouseConnectorManager siteId={selectedSite.id} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="user-ltv" className="space-y-6">
-        <UserLTVTab selectedSiteId={selectedSite.id} />
+        <TabErrorBoundary tabName="User LTV & Cohorts">
+          <UserLTVTab selectedSiteId={selectedSite.id} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="advanced-features" className="space-y-6">
-        <FinalFas3Features
-          siteId={selectedSite.id}
-          companyId={selectedSite.company_id || selectedSite.id}
-        />
+        <TabErrorBoundary tabName="Web Vitals & White Label">
+          <FinalFas3Features
+            siteId={selectedSite.id}
+            companyId={selectedSite.company_id || selectedSite.id}
+          />
+        </TabErrorBoundary>
       </TabsContent>
+
+      <TabsContent value="click-fraud" className="space-y-6">
+        <TabErrorBoundary tabName="Click Fraud">
+          <ClickFraudTab
+            selectedSite={selectedSite.id}
+            startDate={dateRange?.from?.toISOString().split('T')[0]}
+            endDate={dateRange?.to?.toISOString().split('T')[0]}
+          />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="notifications" className="space-y-6">
+        <TabErrorBoundary tabName="Notifications">
+          <NotificationChannelsConfig selectedSite={selectedSite} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="ip-segments" className="space-y-6">
+        <TabErrorBoundary tabName="Network Segments">
+          <IPSegmentsTab selectedSite={selectedSite} dateRange={dateRange} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="social-media" className="space-y-6">
+        <TabErrorBoundary tabName="Social Media">
+          <SocialMediaTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="utm-segments" className="space-y-6">
+        <TabErrorBoundary tabName="UTM Segments">
+          <UTMSegmentsTab selectedSite={selectedSite} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      {/* AI — Agent Macros & Registry */}
+      <TabsContent value="agent-macros" className="space-y-6">
+        <TabErrorBoundary tabName="Agent Macros">
+          <AgentMacroManager siteId={selectedSite.id} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="agent-registry" className="space-y-6">
+        <TabErrorBoundary tabName="Agent Registry">
+          <AgentRegistry siteId={selectedSite.id} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      {/* Commerce */}
+      <TabsContent value="ecommerce" className="space-y-6">
+        <TabErrorBoundary tabName="E-commerce">
+          <EcommerceTab selectedSiteId={selectedSite.id} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="campaigns" className="space-y-6">
+        <TabErrorBoundary tabName="Campaigns">
+          <CampaignDashboard
+            siteId={selectedSite.id}
+            dateRange={{
+              from: dateRange?.from?.toISOString() ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+              to: dateRange?.to?.toISOString() ?? new Date().toISOString(),
+            }}
+          />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="content-performance" className="space-y-6">
+        <TabErrorBoundary tabName="Content Performance">
+          <ContentPerformance
+            siteId={selectedSite.id}
+            dateRange={{
+              from: dateRange?.from?.toISOString() ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+              to: dateRange?.to?.toISOString() ?? new Date().toISOString(),
+            }}
+          />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="content-tracking" className="space-y-6">
+        <TabErrorBoundary tabName="Content Tracking">
+          <ContentTrackingAdvanced
+            siteId={selectedSite.id}
+            dateRange={{
+              from: dateRange?.from?.toISOString() ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+              to: dateRange?.to?.toISOString() ?? new Date().toISOString(),
+            }}
+          />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="conversion-goals" className="space-y-6">
+        <TabErrorBoundary tabName="Conversion Goals">
+          <ConversionGoalsConfig selectedSite={selectedSite} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      {/* More / Settings */}
+      <TabsContent value="report-builder" className="space-y-6">
+        <TabErrorBoundary tabName="Report Builder">
+          <ReportBuilder siteId={selectedSite.id} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="server-logs" className="space-y-6">
+        <TabErrorBoundary tabName="Server Logs">
+          <ServerLogAnalytics
+            siteId={selectedSite.id}
+            dateRange={{
+              from: dateRange?.from ?? new Date(Date.now() - 30 * 24 * 60 * 60 * 1000),
+              to: dateRange?.to ?? new Date(),
+            }}
+          />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="realtime" className="space-y-6">
+        <TabErrorBoundary tabName="Real-Time">
+          <RealTimeWidget siteId={selectedSite.id} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      </Suspense>
     </Tabs>
+  );
+}
+
+export function DashboardTabs(props: DashboardTabsProps) {
+  return (
+    <UTMSegmentProvider siteId={props.selectedSite.id}>
+      <DashboardTabsInner {...props} />
+    </UTMSegmentProvider>
   );
 }

@@ -8,6 +8,7 @@ import { SystemSpecificConfig } from '../SystemSpecificConfig';
 import { ConversionGoalsConfig } from '../ConversionGoalsConfig';
 import { useFormAnalytics } from '@/hooks/useFormAnalytics';
 import type { Site } from '@/types/dashboard';
+import type { DateRange } from 'react-day-picker';
 import { 
   BarChart3, 
   TrendingDown, 
@@ -18,24 +19,28 @@ import {
 } from 'lucide-react';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Button } from '@/components/ui/button';
+import { useToast } from '@/hooks/use-toast';
 
 interface FormAnalyticsTabProps {
   selectedSite: Site;
+  dateRange?: DateRange;
 }
 
-export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
+export function FormAnalyticsTab({ selectedSite, dateRange }: FormAnalyticsTabProps) {
   const { data: forms } = useFormAnalytics(selectedSite.id);
+  const { toast } = useToast();
   const [selectedFormId, setSelectedFormId] = useState<string>('');
   const [selectedFormType, setSelectedFormType] = useState<string>('');
   const [systemConfigured, setSystemConfigured] = useState<boolean>(false);
-  const [activeView, setActiveView] = useState<'setup' | 'config' | 'goals' | 'overview' | 'funnel' | 'heatmap'>('setup');
+  const [activeView, setActiveView] = useState<'setup' | 'config' | 'goals' | 'overview' | 'funnel'>('setup');
 
-  // Auto-select first form when forms load
+  // Auto-select first form and jump straight to overview when data exists
   React.useEffect(() => {
-    if (forms && forms.length > 0 && !selectedFormId) {
-      setSelectedFormId(forms[0].form_id);
+    if (forms && forms.length > 0) {
+      if (!selectedFormId) setSelectedFormId(forms[0].form_id);
+      setActiveView('overview');
     }
-  }, [forms, selectedFormId]);
+  }, [forms?.length]);
 
   const selectedForm = forms?.find(form => form.form_id === selectedFormId);
 
@@ -61,7 +66,7 @@ export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
       case 'woocommerce_checkout':
         return 'WooCommerce Checkout';
       default:
-        return 'Anpassat formulär';
+        return 'Custom form';
     }
   };
 
@@ -69,9 +74,9 @@ export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h2 className="text-2xl font-bold tracking-tight">Formuläranalys</h2>
+          <h2 className="text-2xl font-bold tracking-tight">Form Analytics</h2>
           <p className="text-muted-foreground">
-            Analysera prestanda för Contact Form 7, Gravity Forms och andra formulär
+            Analyze performance for Contact Form 7, Gravity Forms, and other forms
           </p>
         </div>
         
@@ -79,7 +84,7 @@ export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
           {forms && forms.length > 0 && (
             <Select value={selectedFormId} onValueChange={setSelectedFormId}>
               <SelectTrigger className="w-[280px]">
-                <SelectValue placeholder="Välj formulär att analysera" />
+                <SelectValue placeholder="Select form to analyze" />
               </SelectTrigger>
               <SelectContent>
                 {forms.map((form) => (
@@ -107,30 +112,26 @@ export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
       </div>
 
       <Tabs value={activeView} onValueChange={(value) => setActiveView(value as any)} className="w-full">
-        <TabsList className="grid w-full grid-cols-6">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="setup" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
-            Välj System
+            Select System
           </TabsTrigger>
           <TabsTrigger value="config" className="flex items-center gap-2" disabled={!selectedFormType}>
             <Settings className="h-4 w-4" />
-            Konfigurera
+            Configure
           </TabsTrigger>
           <TabsTrigger value="goals" className="flex items-center gap-2">
             <Settings className="h-4 w-4" />
-            Konverteringsmål
+            Conversion Goals
           </TabsTrigger>
           <TabsTrigger value="overview" className="flex items-center gap-2" disabled={!systemConfigured}>
             <BarChart3 className="h-4 w-4" />
-            Översikt
+            Overview
           </TabsTrigger>
           <TabsTrigger value="funnel" className="flex items-center gap-2" disabled={!selectedFormId}>
             <TrendingDown className="h-4 w-4" />
-            Formulärtratt
-          </TabsTrigger>
-          <TabsTrigger value="heatmap" className="flex items-center gap-2" disabled={!selectedFormId}>
-            <Users className="h-4 w-4" />
-            Formulär-heatmap
+            Form Funnel
           </TabsTrigger>
         </TabsList>
 
@@ -146,12 +147,12 @@ export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
 
         <TabsContent value="config" className="space-y-6">
           {selectedFormType && (
-            <SystemSpecificConfig 
+            <SystemSpecificConfig
               systemType={selectedFormType}
-              onConfigSave={(config) => {
-                console.log('System configuration saved:', config);
+              onConfigSave={(_config) => {
                 setSystemConfigured(true);
                 setActiveView('overview');
+                toast({ title: 'Configuration saved', description: 'Form analytics is now configured.' });
               }}
             />
           )}
@@ -162,7 +163,7 @@ export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
         </TabsContent>
 
         <TabsContent value="overview" className="space-y-6">
-          <FormAnalyticsOverview selectedSite={selectedSite} />
+          <FormAnalyticsOverview selectedSite={selectedSite} dateRange={dateRange} />
         </TabsContent>
 
         <TabsContent value="funnel" className="space-y-6">
@@ -175,51 +176,15 @@ export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
           ) : (
             <Card>
               <CardHeader>
-                <CardTitle>Välj ett formulär</CardTitle>
+                <CardTitle>Select a form</CardTitle>
                 <CardDescription>
-                  Välj ett formulär från dropdown-menyn ovan för att se funnelanalys.
+                  Select a form from the dropdown above to see funnel analysis.
                 </CardDescription>
               </CardHeader>
             </Card>
           )}
         </TabsContent>
 
-        <TabsContent value="heatmap" className="space-y-6">
-          {selectedFormId ? (
-            <Card>
-              <CardHeader>
-                <CardTitle className="flex items-center gap-2">
-                  <Users className="h-5 w-5" />
-                  Formulär-heatmap: {selectedForm?.form_name || selectedFormId}
-                </CardTitle>
-                <CardDescription>
-                  Visar var användare klickar, fokuserar och interagerar i formuläret
-                </CardDescription>
-              </CardHeader>
-              <CardContent>
-                <div className="text-center py-12">
-                  <div className="text-4xl mb-4">🔥</div>
-                  <h3 className="text-lg font-semibold mb-2">Formulär-heatmap</h3>
-                  <p className="text-muted-foreground mb-4">
-                    Denna funktion visar interaktions-heatmaps för specifika formulärfält
-                  </p>
-                  <div className="text-sm text-muted-foreground">
-                    Kommer snart: Visuell representation av klick- och fokusdata för formulärfält
-                  </div>
-                </div>
-              </CardContent>
-            </Card>
-          ) : (
-            <Card>
-              <CardHeader>
-                <CardTitle>Välj ett formulär</CardTitle>
-                <CardDescription>
-                  Välj ett formulär från dropdown-menyn ovan för att se heatmap-data.
-                </CardDescription>
-              </CardHeader>
-            </Card>
-          )}
-        </TabsContent>
       </Tabs>
 
       {/* Quick Stats Footer */}
@@ -229,27 +194,27 @@ export function FormAnalyticsTab({ selectedSite }: FormAnalyticsTabProps) {
             <div className="grid gap-4 md:grid-cols-4 text-center">
               <div>
                 <div className="text-2xl font-bold">{forms.length}</div>
-                <p className="text-sm text-muted-foreground">Aktiva formulär</p>
+                <p className="text-sm text-muted-foreground">Active forms</p>
               </div>
               <div>
                 <div className="text-2xl font-bold">
-                  {forms.reduce((sum, form) => sum + form.total_starts, 0).toLocaleString()}
+                  {forms.reduce((sum, form) => sum + form.total_starts, 0).toLocaleString('sv-SE')}
                 </div>
-                <p className="text-sm text-muted-foreground">Totala starter</p>
+                <p className="text-sm text-muted-foreground">Total starts</p>
               </div>
               <div>
                 <div className="text-2xl font-bold text-green-600">
-                  {forms.reduce((sum, form) => sum + form.total_completions, 0).toLocaleString()}
+                  {forms.reduce((sum, form) => sum + form.total_completions, 0).toLocaleString('sv-SE')}
                 </div>
-                <p className="text-sm text-muted-foreground">Slutförda</p>
+                <p className="text-sm text-muted-foreground">Completed</p>
               </div>
               <div>
                 <div className="text-2xl font-bold">
-                  {forms.length > 0 
+                  {forms.length > 0
                     ? (forms.reduce((sum, form) => sum + form.conversion_rate, 0) / forms.length).toFixed(1)
                     : 0}%
                 </div>
-                <p className="text-sm text-muted-foreground">Genomsnittlig konvertering</p>
+                <p className="text-sm text-muted-foreground">Average conversion</p>
               </div>
             </div>
           </CardContent>

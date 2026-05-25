@@ -19,7 +19,7 @@ import {
   TableRow,
 } from '@/components/ui/table';
 import { Badge } from '@/components/ui/badge';
-import { ArrowUpRight, TrendingUp, TrendingDown, ExternalLink } from 'lucide-react';
+import { TrendingUp, TrendingDown, ExternalLink, Minus } from 'lucide-react';
 import { toast } from 'sonner';
 
 interface SiteSummary {
@@ -32,15 +32,18 @@ interface SiteSummary {
   bounce_rate: number;
   avg_session_duration: number;
   conversions: number;
-  trend: number; // percentage change vs last period
+  prev_visits: number;
 }
 
 export default function AllSites() {
   const [sites, setSites] = useState<SiteSummary[]>([]);
   const [loading, setLoading] = useState(true);
+  const now = new Date();
   const [dateRange] = useState({
-    from: new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString(),
-    to: new Date().toISOString()
+    from: new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(),
+    to: now.toISOString(),
+    prevFrom: new Date(now.getTime() - 60 * 24 * 60 * 60 * 1000).toISOString(),
+    prevTo:   new Date(now.getTime() - 30 * 24 * 60 * 60 * 1000).toISOString(),
   });
 
   useEffect(() => {
@@ -83,10 +86,18 @@ export default function AllSites() {
             .gte('created_at', dateRange.from)
             .lte('created_at', dateRange.to);
 
+          const { data: prevSessions } = await supabase
+            .from('tracking_sessions')
+            .select('id')
+            .eq('site_id', site.id)
+            .gte('started_at', dateRange.prevFrom)
+            .lte('started_at', dateRange.prevTo);
+
           const visits = sessions?.length || 0;
           const totalPageviews = pageViews?.length || 0;
           const bounces = sessions?.filter(s => s.page_views === 1).length || 0;
           const avgDuration = sessions?.reduce((sum, s) => sum + (s.duration_seconds || 0), 0) / (visits || 1);
+          const prevVisits = prevSessions?.length || 0;
 
           return {
             ...site,
@@ -95,7 +106,7 @@ export default function AllSites() {
             bounce_rate: visits > 0 ? (bounces / visits) * 100 : 0,
             avg_session_duration: avgDuration,
             conversions: conversions?.length || 0,
-            trend: Math.random() * 40 - 20 // Mock trend for now
+            prev_visits: prevVisits,
           };
         })
       );
@@ -260,19 +271,20 @@ export default function AllSites() {
                             {site.conversions}
                           </TableCell>
                           <TableCell className="text-right">
-                            <div className="flex items-center justify-end gap-1">
-                              {site.trend >= 0 ? (
-                                <>
-                                  <TrendingUp className="h-4 w-4 text-green-500" />
-                                  <span className="text-green-500">+{site.trend.toFixed(1)}%</span>
-                                </>
+                            {(() => {
+                              if (site.prev_visits === 0 && site.visits === 0) {
+                                return <span className="text-muted-foreground"><Minus className="h-4 w-4 inline" /></span>;
+                              }
+                              if (site.prev_visits === 0) {
+                                return <span className="text-green-500 flex items-center justify-end gap-1"><TrendingUp className="h-4 w-4" />New</span>;
+                              }
+                              const pct = ((site.visits - site.prev_visits) / site.prev_visits) * 100;
+                              return pct >= 0 ? (
+                                <span className="text-green-500 flex items-center justify-end gap-1"><TrendingUp className="h-4 w-4" />+{pct.toFixed(1)}%</span>
                               ) : (
-                                <>
-                                  <TrendingDown className="h-4 w-4 text-red-500" />
-                                  <span className="text-red-500">{site.trend.toFixed(1)}%</span>
-                                </>
-                              )}
-                            </div>
+                                <span className="text-red-500 flex items-center justify-end gap-1"><TrendingDown className="h-4 w-4" />{pct.toFixed(1)}%</span>
+                              );
+                            })()}
                           </TableCell>
                           <TableCell className="text-right">
                             <Link to={`/dashboard?site=${site.id}`}>

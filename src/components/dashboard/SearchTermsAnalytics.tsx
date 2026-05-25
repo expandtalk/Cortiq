@@ -4,14 +4,14 @@ import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useGA4SearchTerms } from '@/hooks/useGA4SearchTerms';
 import { Search, TrendingUp, Calendar } from 'lucide-react';
-import { GA4SetupGuide } from './GA4SetupGuide';
 
 interface SearchTermsAnalyticsProps {
   siteId: string | null;
   dateRange?: { from: Date; to: Date };
+  onNavigateToIntegrations?: () => void;
 }
 
-export function SearchTermsAnalytics({ siteId, dateRange }: SearchTermsAnalyticsProps) {
+export function SearchTermsAnalytics({ siteId, dateRange, onNavigateToIntegrations }: SearchTermsAnalyticsProps) {
   const { searchTerms, loading, error } = useGA4SearchTerms({ siteId, dateRange });
 
   if (loading) {
@@ -20,9 +20,9 @@ export function SearchTermsAnalytics({ siteId, dateRange }: SearchTermsAnalytics
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Search className="h-5 w-5" />
-            Söktermsanalys
+            Search Term Analysis
           </CardTitle>
-          <CardDescription>Laddar sökdata från GA4...</CardDescription>
+          <CardDescription>Loading search data from GA4...</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -36,36 +36,51 @@ export function SearchTermsAnalytics({ siteId, dateRange }: SearchTermsAnalytics
   }
 
   if (error) {
+    const isNotConfigured =
+      error.toLowerCase().includes('service account') ||
+      error.toLowerCase().includes('not configured') ||
+      error.toLowerCase().includes('non-2xx') ||
+      error.toLowerCase().includes('integration not enabled');
+
+    const isPermission =
+      error.toLowerCase().includes('permission') ||
+      error.toLowerCase().includes('behörighet');
+
     return (
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Search className="h-5 w-5" />
-            Söktermsanalys
+            Search Term Analysis
           </CardTitle>
-          <CardDescription>Problem med att hämta sökdata</CardDescription>
+          <CardDescription>
+            {isNotConfigured ? 'Setup required' : 'Problem fetching search data'}
+          </CardDescription>
         </CardHeader>
-        <CardContent className="space-y-4">
-          <Alert>
-            <AlertDescription className="space-y-2">
-              <p className="font-medium">{error}</p>
-              {error.includes('service account') && (
-                <p className="text-xs">Detta kräver att en administratör konfigurerar GA4 service account-nyckel i Supabase.</p>
-              )}
-              {error.includes('behörighet') && (
-                <div className="text-xs space-y-1">
-                  <p>Lösning:</p>
-                  <ol className="list-decimal list-inside space-y-1">
-                    <li>Gå till GA4 Admin → Property Access Management</li>
-                    <li>Lägg till service account email med "Viewer" roll</li>
-                    <li>Service account email finns i din Supabase edge function miljövariabler</li>
-                  </ol>
-                </div>
-              )}
-            </AlertDescription>
-          </Alert>
-          {error.includes('service account') && (
-            <GA4SetupGuide />
+        <CardContent>
+          {isNotConfigured ? (
+            <div className="flex items-start gap-3 text-sm">
+              <span className="flex-shrink-0 w-5 h-5 rounded-full bg-muted flex items-center justify-center text-xs font-bold mt-0.5">!</span>
+              <div className="space-y-1">
+                <p className="text-muted-foreground">
+                  Requires a GA4 service account.{' '}
+                  {onNavigateToIntegrations && (
+                    <button className="text-primary hover:underline" onClick={onNavigateToIntegrations}>
+                      Configure under Mer → Data Sources → GA4 →
+                    </button>
+                  )}
+                </p>
+                <p className="text-xs text-muted-foreground">
+                  After setup: GA4 Admin → Property Access Management → add service account email with Viewer role.
+                </p>
+              </div>
+            </div>
+          ) : isPermission ? (
+            <p className="text-sm text-muted-foreground">
+              Permission error: add the service account email as Viewer in GA4 Admin → Property Access Management.
+            </p>
+          ) : (
+            <p className="text-sm text-muted-foreground">{error}</p>
           )}
         </CardContent>
       </Card>
@@ -78,18 +93,18 @@ export function SearchTermsAnalytics({ siteId, dateRange }: SearchTermsAnalytics
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Search className="h-5 w-5" />
-            Söktermsanalys
+            Search Term Analysis
           </CardTitle>
-          <CardDescription>Inga söktermer funna för denna period</CardDescription>
+          <CardDescription>No search terms found for this period</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="text-sm text-muted-foreground p-4 bg-muted rounded">
-            <p className="font-medium text-foreground mb-2">🔍 Ingen sökaktivitet</p>
-            <p className="mb-2">För att spåra söktermer behöver din webbplats:</p>
+            <p className="font-medium text-foreground mb-2">🔍 No search activity</p>
+            <p className="mb-2">To track search terms your website needs:</p>
             <ul className="list-disc list-inside space-y-1">
-              <li>En sökfunktion med query parameters (q, s, search, query, keyword)</li>
-              <li>GA4 Enhanced Measurement aktiverat</li>
-              <li>Eller manuell view_search_results event-spårning</li>
+              <li>A search function with query parameters (q, s, search, query, keyword)</li>
+              <li>GA4 Enhanced Measurement enabled</li>
+              <li>Or manual view_search_results event tracking</li>
             </ul>
           </div>
         </CardContent>
@@ -105,10 +120,10 @@ export function SearchTermsAnalytics({ siteId, dateRange }: SearchTermsAnalytics
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Search className="h-5 w-5" />
-          Söktermsanalys
+          Search Term Analysis
         </CardTitle>
         <CardDescription>
-          Top söktermer från GA4 ({totalSearches} totala sökningar)
+          Top search terms from GA4 ({totalSearches} total searches)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -136,7 +151,7 @@ export function SearchTermsAnalytics({ siteId, dateRange }: SearchTermsAnalytics
                     </p>
                     <p className="text-xs text-muted-foreground flex items-center gap-1">
                       <Calendar className="h-3 w-3" />
-                      Senast: {new Date(searchTerm.lastSearched).toLocaleDateString('sv-SE')}
+                      Last: {new Date(searchTerm.lastSearched).toLocaleDateString('en-US')}
                     </p>
                   </div>
                 </div>
@@ -145,7 +160,7 @@ export function SearchTermsAnalytics({ siteId, dateRange }: SearchTermsAnalytics
                     {searchTerm.count}
                   </div>
                   <div className="text-xs text-muted-foreground">
-                    sökningar
+                    searches
                   </div>
                 </div>
               </div>
@@ -156,18 +171,18 @@ export function SearchTermsAnalytics({ siteId, dateRange }: SearchTermsAnalytics
         {searchTerms.length > 10 && (
           <div className="mt-4 pt-4 border-t text-center">
             <p className="text-sm text-muted-foreground">
-              Visar topp 10 av {searchTerms.length} söktermer
+              Showing top 10 of {searchTerms.length} search terms
             </p>
           </div>
         )}
 
         <div className="mt-4 pt-4 border-t">
           <div className="text-xs text-muted-foreground">
-            <p className="mb-2">💡 <strong>Tips för bättre sökspårning:</strong></p>
+            <p className="mb-2">💡 <strong>Tips for better search tracking:</strong></p>
             <ul className="list-disc list-inside space-y-1">
-              <li>Använd standardiserade query parameters (q, s, search)</li>
-              <li>Aktivera Enhanced Measurement i GA4</li>
-              <li>Implementera custom search events för avancerad spårning</li>
+              <li>Use standardized query parameters (q, s, search)</li>
+              <li>Enable Enhanced Measurement in GA4</li>
+              <li>Implement custom search events for advanced tracking</li>
             </ul>
           </div>
         </div>

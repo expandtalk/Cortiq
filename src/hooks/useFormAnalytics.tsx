@@ -170,7 +170,6 @@ export function useFormPerformanceMetrics(siteId: string) {
   return useQuery({
     queryKey: ['form-performance', siteId],
     queryFn: async () => {
-      // Get all forms data
       const { data: forms, error: formsError } = await supabase
         .from('form_analytics')
         .select('*')
@@ -178,41 +177,53 @@ export function useFormPerformanceMetrics(siteId: string) {
 
       if (formsError) throw formsError;
 
-      // Calculate overall metrics
       const totalStarts = forms.reduce((sum, form) => sum + form.total_starts, 0);
       const totalCompletions = forms.reduce((sum, form) => sum + form.total_completions, 0);
       const totalAbandons = forms.reduce((sum, form) => sum + form.total_abandons, 0);
-
-      const avgConversionRate = forms.length > 0 
-        ? forms.reduce((sum, form) => sum + form.conversion_rate, 0) / forms.length 
+      const avgConversionRate = forms.length > 0
+        ? forms.reduce((sum, form) => sum + form.conversion_rate, 0) / forms.length
         : 0;
-
       const avgCompletionTime = forms.length > 0
         ? forms.reduce((sum, form) => sum + form.avg_completion_time, 0) / forms.length
         : 0;
+      const bestForm = forms.reduce((best, current) =>
+        current.conversion_rate > best.conversion_rate ? current : best, forms[0] || null);
+      const worstForm = forms.reduce((worst, current) =>
+        current.conversion_rate < worst.conversion_rate ? current : worst, forms[0] || null);
 
-      // Find best and worst performing forms
-      const bestForm = forms.reduce((best, current) => 
-        current.conversion_rate > best.conversion_rate ? current : best, 
-        forms[0] || null
-      );
+      return { totalStarts, totalCompletions, totalAbandons, avgConversionRate, avgCompletionTime, formsCount: forms.length, bestForm, worstForm, forms };
+    },
+    enabled: !!siteId,
+  });
+}
 
-      const worstForm = forms.reduce((worst, current) => 
-        current.conversion_rate < worst.conversion_rate ? current : worst, 
-        forms[0] || null
-      );
+/** Date-range-filtered metrics derived from form_sessions (not the aggregated form_analytics table). */
+export function useFormSessionMetrics(siteId: string, from?: string, to?: string) {
+  return useQuery({
+    queryKey: ['form-session-metrics', siteId, from, to],
+    queryFn: async () => {
+      let query = supabase
+        .from('form_sessions')
+        .select('completed_at, abandoned_at, completion_time')
+        .eq('site_id', siteId);
 
-      return {
-        totalStarts,
-        totalCompletions,
-        totalAbandons,
-        avgConversionRate,
-        avgCompletionTime,
-        formsCount: forms.length,
-        bestForm,
-        worstForm,
-        forms,
-      };
+      if (from) query = query.gte('started_at', from);
+      if (to)   query = query.lte('started_at', to);
+
+      const { data, error } = await query;
+      if (error) throw error;
+
+      const sessions = data || [];
+      const totalStarts = sessions.length;
+      const totalCompletions = sessions.filter(s => s.completed_at).length;
+      const totalAbandons = sessions.filter(s => s.abandoned_at && !s.completed_at).length;
+      const avgConversionRate = totalStarts > 0 ? (totalCompletions / totalStarts) * 100 : 0;
+      const completionTimes = sessions.filter(s => s.completion_time != null).map(s => s.completion_time!);
+      const avgCompletionTime = completionTimes.length > 0
+        ? completionTimes.reduce((a, b) => a + b, 0) / completionTimes.length
+        : 0;
+
+      return { totalStarts, totalCompletions, totalAbandons, avgConversionRate, avgCompletionTime };
     },
     enabled: !!siteId,
   });
