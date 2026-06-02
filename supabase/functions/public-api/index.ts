@@ -1,6 +1,5 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
-import { createHash } from "https://deno.land/std@0.168.0/hash/mod.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -26,10 +25,12 @@ async function validateApiKey(authHeader: string | null, supabase: any): Promise
 
   const apiKey = authHeader.substring(7); // Remove 'Bearer '
 
-  // Hash the API key for database lookup
-  const hash = createHash("sha256");
-  hash.update(apiKey);
-  const keyHash = hash.toString();
+  // Hash the API key for database lookup (Web Crypto — no external import needed)
+  const keyBytes = new TextEncoder().encode(apiKey);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", keyBytes);
+  const keyHash = Array.from(new Uint8Array(hashBuffer))
+    .map(b => b.toString(16).padStart(2, '0'))
+    .join('');
 
   const { data, error } = await supabase.rpc('validate_api_key', { p_key_hash: keyHash });
 
