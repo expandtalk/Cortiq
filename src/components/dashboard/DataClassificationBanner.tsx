@@ -1,0 +1,59 @@
+import { Shield, BarChart3, Info } from 'lucide-react';
+import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from '@/components/ui/tooltip';
+
+interface DataClassificationBannerProps {
+  variant: 'security' | 'analytics';
+}
+
+const CONFIG = {
+  security: {
+    icon: Shield,
+    label: 'Security Data',
+    color: 'bg-orange-500/10 border-orange-500/30 text-orange-700 dark:text-orange-400',
+    iconColor: 'text-orange-500',
+    details: [
+      'Legal basis: Legitimate interest (Art. 6(1)(f) GDPR)',
+      'IP addresses: hashed, never stored in plain text',
+      'Retention: 48 hours',
+    ],
+    tooltip: 'Security monitoring data is processed under legitimate interest for fraud prevention and site protection. Raw IP addresses are hashed immediately and automatically deleted after 48 hours.',
+  },
+  analytics: {
+    icon: BarChart3,
+    label: 'Analytics Data',
+    color: 'bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-400',
+    iconColor: 'text-blue-500',
+    details: [
+      'No personal data stored',
+      'Aggregated metrics only — no identifiable link',
+      'Retention: 730 days',
+    ],
+    tooltip: 'Analytics data contains no personal data. All metrics are aggregated and anonymized. No cookies or IP addresses are stored.',
+  },
+};
+
+export function DataClassificationBanner({ variant }: DataClassificationBannerProps) {
+  const config = CONFIG[variant];
+  const Icon = config.icon;
+
+  return (
+    <div className={`flex items-start gap-3 rounded-lg border px-4 py-3 text-sm ${config.color}`}>
+      <Icon className={`h-4 w-4 mt-0.5 flex-shrink-0 ${config.iconColor}`} />
+      <div className="flex-1 min-w-0">
+        <span className="font-semibold">{config.label}</span>
+        <span className="mx-2 opacity-40">·</span>
+        <span className="opacity-80">{config.details.join(' · ')}</span>
+      </div>
+      <TooltipProvider>
+        <Tooltip>
+          <TooltipTrigger asChild>
+            <Info className="h-4 w-4 flex-shrink-0 mt-0.5 opacity-60 cursor-help" />
+          </TooltipTrigger>
+          <TooltipContent className="max-w-xs text-xs" side="left">
+            {config.tooltip}
+          </TooltipContent>
+        </Tooltip>
+      </TooltipProvider>
+    </div>
+  );
+}

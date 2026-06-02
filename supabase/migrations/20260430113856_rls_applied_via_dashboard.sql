@@ -1,0 +1,3 @@
+-- RLS security fixes applied via Supabase Dashboard SQL Editor on 2026-04-30.
+-- Covered by 20260430000003_rls_security_fixes.sql — this is the Dashboard-generated record.
+-- No SQL to run — already applied on remote.

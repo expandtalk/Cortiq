@@ -1,0 +1,3 @@
+-- Applied directly via Supabase Dashboard on 2026-04-04.
+-- Local placeholder to keep migration history in sync.
+-- No SQL to run — already applied on remote.
