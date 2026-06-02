@@ -1,150 +1,117 @@
-=== Heatmap Analytics by Expandtalk.se ===
-Contributors: expandtalk
-Tags: agentic-analytics, ai-tracking, heatmap, cookiefree, serverside-analytics, gdpr, chatgpt-browser, perplexity
-Requires at least: 5.0
-Tested up to: 6.4
-Stable tag: 5.0.0
+=== CortIQ Analytics ===
+Contributors: cortiq
+Tags: analytics, ai-tracking, heatmap, cookie-free, gdpr, chatgpt, session-recording
+Requires at least: 5.6
+Tested up to: 6.7
+Stable tag: 5.1.0
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-First on the market with Agentic Browser Analytics + Cookiefree Serverside Tracking. Track AI agents and eliminate cookie banners.
+Analytics for the agentic web. Track AI agents, human visitors and Core Web Vitals — cookie-free and GDPR-compliant.
 
 == Description ==
 
-**Heatmap Analytics by Expandtalk.se** is the first on the market with dedicated **Agentic Browser Analytics** - track when AI agents like ChatGPT Browser, Perplexity Comet, and Claude Browser visit your website. Combined with **cookiefree serverside tracking**, you get 100% GDPR-compliant analytics without any cookie banners.
+CortIQ Analytics gives you a complete picture of who visits your site: human visitors and AI agents alike. It combines cookie-free server-side analytics (no consent required) with optional enhanced tracking (heatmaps, session recording) that activates only after the visitor gives consent.
 
-### 🤖 Agentic Browser Analytics (World First!)
+= What you can measure =
 
-* **Track AI Agents** - ChatGPT Browser, Perplexity Comet, Claude Browser and more
-* **Agent-specific dashboards** - See how AI agents interact with your website
-* **Structured data analysis** - Understand how well your site is prepared for the agentic web
-* **Agent conversion attribution** - Measure conversions from AI-driven traffic
-* **Future-proof** - Ready for when 10-15% of all traffic comes from bots within three years
+**AI agent traffic**
+* Which AI agents visit your site: ChatGPT Browser, Perplexity Comet, Claude Browser, Gemini and others
+* Which pages AI agents access and how often
+* Citation tracking — when an LLM references your content
+* AI agent conversion attribution — traffic and goals driven by AI referrals
+* Browser type classification: Visual / Headless / Text-based
 
-### 🍪 Cookiefree Serverside Analytics
+**Human visitor behaviour**
+* Page views, sessions, bounce rate, time on site
+* Traffic sources: organic, direct, referral, paid, social
+* Click heatmaps — exact click positions per page and device type
+* Form analytics — field-level drop-off analysis
+* Session recording — full replay of visitor interactions (with data masking for sensitive fields)
+* User journey and navigation flow
 
-* **No cookie banners** - Eliminate cookie disruptions completely
-* **100% GDPR-compliant** - Serverside tracking without personal data in browser
-* **Better conversion** - No annoying banners reducing conversion rates
-* **Complete data** - All the analytics you need without cookies
-* **GA4 Server-Side** - Want to keep Google Analytics? We run it serverside
+**Conversion & testing**
+* Goal tracking and conversion funnels
+* A/B testing with statistical significance
+* UTM campaign tracking
 
-### 🔥 Traditional Analytics (Also Included)
+**Technical**
+* Core Web Vitals (LCP, FID/INP, CLS)
+* Device, browser and geographic breakdown
+* Data Warehouse export (BigQuery, Snowflake, Redshift, PostgreSQL)
 
-* **Heatmap visualization** - Click, scroll and attention maps
-* **Google Analytics 4 integration** - Combine with GA4 data
-* **A/B Testing** - Built-in testing platform
-* **Form Analytics** - Detailed form analysis
-* **Real-time data** - Live tracking with batch optimization
+= Privacy & GDPR =
 
-### 🚀 Why Choose Us?
+Cookie-free tracking runs by default with no cookies and no personal data stored in the browser. This is legal under GDPR legitimate interest (Art. 6.1.f) — no cookie banner required for this layer.
 
-* **Unique features** - No one else has agentic browser tracking + cookiefree analytics
-* **Competitive advantage** - Stay ahead of your competitors in the new agentic web
-* **Expert support** - Personal help when you need it
-* **GDPR expert** - We understand European data protection requirements perfectly
+Enhanced tracking (heatmaps, sessions) activates only after the visitor consents via the built-in cookie banner. The banner implements:
+* Granular categories (Necessary / Preferences / Statistics / Marketing)
+* No pre-ticked boxes for non-essential categories
+* Consent ID and timestamp logging
+* Google Consent Mode v2 — wired automatically if GA4 is configured
+* IP anonymisation enabled by default
+
+All data is stored in the EU.
+
+= Requirements =
+
+* A CortIQ account — [sign up at cortiq.se](https://cortiq.se)
+* Site ID from the CortIQ dashboard (Settings → Setup)
+* Tracking ID (API key) from the CortIQ dashboard
 
 == Installation ==
 
-1. Upload the plugin files to the `/wp-content/plugins/heatmap-analytics` directory
-2. Activate the plugin through the 'Plugins' menu in WordPress
-3. Go to Settings → Heatmap Analytics for configuration
-4. Enter your tracking ID from Expandtalk.se dashboard
-5. Choose between cookiefree serverside or traditional tracking
-6. Enable Agentic Browser Analytics to track AI agents
-7. Configure Google Analytics integration (optional)
+1. Upload the `cortiq-analytics` folder to `/wp-content/plugins/`
+2. Activate the plugin via the Plugins menu in WordPress
+3. Go to **Settings → CortIQ Analytics**
+4. Enter your **Site ID** (UUID from CortIQ dashboard → Settings → Setup)
+5. Enter your **Tracking ID** (API key from the same page)
+6. Optionally enter your **GA4 Measurement ID** (e.g. `G-XXXXXXXXXX`)
+7. Save. Tracking starts immediately.
+
+The plugin loads the CortIQ tracking script in `<head>` and shows the cookie consent banner in the footer. Both can be disabled independently.
+
+== Frequently Asked Questions ==
+
+= Do I need a cookie banner? =
+
+Not for the cookie-free layer. CortIQ's server-side analytics collect no personal data and require no consent. The built-in cookie banner is only needed if you want enhanced tracking (heatmaps, sessions) or Google Analytics.
+
+= Does this work alongside Google Analytics? =
+
+Yes. Enter your GA4 Measurement ID in the plugin settings. CortIQ wires Google Consent Mode v2 automatically — GA4 only fires after the visitor accepts analytics cookies.
+
+= Where is my data stored? =
+
+All data is stored in the EU (AWS eu-north-1 via Supabase).
+
+= Does the plugin slow down my site? =
+
+The tracking script is loaded with `defer` so it does not block rendering. Cookie-free tracking is server-side and adds no client-side weight beyond the script tag.
+
+= Can I mask sensitive fields in session recordings? =
+
+Yes. Add `data-cortiq-mask` to any input or element. The field content is replaced with asterisks in the recording. See the [GDPR guide](https://github.com/expandtalk/cortiq/blob/main/GDPR.md) for details.
 
 == Changelog ==
 
+= 5.1.0 =
+* Unified single-file plugin — no class dependencies
+* Full rebranding to CortIQ Analytics
+* Improved settings page with live status indicators
+* Legacy GA measurement ID migration (from pre-5.1 installs)
+
 = 5.0.0 =
-* NEW: Agentic Browser Analytics - first on the market!
-* NEW: Track ChatGPT Browser, Perplexity Comet and Claude Browser
-* NEW: Cookiefree Serverside Analytics - eliminate cookie banners completely
-* NEW: GA4 Server-Side Integration capability
-* Agent-specific dashboards and insights
-* Structured data readiness scoring
-* Agent conversion attribution
-* Improved user experience without cookie banners
-* 100% GDPR-compliant without cookies
+* AI agent detection: ChatGPT Browser, Perplexity Comet, Claude Browser
+* Cookie-free server-side analytics
+* GA4 server-side integration
+* Agent-specific dashboards
 
 = 4.2.0 =
 * Google Site Kit integration
-* TikTok Pixel integration
-* Navigation sync improvements
+* Navigation sync
 
 = 3.0.0 =
-* Proper Supabase integration
+* Supabase backend integration
 * Improved tracking with retry logic
-* Advanced IP exclusion with CIDR support
-* Sampling functionality
-* Mobile tracking control
-
-
-
-*****************
-
-
-<!-- Add this to <head> BEFORE all other tracking scripts -->
-<script src="/wp-content/plugins/heatmap-analytics/assets/gdpr-compliant-analytics-loader.js"></script>
-
-<!-- Google Analytics and other scripts load AFTER -->
-
-
-
-What the script does:
-
-Automatically blocks Google Analytics and other tracking scripts
-Implements Google Consent Mode v2 with correct default settings
-Prevents cookies from being set before consent
-Loads scripts only after user has given consent
-
-
-
-Update your WordPress header (functions.php or theme):
-
-phpfunction add_gdpr_scripts() {
-    // GDPR loader FIRST
-    wp_enqueue_script('gdpr-loader', 
-        get_template_directory_uri() . '/js/gdpr-compliant-analytics-loader.js', 
-        array(), 
-        '1.0.0', 
-        false // In head, not footer
-    );
-    
-    // Google Analytics AFTER (will be blocked until consent)
-    wp_enqueue_script('google-analytics', 
-        'https://www.googletagmanager.com/gtag/js?id=YOUR-GA-ID', 
-        array('gdpr-loader'), 
-        null, 
-        false
-    );
-}
-add_action('wp_enqueue_scripts', 'add_gdpr_scripts', 5); // Priority 5 = early
-
-
-
-4. Test that it works
-
-Clear all cookies and reload the page
-Open Developer Tools → Network tab
-Verify that:
-
-Google Analytics scripts have type="text/blocked"
-No _ga cookies are set
-Console shows "Blocked script: google-analytics.com"
-
-
-Accept analytics in cookie banner
-See that scripts load and cookies are set
-
-This follows GDPR 100% because:
-
-✅ No tracking cookies before consent
-✅ Google Consent Mode v2 implemented
-✅ User has full control
-✅ Clear cookie categorization
-RetryClaude can make mistakes. Please double-check responses.
-
-
-
