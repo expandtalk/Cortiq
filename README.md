@@ -9,7 +9,7 @@
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase)](https://supabase.com/)
 
-[🌐 Website](https://cortiq.se) · [📚 Full Documentation](./CLAUDE.md) · [🚀 Deployment Guide](./DEPLOYMENT.md) · [📖 Docs Index](./docs/INDEX.md)
+[🌐 Website](https://cortiq.se) · [📖 Integration Guide](./INTEGRATION-GUIDE.md) · [🚀 Deployment Guide](./DEPLOYMENT.md)
 
 </div>
 

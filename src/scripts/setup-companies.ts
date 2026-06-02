@@ -1,17 +1,27 @@
 /**
- * Setup script to create company records for Daniel's sites
- * Run this once to initialize the tracking companies
+ * One-time setup script — creates company records and generates API keys.
+ * Run once per environment: npx tsx src/scripts/setup-companies.ts
+ *
+ * Required environment variables:
+ *   VITE_SUPABASE_URL          — your Supabase project URL
+ *   SUPABASE_SERVICE_ROLE_KEY  — found in Supabase dashboard → Settings → API
  */
 import { createClient } from '@supabase/supabase-js';
 
-const SUPABASE_URL = "https://cxmkdtgfocgbfizawlwa.supabase.co";
-const SUPABASE_SERVICE_ROLE_KEY = "YOUR_SERVICE_ROLE_KEY"; // Replace with actual key from Supabase
+const SUPABASE_URL = process.env.VITE_SUPABASE_URL ?? "";
+const SUPABASE_SERVICE_ROLE_KEY = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+
+if (!SUPABASE_URL || !SUPABASE_SERVICE_ROLE_KEY) {
+  console.error("❌ Missing environment variables. Set VITE_SUPABASE_URL and SUPABASE_SERVICE_ROLE_KEY before running.");
+  process.exit(1);
+}
 
 const supabase = createClient(SUPABASE_URL, SUPABASE_SERVICE_ROLE_KEY);
 
+// Replace these with your actual site names before running.
 const companies = [
   {
-    name: 'Ekonom.biz',
+    name: 'My Site 1',
     consent_settings: {
       consent_mode: 'opt-out',
       data_retention_days: 730,
@@ -25,7 +35,7 @@ const companies = [
     }
   },
   {
-    name: 'AI Search Optimization',
+    name: 'My Site 2',
     consent_settings: {
       consent_mode: 'opt-out',
       data_retention_days: 730,
@@ -39,14 +49,14 @@ const companies = [
     }
   },
   {
-    name: 'Sentrisk',
+    name: 'My SaaS App',
     consent_settings: {
       consent_mode: 'opt-out',
       data_retention_days: 730,
       anonymize_ip: true,
       allowed_event_types: ['view', 'click', 'conversion', 'submission'],
       gdpr_settings: {
-        store_user_agent: true, // Sentrisk kanske behöver mer data för analytics
+        store_user_agent: false,
         store_referrer: true,
         geographic_restrictions: []
       }

@@ -1,224 +1,295 @@
-# CortIQ - Tracking Integration Guide
+# CortIQ — Tracking Integration Guide
 
-## För Daniels sajter
+## Quick Start
 
-### 1. Ekonom.biz
-Single-page application tracking
+### 1. Run the setup script
 
-**Installation:**
+Create your company records and generate API keys. Set the required environment variables first:
+
+```bash
+export VITE_SUPABASE_URL="https://[YOUR_PROJECT_REF].supabase.co"
+export SUPABASE_SERVICE_ROLE_KEY="your-service-role-key"
+npx tsx src/scripts/setup-companies.ts
+```
+
+You will receive:
+- **Company ID** (UUID)
+- **API Key** (one per site)
+
+### 2. Add the tracking script
+
+Place the snippet before `</body>` on every page:
+
 ```html
-<!-- I <head> eller före </body> -->
+<script
+  src="https://cortiq.se/spa-tracking.js"
+  data-site-id="[YOUR_COMPANY_ID]"
+  data-api-key="[YOUR_API_KEY]"
+  defer
+></script>
+```
+
+Page views are tracked automatically. No additional calls required for standard navigation.
+
+---
+
+## Platform Examples
+
+### Standard website (MPA)
+
+```html
+<!-- Place in <head> or before </body> -->
 <script>
   window.wfaConfig = {
-    companyId: '[COMPANY_ID_FRÅN_SETUP]',
-    apiKey: '[API_KEY_FRÅN_SETUP]',
-    apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
+    companyId: '[YOUR_COMPANY_ID]',
+    apiKey: '[YOUR_API_KEY]',
+    apiUrl: 'https://[YOUR_PROJECT_REF].supabase.co/functions/v1',
     contentType: 'page',
-    platform: 'ekonom-biz'
+    platform: 'my-site'
   };
 </script>
 <script src="https://cortiq.se/spa-tracking.js"></script>
 ```
 
-**Tracking exempel:**
+**Track specific elements:**
 ```html
-<!-- Automatisk pageview tracking -->
-<!-- Inget behöver göras, fungerar automatiskt! -->
-
-<!-- Tracka viktiga knappar -->
-<button data-wfa-track data-wfa-event="click" data-wfa-content-id="kontakt-cta">
-  Kontakta oss
+<!-- Track button clicks -->
+<button data-wfa-track data-wfa-event="click" data-wfa-content-id="cta-button">
+  Contact us
 </button>
 
-<!-- Tracka formulär som conversions -->
-<form data-wfa-conversion data-wfa-content-id="offert-formulär">
+<!-- Track form submissions as conversions -->
+<form data-wfa-conversion data-wfa-content-id="contact-form">
   <input type="email" required>
-  <button type="submit">Skicka</button>
+  <button type="submit">Submit</button>
 </form>
 ```
 
 ---
 
-### 2. AI Search Optimization
-Single-page application tracking
+### React / Vue / Next.js SPA
 
-**Installation:**
+CortIQ captures SPA navigation automatically via History API (`pushState` / `replaceState` / `popstate`). No extra calls needed for page view tracking.
+
 ```html
-<script>
-  window.wfaConfig = {
-    companyId: '[COMPANY_ID_FRÅN_SETUP]',
-    apiKey: '[API_KEY_FRÅN_SETUP]',
-    apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
-    contentType: 'page',
-    platform: 'ai-search-opt'
-  };
-</script>
-<script src="https://cortiq.se/spa-tracking.js"></script>
+<script
+  src="https://cortiq.se/spa-tracking.js"
+  data-site-id="[YOUR_COMPANY_ID]"
+  data-api-key="[YOUR_API_KEY]"
+  defer
+></script>
 ```
 
-**AI-specific tracking:**
-```javascript
-// Tracka när användare optimerar content
-WFATracker.track('click', 'ai-optimize-button', {
-  optimization_type: 'title',
-  platform: 'google'
-});
+**Conversion events via postMessage** (for SPAs that submit via `fetch` rather than native form submit):
 
-// Tracka conversions (t.ex. export eller download)
-WFATracker.trackConversion('export-optimized-content', {
-  format: 'html',
-  platform: 'tiktok'
-});
+```js
+// Successful form submission
+window.postMessage({
+  type: 'cortiq:formSubmit',
+  formId: form.id,
+  tenantId: company.id
+}, '*');
+
+// User login
+window.postMessage({ type: 'cortiq:login' }, '*');
+
+// New lead created
+window.postMessage({
+  type: 'cortiq:leadCreated',
+  tenantId: company.id
+}, '*');
+```
+
+| `type` | Conversion type | Extra fields |
+|--------|----------------|--------------|
+| `cortiq:formSubmit` | `form_submit` | `formId`, `tenantId` |
+| `cortiq:login` | `login` | `tenantId` (optional) |
+| `cortiq:leadCreated` | `lead_created` | `tenantId` |
+
+Legacy values without namespace (`formSubmit`, `login`, `leadCreated`) are also accepted for backwards compatibility.
+
+---
+
+### SaaS app with authenticated routes
+
+For apps with a public marketing section and a protected `/admin` area:
+
+```html
+<script
+  src="https://cortiq.se/spa-tracking.js"
+  data-site-id="[YOUR_SITE_ID]"
+  data-api-key="[YOUR_API_KEY]"
+  data-exclude-iframes="true"
+  data-exclude-paths="/embed/"
+  data-auth-path="/admin"
+  defer>
+</script>
+```
+
+- `data-exclude-iframes="true"` — stops all tracking when the script runs inside an iframe.
+- `data-exclude-paths="/embed/"` — skips tracking if the URL path starts with `/embed/`, even outside an iframe.
+- `data-auth-path="/admin"` — traffic under this prefix is tagged `traffic_segment: "authenticated"`, everything else `"public"`. Lets you filter product usage from marketing traffic in the dashboard.
+
+**Track tenant dimension** (optional — for multi-tenant apps):
+
+```js
+// Run in React context once currentCompany is known
+const n = window.CortIQ.getNonce();
+window.CortIQ.track('identify', window.location.pathname, {
+  tenant_id: currentCompany.id
+}, n);
+```
+
+Or set it statically if the installation always belongs to one tenant:
+```html
+<script ... data-tenant-id="[TENANT_UUID]" defer></script>
 ```
 
 ---
 
-### 3. Sentrisk
-Integration för AI-genererat content tracking
+### Content / AI platform
 
-**A. För Sentrisk's egen sajt:**
-```html
-<script>
-  window.wfaConfig = {
-    companyId: '[COMPANY_ID_FRÅN_SETUP]',
-    apiKey: '[API_KEY_FRÅN_SETUP]',
-    apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
-    contentType: 'page',
-    platform: 'sentrisk'
-  };
-</script>
-<script src="https://cortiq.se/spa-tracking.js"></script>
-```
-
-**B. För att tracka AI-genererat content (bilder, formulär, events):**
+Track AI-generated content views and conversions:
 
 ```javascript
-// När användare genererar content i Sentrisk
 async function trackGeneratedContent(contentId, contentType, platform) {
-  const response = await fetch('https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/track-event', {
-    method: 'POST',
-    headers: {
-      'Authorization': 'Bearer [SENTRISK_API_KEY]',
-      'Content-Type': 'application/json'
-    },
-    body: JSON.stringify({
-      company_id: '[SENTRISK_COMPANY_ID]',
-      content_type: contentType, // 'image' | 'form' | 'event' | 'survey' | 'chatbot'
-      content_id: contentId,
-      event_type: 'view', // eller 'click', 'conversion', 'submission'
-      platform: platform, // 'instagram' | 'youtube' | 'tiktok' | etc
-      session_id: WFATracker.getSessionId(),
-      metadata: {
-        device_type: 'desktop',
-        referrer: document.referrer
-      }
-    })
-  });
-  
+  const response = await fetch(
+    'https://[YOUR_PROJECT_REF].supabase.co/functions/v1/track-event',
+    {
+      method: 'POST',
+      headers: {
+        'Authorization': 'Bearer [YOUR_API_KEY]',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        company_id: '[YOUR_COMPANY_ID]',
+        content_type: contentType, // 'image' | 'form' | 'event' | 'survey' | 'chatbot'
+        content_id: contentId,
+        event_type: 'view',        // 'view' | 'click' | 'conversion' | 'submission'
+        platform: platform,        // 'instagram' | 'youtube' | 'tiktok' | etc.
+        session_id: WFATracker.getSessionId(),
+        metadata: {
+          device_type: 'desktop',
+          referrer: document.referrer
+        }
+      })
+    }
+  );
   return response.json();
 }
-
-// Exempel: Tracka när AI-genererad bild visas
-trackGeneratedContent('uuid-123', 'image', 'instagram');
-
-// Exempel: Tracka när formulär submittas
-trackGeneratedContent('uuid-456', 'form', 'web');
 ```
 
-**C. Hämta analytics för content:**
+Retrieve analytics for a content item:
 
 ```javascript
 async function getContentAnalytics(contentId) {
   const response = await fetch(
-    `https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/analytics-content/${COMPANY_ID}/${contentId}?from=2024-01-01&to=2024-12-31`,
-    {
-      headers: {
-        'Authorization': 'Bearer [API_KEY]'
-      }
-    }
+    `https://[YOUR_PROJECT_REF].supabase.co/functions/v1/analytics-content/[COMPANY_ID]/${contentId}?from=2024-01-01&to=2024-12-31`,
+    { headers: { 'Authorization': 'Bearer [API_KEY]' } }
   );
-  
-  const data = await response.json();
-  /*
-  {
-    content_id: "uuid",
-    content_type: "image",
-    metrics: {
-      total_views: 1234,
-      total_clicks: 89,
-      total_conversions: 12,
-      ctr: 7.21,
-      conversion_rate: 13.48
-    },
-    timeline: [...],
-    top_platforms: [...],
-    recommendations: [...]
-  }
-  */
-  return data;
+  return response.json();
+  // Returns: { content_id, content_type, metrics: { total_views, total_clicks, ctr, ... }, timeline, top_platforms }
 }
 ```
 
 ---
 
-## Setup-instruktioner
+## Astro
 
-### Steg 1: Kör setup-script
-Du måste köra scriptet `src/scripts/setup-companies.ts` EN GÅNG för att skapa companies och API-nycklar.
+### Standard MPA (default)
 
-**Innan du kör scriptet:**
-1. Hämta din SUPABASE_SERVICE_ROLE_KEY från: https://supabase.com/dashboard/project/cxmkdtgfocgbfizawlwa/settings/api
-2. Ersätt `YOUR_SERVICE_ROLE_KEY` i `setup-companies.ts`
-3. Kör: `npx tsx src/scripts/setup-companies.ts`
+Astro does full page loads — the script re-initialises on every page. Add it to your base layout:
 
-Du får då:
-- **Company ID** (UUID)
-- **API Key** (för varje sajt)
+```astro
+<!-- src/layouts/BaseLayout.astro -->
+<head>
+  <script
+    is:inline
+    src="https://cortiq.se/spa-tracking.js"
+    data-site-id="[SITE_ID]"
+    data-api-key="[API_KEY]"
+    defer
+  ></script>
+</head>
+```
 
-### Steg 2: Integrera på sajterna
-Använd Company ID och API Key från steg 1 i konfigurationen ovan.
+`is:inline` is required for external tracking scripts — it prevents Vite from trying to bundle the URL.
 
-### Steg 3: Publicera tracking-scriptet
-Tracking-scriptet finns i `public/spa-tracking.js` och behöver vara tillgängligt på:
-`https://cortiq.se/spa-tracking.js`
+### Astro with View Transitions
 
-(Se DEPLOYMENT.md för instruktioner om hur du deployer till cortiq.se)
+When `<ViewTransitions />` is active, Astro uses `history.pushState` internally. CortIQ captures these automatically.
+
+Add an `astro:page-load` listener as a complement for edge cases where Astro replaces `<body>`:
+
+```astro
+<head>
+  <script
+    is:inline
+    src="https://cortiq.se/spa-tracking.js"
+    data-site-id="[SITE_ID]"
+    data-api-key="[API_KEY]"
+    defer
+  ></script>
+  <script is:inline>
+    document.addEventListener('astro:page-load', () => {
+      if (window.CortIQ) {
+        const n = window.CortIQ.getNonce();
+        window.CortIQ.trackView(n);
+      }
+    });
+  </script>
+</head>
+```
+
+### Astro SSR on Cloudflare Pages
+
+The tracking script runs entirely client-side — where Astro serves HTML (Node, Deno, Cloudflare Workers) does not affect CortIQ. Installation is identical to standard MPA above.
+
+---
+
+## Script data attributes
+
+| Attribute | Type | Description |
+|-----------|------|-------------|
+| `data-site-id` | UUID | **Required.** Identifies the site in CortIQ. |
+| `data-api-key` | string | API key for authenticating against Edge Functions. |
+| `data-exclude-iframes` | `"true"` | Stops all tracking when the script runs inside an iframe. |
+| `data-exclude-paths` | comma-separated | Path prefixes to ignore. Example: `"/embed/,/preview/"`. Matched with `startsWith`. |
+| `data-auth-path` | string | Path prefix for authenticated mode. Default: `/admin`. |
+| `data-tenant-id` | UUID | Static tenant dimension — attached to all events. |
 
 ---
 
 ## Privacy & GDPR
 
-Alla sajter är konfigurerade med:
+Default configuration for all sites:
 - ✅ **Cookieless tracking** (browser fingerprint)
-- ✅ **IP-anonymisering** aktiverad
-- ✅ **Opt-out mode** (tracking tillåtet om inte användare säger nej)
-- ✅ **730 dagars data retention**
-- ✅ **User agent sparas EJ** (utom Sentrisk)
-- ✅ **Referrer sparas** (för traffic source analysis)
+- ✅ **IP anonymisation** enabled
+- ✅ **Opt-out mode** (tracking allowed unless user opts out)
+- ✅ **730-day data retention**
+- ✅ **User agent not stored** (configurable per site)
+- ✅ **Referrer stored** (for traffic source analysis)
 
 ---
 
-## Rate Limits
+## Rate limits
 
 Per company:
-- **10,000 tracking events per timme**
-- **1,000 analytics requests per timme**
+- **10,000 tracking events per hour**
+- **1,000 analytics requests per hour**
 
 ---
 
-## Support & Debugging
+## Debugging
 
-Öppna browser console för att se tracking-loggar:
+Open browser console to view tracking logs:
 ```javascript
-// Se session ID
+// Get session ID
 console.log(WFATracker.getSessionId());
 
-// Testa manuell tracking
+// Test manual tracking
 WFATracker.trackView();
 WFATracker.trackClick('test-content');
 ```
 
-Logga in på Supabase för att se events:
-https://supabase.com/dashboard/project/cxmkdtgfocgbfizawlwa/editor
-
-Tabell: `tracking_events`
+View raw events in the Supabase dashboard under **Table Editor → tracking_events**.
