@@ -251,7 +251,7 @@ export function ContentPerformance({ siteId, dateRange }: ContentPerformanceProp
             <ul className="text-sm text-muted-foreground space-y-1">
               <li>• <strong>Impression:</strong> Element enters viewport</li>
               <li>• <strong>Click:</strong> Element is clicked</li>
-              <li>• <strong>Hover:</strong> Mouse hovers over element (>1 second)</li>
+              <li>• <strong>Hover:</strong> Mouse hovers over element (&gt;1 second)</li>
             </ul>
           </div>
         </CardContent>
