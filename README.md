@@ -357,7 +357,7 @@ npm run supabase:deploy
 
 | Document | Description |
 |----------|-------------|
-| **[CLAUDE.md](./CLAUDE.md)** | Complete project documentation (Swedish) |
+| **[INTEGRATION-GUIDE.md](./INTEGRATION-GUIDE.md)** | Complete project documentation (Swedish) |
 | **[DEPLOYMENT.md](./DEPLOYMENT.md)** | Production deployment guide |
 | **[ARCHITECTURE.md](./docs/ARCHITECTURE.md)** | System architecture & design |
 
@@ -441,8 +441,6 @@ cortiq/
 
 ### Repository Status
 
-**This is a PRIVATE repository.**
-
 - ✅ No secrets committed to git
 - ✅ `.env` files are gitignored
 - ✅ Service role keys only in environment variables
@@ -460,9 +458,7 @@ cortiq/
 
 ## 📄 License
 
-**Private/Proprietary** - All rights reserved by Expandtalk.
-
-This repository is private and not open source. Unauthorized access, use, or distribution is prohibited.
+**MIT** — See [LICENSE](./LICENSE) for details.
 
 ---
 
@@ -470,7 +466,7 @@ This repository is private and not open source. Unauthorized access, use, or dis
 
 **CortIQ** is developed by [Expandtalk](https://expandtalk.se)
 
-- **Founder & CEO**: Daniel Larsson
+- **Founder & CEO**: [Daniel Larsson](https://www.linkedin.com/in/larssondaniel)
 - **Location**: Sweden
 - **Contact**: https://expandtalk.se/kontakt/
 
@@ -506,7 +502,7 @@ This repository is private and not open source. Unauthorized access, use, or dis
 
 For questions or issues:
 
-1. Check [CLAUDE.md](./CLAUDE.md) for full documentation
+1. Check the [Integration Guide](./INTEGRATION-GUIDE.md) or [Deployment Guide](./DEPLOYMENT.md)
 2. Review specific guides in [docs/](./docs/)
 3. Contact: https://expandtalk.se/kontakt/
 
@@ -518,6 +514,6 @@ For questions or issues:
 
 First platform for the Agentic Web 🤖
 
-[Website](https://cortiq.se) · [Documentation](./CLAUDE.md) · [Deployment](./DEPLOYMENT.md)
+[Website](https://cortiq.se) · [Integration Guide](./INTEGRATION-GUIDE.md) · [Deployment](./DEPLOYMENT.md)
 
 </div>

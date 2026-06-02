@@ -1,9 +1,9 @@
 # Sentrisk + CortIQ Integration Guide
 
-## Översikt
-Guide för att integrera CortIQ (tidigare Web Focus Analyzer) i Sentrisk multi-tenant plattformen.
+## Overview
+Guide for integrating CortIQ (formerly Web Focus Analyzer) into the Sentrisk multi-tenant platform.
 
-## Arkitektur
+## Architecture
 
 ```
 Sentrisk (Multi-tenant)
@@ -12,12 +12,12 @@ Sentrisk (Multi-tenant)
 └── API Proxy → CortIQ Edge Functions
 ```
 
-## Steg 1: Databasschema för Sentrisk
+## Step 1: Database schema for Sentrisk
 
-### Migration: Lägg till WFA-integration
+### Migration: Add WFA integration
 
 ```sql
--- CortIQ sites table i Sentrisk (behåller wfa_sites för bakåtkompatibilitet)
+-- CortIQ sites table in Sentrisk (keeps wfa_sites for backwards compatibility)
 CREATE TABLE public.wfa_sites (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   company_id UUID NOT NULL REFERENCES public.companies(id) ON DELETE CASCADE,
@@ -73,16 +73,16 @@ WITH CHECK (
 CREATE INDEX idx_wfa_sites_company ON public.wfa_sites(company_id);
 CREATE INDEX idx_wfa_sites_tracking_id ON public.wfa_sites(tracking_id);
 
--- Trigger för updated_at
+-- Trigger for updated_at
 CREATE TRIGGER update_wfa_sites_updated_at
   BEFORE UPDATE ON public.wfa_sites
   FOR EACH ROW
   EXECUTE FUNCTION public.update_updated_at_column();
 ```
 
-## Steg 2: API Proxy Edge Function
+## Step 2: API Proxy Edge Function
 
-### `/supabase/functions/cortiq-proxy/index.ts` (eller behåll wfa-proxy för bakåtkompatibilitet)
+### `/supabase/functions/cortiq-proxy/index.ts` (or keep wfa-proxy for backwards compatibility)
 
 ```typescript
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
@@ -106,7 +106,7 @@ Deno.serve(async (req) => {
       throw new Error('Missing authorization header');
     }
 
-    // Verifiera användare i Sentrisk
+    // Verify user in Sentrisk
     const supabaseClient = createClient(
       Deno.env.get('SUPABASE_URL')!,
       Deno.env.get('SUPABASE_ANON_KEY')!,
@@ -120,7 +120,7 @@ Deno.serve(async (req) => {
 
     const { trackingId, endpoint, method, body } = await req.json();
 
-    // Verifiera att tracking_id tillhör användarens företag
+    // Verify that tracking_id belongs to the user's company
     const { data: wfaSite, error: siteError } = await supabaseClient
       .from('wfa_sites')
       .select('*, companies!inner(id)')
@@ -137,7 +137,7 @@ Deno.serve(async (req) => {
     const response = await cortiqClient.functions.invoke(endpoint, {
       body: {
         ...body,
-        site_id: trackingId, // Använd tracking_id som site_id i CortIQ
+        site_id: trackingId, // Use tracking_id as site_id in CortIQ
       },
     });
 
@@ -157,9 +157,9 @@ Deno.serve(async (req) => {
 });
 ```
 
-## Steg 3: Sentrisk Frontend Integration
+## Step 3: Sentrisk Frontend Integration
 
-### Hook: `useCortIQAnalytics.tsx` (eller behåll useWFAAnalytics för bakåtkompatibilitet)
+### Hook: `useCortIQAnalytics.tsx` (or keep useWFAAnalytics for backwards compatibility)
 
 ```typescript
 import { useState, useEffect } from 'react';
@@ -212,7 +212,7 @@ export function useWFAAnalytics(trackingId: string | null, dateRange?: { from: D
 }
 ```
 
-### Komponent: `CortIQDashboard.tsx` (eller behåll WFADashboard för bakåtkompatibilitet)
+### Component: `CortIQDashboard.tsx` (or keep WFADashboard for backwards compatibility)
 
 ```typescript
 import { Card } from '@/components/ui/card';
@@ -225,28 +225,28 @@ interface WFADashboardProps {
 export function WFADashboard({ trackingId }: WFADashboardProps) {
   const { analytics, loading } = useWFAAnalytics(trackingId);
 
-  if (loading) return <div>Laddar analytics...</div>;
-  if (!analytics) return <div>Ingen data tillgänglig</div>;
+  if (loading) return <div>Loading analytics...</div>;
+  if (!analytics) return <div>No data available</div>;
 
   return (
     <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
       <Card className="p-6">
-        <h3 className="text-sm font-medium text-muted-foreground">Totala Sessioner</h3>
-        <p className="text-3xl font-bold">{analytics.totalSessions.toLocaleString('sv-SE')}</p>
+        <h3 className="text-sm font-medium text-muted-foreground">Total Sessions</h3>
+        <p className="text-3xl font-bold">{analytics.totalSessions.toLocaleString()}</p>
       </Card>
       
       <Card className="p-6">
-        <h3 className="text-sm font-medium text-muted-foreground">Sidvisningar</h3>
-        <p className="text-3xl font-bold">{analytics.totalPageViews.toLocaleString('sv-SE')}</p>
+        <h3 className="text-sm font-medium text-muted-foreground">Page Views</h3>
+        <p className="text-3xl font-bold">{analytics.totalPageViews.toLocaleString()}</p>
       </Card>
       
       <Card className="p-6">
-        <h3 className="text-sm font-medium text-muted-foreground">Snitt Sessionstid</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">Avg. Session Time</h3>
         <p className="text-3xl font-bold">{Math.round(analytics.averageSessionDuration / 60)}m</p>
       </Card>
       
       <Card className="p-6">
-        <h3 className="text-sm font-medium text-muted-foreground">Engagemang</h3>
+        <h3 className="text-sm font-medium text-muted-foreground">Engagement</h3>
         <p className="text-3xl font-bold">{analytics.engagementRate.toFixed(1)}%</p>
       </Card>
     </div>
@@ -254,12 +254,12 @@ export function WFADashboard({ trackingId }: WFADashboardProps) {
 }
 ```
 
-## Steg 4: WordPress Plugin Distribution
+## Step 4: WordPress Plugin Distribution
 
-### Sentrisk: Generera plugin-konfiguration
+### Sentrisk: Generate plugin configuration
 
 ```typescript
-// I Sentrisk när kund skapar CortIQ site
+// In Sentrisk when a customer creates a CortIQ site
 const generateCortIQPluginConfig = (wfaSite: WFASite) => {
   return {
     tracking_id: wfaSite.tracking_id,
@@ -273,7 +273,7 @@ const generateCortIQPluginConfig = (wfaSite: WFASite) => {
   };
 };
 
-// Download plugin med pre-config
+// Download plugin with pre-config
 const downloadConfiguredPlugin = async (wfaSiteId: string) => {
   const { data } = await supabase
     .from('wfa_sites')
@@ -283,84 +283,84 @@ const downloadConfiguredPlugin = async (wfaSiteId: string) => {
     
   const config = generateCortIQPluginConfig(data);
   
-  // Ladda ner CortIQ WordPress plugin med config.json inkluderad
+  // Download CortIQ WordPress plugin with config.json included
   window.location.href = `/api/download-cortiq-plugin?config=${encodeURIComponent(JSON.stringify(config))}`;
 };
 ```
 
-## Steg 5: Navigation i Sentrisk
+## Step 5: Navigation in Sentrisk
 
 ```typescript
-// I Sentrisk LoggedInLayout
+// In Sentrisk LoggedInLayout
 const navigation = [
-  { name: 'Översikt', href: '/dashboard' },
+  { name: 'Overview', href: '/dashboard' },
   { name: 'Leads', href: '/leads' },
-  { name: 'Företag', href: '/companies' },
+  { name: 'Companies', href: '/companies' },
   { 
     name: 'Analytics', 
     href: '/analytics',
     children: [
-      { name: 'Översikt', href: '/analytics' },
+      { name: 'Overview', href: '/analytics' },
       { name: 'AI Bot Traffic', href: '/analytics/ai-bots' },
       { name: 'Heatmaps', href: '/analytics/heatmaps' },
-      { name: 'Formulär', href: '/analytics/forms' },
-      { name: 'Inställningar', href: '/analytics/settings' },
+      { name: 'Forms', href: '/analytics/forms' },
+      { name: 'Settings', href: '/analytics/settings' },
     ]
   },
-  { name: 'Trafikmätare', href: '/traffic-analyzer' },
+  { name: 'Traffic Monitor', href: '/traffic-analyzer' },
   { name: 'Cookies', href: '/cookies' },
 ];
 ```
 
-## Säkerhet & Performance
+## Security & Performance
 
 ### API Rate Limiting
 ```typescript
 // I wfa-proxy edge function
 const RATE_LIMIT = 100; // requests per minute per company
 const rateLimitKey = `rate_limit:${wfaSite.company_id}`;
-// Implementera med Redis eller Supabase
+// Implement with Redis or Supabase
 ```
 
 ### Caching Strategy
 ```typescript
-// Cache WFA analytics i 5 minuter
+// Cache WFA analytics for 5 minutes
 const CACHE_TTL = 5 * 60 * 1000;
 
 const getCachedAnalytics = async (trackingId: string) => {
   const cacheKey = `wfa_analytics:${trackingId}`;
-  // Implementera med Redis eller localStorage för kortare cache
+  // Implement with Redis or localStorage for shorter-lived cache
 };
 ```
 
 ## Deployment Checklist
 
-- [ ] Kör migration i Sentrisk Supabase
-- [ ] Deploya `wfa-proxy` edge function
-- [ ] Lägg till `CORTIQ_SUPABASE_ANON_KEY` (eller `WFA_SUPABASE_ANON_KEY` för bakåtkompatibilitet) i Sentrisk secrets
-- [ ] Skapa `/analytics` route i Sentrisk
-- [ ] Importera WFA komponenter till Sentrisk
-- [ ] Testa med test-company och test-domain
-- [ ] Konfigurera CORS i CortIQ för Sentrisk domain
-- [ ] Dokumentera för kunder hur de aktiverar CortIQ
+- [ ] Run migration in Sentrisk Supabase
+- [ ] Deploy `wfa-proxy` edge function
+- [ ] Add `CORTIQ_SUPABASE_ANON_KEY` (or `WFA_SUPABASE_ANON_KEY` for backwards compatibility) to Sentrisk secrets
+- [ ] Create `/analytics` route in Sentrisk
+- [ ] Import WFA components into Sentrisk
+- [ ] Test with a test company and test domain
+- [ ] Configure CORS in CortIQ for Sentrisk domain
+- [ ] Document for customers how to activate CortIQ
 
 ## Support & Troubleshooting
 
 ### Common Issues
 
 **Problem:** "Invalid tracking ID"
-- Kontrollera att tracking_id finns i wfa_sites
-- Verifiera att användaren har access till company
+- Check that tracking_id exists in wfa_sites
+- Verify that the user has access to the company
 
 **Problem:** "CORS error"
-- Lägg till Sentrisk domain i WFA CORS-inställningar
-- Kontrollera corsHeaders i edge functions
+- Add the Sentrisk domain to CortIQ CORS settings
+- Check corsHeaders in edge functions
 
 **Problem:** "No data showing"
-- Kontrollera att WordPress plugin är installerat och aktiverat
-- Verifiera att tracking_id är korrekt konfigurerat
-- Kolla CortIQ edge function logs
+- Verify that the WordPress plugin is installed and activated
+- Check that tracking_id is correctly configured
+- Inspect CortIQ edge function logs
 
-## Kontakt
-- CortIQ Team: [kontaktinfo]
-- Sentrisk Team: [kontaktinfo]
+## Contact
+- CortIQ: https://cortiq.se
+- LinkedIn: https://www.linkedin.com/in/larssondaniel

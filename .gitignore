@@ -25,6 +25,9 @@ supabase/.temp/
 # Internal project config — contains company names, client info, credentials placeholders
 CLAUDE.md
 
+# Client-specific briefs (contain email addresses and project details)
+docs/itsakerhet-app-developer-brief.md
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
