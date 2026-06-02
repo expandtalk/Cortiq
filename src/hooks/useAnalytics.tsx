@@ -18,29 +18,51 @@ export function useAnalytics(siteId: string | null, dateRange?: { from: Date; to
       const fromIso = fromDate.toISOString();
       const toIso = toDate.toISOString();
 
-      // Get session analytics (filtered by date)
+      // Exact session count (no row fetch — avoids Supabase 1000-row default limit)
+      const { count: sessionCount, error: sessionCountError } = await supabase
+        .from('tracking_sessions')
+        .select('*', { count: 'exact', head: true })
+        .eq('site_id', siteId)
+        .gte('started_at', fromIso)
+        .lte('started_at', toIso);
+
+      if (sessionCountError) throw sessionCountError;
+
+      // Exact page view count
+      const { count: pageViewCount, error: pageViewCountError } = await supabase
+        .from('page_views')
+        .select('*', { count: 'exact', head: true })
+        .eq('site_id', siteId)
+        .gte('viewed_at', fromIso)
+        .lte('viewed_at', toIso);
+
+      if (pageViewCountError) throw pageViewCountError;
+
+      // Fetch session detail rows for engagement/device metrics (up to 5000)
       const { data: sessions, error: sessionError } = await supabase
         .from('tracking_sessions')
         .select('duration_seconds, device_type, page_views')
         .eq('site_id', siteId)
         .gte('started_at', fromIso)
-        .lte('started_at', toIso);
+        .lte('started_at', toIso)
+        .limit(5000);
 
       if (sessionError) throw sessionError;
 
-      // Get page view analytics (filtered by date)
+      // Fetch page view URLs for top-pages (up to 5000)
       const { data: pageViews, error: pageError } = await supabase
         .from('page_views')
         .select('url')
         .eq('site_id', siteId)
         .gte('viewed_at', fromIso)
-        .lte('viewed_at', toIso);
+        .lte('viewed_at', toIso)
+        .limit(5000);
 
       if (pageError) throw pageError;
 
-      // Process analytics data with GA4-compatible metrics
-      const totalSessions = sessions?.length || 0;
-      const totalPageViews = pageViews?.length || 0;
+      // Use exact counts for display; row data for derived metrics
+      const totalSessions = sessionCount ?? sessions?.length ?? 0;
+      const totalPageViews = pageViewCount ?? pageViews?.length ?? 0;
       
       // GA4 Engagement metrics
       // Engaged session = session with >10s duration OR >1 page view OR conversion event
