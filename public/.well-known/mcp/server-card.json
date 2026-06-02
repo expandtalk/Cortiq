@@ -1,0 +1,45 @@
+{
+  "schema_version": "0.1",
+  "name": "CortIQ Analytics",
+  "description": "MCP server for CortIQ — query web analytics data, AI agent traffic, heatmaps, and run AI-visibility audits. The first analytics platform with dedicated tracking for AI agents on the web.",
+  "url": "https://cortiq.se",
+  "provider": {
+    "organization": "Expandtalk Corporation",
+    "url": "https://cortiq.se"
+  },
+  "tools": [
+    {
+      "name": "track_event",
+      "description": "Send a tracking event (page view, click, custom event) for a registered site",
+      "endpoint": "https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/track-event"
+    },
+    {
+      "name": "get_analytics",
+      "description": "Retrieve aggregated analytics for a site: sessions, page views, traffic sources, device breakdown, top pages",
+      "endpoint": "https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/analytics-query"
+    },
+    {
+      "name": "get_ai_agent_sessions",
+      "description": "Query AI agent sessions for a site — which agents visited, journey paths, conversion attribution",
+      "endpoint": "https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/ai-bot-tracker"
+    },
+    {
+      "name": "get_heatmap",
+      "description": "Retrieve click heatmap data for a specific page URL and device type",
+      "endpoint": "https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/heatmap-data"
+    },
+    {
+      "name": "run_geo_audit",
+      "description": "Run an AI-visibility (GEO) audit on any URL — returns GEO score, llms.txt presence, crawler access, schema markup",
+      "endpoint": "https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/geo-analyze"
+    }
+  ],
+  "authentication": {
+    "type": "api_key",
+    "description": "API key required. Obtain from Settings → API Keys in the CortIQ dashboard.",
+    "docs": "https://cortiq.se/api"
+  },
+  "openapi": "https://cortiq.se/api-docs/swagger.json",
+  "documentation": "https://cortiq.se/api",
+  "privacy": "https://cortiq.se/privacy"
+}

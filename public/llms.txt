@@ -1,0 +1,28 @@
+# CortIQ
+
+> CortIQ is the first web analytics platform with dedicated tracking for AI agents — ChatGPT Browser, Perplexity Comet, Claude Browser, and other agentic browsers. Built for the Agentic Web.
+
+CortIQ combines cookie-free server-side analytics with first-party tracking, GDPR-compliant consent management, and deep behavioral analytics. Headquartered in Sweden, targeting European SMEs and WordPress publishers.
+
+## Product
+
+- [Overview](https://cortiq.se/): AI-agent tracking, cookie-free analytics, heatmaps, A/B testing, form analytics, GDPR CMP
+- [CMP & Cookie Consent](https://cortiq.se/cmp): Consent management with nudging technology for higher opt-in rates
+- [Features](https://cortiq.se/features): Full feature breakdown
+- [AI Agent Analytics](https://cortiq.se/features/ai): Detect and analyze traffic from ChatGPT Browser, Perplexity Comet, Claude Browser — journey funnels, conversion attribution, citation tracking
+- [Privacy & Analytics](https://cortiq.se/features/analytics): Cookie-free server-side tracking (PTS-approved), GA4 server-side integration
+- [Pricing](https://cortiq.se/pricing): Plans and pricing
+
+## Docs
+
+- [API Reference](https://cortiq.se/api): OpenAPI documentation for the CortIQ tracking and analytics API
+- [Tracking Script](https://cortiq.se/spa-tracking.js): JavaScript snippet for website integration — supports heatmaps, session recording, AI agent detection, UTM tracking
+
+## Company
+
+- [Privacy Policy](https://cortiq.se/privacy): Data handling and GDPR compliance
+- [Contact](https://cortiq.se/contact): Contact information
+
+## Optional
+
+- [Full product description](https://cortiq.se/llms-full.txt): Comprehensive markdown documentation for LLM consumption

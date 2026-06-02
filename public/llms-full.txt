@@ -1,0 +1,142 @@
+# CortIQ — Full Product Documentation
+
+## What is CortIQ?
+
+CortIQ is a web analytics platform designed for the Agentic Web — the emerging era where AI agents (ChatGPT Browser, Perplexity Comet, Claude Browser) constitute a growing share of web traffic.
+
+CortIQ is the first analytics platform with a dedicated module for tracking and analyzing AI agent behavior on websites. Beyond AI tracking, it provides a comprehensive analytics stack: cookie-free server-side tracking, click heatmaps, session recording, A/B testing, form analytics, geolocation maps, and a GDPR-compliant consent management platform (CMP).
+
+**Production URL:** https://cortiq.se
+**Company:** Expandtalk Corporation, Sweden
+**Status:** Invite-only beta
+
+---
+
+## Core Features
+
+### Agentic Browser Analytics (World First)
+
+Detects and analyzes AI agents that browse websites autonomously:
+
+- **Supported agents:** ChatGPT Browser, Perplexity Comet, Claude Browser, Bing AI, and generic AI crawlers
+- **Detection method:** User-agent parsing + behavioral fingerprinting (visual/headless/text-based browser type)
+- **Journey funnel:** Full session path reconstruction for AI agents
+- **Conversion attribution:** Measures conversions triggered by AI-driven traffic
+- **Citation tracking:** Detects LLM citation requests and training crawlers separately from browsing agents
+- **Dashboard tabs:** "AI Traffic" and "AI Agents" in the main analytics dashboard
+
+### Cookie-Free Analytics
+
+Server-side tracking without any client-side cookies or personal data collection:
+
+- 100% GDPR-compliant
+- PTS-approved (Swedish Post and Telecom Authority)
+- No cookie banners required for this tracking mode
+- GA4 server-side integration for paid ads attribution
+- Parallel to standard first-party cookie tracking (hybrid mode available)
+
+### Click Heatmaps
+
+- Click position recording with device segmentation (desktop / tablet / mobile)
+- Per-page heatmap selection
+- Mobile-specific insights view
+- Rendered as canvas overlays on page screenshots
+
+### Session Recording
+
+- Full session replay using rrweb
+- AI agent vs human session filter
+- Device and URL filters
+- Visitor hash search (GDPR-safe, no PII)
+
+### A/B Testing
+
+- Two-variant (A/B) test management
+- Statistical significance calculations built-in
+- Conversion goal assignment per test
+
+### Form Analytics
+
+- Field-level funnel visualization
+- Drop-off detection per form field
+- Supports contact forms, checkout forms, lead forms
+
+### GDPR & CMP
+
+- Cookie consent management with nudging technology
+- Higher opt-in rates through smart banner timing and UX
+- Configurable data retention (default 730 days)
+- TCF v2 compatible
+
+### Advanced Features
+
+- **Geolocation Maps:** Leaflet.js world map with visitor clusters; drill-down from country to city
+- **Data Warehouse Connectors:** Sync to BigQuery, Snowflake, Redshift, PostgreSQL, MySQL, Databricks
+- **User LTV & Cohort Analysis:** Lifetime value tracking with cohort grouping by first visit month
+- **Tag Manager:** Create event, pixel, script, and HTML tags without code deployment
+- **Web Vitals:** LCP, FID/INP, CLS tracking with historical trends
+- **White Label:** Custom branding and colors for agency resellers
+- **SAML SSO:** Enterprise single sign-on
+
+---
+
+## Technical Architecture
+
+### Frontend
+- React 18, TypeScript, Vite
+- shadcn-ui (Radix UI), Tailwind CSS
+- Recharts for data visualization
+
+### Backend
+- Supabase (PostgreSQL + Deno Edge Functions)
+- 62 database tables, 51 edge functions
+- Row-level security (RLS) for multi-tenant data isolation
+
+### Tracking Script
+
+Installed on customer websites via a single `<script>` tag:
+
+```html
+<script src="https://cortiq.se/spa-tracking.js" data-site-id="YOUR_SITE_ID" defer></script>
+```
+
+The script handles: heatmap recording, session events, AI agent detection, UTM parameter capture, GDPR consent integration (CortIQ banner, Cookiebot, TCF v2).
+
+### API
+
+REST API documented at https://cortiq.se/api (OpenAPI/Swagger). Supports:
+- Event ingestion (`/track-event`)
+- Heatmap data retrieval
+- Analytics queries
+- AI agent session data
+
+---
+
+## What CortIQ Does NOT Include
+
+- Scroll heatmaps (click heatmaps only)
+- Attention maps
+- Multivariate testing (A/B only, two variants)
+- Visual editor for A/B tests
+- Mobile app
+
+---
+
+## Target Users
+
+- European SMEs with GDPR compliance requirements
+- WordPress publishers (dedicated plugin in development)
+- Digital agencies managing analytics for multiple clients
+- Organizations with significant or growing AI-agent traffic
+
+---
+
+## Competitive Position
+
+CortIQ is the only analytics platform with dedicated AI-agent tracking as a first-class feature. Traditional analytics platforms (Google Analytics, Plausible, Fathom, Matomo) treat AI agents as regular bot traffic and filter them out. CortIQ treats them as a distinct traffic category with their own funnel, attribution, and behavior analysis.
+
+The combination of AI-agent analytics + cookie-free server-side tracking + GDPR-native CMP is unique in the European market.
+
+---
+
+*Last updated: 2026-05-27*
