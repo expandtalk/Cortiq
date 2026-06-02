@@ -63,22 +63,38 @@ type NavGroup = { label: string; icon: React.ComponentType<{ className?: string 
 
 const NAV_GROUPS: NavGroup[] = [
   {
-    label: 'Rapport',
-    icon: BookOpen,
-    options: [
-      { value: 'kpi',       label: 'KPI Dashboard',      icon: Target },
-      { value: 'kpi-catalog', label: 'AI KPI Overview',  icon: DollarSign },
-      { value: 'user-ltv',  label: 'User LTV & Cohorts', icon: Users },
-    ],
-  },
-  {
     label: 'Traffic',
     icon: BarChart2,
     options: [
-      { value: 'analytics',    label: 'Analytics',      icon: BarChart2 },
-      { value: 'cookiefree',   label: 'Cookie-Free',    icon: Shield },
-      { value: 'geolocation',  label: 'Geolocation',    icon: Globe },
-      { value: 'social-media', label: 'Social Media',   icon: Share2 },
+      { value: 'analytics',    label: 'Analytics',       icon: BarChart2 },
+      { value: 'cookiefree',   label: 'Cookie-Free',     icon: Shield },
+      { value: 'realtime',     label: 'Real-Time',       icon: Activity },
+      { value: 'geolocation',  label: 'Geolocation',     icon: Globe },
+      { value: 'social-media', label: 'Social Media',    icon: Share2 },
+      { value: 'navigation',   label: 'Navigation Flow', icon: Network },
+      { value: 'server-logs',  label: 'Server Logs',     icon: Server },
+    ],
+  },
+  {
+    label: 'AI',
+    icon: Bot,
+    options: [
+      { value: 'ai',              label: 'AI Traffic',      icon: TrendingUp },
+      { value: 'ai-bots',         label: 'AI Agents',       icon: Bot },
+      { value: 'ai-visibility',   label: 'GEO / AI Search', icon: Sparkles },
+      { value: 'zero-click-risk', label: 'Zero-Click Risk', icon: AlertTriangle },
+      { value: 'agent-ops',       label: 'Agent Ops',       icon: Zap },
+    ],
+  },
+  {
+    label: 'Optimize',
+    icon: Sliders,
+    options: [
+      { value: 'heatmap',           label: 'Heatmap',           icon: Flame },
+      { value: 'forms',             label: 'Forms',             icon: FileText },
+      { value: 'abtesting',         label: 'A/B Testing',       icon: FlaskConical },
+      { value: 'session-recording', label: 'Session Recording', icon: Play },
+      { value: 'conversion-goals',  label: 'Conversion Goals',  icon: Target },
     ],
   },
   {
@@ -91,64 +107,36 @@ const NAV_GROUPS: NavGroup[] = [
     ],
   },
   {
-    label: 'GEO',
-    icon: Sparkles,
+    label: 'Reports',
+    icon: BookOpen,
     options: [
-      { value: 'ai-visibility',   label: 'AI Visibility',   icon: Sparkles },
-      { value: 'zero-click-risk', label: 'Zero-Click Risk', icon: AlertTriangle },
-    ],
-  },
-  {
-    label: 'AI',
-    icon: Bot,
-    options: [
-      { value: 'ai',             label: 'AI Traffic',      icon: TrendingUp },
-      { value: 'ai-bots',        label: 'AI Agents',       icon: Bot },
-      { value: 'agent-ops',      label: 'Agent Ops',       icon: Zap },
-      { value: 'agent-macros',   label: 'Agent Macros',    icon: Cpu },
-      { value: 'agent-registry', label: 'Agent Registry',  icon: Server },
-    ],
-  },
-  {
-    label: 'Commerce',
-    icon: ShoppingCart,
-    options: [
-      { value: 'ecommerce',           label: 'E-commerce',        icon: ShoppingCart },
-      { value: 'campaigns',           label: 'Campaigns',         icon: Megaphone },
-      { value: 'content-performance', label: 'Content',           icon: FileText },
-      { value: 'content-tracking',    label: 'Content Tracking',  icon: Layers },
-      { value: 'conversion-goals',    label: 'Conversion Goals',  icon: Target },
-    ],
-  },
-  {
-    label: 'Optimize',
-    icon: Sliders,
-    options: [
-      { value: 'heatmap',           label: 'Heatmap',           icon: Flame },
-      { value: 'forms',             label: 'Forms',             icon: FileText },
-      { value: 'abtesting',         label: 'A/B Testing',       icon: FlaskConical },
-      { value: 'session-recording', label: 'Session Recording', icon: Play },
+      { value: 'kpi',                 label: 'KPI Dashboard',      icon: Target },
+      { value: 'kpi-catalog',         label: 'AI KPI Overview',    icon: DollarSign },
+      { value: 'user-ltv',            label: 'User LTV & Cohorts', icon: Users },
+      { value: 'alerts',              label: 'Alerts',             icon: Bell },
+      { value: 'report-builder',      label: 'Report Builder',     icon: PieChart },
+      { value: 'campaigns',           label: 'Campaigns',          icon: Megaphone },
+      { value: 'content-performance', label: 'Content',            icon: FileText },
     ],
   },
 ];
 
 const SETTINGS_OPTIONS: NavOption[] = [
-  { value: 'alerts',            label: 'Alerts',                  icon: Bell },
-  { value: 'navigation',        label: 'Navigation flow',         icon: TrendingUp },
-  { value: 'segments',          label: 'Segments',                icon: Users },
-  { value: 'tag-manager',       label: 'Tag Manager',             icon: Code2 },
-  { value: 'warehouse',         label: 'Data Warehouse',          icon: Database },
+  { value: 'setup',             label: 'Setup & tracking script',  icon: Code2 },
+  { value: 'integrations',      label: 'Integrations',             icon: ExternalLink },
+  { value: 'api-keys',          label: 'API Keys',                 icon: Key },
+  { value: 'gdpr',              label: 'GDPR',                     icon: Shield },
+  { value: 'notifications',     label: 'Notifications',            icon: Bell },
+  { value: 'tag-manager',       label: 'Tag Manager',              icon: Code2 },
+  { value: 'warehouse',         label: 'Data Warehouse',           icon: Database },
   { value: 'advanced-features', label: 'Web Vitals & White Label', icon: TrendingUp },
-  { value: 'setup',             label: 'Setup & tracking script', icon: Code2 },
-  { value: 'integrations',      label: 'Integrations',            icon: ExternalLink },
-  { value: 'api-keys',          label: 'API Keys',                icon: Key },
-  { value: 'gdpr',              label: 'GDPR',                    icon: Shield },
-  { value: 'notifications',     label: 'Notifications',           icon: Bell },
-  { value: 'ip-segments',       label: 'Network Segments',        icon: Network },
-  { value: 'utm-segments',      label: 'UTM Segments',            icon: Filter },
-  { value: 'report-builder',    label: 'Report Builder',          icon: PieChart },
-  { value: 'server-logs',       label: 'Server Logs',             icon: Server },
-  { value: 'realtime',          label: 'Real-Time',               icon: Activity },
+  { value: 'segments',          label: 'Segments',                 icon: Users },
+  { value: 'utm-segments',      label: 'UTM Segments',             icon: Filter },
+  { value: 'ip-segments',       label: 'Network Segments',         icon: Network },
+  { value: 'ecommerce',         label: 'E-commerce',               icon: ShoppingCart },
+  { value: 'content-tracking',  label: 'Content Tracking',         icon: Layers },
+  { value: 'agent-macros',      label: 'Agent Macros',             icon: Cpu },
+  { value: 'agent-registry',    label: 'Agent Registry',           icon: Server },
 ];
 
 function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTabsProps) {
@@ -219,7 +207,7 @@ function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTab
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end" className="w-56 bg-card border shadow-lg z-[100]" sideOffset={5}>
-              {/* Analytics & Tools */}
+              {/* Core config — Setup through Notifications */}
               {SETTINGS_OPTIONS.slice(0, 5).map((option) => (
                 <DropdownMenuItem
                   key={option.value}
@@ -231,8 +219,8 @@ function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTab
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              {/* Site Config */}
-              {SETTINGS_OPTIONS.slice(5, 9).map((option) => (
+              {/* Advanced tools — Tag Manager through Web Vitals */}
+              {SETTINGS_OPTIONS.slice(5, 8).map((option) => (
                 <DropdownMenuItem
                   key={option.value}
                   onClick={() => setActiveTab(option.value)}
@@ -243,8 +231,8 @@ function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTab
                 </DropdownMenuItem>
               ))}
               <DropdownMenuSeparator />
-              {/* Segments & Advanced */}
-              {SETTINGS_OPTIONS.slice(9).map((option) => (
+              {/* Segments & specialised */}
+              {SETTINGS_OPTIONS.slice(8).map((option) => (
                 <DropdownMenuItem
                   key={option.value}
                   onClick={() => setActiveTab(option.value)}
