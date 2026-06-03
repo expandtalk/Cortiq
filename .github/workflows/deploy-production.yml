@@ -59,6 +59,7 @@ jobs:
           echo "**Deployment target:** cortiq.se" >> $GITHUB_STEP_SUMMARY
 
       - name: 🚀 Deploy to cortiq.se (FTP)
+        if: ${{ secrets.FTP_SERVER != '' }}
         uses: SamKirkland/FTP-Deploy-Action@v4.3.5
         with:
           server: ${{ secrets.FTP_SERVER }}
