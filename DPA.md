@@ -1,10 +1,12 @@
 # Data Processing Agreement (DPA)
 
 **Between:**
-- **Data Controller:** The legal entity or individual ("Customer") who has registered an account with CortIQ and embeds the CortIQ tracking script on their website(s).
-- **Data Processor:** Expandtalk Corporation AB, org. nr. 559358-8824, Sweden ("CortIQ").
 
-This Data Processing Agreement ("DPA") is entered into as part of the CortIQ Terms of Service and governs the processing of personal data by CortIQ on behalf of the Customer, in accordance with Article 28 of the General Data Protection Regulation (EU) 2016/679 ("GDPR").
+- **Data Controller:** The legal entity or individual ("Customer") who has registered an account with CortIQ and embeds the CortIQ tracking script on their website(s).
+
+- **Data Processor:** Expandtalk Corporation AB, org. nr. 559358-8824, Stenkolsgatan 5, 417 07 Göteborg, Sweden ("CortIQ").
+
+This Data Processing Agreement ("DPA") is a standalone agreement that governs the processing of personal data by CortIQ on behalf of the Customer, in accordance with Article 28 of the General Data Protection Regulation (EU) 2016/679 ("GDPR"). It takes effect upon the Customer creating an account with CortIQ or embedding the CortIQ tracking script on their website, whichever occurs first.
 
 ---
 
@@ -115,20 +117,35 @@ The Customer is responsible for notifying the relevant supervisory authority (e.
 
 ---
 
-## 9. Governing law and jurisdiction
+## 9. Limitation of liability
+
+To the maximum extent permitted by applicable law, CortIQ's total liability to the Customer under or in connection with this DPA shall not exceed the greater of:
+
+- (a) the total fees paid by the Customer to CortIQ in the **12 months preceding the event** giving rise to the claim; or
+- (b) **EUR 500**.
+
+This limitation applies regardless of the form of action (contract, tort, or otherwise) and even if CortIQ has been advised of the possibility of such damages. It does not limit liability for death or personal injury caused by negligence, fraud, or any other liability that cannot be excluded under applicable law.
+
+The Customer acknowledges that CortIQ's pricing reflects this allocation of risk.
+
+---
+
+## 10. Governing law and jurisdiction
 
 This DPA is governed by the laws of Sweden. Any disputes arising from this DPA shall be subject to the exclusive jurisdiction of the courts of Sweden, without prejudice to the data subject's right to lodge a complaint with a supervisory authority.
 
 ---
 
-## 10. Contact
+## 11. Contact
 
-**Data Processor (CortIQ / Expandtalk Corporation AB, org. nr. 559358-8824)**
+**Data Processor:**
+Expandtalk Corporation AB
+Stenkolsgatan 5, 417 07 Göteborg, Sweden
+Org. nr. 559358-8824
 Email: [daniel@expandtalk.se](mailto:daniel@expandtalk.se)
 Website: [cortiq.se](https://cortiq.se)
 
-**Data Protection matters:**
-For all GDPR and data protection enquiries, contact: [daniel@expandtalk.se](mailto:daniel@expandtalk.se)
+For all GDPR and data protection enquiries: [daniel@expandtalk.se](mailto:daniel@expandtalk.se)
 
 ---
 
@@ -137,4 +154,4 @@ For all GDPR and data protection enquiries, contact: [daniel@expandtalk.se](mail
 
 ---
 
-> **Note for Customers:** This DPA is incorporated by reference into the CortIQ Terms of Service. By using CortIQ, you agree to the terms of this DPA. If you require a signed copy of this DPA for your compliance records, contact [daniel@expandtalk.se](mailto:daniel@expandtalk.se).
+> **For Customers:** By creating an account with CortIQ or embedding the tracking script on your website, you agree to the terms of this DPA. If you require a countersigned copy for your compliance records, contact [daniel@expandtalk.se](mailto:daniel@expandtalk.se).
