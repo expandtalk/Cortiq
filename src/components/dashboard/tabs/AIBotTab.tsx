@@ -1,6 +1,8 @@
+import { useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { Bot, TrendingUp, FileText, Route, Monitor, Target, ClipboardList } from "lucide-react";
 import { useAIBotTracking } from "@/hooks/useAIBotTracking";
 import { useAIAgentJourney } from "@/hooks/useAIAgentJourney";
@@ -10,6 +12,7 @@ import { AIBotSecurityWidget } from "@/components/dashboard/AIBotSecurityWidget"
 import { AIAgentFunnel } from "@/components/dashboard/AIAgentFunnel";
 import { AIBrowserTypeBreakdown } from "@/components/dashboard/AIBrowserTypeBreakdown";
 import { AgentRegistry } from "@/components/dashboard/AgentRegistry";
+import { BotTrafficClassification } from "@/components/dashboard/BotTrafficClassification";
 interface AIBotTabProps {
   selectedSite: {
     id: string;
@@ -19,7 +22,8 @@ interface AIBotTabProps {
 }
 
 export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
-  const { data, isLoading, error } = useAIBotTracking(selectedSite?.id);
+  const [days, setDays] = useState(30);
+  const { data, isLoading, error } = useAIBotTracking(selectedSite?.id, days);
   const { data: journeyData, isLoading: journeyLoading } = useAIAgentJourney(selectedSite?.id);
 
   if (isLoading) {
@@ -56,10 +60,22 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
             Spåra AI-agents, deras resor och konverteringar
           </p>
         </div>
-        <Badge variant="outline" className="flex items-center gap-2">
-          <span className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
-          Live Monitoring
-        </Badge>
+        <div className="flex items-center gap-3">
+          <Select value={String(days)} onValueChange={(v) => setDays(Number(v))}>
+            <SelectTrigger className="w-44">
+              <SelectValue />
+            </SelectTrigger>
+            <SelectContent>
+              <SelectItem value="7">Senaste 7 dagarna</SelectItem>
+              <SelectItem value="30">Senaste 30 dagarna</SelectItem>
+              <SelectItem value="90">Senaste 90 dagarna</SelectItem>
+            </SelectContent>
+          </Select>
+          <Badge variant="outline" className="flex items-center gap-2">
+            <span className="h-2 w-2 bg-green-500 rounded-full animate-pulse" />
+            Live Monitoring
+          </Badge>
+        </div>
       </div>
 
       {/* Installation Instructions */}
@@ -169,6 +185,15 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
               </CardContent>
             </Card>
           </div>
+
+          {/* Bot Traffic Classification */}
+          {!isEmpty && data && (
+            <BotTrafficClassification
+              botBreakdown={data.botBreakdown}
+              totalTraffic={data.totalTraffic}
+              trainingCrawlers={data.trainingCrawlers}
+            />
+          )}
 
           {/* Bot Breakdown */}
           {!isEmpty && data && data.botBreakdown.length > 0 && (

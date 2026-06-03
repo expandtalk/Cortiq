@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
+import { useSEO } from "@/hooks/useSEO";
 import {
   Bot,
   Activity,
@@ -115,6 +116,10 @@ const typeColor: Record<string, string> = {
 };
 
 export default function FeaturesAI() {
+  useSEO({
+    title: 'AI Agent Analytics — CortIQ',
+    description: 'Track and analyse traffic from ChatGPT Browser, Perplexity Comet, Claude Browser and other AI agents. Journey funnels, conversion attribution, citation tracking. First on the market.',
+  });
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <PublicNavigation />

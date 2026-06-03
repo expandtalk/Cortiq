@@ -2,9 +2,14 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import PublicNavigation from "@/components/PublicNavigation";
+import { useSEO } from "@/hooks/useSEO";
 import { Mail, ArrowRight, MapPin, Phone, Globe } from "lucide-react";
 
 const Contact = () => {
+  useSEO({
+    title: 'Contact — CortIQ',
+    description: 'Get in touch with the CortIQ team. Request an invitation to our analytics platform or ask about AI agent tracking and cookie-free analytics.',
+  });
   return (
     <div className="min-h-screen bg-background">
       <PublicNavigation />

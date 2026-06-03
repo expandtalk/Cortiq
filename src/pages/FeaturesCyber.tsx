@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
+import { useSEO } from "@/hooks/useSEO";
 import {
   Shield,
   AlertTriangle,
@@ -119,6 +120,10 @@ const botTypes = [
 ];
 
 export default function FeaturesCyber() {
+  useSEO({
+    title: 'Cyber Security & Bot Detection — CortIQ',
+    description: 'Detect click fraud, bot traffic and suspicious sessions in real time. Protect paid ad spend and identify malicious bots alongside genuine AI agent traffic.',
+  });
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <PublicNavigation />

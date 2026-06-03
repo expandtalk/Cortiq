@@ -23,12 +23,14 @@ serve(async (req) => {
     console.log('Calculating cookiefree analytics for site:', siteId, 'from:', startDate, 'to:', endDate);
 
     // 🎯 Grundläggande Traffic KPIs
+    const endDateInclusive = `${endDate}T23:59:59`;
+
     const { data: trackingSessions, error: sessionsError } = await supabase
       .from('tracking_sessions')
       .select('*')
       .eq('site_id', siteId)
       .gte('started_at', startDate)
-      .lte('started_at', endDate);
+      .lte('started_at', endDateInclusive);
 
     if (sessionsError) {
       console.error('Sessions error:', sessionsError);
@@ -40,7 +42,7 @@ serve(async (req) => {
       .select('*')
       .eq('site_id', siteId)
       .gte('viewed_at', startDate)
-      .lte('viewed_at', endDate);
+      .lte('viewed_at', endDateInclusive);
 
     if (pageViewsError) {
       console.error('Page views error:', pageViewsError);
@@ -63,12 +65,14 @@ serve(async (req) => {
     // 🧮 Calculate Basic KPIs
     const totalPageViews = pageViews?.length || 0;
     const totalSessions = trackingSessions?.length || 0;
-    const uniqueVisitors = new Set(trackingSessions?.map(s => s.ip_address + s.user_agent)).size;
+    // session_id is the unique fingerprint per visit (NOT NULL); ip_address is often null in cookiefree mode
+    const uniqueVisitors = new Set(trackingSessions?.map(s => s.session_id)).size;
 
-    // Calculate session metrics
+    // Cap at 7200s (2h) to exclude outliers from open/abandoned tabs, matching get_analytics_summary
+    const DURATION_CAP = 7200;
     const sessionsWithDuration = trackingSessions?.filter(s => s.duration_seconds > 0) || [];
-    const avgSessionDuration = sessionsWithDuration.length > 0 
-      ? sessionsWithDuration.reduce((sum, s) => sum + s.duration_seconds, 0) / sessionsWithDuration.length 
+    const avgSessionDuration = sessionsWithDuration.length > 0
+      ? sessionsWithDuration.reduce((sum, s) => sum + Math.min(s.duration_seconds, DURATION_CAP), 0) / sessionsWithDuration.length
       : 0;
 
     const avgPagesPerSession = totalSessions > 0 ? totalPageViews / totalSessions : 0;

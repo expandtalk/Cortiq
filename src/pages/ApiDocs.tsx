@@ -5,6 +5,7 @@
 
 import { Link } from 'react-router-dom';
 import PublicNavigation from '@/components/PublicNavigation';
+import { useSEO } from '@/hooks/useSEO';
 import { Button } from '@/components/ui/button';
 import {
   Card,
@@ -28,6 +29,10 @@ import {
 } from 'lucide-react';
 
 export default function ApiDocs() {
+  useSEO({
+    title: 'API Documentation — CortIQ',
+    description: 'CortIQ REST API reference. Track events, query analytics, heatmaps, A/B tests and more. OpenAPI-compatible with API key authentication.',
+  });
   const features = [
     {
       icon: <Zap className="h-6 w-6" />,

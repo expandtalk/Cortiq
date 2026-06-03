@@ -107,8 +107,8 @@ export function ZeroClickRiskIndex({ siteId }: ZeroClickRiskIndexProps) {
           Risk score is weighted by crawler intent — training crawlers score 3×, citation crawlers 2×, general crawlers 1×.
           A rising trend means AI exposure is accelerating.{" "}
           {gscConnected
-            ? <span className="text-green-600 font-medium">GSC kopplat — CTR-korrelation aktiv.</span>
-            : <span className="text-muted-foreground">Koppla Google Search Console under Mer → Integrations för CTR-korrelation.</span>
+            ? <span className="text-green-600 font-medium">GSC connected — CTR correlation active.</span>
+            : <span className="text-muted-foreground">Connect Google Search Console under Settings → Integrations to enable CTR correlation.</span>
           }
         </AlertDescription>
       </Alert>
@@ -253,13 +253,13 @@ export function ZeroClickRiskIndex({ siteId }: ZeroClickRiskIndexProps) {
                 <ExternalLink className="h-5 w-5 text-primary" />
               </div>
               <div>
-                <p className="font-semibold">Lägg till CTR-korrelation via Google Search Console</p>
+                <p className="font-semibold">Add CTR correlation via Google Search Console</p>
                 <p className="text-sm text-muted-foreground mt-1">
-                  När GSC är kopplat matchar CortIQ AI-crawlade sidor mot sjunkande klickfrekvenser —
-                  det avslöjar vilka sidor som förlorar trafik till AI-svar, inte bara crawlas.
+                  When GSC is connected, CortIQ matches AI-crawled pages against falling click rates —
+                  revealing which pages are losing traffic to AI answers, not just being crawled.
                 </p>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Mer → Integrations → Google Search Console
+                  Settings → Integrations → Google Search Console
                 </p>
               </div>
             </div>

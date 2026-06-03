@@ -31,35 +31,51 @@
 
     <!-- Structured Data (JSON-LD) -->
     <script type="application/ld+json">
-    {
-      "@context": "https://schema.org",
-      "@type": "SoftwareApplication",
-      "name": "CortIQ",
-      "applicationCategory": "WebApplication",
-      "operatingSystem": "Web Browser",
-      "offers": {
-        "@type": "Offer",
-        "price": "0",
-        "priceCurrency": "SEK",
-        "description": "Invite-only beta version"
+    [
+      {
+        "@context": "https://schema.org",
+        "@type": "SoftwareApplication",
+        "name": "CortIQ",
+        "url": "https://cortiq.se",
+        "applicationCategory": "BusinessApplication",
+        "operatingSystem": "Web Browser",
+        "offers": {
+          "@type": "Offer",
+          "price": "0",
+          "priceCurrency": "SEK",
+          "description": "Invite-only beta"
+        },
+        "description": "CortIQ — first-to-market web analytics with dedicated AI agent tracking (ChatGPT Browser, Perplexity Comet, Claude Browser), cookie-free server-side analytics, and GDPR-compliant CMP.",
+        "featureList": [
+          "AI Agent Tracking",
+          "Cookie-Free Server-Side Analytics",
+          "GDPR-Compliant CMP",
+          "Click Heatmaps",
+          "A/B Testing",
+          "Form Analytics",
+          "Session Recording",
+          "Agentic Browser Detection"
+        ],
+        "screenshot": "https://cortiq.se/og-image.png",
+        "publisher": {
+          "@type": "Organization",
+          "name": "Expandtalk Corporation",
+          "url": "https://cortiq.se"
+        }
       },
-      "description": "CortIQ - Advanced web analytics with AI agent tracking, cookie-free tracking and GDPR-compliant CMP solution for Agentic Web.",
-      "featureList": [
-        "AI Agent Tracking",
-        "Cookie-Free Analytics",
-        "GDPR-Compliant CMP",
-        "Real-time Heatmaps",
-        "A/B Testing",
-        "Browser Type Detection",
-        "Agent Journey Funnel"
-      ],
-      "screenshot": "https://cortiq.se/og-image.png",
-      "aggregateRating": {
-        "@type": "AggregateRating",
-        "ratingValue": "5.0",
-        "ratingCount": "12"
+      {
+        "@context": "https://schema.org",
+        "@type": "Organization",
+        "name": "Expandtalk Corporation",
+        "url": "https://cortiq.se",
+        "description": "Swedish software company building CortIQ — analytics for the Agentic Web.",
+        "foundingLocation": {
+          "@type": "Place",
+          "addressCountry": "SE"
+        },
+        "sameAs": []
       }
-    }
+    ]
     </script>
   </head>
 

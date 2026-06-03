@@ -1,0 +1,16 @@
+services:
+  cortiq-relay:
+    build: .
+    restart: unless-stopped
+    ports:
+      - "3478:3478"          # Expose only on the internal network interface
+    environment:
+      # Required: paste the API key from CortIQ → Settings → API Keys
+      CORTIQ_API_KEY: "${CORTIQ_API_KEY}"
+      # Optional: override if you use a self-hosted Supabase instance
+      # CORTIQ_ENDPOINT: "https://your-project.supabase.co/functions/v1/track-event"
+      # Optional: restrict CORS to your intranet domains
+      ALLOWED_ORIGINS: "${ALLOWED_ORIGINS:-*}"
+      PORT: "3478"
+    # Optional: bind only to the internal network adapter
+    # network_mode: host

@@ -1,0 +1,15 @@
+{
+  "name": "cortiq-relay",
+  "version": "1.0.0",
+  "description": "Lightweight intranet relay — forwards CortIQ tracking events from closed networks to the Supabase Edge Function endpoint.",
+  "main": "server.js",
+  "scripts": {
+    "start": "node server.js"
+  },
+  "dependencies": {
+    "express": "^4.18.2"
+  },
+  "engines": {
+    "node": ">=18"
+  }
+}

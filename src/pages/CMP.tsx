@@ -4,8 +4,13 @@ import { Badge } from "@/components/ui/badge";
 import { Check, Shield, Eye, Cookie, Users, Lock, Zap, Globe } from "lucide-react";
 import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
+import { useSEO } from "@/hooks/useSEO";
 
 export default function CMP() {
+  useSEO({
+    title: 'Consent Management Platform (CMP) — CortIQ',
+    description: 'GDPR-compliant cookie consent with smart nudging to increase opt-in rates. Google Consent Mode v2 built in. No cookie banner required for server-side analytics.',
+  });
   const features = [
     {
       icon: <Cookie className="h-6 w-6" />,

@@ -7,7 +7,7 @@
  * Author: CortIQ
  * Author URI: https://cortiq.se
  * Requires at least: 5.6
- * Tested up to: 6.7
+ * Tested up to: 6.8
  * Requires PHP: 7.4
  * License: GPL v2 or later
  * Text Domain: cortiq

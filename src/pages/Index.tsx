@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import { useEffect } from "react";
+import { useSEO } from "@/hooks/useSEO";
 import PublicNavigation from "@/components/PublicNavigation";
 import heroImage from "@/assets/analytics-dashboard-hero.jpg";
 import analyticsIllustration from "@/assets/analytics-illustration.jpg";
@@ -39,7 +40,12 @@ declare global {
 }
 
 const Index = () => {
-  // Track page view when component mounts
+  useSEO({
+    title: 'CortIQ — AI Agent Analytics & Cookie-Free Tracking',
+    description: 'First-to-market analytics for the Agentic Web. Track ChatGPT Browser, Perplexity & Claude Browser. Cookie-free, GDPR-compliant. Heatmaps, A/B testing, form analytics.',
+    canonical: 'https://cortiq.se/',
+  });
+
   useEffect(() => {
     if (window.WFATracker) {
       window.WFATracker.trackView('homepage');
@@ -59,13 +65,13 @@ const Index = () => {
     },
     {
       icon: MousePointer,
-      title: "Visual Analytics",
-      description: "Visualize user interactions with click-maps, scroll-maps, and attention-maps for both human and AI agents."
+      title: "Visual Analytics (Click Maps)",
+      description: "Visualize where users click on every page — for both human visitors and AI agents. Desktop, tablet and mobile views."
     },
     {
       icon: TestTube,
       title: "A/B Testing & Optimization",
-      description: "Built-in A/B testing platform to optimize conversion and user experience in the new agentic web."
+      description: "Built-in A/B testing with statistical significance calculations to optimize conversion in the agentic web era."
     },
     {
       icon: Cookie,
@@ -74,8 +80,8 @@ const Index = () => {
     },
     {
       icon: Globe,
-      title: "WordPress Integration",
-      description: "Unique WordPress plugin with 1-click installation and deep integration. Our main competitive advantage."
+      title: "Universal Tracking Script",
+      description: "One script works on any CMS or custom site. Deep WordPress integration in early access for invited users."
     }
   ];
 
@@ -85,7 +91,7 @@ const Index = () => {
     "Agent-specific dashboards and insights",
     "Nudging cookie banners for higher consent rates", 
     "Accurate data with 1st party cookies",
-    "WordPress plugin as competitive advantage",
+    "Universal tracking script for any CMS or custom site",
     "Real-time analytics for both humans and AI agents",
     "Ready for the future web before competitors understand it"
   ];
@@ -130,15 +136,14 @@ const Index = () => {
           <div className="grid lg:grid-cols-2 gap-16 items-center">
             <div className="text-center lg:text-left">
               <Badge className="mb-8 animate-fade-in bg-gradient-primary hover-scale hover-glow text-white border-0">
-                🤖 First with Agentic Browser Analytics
+                🤖 World's First AI Bot Intelligence Platform
               </Badge>
               <h1 className="text-4xl md:text-6xl font-black mb-8 animate-slide-up text-gradient-primary leading-tight">
-                The future of web and bot analytics starts here
+                1 in 31 web visits is now an AI bot. Do you know which ones matter?
               </h1>
               <p className="text-xl md:text-2xl text-muted-foreground mb-12 max-w-2xl mx-auto lg:mx-0 animate-fade-in leading-relaxed">
-                Track AI agents like ChatGPT Browser, Perplexity Comet & Claude Browser. 
-                Plus 100% banner-free server-side analytics (PTS-approved) or hybrid with smart nudging cookie banners. 
-                WordPress plugin as main advantage. Heatmaps, A/B testing, GDPR compliant.
+                Not all AI traffic is equal. CortIQ classifies every AI visit — training crawlers, agentic browsers, and citation bots — so you know what to optimize, what to ignore, and what's costing you infrastructure budget.
+                Plus cookie-free analytics, heatmaps, A/B testing, and GDPR compliance.
               </p>
               <div className="flex flex-col sm:flex-row gap-6 justify-center lg:justify-start items-center animate-scale-in">
                 <Link to="/auth">
@@ -497,14 +502,48 @@ const Index = () => {
           <div className="text-center mb-16 animate-fade-in">
             <Badge className="mb-6 bg-gradient-primary text-white">
               <Bot className="h-4 w-4 mr-2 inline" />
-              AI Agent Intelligence
+              AI Bot Intelligence
             </Badge>
             <h2 className="text-4xl md:text-5xl font-black mb-6 text-gradient-primary">
-              Measure and Understand AI Agent Behavior
+              Not all AI traffic is equal
             </h2>
             <p className="text-xl text-muted-foreground max-w-3xl mx-auto leading-relaxed">
-              First on the market with dedicated AI agent analytics. See how ChatGPT, Perplexity, Claude and other AI agents interact with your site.
+              A GPTBot crawling for training data is not the same as a ChatGPT Browser user navigating your site for a real customer. CortIQ is the first platform that classifies the difference.
             </p>
+          </div>
+
+          {/* Three bot categories */}
+          <div className="grid md:grid-cols-3 gap-6 max-w-4xl mx-auto mb-12">
+            <Card className="border-red-500/20 bg-red-500/5">
+              <CardContent className="pt-6 space-y-2">
+                <div className="flex items-center justify-between">
+                  <AlertTriangle className="h-5 w-5 text-red-400" />
+                  <Badge className="text-xs bg-red-500/20 text-red-400 border-0">Infrastructure cost</Badge>
+                </div>
+                <p className="font-semibold text-red-400">Training Crawlers</p>
+                <p className="text-sm text-muted-foreground">GPTBot, ClaudeBot, BLEXBot — crawl for model training, zero referral value.</p>
+              </CardContent>
+            </Card>
+            <Card className="border-green-500/20 bg-green-500/5">
+              <CardContent className="pt-6 space-y-2">
+                <div className="flex items-center justify-between">
+                  <Zap className="h-5 w-5 text-green-400" />
+                  <Badge className="text-xs bg-green-500/20 text-green-400 border-0">Real user intent</Badge>
+                </div>
+                <p className="font-semibold text-green-400">Agentic Browsers</p>
+                <p className="text-sm text-muted-foreground">ChatGPT Browser, Perplexity Comet — act on behalf of users, convert like humans.</p>
+              </CardContent>
+            </Card>
+            <Card className="border-blue-500/20 bg-blue-500/5">
+              <CardContent className="pt-6 space-y-2">
+                <div className="flex items-center justify-between">
+                  <Globe className="h-5 w-5 text-blue-400" />
+                  <Badge className="text-xs bg-blue-500/20 text-blue-400 border-0">Visibility signal</Badge>
+                </div>
+                <p className="font-semibold text-blue-400">Citation Crawlers</p>
+                <p className="text-sm text-muted-foreground">PerplexityBot, Google-Extended — index your content for AI search results.</p>
+              </CardContent>
+            </Card>
           </div>
 
           <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6 max-w-6xl mx-auto mb-16">
@@ -1132,9 +1171,8 @@ const Index = () => {
               Build for tomorrow's web, today
             </h2>
             <p className="text-xl md:text-2xl mb-12 opacity-95 max-w-4xl mx-auto leading-relaxed">
-              When AI agents become mainstream, 10-15% of all web traffic will come from bots within three years. 
-              Brands that make their data easy to choose, summarize, and act on will win. 
-              This is the early moment - experiment while risk is low.
+              AI bot traffic grew 300% last year. 1 in 31 web visits is already an AI bot — up from 1 in 200 at the start of 2025.
+              The platforms that understand what kind of AI traffic they have will win. Everyone else is flying blind.
             </p>
           </div>
           
@@ -1146,9 +1184,12 @@ const Index = () => {
                 <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-2 transition-transform duration-300" />
               </Button>
             </Link>
-            <div className="glass px-6 py-4 rounded-xl text-sm font-medium text-foreground">
-              🤖 Agentic Browser Tracking • ✅ Complete Analytics • ✅ GDPR-Ready
-            </div>
+            <Link to="/bot-intelligence">
+              <Button size="lg" variant="outline" className="group glass hover-scale text-lg px-10 py-5 h-auto font-bold border-white/30 text-white hover:text-white">
+                AI Bot Intelligence Report
+                <ArrowRight className="ml-3 h-6 w-6 group-hover:translate-x-2 transition-transform duration-300" />
+              </Button>
+            </Link>
           </div>
         </div>
       </section>

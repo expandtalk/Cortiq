@@ -86,7 +86,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
   async function runAudit() {
     const url = auditUrl.trim();
     if (!url) { toast.error('Ange URL:en som ska analyseras.'); return; }
-    const normalized = url.startsWith('http') ? url : `https://${url}`;
+    const normalized = `https://${url.replace(/^https?:\/\//i, '')}`;
     setRunning(true);
     try {
       const { data, error } = await supabase.functions.invoke('geo-analyze', {

@@ -10,6 +10,7 @@ import { useAuth } from "@/hooks/useAuth";
 import { supabase } from "@/integrations/supabase/client";
 import { useToast } from "@/hooks/use-toast";
 import PublicNavigation from "@/components/PublicNavigation";
+import { useSEO } from "@/hooks/useSEO";
 import { 
   Check, 
   Crown, 
@@ -24,6 +25,10 @@ import {
 } from "lucide-react";
 
 export default function Pricing() {
+  useSEO({
+    title: 'Pricing — CortIQ Analytics',
+    description: 'Simple, transparent pricing for AI agent analytics, cookie-free tracking and GDPR CMP. Invite-only beta — request access today.',
+  });
   const { user } = useAuth();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);

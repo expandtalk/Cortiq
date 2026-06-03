@@ -10,6 +10,10 @@ import { ErrorBoundary } from "@/components/ErrorBoundary";
 import Index from "./pages/Index";
 import CMP from "./pages/CMP";
 import Features from "./pages/Features";
+import FeaturesAI from "./pages/FeaturesAI";
+import FeaturesAnalytics from "./pages/FeaturesAnalytics";
+import FeaturesCyber from "./pages/FeaturesCyber";
+import BotIntelligence from "./pages/BotIntelligence";
 import Pricing from "./pages/Pricing";
 import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
@@ -36,6 +40,10 @@ const App = () => (
               <Route path="/" element={<Index />} />
               <Route path="/cmp" element={<CMP />} />
               <Route path="/features" element={<Features />} />
+              <Route path="/features/ai" element={<FeaturesAI />} />
+              <Route path="/features/analytics" element={<FeaturesAnalytics />} />
+              <Route path="/features/cyber" element={<FeaturesCyber />} />
+              <Route path="/bot-intelligence" element={<BotIntelligence />} />
               <Route path="/pricing" element={<Pricing />} />
               <Route path="/api" element={<ApiDocs />} />
               <Route path="/privacy" element={<Privacy />} />

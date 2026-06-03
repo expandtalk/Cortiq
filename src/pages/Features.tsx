@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
+import { useSEO } from "@/hooks/useSEO";
 import { 
   MousePointer, 
   BarChart3, 
@@ -30,6 +31,10 @@ import {
 } from "lucide-react";
 
 export default function Features() {
+  useSEO({
+    title: 'Features — CortIQ Analytics Platform',
+    description: 'Full feature overview: AI agent tracking, click heatmaps, A/B testing, form analytics, session recording, data warehouse export and GDPR-compliant CMP. All in one platform.',
+  });
   const coreFeatures = [
     {
       icon: <MousePointer className="h-8 w-8" />,

@@ -3,6 +3,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
+import { useSEO } from "@/hooks/useSEO";
 import {
   BarChart3,
   MousePointer,
@@ -124,6 +125,10 @@ const integrations = [
 ];
 
 export default function FeaturesAnalytics() {
+  useSEO({
+    title: 'Web Analytics — CortIQ',
+    description: 'Cookie-free server-side analytics, click heatmaps, form analytics, session recording and A/B testing — all GDPR-compliant and without a cookie banner.',
+  });
   return (
     <div className="min-h-screen bg-gradient-to-br from-background via-background to-muted">
       <PublicNavigation />

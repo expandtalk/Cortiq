@@ -29,7 +29,7 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          Välj en webbplats för att se annonsdata
+          Select a website to view advertising data
         </AlertDescription>
       </Alert>
     );
@@ -43,7 +43,7 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          Ingen annonsdata tillgänglig. Kontrollera att GA4-integrationen är aktiverad och att annonser körs med rätt UTM-parametrar.
+          No advertising data available. Make sure the GA4 integration is enabled and that ads are running with UTM parameters.
         </AlertDescription>
       </Alert>
     );
@@ -158,8 +158,8 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
 
   const monthNames: Record<string, string> = {
     '01': 'Jan', '02': 'Feb', '03': 'Mar', '04': 'Apr',
-    '05': 'Maj', '06': 'Jun', '07': 'Jul', '08': 'Aug',
-    '09': 'Sep', '10': 'Okt', '11': 'Nov', '12': 'Dec'
+    '05': 'May', '06': 'Jun', '07': 'Jul', '08': 'Aug',
+    '09': 'Sep', '10': 'Oct', '11': 'Nov', '12': 'Dec'
   };
 
   return (
@@ -172,7 +172,7 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
               <DollarSign className="h-10 w-10 text-primary" />
               <div>
                 <p className="text-2xl font-bold">${totalAdCost.toLocaleString('sv-SE', { maximumFractionDigits: 0 })}</p>
-                <p className="text-sm text-muted-foreground">Total annonskostnad</p>
+                <p className="text-sm text-muted-foreground">Total ad spend</p>
               </div>
             </div>
           </CardContent>
@@ -184,7 +184,7 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
               <Target className="h-10 w-10 text-primary" />
               <div>
                 <p className="text-2xl font-bold">{overallConversionRate.toFixed(2)}%</p>
-                <p className="text-sm text-muted-foreground">Konverteringsfrekvens</p>
+                <p className="text-sm text-muted-foreground">Conversion rate</p>
               </div>
             </div>
           </CardContent>
@@ -220,7 +220,7 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
                   variant={overallROAS >= 1 ? "default" : "secondary"} 
                   className="text-xs w-fit mx-auto"
                 >
-                  ${totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} intäkt
+                  ${totalRevenue.toLocaleString('en-US', { maximumFractionDigits: 0 })} revenue
                 </Badge>
               </div>
             </div>
@@ -231,8 +231,8 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
       {/* Cost Over Time Chart */}
       <Card>
         <CardHeader>
-          <CardTitle>Kostnad och ROAS över tid</CardTitle>
-          <CardDescription>Månatlig annonskostnad och avkastning</CardDescription>
+          <CardTitle>Ad spend and ROAS over time</CardTitle>
+          <CardDescription>Monthly ad spend and return on ad spend</CardDescription>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
@@ -254,7 +254,7 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
                 type="monotone" 
                 dataKey="adCost" 
                 stroke="hsl(var(--primary))" 
-                name="Annonskostnad ($)"
+                name="Ad spend ($)"
                 strokeWidth={2}
               />
               <Line 
@@ -273,8 +273,8 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
       {/* Cost per Traffic Source */}
       <Card>
         <CardHeader>
-          <CardTitle>Kostnad per trafikkälla</CardTitle>
-          <CardDescription>Annonskostnad fördelat per källa och medium</CardDescription>
+          <CardTitle>Ad spend by traffic source</CardTitle>
+          <CardDescription>Ad cost broken down by source and medium</CardDescription>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
@@ -284,7 +284,7 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
               <YAxis />
               <Tooltip formatter={(value: any) => `$${value.toLocaleString('sv-SE', { maximumFractionDigits: 2 })}`} />
               <Legend />
-              <Bar dataKey="adCost" fill="hsl(var(--primary))" name="Annonskostnad ($)" />
+              <Bar dataKey="adCost" fill="hsl(var(--primary))" name="Ad spend ($)" />
             </BarChart>
           </ResponsiveContainer>
         </CardContent>
@@ -293,8 +293,8 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
       {/* Campaign Performance Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Kampanjprestanda</CardTitle>
-          <CardDescription>Detaljerade metrics per kampanj</CardDescription>
+          <CardTitle>Campaign performance</CardTitle>
+          <CardDescription>Detailed metrics per campaign</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">

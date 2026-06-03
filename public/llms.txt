@@ -1,28 +1,37 @@
 # CortIQ
 
-> CortIQ is the first web analytics platform with dedicated tracking for AI agents — ChatGPT Browser, Perplexity Comet, Claude Browser, and other agentic browsers. Built for the Agentic Web.
+> First-to-market web analytics platform with dedicated AI agent tracking — ChatGPT Browser, Perplexity Comet, Claude Browser. Built for the Agentic Web.
 
-CortIQ combines cookie-free server-side analytics with first-party tracking, GDPR-compliant consent management, and deep behavioral analytics. Headquartered in Sweden, targeting European SMEs and WordPress publishers.
+CortIQ combines cookie-free server-side analytics, GDPR-compliant consent management, and behavioral analytics. Developed by Expandtalk Corporation, Sweden.
 
-## Product
+## Product capabilities
 
-- [Overview](https://cortiq.se/): AI-agent tracking, cookie-free analytics, heatmaps, A/B testing, form analytics, GDPR CMP
-- [CMP & Cookie Consent](https://cortiq.se/cmp): Consent management with nudging technology for higher opt-in rates
-- [Features](https://cortiq.se/features): Full feature breakdown
-- [AI Agent Analytics](https://cortiq.se/features/ai): Detect and analyze traffic from ChatGPT Browser, Perplexity Comet, Claude Browser — journey funnels, conversion attribution, citation tracking
-- [Privacy & Analytics](https://cortiq.se/features/analytics): Cookie-free server-side tracking (PTS-approved), GA4 server-side integration
-- [Pricing](https://cortiq.se/pricing): Plans and pricing
+- **Agentic Browser Analytics**: Detect and track AI browsers (ChatGPT Browser, Perplexity Comet, Claude Browser). Agent journey funnels, conversion attribution, browser type classification (visual/headless/text-based), citation and training crawler tracking.
+- **Cookie-Free Analytics**: 100% server-side tracking. No cookies, no IP storage, no fingerprinting. Compliant with Swedish PTS and EU ePrivacy directive. No consent banner required for base analytics.
+- **CMP with Nudging**: Smart consent banners with behavioral nudging for higher opt-in rates. Combines banner-free base metrics with richer opt-in data.
+- **Click Maps**: Heatmaps showing click patterns per page and device type (desktop/tablet/mobile).
+- **A/B Testing**: Two-variant testing with built-in statistical significance.
+- **Form Analytics**: Funnel visualization, field-level drop-off data.
+- **Session Recording**: Record and replay user sessions.
+- **Geolocation Maps**: Visitor density by country, region and city.
+- **KPI Dashboards**: Customizable KPI tracking, goal configuration and behavioral alerts.
+- **Data Warehouse**: Sync to BigQuery, Snowflake, Redshift, PostgreSQL, MySQL.
+- **GA4 Integration**: Server-side GA4 for paid ads attribution.
 
-## Docs
+## What CortIQ does NOT offer
 
-- [API Reference](https://cortiq.se/api): OpenAPI documentation for the CortIQ tracking and analytics API
-- [Tracking Script](https://cortiq.se/spa-tracking.js): JavaScript snippet for website integration — supports heatmaps, session recording, AI agent detection, UTM tracking
+- Scroll heatmaps or attention maps (click maps only)
+- Multivariate testing (two-variant A/B only)
+- Mobile app analytics
+
+## Access
+
+Invite-only beta. Website: https://cortiq.se
+
+## Tracking script
+
+https://cortiq.se/spa-tracking.js — drop-in JavaScript for any site (heatmaps, session recording, AI agent detection, UTM, form analytics).
 
 ## Company
 
-- [Privacy Policy](https://cortiq.se/privacy): Data handling and GDPR compliance
-- [Contact](https://cortiq.se/contact): Contact information
-
-## Optional
-
-- [Full product description](https://cortiq.se/llms-full.txt): Comprehensive markdown documentation for LLM consumption
+Expandtalk Corporation — Sweden. GDPR-compliant, EU-hosted.

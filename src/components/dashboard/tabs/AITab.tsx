@@ -22,12 +22,15 @@ export function AITab({ selectedSite }: AITabProps) {
   // Fallback to GA4 if native has no data (requires GA4 integration)
   const ga4Result = useAITraffic(selectedSite.id, parseInt(timeRange));
   
-  // Use native data if available and has sessions
+  // Use native data if it loaded without error; fall back to GA4 only if native also failed
   const hasNativeData = nativeResult.data && nativeResult.data.totalSessions > 0;
-  const useNative = hasNativeData;
-  
-  const loading = useNative ? nativeResult.isLoading : ga4Result.loading;
-  const error = useNative ? (nativeResult.error?.message || null) : ga4Result.error;
+  const nativeLoaded = !nativeResult.isLoading && !nativeResult.error;
+  const useNative = hasNativeData || nativeLoaded;
+
+  const loading = nativeResult.isLoading || (!nativeLoaded && ga4Result.loading);
+  const ga4NotConfigured = !useNative && ga4Result.error &&
+    (ga4Result.error.includes('non-2xx') || ga4Result.error.includes('not found') || ga4Result.error.includes('GA4'));
+  const error = useNative ? (nativeResult.error?.message || null) : (ga4NotConfigured ? null : ga4Result.error);
   
   // Normalize data structure
   const data = useNative && nativeResult.data ? {
@@ -81,7 +84,7 @@ export function AITab({ selectedSite }: AITabProps) {
             <div className="text-center py-8">
               <p className="text-destructive mb-4">{error}</p>
               <p className="text-muted-foreground text-sm">
-                Kontrollera att Google Analytics är korrekt konfigurerat för denna webbplats.
+                An unexpected error occurred. Try refreshing or check the browser console.
               </p>
             </div>
           </CardContent>
@@ -89,6 +92,9 @@ export function AITab({ selectedSite }: AITabProps) {
       </div>
     );
   }
+
+  // GA4 not configured — show setup prompt inline instead of error state
+  const showGA4Prompt = ga4NotConfigured && !useNative;
 
   return (
     <div className="space-y-6">
@@ -248,12 +254,21 @@ export function AITab({ selectedSite }: AITabProps) {
           ) : (
             <div className="text-center py-8">
               <Bot className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-lg font-medium mb-2">Ingen AI-trafik upptäckt</p>
+              <p className="text-lg font-medium mb-2">No AI traffic detected</p>
               <p className="text-muted-foreground text-sm mb-4">
-                Vi hittade ingen trafik från kända AI-plattformar under den valda perioden.
+                No traffic from known AI platforms found for the selected period.
               </p>
+              {showGA4Prompt && (
+                <div className="mb-4 p-4 bg-blue-50 dark:bg-blue-950 border border-blue-200 dark:border-blue-800 rounded-lg text-left max-w-md mx-auto">
+                  <p className="text-sm font-medium text-blue-800 dark:text-blue-200 mb-1">Add Google Analytics for a second measurement source</p>
+                  <p className="text-xs text-blue-700 dark:text-blue-300">
+                    Google Analytics tracks AI referral traffic via UTM parameters. Connect it under{' '}
+                    <strong>Settings → External Integrations</strong> to combine GA4 data with CortIQ's native cookie-free tracking.
+                  </p>
+                </div>
+              )}
               <div className="text-xs text-muted-foreground">
-                <p>Spårade plattformar: ChatGPT, Perplexity, Claude, Gemini, Copilot, Meta AI</p>
+                <p>Tracked platforms: ChatGPT, Perplexity, Claude, Gemini, Copilot, Meta AI</p>
               </div>
             </div>
           )}

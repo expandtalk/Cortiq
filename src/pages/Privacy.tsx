@@ -3,9 +3,14 @@ import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
+import { useSEO } from "@/hooks/useSEO";
 import { Shield, CheckCircle, Mail, FileText, Lock, Database, Users } from "lucide-react";
 
 const Privacy = () => {
+  useSEO({
+    title: 'Privacy Policy — CortIQ',
+    description: 'CortIQ privacy policy. GDPR-compliant data handling, EU data storage, data retention details and your rights as a data subject.',
+  });
   return (
     <div className="min-h-screen bg-background">
       <PublicNavigation />

@@ -29,7 +29,7 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          Välj en webbplats för att se annonsdata
+          Select a website to view advertising data
         </AlertDescription>
       </Alert>
     );
@@ -56,7 +56,7 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          {error || 'Ingen annonsdata tillgänglig. Kontrollera att tracking-skriptet är installerat och att annonser körs med UTM-parametrar.'}
+          {error || 'No advertising data available. Make sure the tracking script is installed and that ads are running with UTM parameters (utm_medium: cpc, ppc, or paid-social).'}
         </AlertDescription>
       </Alert>
     );
@@ -78,8 +78,8 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
       <Alert>
         <AlertCircle className="h-4 w-4" />
         <AlertDescription>
-          <strong>GDPR-compliant Server-Side Tracking</strong> - Denna data samlas in utan cookies via din egen tracking-infrastruktur. 
-          Endast sessioner med UTM-parametrar (utm_medium: cpc, ppc, paid-social, display, paid) visas här.
+          <strong>GDPR-compliant server-side tracking</strong> — Data collected without cookies via your own tracking infrastructure.
+          Only sessions with paid UTM parameters (utm_medium: cpc, ppc, paid-social, display, paid) are shown here.
         </AlertDescription>
       </Alert>
 
@@ -91,7 +91,7 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
               <Users className="h-10 w-10 text-primary" />
               <div>
                 <p className="text-2xl font-bold">{summary.totalSessions.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">Annons-sessioner</p>
+                <p className="text-sm text-muted-foreground">Ad sessions</p>
               </div>
             </div>
           </CardContent>
@@ -103,9 +103,9 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
               <Target className="h-10 w-10 text-primary" />
               <div>
                 <p className="text-2xl font-bold">{summary.conversionRate.toFixed(2)}%</p>
-                <p className="text-sm text-muted-foreground">Konverteringsfrekvens</p>
+                <p className="text-sm text-muted-foreground">Conversion rate</p>
                 <Badge variant="outline" className="text-xs w-fit mx-auto">
-                  {summary.totalConversions} konverteringar
+                  {summary.totalConversions} conversions
                 </Badge>
               </div>
             </div>
@@ -118,7 +118,7 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
               <MousePointerClick className="h-10 w-10 text-primary" />
               <div>
                 <p className="text-2xl font-bold">{summary.totalPageViews.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">Sidvisningar</p>
+                <p className="text-sm text-muted-foreground">Page views</p>
                 <Badge variant="outline" className="text-xs w-fit mx-auto">
                   {(summary.totalPageViews / Math.max(summary.totalSessions, 1)).toFixed(1)} per session
                 </Badge>
@@ -133,10 +133,10 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
               <Clock className="h-10 w-10 text-primary" />
               <div>
                 <p className="text-2xl font-bold">{Math.round(summary.avgDuration)}s</p>
-                <p className="text-sm text-muted-foreground">Genomsnittlig sessionstid</p>
+                <p className="text-sm text-muted-foreground">Avg. session duration</p>
                 {summary.totalRevenue > 0 && (
                   <Badge variant="default" className="text-xs w-fit mx-auto">
-                    {summary.totalRevenue.toLocaleString('sv-SE', { maximumFractionDigits: 0 })} kr intäkt
+                    {summary.totalRevenue.toLocaleString('en-US', { maximumFractionDigits: 0 })} revenue
                   </Badge>
                 )}
               </div>
@@ -148,8 +148,8 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
       {/* Sessions Over Time */}
       <Card>
         <CardHeader>
-          <CardTitle>Sessioner och konverteringar över tid</CardTitle>
-          <CardDescription>Månadsvis breakdown av paid traffic</CardDescription>
+          <CardTitle>Sessions and conversions over time</CardTitle>
+          <CardDescription>Monthly breakdown of paid traffic</CardDescription>
         </CardHeader>
         <CardContent>
           <ResponsiveContainer width="100%" height={300}>
@@ -176,7 +176,7 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
                 type="monotone" 
                 dataKey="sessions" 
                 stroke="hsl(var(--primary))" 
-                name="Sessioner"
+                name="Sessions"
                 strokeWidth={2}
               />
               <Line 
@@ -184,7 +184,7 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
                 type="monotone" 
                 dataKey="conversions" 
                 stroke="hsl(var(--chart-2))" 
-                name="Konverteringar"
+                name="Conversions"
                 strokeWidth={2}
               />
             </LineChart>
@@ -196,8 +196,8 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Sessioner per trafikkälla</CardTitle>
-            <CardDescription>Fördelning av annonstrafik</CardDescription>
+            <CardTitle>Sessions by traffic source</CardTitle>
+            <CardDescription>Distribution of paid traffic by source</CardDescription>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -207,7 +207,7 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
                 <YAxis />
                 <Tooltip />
                 <Legend />
-                <Bar dataKey="sessions" fill="hsl(var(--primary))" name="Sessioner" />
+                <Bar dataKey="sessions" fill="hsl(var(--primary))" name="Sessions" />
               </BarChart>
             </ResponsiveContainer>
           </CardContent>
@@ -215,8 +215,8 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
 
         <Card>
           <CardHeader>
-            <CardTitle>Top kampanjer</CardTitle>
-            <CardDescription>Kampanjer med flest sessioner</CardDescription>
+            <CardTitle>Top campaigns</CardTitle>
+            <CardDescription>Campaigns with the most sessions</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -242,21 +242,21 @@ export function ServerSidePaidAdsTab({ selectedSite, startDate, endDate }: Serve
       {/* Campaign Performance Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Kampanjprestanda (Server-Side)</CardTitle>
-          <CardDescription>Detaljerade metrics per kampanj - spårat med cookiefree fingerprinting</CardDescription>
+          <CardTitle>Campaign performance (server-side)</CardTitle>
+          <CardDescription>Detailed metrics per campaign — tracked via cookie-free fingerprinting</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="overflow-x-auto">
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium">Kampanj</th>
-                  <th className="text-right p-3 font-medium">Källa</th>
-                  <th className="text-right p-3 font-medium">Sessioner</th>
-                  <th className="text-right p-3 font-medium">Sidvisningar</th>
-                  <th className="text-right p-3 font-medium">Genomsnitt tid</th>
-                  <th className="text-right p-3 font-medium">Konv. Rate</th>
-                  <th className="text-right p-3 font-medium">Enhet</th>
+                  <th className="text-left p-3 font-medium">Campaign</th>
+                  <th className="text-right p-3 font-medium">Source</th>
+                  <th className="text-right p-3 font-medium">Sessions</th>
+                  <th className="text-right p-3 font-medium">Page views</th>
+                  <th className="text-right p-3 font-medium">Avg. duration</th>
+                  <th className="text-right p-3 font-medium">Conv. rate</th>
+                  <th className="text-right p-3 font-medium">Device</th>
                 </tr>
               </thead>
               <tbody>
