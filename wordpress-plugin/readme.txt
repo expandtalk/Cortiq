@@ -27,6 +27,7 @@ CortIQ Analytics gives you a complete picture of who visits your site: human vis
 * Page views, sessions, bounce rate, time on site
 * Traffic sources: organic, direct, referral, paid, social
 * Click heatmaps — exact click positions per page and device type
+* Scroll depth heatmaps — funnel showing how far visitors scroll (25 / 50 / 75 / 100%)
 * Form analytics — field-level drop-off analysis
 * Session recording — full replay of visitor interactions (with data masking for sensitive fields)
 * User journey and navigation flow

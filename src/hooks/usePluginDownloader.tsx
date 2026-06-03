@@ -111,8 +111,8 @@ function heatmap_log($message, $level = 'info') {
     
     if (isGdprEnabled) {
         // Check for consent in cookies or localStorage
-        hasConsent = document.cookie.includes('heatmap_consent=analytics') || 
-                    localStorage.getItem('heatmap_consent') === 'analytics';
+        hasConsent = document.cookie.includes('cortiq_consent=analytics') || 
+                    localStorage.getItem('cortiq_consent') === 'analytics';
         
         // Listen for consent updates
         document.addEventListener('consentUpdated', function(e) {
@@ -158,11 +158,11 @@ function heatmap_log($message, $level = 'info') {
         }
         
         function getOrCreateSession() {
-            let sessionId = sessionStorage.getItem('heatmap_session_id');
+            let sessionId = sessionStorage.getItem('cortiq_session_id');
             if (!sessionId) {
                 sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-                sessionStorage.setItem('heatmap_session_id', sessionId);
-                sessionStorage.setItem('heatmap_session_start', Date.now().toString());
+                sessionStorage.setItem('cortiq_session_id', sessionId);
+                sessionStorage.setItem('cortiq_session_start', Date.now().toString());
             }
             return sessionId;
         }
@@ -350,7 +350,7 @@ function heatmap_log($message, $level = 'info') {
         }
         
         function trackPageUnload() {
-            const sessionStart = parseInt(sessionStorage.getItem('heatmap_session_start')) || pageStartTime;
+            const sessionStart = parseInt(sessionStorage.getItem('cortiq_session_start')) || pageStartTime;
             const timeOnPage = Date.now() - pageStartTime;
             const sessionDuration = Date.now() - sessionStart;
             
@@ -542,10 +542,10 @@ function heatmap_log($message, $level = 'info') {
     }
     
     function getSessionId() {
-        let sessionId = sessionStorage.getItem('heatmap_session_id');
+        let sessionId = sessionStorage.getItem('cortiq_session_id');
         if (!sessionId) {
             sessionId = 'session_' + Date.now() + '_' + Math.random().toString(36).substr(2, 9);
-            sessionStorage.setItem('heatmap_session_id', sessionId);
+            sessionStorage.setItem('cortiq_session_id', sessionId);
         }
         return sessionId;
     }
@@ -764,10 +764,10 @@ function heatmap_log($message, $level = 'info') {
         };
         
         // Store in cookie
-        document.cookie = \`heatmap_consent=\${consentTypes.join(',')};path=/;max-age=31536000;SameSite=Lax\`;
+        document.cookie = \`cortiq_consent=\${consentTypes.join(',')};path=/;max-age=31536000;SameSite=Lax\`;
         
         // Store in localStorage as backup
-        localStorage.setItem('heatmap_consent', JSON.stringify(consent));
+        localStorage.setItem('cortiq_consent', JSON.stringify(consent));
         
         // Send to Supabase
         sendConsentToSupabase(consent);
@@ -893,13 +893,13 @@ function heatmap_log($message, $level = 'info') {
     
     function getConsent() {
         // Check cookie first
-        const cookieMatch = document.cookie.match(/heatmap_consent=([^;]+)/);
+        const cookieMatch = document.cookie.match(/cortiq_consent=([^;]+)/);
         if (cookieMatch) {
             return cookieMatch[1].split(',');
         }
         
         // Check localStorage
-        const stored = localStorage.getItem('heatmap_consent');
+        const stored = localStorage.getItem('cortiq_consent');
         if (stored) {
             try {
                 const consent = JSON.parse(stored);
@@ -1493,8 +1493,8 @@ function heatmap_log($message, $level = 'info') {
         };
         
         // Store in cookie and localStorage
-        document.cookie = \`heatmap_consent=\${categories.join(',')};path=/;max-age=31536000;SameSite=Lax\`;
-        localStorage.setItem('heatmap_consent', JSON.stringify(heatmapConsent));
+        document.cookie = \`cortiq_consent=\${categories.join(',')};path=/;max-age=31536000;SameSite=Lax\`;
+        localStorage.setItem('cortiq_consent', JSON.stringify(heatmapConsent));
         
         // Dispatch event for other scripts
         document.dispatchEvent(new CustomEvent('consentUpdated', {
@@ -1569,14 +1569,14 @@ function heatmap_log($message, $level = 'info') {
     
     function checkConsent() {
         // Check cookie
-        const cookieMatch = document.cookie.match(/heatmap_consent=([^;]+)/);
+        const cookieMatch = document.cookie.match(/cortiq_consent=([^;]+)/);
         if (cookieMatch) {
             hasAnalyticsConsent = cookieMatch[1].split(',').includes('analytics');
         }
         
         // Check localStorage as backup
         if (!hasAnalyticsConsent) {
-            const stored = localStorage.getItem('heatmap_consent');
+            const stored = localStorage.getItem('cortiq_consent');
             if (stored) {
                 try {
                     const consent = JSON.parse(stored);
@@ -2995,8 +2995,8 @@ class HeatmapAnalyticsSecurityManager {
      * Check if user has consented to tracking
      */
     public function has_tracking_consent() {
-        if (isset(\\$_COOKIE['heatmap_consent'])) {
-            \\$consent = json_decode(\\$_COOKIE['heatmap_consent'], true);
+        if (isset(\\$_COOKIE['cortiq_consent'])) {
+            \\$consent = json_decode(\\$_COOKIE['cortiq_consent'], true);
             return isset(\\$consent['analytics']) && \\$consent['analytics'] === true;
         }
         
@@ -3359,11 +3359,11 @@ class HeatmapAnalyticsTrackingManager {
             function initHeatmap() {
                 if (window.HeatmapAnalyticsTracker && window.heatmapAnalyticsConfig) {
                     if (window.heatmapAnalyticsConfig.gdprEnabled) {
-                        if (localStorage.getItem('heatmap_consent') === 'true' || 
-                            document.cookie.indexOf('heatmap_consent=') !== -1) {
+                        if (localStorage.getItem('cortiq_consent') === 'true' || 
+                            document.cookie.indexOf('cortiq_consent=') !== -1) {
                             window.HeatmapAnalyticsTracker.init(window.heatmapAnalyticsConfig);
                         } else {
-                            document.addEventListener('heatmap_consent_granted', function() {
+                            document.addEventListener('cortiq_consent_granted', function() {
                                 window.HeatmapAnalyticsTracker.init(window.heatmapAnalyticsConfig);
                             });
                         }

@@ -275,14 +275,14 @@ const Privacy = () => {
               <div>
                 <h4 className="font-semibold mb-2">Necessary Cookies (Always active)</h4>
                 <ul className="text-muted-foreground space-y-1 ml-4">
-                  <li>• <code>heatmap_consent_given</code> - Saves your cookie preferences (Lifetime: 1 year)</li>
+                  <li>• <code>cortiq_consent</code> - Saves your cookie preferences (Lifetime: 1 year)</li>
                 </ul>
               </div>
               <div>
                 <h4 className="font-semibold mb-2">Analytical Cookies (Requires consent)</h4>
                 <ul className="text-muted-foreground space-y-1 ml-4">
-                  <li>• <code>heatmap_session</code> - Session ID (Lifetime: Session)</li>
-                  <li>• <code>heatmap_consent</code> - Detailed consent preferences (Lifetime: Session)</li>
+                  <li>• <code>cortiq_session</code> - Session ID (Lifetime: Session)</li>
+                  <li>• <code>cortiq_consent</code> - Detailed consent preferences (Lifetime: Session)</li>
                 </ul>
               </div>
             </CardContent>

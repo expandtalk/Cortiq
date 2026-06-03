@@ -10,7 +10,7 @@
 
 **Bot blockers tell you what to stop. CortIQ tells you what matters.**
 
-[🌐 Live Demo](https://cortiq.se) · [🤖 Bot Intelligence](https://cortiq.se/bot-intelligence) · [📖 Docs](./INTEGRATION-GUIDE.md) · [🔒 GDPR Guide](./GDPR.md)
+[🌐 Live Demo](https://cortiq.se) · [🤖 Bot Intelligence](https://cortiq.se/bot-intelligence) · [📖 Docs](./INTEGRATION-GUIDE.md) · [🔒 GDPR Guide](./GDPR.md) · [📄 DPA](./DPA.md)
 
 </div>
 

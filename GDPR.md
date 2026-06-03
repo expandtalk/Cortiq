@@ -98,7 +98,7 @@ CortIQ acts as a **data processor** on behalf of site owners (data controllers) 
 - Not engage sub-processors without informing the customer
 - Assist with Subject Access Requests where technically possible
 
-> **Note:** A formal DPA template for customers is in preparation. Contact [daniel@expandtalk.se](mailto:daniel@expandtalk.se) to request one ahead of public availability.
+> The full DPA is available in [DPA.md](./DPA.md). Customers requiring a countersigned copy should contact [daniel@expandtalk.se](mailto:daniel@expandtalk.se).
 
 ---
 

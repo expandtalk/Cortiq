@@ -28,7 +28,7 @@ export function ClickToLoad({
     // Check if user has consent for this category
     const checkConsent = () => {
       try {
-        const stored = localStorage.getItem('heatmap_consent');
+        const stored = localStorage.getItem('cortiq_consent') || localStorage.getItem('heatmap_consent');
         if (stored) {
           const data = JSON.parse(stored);
           setHasConsent(data.choices[category] === true);
@@ -74,9 +74,9 @@ export function ClickToLoad({
 
   const getCategoryName = () => {
     switch (category) {
-      case 'functional': return 'funktionella cookies';
-      case 'marketing': return 'marknadsföringscookies';
-      case 'analytics': return 'analytiska cookies';
+      case 'functional': return 'functional cookies';
+      case 'marketing': return 'marketing cookies';
+      case 'analytics': return 'analytics cookies';
       default: return 'cookies';
     }
   };
@@ -94,28 +94,28 @@ export function ClickToLoad({
           handleClick();
         }
       }}
-      aria-label={`Ladda ${title} genom att acceptera ${getCategoryName()}`}
+      aria-label={`Load ${title} by accepting ${getCategoryName()}`}
     >
       <div className="flex flex-col items-center justify-center h-full space-y-4">
         <div className="text-4xl">🔒</div>
         <h3 className="text-lg font-semibold text-gray-800">
-          Externt innehåll blockerat
+          External content blocked
         </h3>
         <p className="text-sm text-gray-600 max-w-md">
-          För att visa detta innehåll ({title}) behöver du acceptera {getCategoryName()}.
+          To display this content ({title}) you need to accept {getCategoryName()}.
         </p>
         {children && <div className="text-xs text-gray-500">{children}</div>}
-        <button 
+        <button
           className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition-colors text-sm font-medium"
           onClick={(e) => {
             e.stopPropagation();
             handleClick();
           }}
         >
-          Ladda innehåll
+          Load content
         </button>
         <p className="text-xs text-gray-400">
-          Klicka för att ladda en gång, eller ändra dina cookie-inställningar för att alltid tillåta.
+          Click to load once, or change your cookie settings to always allow.
         </p>
       </div>
     </div>
