@@ -2,198 +2,227 @@
 
 <div align="center">
 
-**Not all AI traffic is equal. CortIQ classifies training crawlers, agentic browsers, and citation bots — so you know which ones matter.**
+[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
+[![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
+[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![Deploy](https://img.shields.io/badge/Live-cortiq.se-blue?logo=vercel)](https://cortiq.se)
 
-[![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react)](https://reactjs.org/)
-[![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
-[![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase)](https://supabase.com/)
-[![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
+**Bot blockers tell you what to stop. CortIQ tells you what matters.**
 
-[🌐 Website](https://cortiq.se) · [🤖 Bot Intelligence](https://cortiq.se/bot-intelligence) · [📖 Integration Guide](./INTEGRATION-GUIDE.md) · [🔒 GDPR Guide](./GDPR.md) · [🚀 Deployment](./DEPLOYMENT.md)
+[🌐 Live Demo](https://cortiq.se) · [🤖 Bot Intelligence](https://cortiq.se/bot-intelligence) · [📖 Docs](./INTEGRATION-GUIDE.md) · [🔒 GDPR Guide](./GDPR.md)
 
 </div>
 
 ---
 
-## What is CortIQ?
-
-1 in 31 web visits is now an AI bot — up from 1 in 200 at the start of 2025 (TollBit Q4 2025). But most analytics platforms either filter them out as noise or treat them as a binary block/allow decision. Neither helps you understand what they're worth.
-
-CortIQ is the first platform that classifies AI traffic into three distinct categories:
-
-| Type | Examples | Value |
-|------|----------|-------|
-| **Training Crawlers** | GPTBot, ClaudeBot, BLEXBot | Infrastructure cost — no referral traffic |
-| **Agentic Browsers** | ChatGPT Browser, Perplexity Comet, Claude Browser | Real visitors acting on behalf of users |
-| **Citation Crawlers** | PerplexityBot, Google-Extended, YouBot | AI search indexing — indirect visibility signal |
-
-Beyond bot intelligence, CortIQ covers full human visitor analytics (heatmaps, sessions, forms, A/B tests) without relying on cookies. Server-side tracking means no consent banner is required for the base analytics layer.
+![CortIQ Analytics Dashboard](src/assets/analytics-dashboard-hero.jpg)
 
 ---
 
-## What you can measure
+## Why CortIQ?
 
-### AI agent traffic
-- Which AI agents visit your site and how often
-- Which pages they access, in what order, for how long
-- Citation detection — when an LLM fetches a page to cite or quote it
-- Training crawler identification (separate from browsing agents)
-- Browser type classification: Visual / Headless / Text-based
-- Conversion attribution — goals completed by visitors arriving from AI referrals
+1 in 31 web visits is now an AI bot — up from 1 in 200 at the start of 2025. But every existing platform treats them as noise to filter out or a binary block/allow decision.
 
-### Human visitor behaviour
-- Page views, sessions, bounce rate, average time on site
-- Traffic sources: organic, direct, referral, paid, social, UTM campaigns
-- Click heatmaps — exact positions per page, filterable by device
-- Form analytics — field-level completion and drop-off tracking
-- Session recording — full replay with configurable data masking
-- Navigation flow — how visitors move between pages
+CortIQ is the **first open-source platform** that classifies AI traffic into three distinct categories:
 
-### Conversion & optimisation
-- Conversion funnels — see where visitors drop off
-- A/B testing — 2-variant tests with statistical significance
-- Goal tracking and conversion attribution per traffic source
+| Type | Examples | Meaning |
+|------|----------|---------|
+| 🔴 **Training Crawlers** | GPTBot, ClaudeBot, BLEXBot | Infrastructure cost — no referral value |
+| 🟢 **Agentic Browsers** | ChatGPT Browser, Perplexity Comet, Claude Browser | Real users with intent — track and convert |
+| 🔵 **Citation Crawlers** | PerplexityBot, Google-Extended, YouBot | AI search indexing — visibility signal |
 
-### Technical & performance
-- Core Web Vitals (LCP, FID/INP, CLS) with historical trends
-- Device, browser and geographic breakdowns
-- Paid ads tracking (GA4 server-side, Google Ads)
+On top of bot intelligence, CortIQ covers **full human analytics** — heatmaps, sessions, A/B testing, forms — with no cookies and no consent banner required for the base layer.
 
 ---
 
-## Unique selling points
+## Quick start
 
-### 1. AI bot intelligence — not just detection
-Bot blockers tell you what to stop. CortIQ tells you what matters. Every AI visit is classified as a training crawler (infrastructure cost), agentic browser (real user intent), or citation crawler (visibility signal). You see counts, percentages, and journeys per category — not just a total bot number.
-
-AI bot traffic grew 300% in 2025 (Akamai). Without classification, you cannot tell whether that growth is costing you server budget or sending you qualified visitors.
-
-### 2. Cookie-free by default
-CortIQ's server-side tracking collects no personal data in the browser and sets no cookies. Under GDPR, this is lawful under legitimate interest (Art. 6.1.f) — no consent banner needed for this layer. You see 100% of traffic instead of the 60–70% that accept cookies.
-
-### 3. No dependency on Google Analytics
-CortIQ is a standalone platform. You do not need GA4 to get traffic, heatmap or conversion data. GA4 is an optional add-on if you need it for paid ads reporting.
-
-### 4. EU data residency
-All data is stored in the EU (AWS eu-north-1 via Supabase). No data leaves the EU unless you configure an optional Google Analytics integration.
-
-### 5. One-click WordPress integration
-The CortIQ WordPress plugin handles script injection, cookie consent banner and GA4 Consent Mode v2 in a single install. No code required.
-
----
-
-## GDPR compliance
-
-CortIQ is built around two clearly separated tracking layers:
-
-| Layer | Cookies | Legal basis | Consent required |
-|-------|---------|-------------|-----------------|
-| Cookie-free analytics | None | Legitimate interest (Art. 6.1.f GDPR) | No |
-| Enhanced (heatmaps, sessions) | Session cookie | Consent (Art. 6.1.a GDPR) | Yes |
-
-The cookie banner (included in the WordPress plugin and available as a standalone script) implements granular consent categories, no pre-ticked boxes, Consent ID logging and Google Consent Mode v2.
-
-See [GDPR.md](./GDPR.md) for a full breakdown of data collected, sub-processors, retention policy and a ready-to-use privacy policy template.
-
----
-
-## Getting started
-
-### Prerequisites
-- Node.js 18+, npm
-- A Supabase project (EU region recommended)
-
-### Local development
 ```bash
 git clone https://github.com/expandtalk/cortiq.git
 cd cortiq
-npm install
-
-# Copy the environment template and fill in your values
-cp .env.example .env
-
-npm run dev
-# → http://localhost:8080
+cp .env.example .env        # add your Supabase keys
+npm install && npm run dev  # → http://localhost:8080
 ```
 
-### WordPress
-1. Download the plugin from `wordpress-plugin/cortiq-analytics.php`
-2. Upload to `/wp-content/plugins/cortiq-analytics/`
-3. Activate and enter your Site ID and Tracking ID from the CortIQ dashboard
+> Full self-hosting guide (Supabase setup, edge functions, deployment) → [below](#self-hosting)
 
-### Any other site
-Add one script tag before `</body>`:
-```html
-<script
-  src="https://cortiq.se/spa-tracking.js"
-  data-site-id="[YOUR_SITE_ID]"
-  data-api-key="[YOUR_API_KEY]"
-  defer
-></script>
-```
-See [INTEGRATION-GUIDE.md](./INTEGRATION-GUIDE.md) for platform-specific examples (React, Next.js, Astro, SaaS apps with consent flows).
+---
+
+## Features
+
+### 🤖 AI Bot Intelligence
+- Classify every AI visit: training crawler, agentic browser, or citation crawler
+- Track agentic browser journeys page-by-page (ChatGPT Browser, Perplexity Comet, Claude Browser)
+- Citation request detection — know when LLMs index your content
+- Browser type breakdown: Visual / Headless / Text-based
+- Conversion attribution from AI-referred traffic
+
+### 📊 Human Visitor Analytics
+- Page views, sessions, bounce rate, traffic sources
+- Click heatmaps by device (desktop / tablet / mobile)
+- Session recording with configurable data masking
+- Form analytics — field-level completion and drop-off
+- Navigation flow analysis
+
+### 🧪 Optimisation
+- A/B testing with statistical significance
+- Conversion funnels
+- KPI dashboards — build your own or pick from a catalog
+- Segments and behavioral alerts
+
+### 🔒 Privacy & Compliance
+- **Cookie-free by default** — server-side tracking, no personal data in the browser
+- No consent banner required for base analytics (GDPR Art. 6.1.f legitimate interest)
+- Two-layer model: cookiefree baseline + optional opt-in enhanced tracking
+- EU data residency (Supabase, AWS eu-north-1)
+
+### ⚙️ Integrations & Advanced
+- Google Analytics 4 (server-side, cookiefree)
+- Google Search Console
+- Tag Manager (no-code event tracking)
+- Data Warehouse connectors (BigQuery, Snowflake, Redshift, PostgreSQL)
+- Geolocation maps
+- User LTV & cohort analysis
+- Web Vitals tracking (LCP, INP, CLS)
+- White label / custom branding
+- WordPress plugin (1-click install)
+- REST API with API key auth
+
+---
+
+## Screenshots
+
+> 📸 **Dashboard screenshots coming soon.** [Star this repo](https://github.com/expandtalk/cortiq) to get notified when we add them.
+>
+> In the meantime: [live demo at cortiq.se](https://cortiq.se) · [bot intelligence explainer](https://cortiq.se/bot-intelligence)
 
 ---
 
 ## Tech stack
 
-### Frontend
-| | |
-|--|--|
-| React 18.3.1 | UI framework |
-| TypeScript 5.5.3 | Type safety |
-| Vite 5.4.1 | Build tool |
-| Tailwind CSS 3.4.11 | Styling |
-| shadcn/ui | Component library (Radix UI) |
-| TanStack Query 5.56.2 | Data fetching |
-| Recharts 2.12.7 | Charts |
-| Leaflet.js 1.9.4 | Geolocation maps |
-| rrweb 2.0 | Session recording |
+| Layer | Technology |
+|-------|-----------|
+| Frontend | React 18, TypeScript, Vite, Tailwind CSS, shadcn/ui |
+| Charts | Recharts, Leaflet.js |
+| Session replay | rrweb 2.0 |
+| Backend | Supabase (PostgreSQL + Deno Edge Functions) |
+| Auth | Supabase Auth with Row Level Security |
+| Tracking script | Vanilla JS, ~8 kB gzipped |
 
-### Backend (Supabase)
-| | |
-|--|--|
-| PostgreSQL | Database — 62 tables |
-| Deno Edge Functions | Serverless compute — 51 functions |
-| Row Level Security | Per-company data isolation |
-| Supabase Auth | Authentication |
+**Scale:** 62 database tables · 51 Edge Functions · 60+ migrations
 
 ---
 
-## Dashboard
+## Self-hosting
 
-### Main tabs
-```
-Overview · Analytics · Ads (GA4) · Ads (Server-Side) · Cookie-Free
-Heatmap · Forms · A/B Testing · AI Traffic · AI Agents
-KPI Dashboard · KPI Catalog · Segments · Navigation · Alerts
-```
+### Prerequisites
+- Node.js 18+, npm
+- [Supabase CLI](https://supabase.com/docs/guides/cli) — `npm install -g supabase`
+- A Supabase project (EU region recommended)
 
-### Settings
-```
-Setup → site configuration and tracking script
-GDPR → consent management and data retention
-External Integrations → GA4, Search Console, Bing
-API Keys → API access for external tools
+### 1. Clone and configure
+
+```bash
+git clone https://github.com/expandtalk/cortiq.git
+cd cortiq
+cp .env.example .env
 ```
 
-### Advanced
+Edit `.env`:
 ```
-Tag Manager · Session Recording · Geolocation Maps
-Data Warehouse · User LTV & Cohorts · Web Vitals & White Label
+VITE_SUPABASE_URL=https://YOUR_PROJECT_ID.supabase.co
+VITE_SUPABASE_PUBLISHABLE_KEY=your-anon-key
+VITE_SUPABASE_PROJECT_ID=your-project-id
 ```
+
+### 2. Replace the hardcoded project reference
+
+```bash
+# macOS / Linux
+find src/ supabase/ public/ -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.toml" \) \
+  -exec sed -i '' 's/cxmkdtgfocgbfizawlwa/YOUR_PROJECT_ID/g' {} +
+
+# Windows PowerShell
+Get-ChildItem -Recurse -Include "*.ts","*.tsx","*.js","*.toml" src,supabase,public |
+  ForEach-Object { (Get-Content $_.FullName) -replace 'cxmkdtgfocgbfizawlwa','YOUR_PROJECT_ID' | Set-Content $_.FullName }
+```
+
+### 3. Push the database schema
+
+```bash
+supabase link --project-ref YOUR_PROJECT_ID
+supabase db push --include-all
+```
+
+Creates all 62 tables, indexes, RLS policies and database functions.
+
+### 4. Set edge function secrets
+
+In [Supabase Dashboard](https://supabase.com/dashboard) → Edge Functions → Manage secrets:
+
+| Secret | Required | Description |
+|--------|----------|-------------|
+| `SUPABASE_URL` | ✅ | `https://YOUR_PROJECT_ID.supabase.co` |
+| `SUPABASE_SERVICE_ROLE_KEY` | ✅ | Your service role key |
+| `ANTHROPIC_API_KEY` | Optional | AI citability analysis in GEO audits |
+| `GOOGLE_CLIENT_ID` | Optional | Google Search Console integration |
+| `GOOGLE_CLIENT_SECRET` | Optional | Google Search Console integration |
+| `GA4_SERVICE_ACCOUNT_KEY` | Optional | GA4 server-side import |
+
+### 5. Deploy edge functions
+
+```bash
+supabase functions deploy --all
+```
+
+### 6. Build and deploy
+
+```bash
+npm run build
+# Upload dist/ to your web host — configure server to serve index.html for all routes
+
+# Or deploy to Vercel:
+npx vercel --prod
+```
+
+Set the same `VITE_*` environment variables in your hosting dashboard.
+
+### WordPress
+
+1. Upload `wordpress-plugin/cortiq-analytics.php` to `/wp-content/plugins/cortiq-analytics/`
+2. Activate and enter your Site ID from the CortIQ dashboard
+
+### Any other site
+
+```html
+<script
+  src="https://YOUR_DOMAIN/spa-tracking.js"
+  data-site-id="YOUR_SITE_ID"
+  data-api-key="YOUR_API_KEY"
+  defer
+></script>
+```
+
+See [INTEGRATION-GUIDE.md](./INTEGRATION-GUIDE.md) for React, Next.js, Astro and more.
 
 ---
 
-## What is not implemented
+## GitHub Actions CI/CD
 
-Being explicit about current limitations:
+The included workflow (`.github/workflows/deploy-production.yml`) builds and FTP-deploys on every push to `main`.
 
-- **Scroll heatmaps** — click heatmaps only, no scroll depth tracking
-- **Attention maps** — not available
-- **Multivariate testing** — A/B testing supports 2 variants only
-- **Visual editor** — not available
-- **Mobile app** — not planned
+Required secrets in your repository settings:
+
+| Secret | Value |
+|--------|-------|
+| `VITE_SUPABASE_URL` | Your Supabase URL |
+| `VITE_SUPABASE_PUBLISHABLE_KEY` | Your anon key |
+| `VITE_SUPABASE_PROJECT_ID` | Your project ID |
+| `FTP_SERVER` | FTP host |
+| `FTP_USERNAME` | FTP username |
+| `FTP_PASSWORD` | FTP password |
+| `FTP_SERVER_DIR` | Remote path (e.g. `/public_html/`) |
 
 ---
 
@@ -204,44 +233,63 @@ cortiq/
 ├── src/
 │   ├── components/dashboard/   # 80+ dashboard components
 │   ├── hooks/                  # 40+ custom React hooks
-│   ├── pages/                  # Routes: Index, Dashboard, Auth
-│   ├── integrations/supabase/  # Supabase client & TypeScript types
-│   └── types/                  # Shared type definitions
+│   ├── pages/                  # Public pages + Dashboard
+│   └── integrations/supabase/  # Client & TypeScript types
 ├── supabase/
-│   ├── functions/              # 51 Edge Functions (Deno TypeScript)
+│   ├── functions/              # 51 Edge Functions (Deno)
 │   └── migrations/             # 60+ database migrations
 ├── public/
 │   └── spa-tracking.js         # Embeddable tracking script
-├── wordpress-plugin/           # WordPress plugin
-├── INTEGRATION-GUIDE.md        # Platform integration examples
-├── GDPR.md                     # GDPR compliance documentation
-└── DEPLOYMENT.md               # Deployment instructions
+└── wordpress-plugin/           # WordPress plugin
 ```
+
+---
+
+## Known limitations
+
+| Feature | Status |
+|---------|--------|
+| Scroll heatmaps | ❌ Click heatmaps only |
+| Multivariate testing | ❌ A/B (2 variants) only |
+| Attention maps | ❌ Not implemented |
+| Mobile app | ❌ Not planned |
+
+---
+
+## Contributing
+
+Contributions are welcome. Please open an issue first to discuss what you'd like to change.
+
+1. Fork the repo
+2. Create a feature branch (`git checkout -b feature/your-feature`)
+3. Commit your changes
+4. Open a pull request
+
+For major changes, open an issue first.
 
 ---
 
 ## Security
 
-- No secrets committed to the repository
+- No secrets in the repository
 - `.env` files are gitignored
-- Service role keys stored only in environment variables
-- Client-side anon key is publishable by design (data access controlled by RLS)
-- Row Level Security enabled on all database tables
+- Row Level Security on all database tables
+- Rate limiting on all public tracking endpoints
 - Input sanitisation in all Edge Functions
-- Rate limiting on public tracking endpoints
+- Anon key is publishable by design (RLS controls data access)
 
 ---
 
 ## About
 
-CortIQ is developed by [Expandtalk](https://expandtalk.se).
+Built by [Expandtalk](https://expandtalk.se) · Sweden
 
 - **Founder:** [Daniel Larsson](https://www.linkedin.com/in/larssondaniel)
 - **Website:** [cortiq.se](https://cortiq.se)
-- **Location:** Sweden
+- **Report:** [AI Bot Traffic Intelligence](https://cortiq.se/bot-intelligence)
 
 ---
 
 ## License
 
-MIT — see [LICENSE](./LICENSE).
+MIT — see [LICENSE](./LICENSE)
