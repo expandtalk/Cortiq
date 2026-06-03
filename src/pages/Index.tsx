@@ -1226,18 +1226,21 @@ const Index = () => {
             <div>
               <h4 className="font-bold mb-6 text-gradient-primary">Product</h4>
               <ul className="space-y-3 text-muted-foreground">
-                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Features</Link></li>
-                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Pricing</Link></li>
-                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Integration</Link></li>
+                <li><Link to="/features" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Features</Link></li>
+                <li><Link to="/bot-intelligence" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Bot Intelligence</Link></li>
+                <li><Link to="/pricing" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Pricing</Link></li>
+                <li><Link to="/api" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">API</Link></li>
               </ul>
             </div>
-            
+
             <div>
               <h4 className="font-bold mb-6 text-gradient-primary">Support</h4>
               <ul className="space-y-3 text-muted-foreground">
-                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Documentation</Link></li>
-                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Help Center</Link></li>
-                <li><Link to="/" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Kontakt</Link></li>
+                <li><Link to="/contact" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Contact</Link></li>
+                <li><Link to="/privacy" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">Privacy Policy</Link></li>
+                <li>
+                  <a href="https://github.com/expandtalk/cortiq" target="_blank" rel="noopener noreferrer" className="hover:text-primary transition-colors hover:translate-x-1 transform duration-200 inline-block">GitHub</a>
+                </li>
               </ul>
             </div>
           </div>

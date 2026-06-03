@@ -4,7 +4,6 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
 import { useSEO } from "@/hooks/useSEO";
-import { useSEO } from "@/hooks/useSEO";
 import {
   Bot,
   TrendingUp,

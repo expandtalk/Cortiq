@@ -1,22 +1,27 @@
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Link } from "react-router-dom";
-import { BarChart3, Menu, X, Github } from "lucide-react";
+import { Link, useLocation } from "react-router-dom";
+import { BarChart3, Menu, ChevronDown, Github } from "lucide-react";
 import { ThemeToggle } from "@/components/ThemeToggle";
 import { Sheet, SheetContent, SheetTrigger } from "@/components/ui/sheet";
-import { useState } from "react";
+
+const FEATURES_LINKS = [
+  { to: "/features/ai", label: "AI Agent Analytics" },
+  { to: "/features/analytics", label: "Analytics & Heatmaps" },
+  { to: "/features/cyber", label: "Cyber & Bot Security" },
+  { to: "/cmp", label: "CMP Solution" },
+];
+
+const TOP_NAV = [
+  { to: "/bot-intelligence", label: "Bot Intelligence" },
+  { to: "/pricing", label: "Pricing" },
+  { to: "/contact", label: "Contact" },
+];
 
 export default function PublicNavigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
-
-  const navLinks = [
-    { to: "/", label: "Home" },
-    { to: "/cmp", label: "CMP Solution" },
-    { to: "/features", label: "Features" },
-    { to: "/pricing", label: "Pricing" },
-    { to: "/api", label: "API" },
-    { to: "/privacy", label: "Privacy" },
-    { to: "/contact", label: "Contact" }
-  ];
+  const [featuresOpen, setFeaturesOpen] = useState(false);
+  const location = useLocation();
 
   return (
     <nav className="glass border-b border-border/20 sticky top-0 z-50">
@@ -28,20 +33,59 @@ export default function PublicNavigation() {
           </div>
           <span className="text-2xl font-bold text-gradient-primary">CortIQ</span>
         </Link>
-        
-        {/* Desktop Navigation Links */}
+
+        {/* Desktop Navigation */}
         <div className="hidden md:flex items-center space-x-8">
-          {navLinks.map((link) => (
+          <Link to="/" className="text-foreground hover:text-primary transition-colors font-medium">
+            Home
+          </Link>
+
+          {/* Features dropdown */}
+          <div
+            className="relative"
+            onMouseEnter={() => setFeaturesOpen(true)}
+            onMouseLeave={() => setFeaturesOpen(false)}
+          >
+            <button className="flex items-center gap-1 text-foreground hover:text-primary transition-colors font-medium">
+              Features <ChevronDown className="h-4 w-4" />
+            </button>
+            {featuresOpen && (
+              <div className="absolute top-full left-0 mt-1 w-52 rounded-lg border border-border bg-background shadow-lg py-1 z-50">
+                <Link
+                  to="/features"
+                  className="block px-4 py-2 text-sm text-muted-foreground hover:text-primary hover:bg-muted/50 transition-colors font-medium"
+                >
+                  All Features
+                </Link>
+                <div className="my-1 border-t border-border/50" />
+                {FEATURES_LINKS.map((link) => (
+                  <Link
+                    key={link.to}
+                    to={link.to}
+                    className="block px-4 py-2 text-sm text-foreground hover:text-primary hover:bg-muted/50 transition-colors"
+                  >
+                    {link.label}
+                  </Link>
+                ))}
+              </div>
+            )}
+          </div>
+
+          {TOP_NAV.map((link) => (
             <Link
               key={link.to}
               to={link.to}
-              className="text-foreground hover:text-primary transition-colors font-medium"
+              className={`font-medium transition-colors ${
+                location.pathname === link.to
+                  ? "text-primary"
+                  : "text-foreground hover:text-primary"
+              }`}
             >
               {link.label}
             </Link>
           ))}
         </div>
-        
+
         {/* Desktop Actions */}
         <div className="hidden md:flex items-center space-x-4">
           <a
@@ -61,7 +105,7 @@ export default function PublicNavigation() {
           </Link>
         </div>
 
-        {/* Mobile Menu Toggle */}
+        {/* Mobile Menu */}
         <div className="flex md:hidden items-center space-x-2">
           <ThemeToggle />
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
@@ -77,9 +121,39 @@ export default function PublicNavigation() {
                   <span className="text-xl font-bold text-gradient-primary">CortIQ</span>
                 </div>
 
-                {/* Mobile Navigation Links */}
-                <nav className="flex flex-col space-y-4">
-                  {navLinks.map((link) => (
+                <nav className="flex flex-col space-y-1">
+                  <Link
+                    to="/"
+                    className="text-lg font-medium text-foreground hover:text-primary transition-colors py-2"
+                    onClick={() => setMobileMenuOpen(false)}
+                  >
+                    Home
+                  </Link>
+
+                  <div className="py-2">
+                    <p className="text-lg font-medium text-foreground mb-1">Features</p>
+                    <div className="pl-4 flex flex-col space-y-1">
+                      <Link
+                        to="/features"
+                        className="text-sm text-muted-foreground hover:text-primary transition-colors py-1"
+                        onClick={() => setMobileMenuOpen(false)}
+                      >
+                        All Features
+                      </Link>
+                      {FEATURES_LINKS.map((link) => (
+                        <Link
+                          key={link.to}
+                          to={link.to}
+                          className="text-sm text-foreground hover:text-primary transition-colors py-1"
+                          onClick={() => setMobileMenuOpen(false)}
+                        >
+                          {link.label}
+                        </Link>
+                      ))}
+                    </div>
+                  </div>
+
+                  {TOP_NAV.map((link) => (
                     <Link
                       key={link.to}
                       to={link.to}
@@ -91,7 +165,6 @@ export default function PublicNavigation() {
                   ))}
                 </nav>
 
-                {/* Mobile Actions */}
                 <div className="flex flex-col space-y-3 pt-6 border-t">
                   <a
                     href="https://github.com/expandtalk/cortiq"
@@ -104,14 +177,10 @@ export default function PublicNavigation() {
                     <span className="font-medium">GitHub</span>
                   </a>
                   <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                    <Button variant="outline" className="w-full">
-                      Log in
-                    </Button>
+                    <Button variant="outline" className="w-full">Log in</Button>
                   </Link>
                   <Link to="/auth" onClick={() => setMobileMenuOpen(false)}>
-                    <Button className="w-full bg-gradient-primary">
-                      Request Invitation
-                    </Button>
+                    <Button className="w-full bg-gradient-primary">Request Invitation</Button>
                   </Link>
                 </div>
               </div>
