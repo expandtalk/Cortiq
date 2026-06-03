@@ -25,6 +25,9 @@ supabase/.temp/
 # Client-specific briefs (contain email addresses and project details)
 docs/itsakerhet-app-developer-brief.md
 
+# Claude Code local settings
+.claude/
+
 # Editor directories and files
 .vscode/*
 !.vscode/extensions.json
