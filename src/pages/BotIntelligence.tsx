@@ -4,6 +4,7 @@ import { Badge } from "@/components/ui/badge";
 import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
 import { useSEO } from "@/hooks/useSEO";
+import { useSEO } from "@/hooks/useSEO";
 import {
   Bot,
   TrendingUp,
@@ -119,6 +120,10 @@ const COMPARISON = [
 ];
 
 export default function BotIntelligence() {
+  useSEO({
+    title: 'Bot Intelligence — CortIQ',
+    description: 'Understand which bots visit your site, what they do, and how they affect your analytics. Training crawlers, citation bots and agentic browsers — all classified and tracked.',
+  });
   useSEO({
     title: "AI Bot Intelligence — CortIQ",
     description:

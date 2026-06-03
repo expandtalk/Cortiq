@@ -155,10 +155,18 @@ export function AuthProvider({ children }: AuthProviderProps) {
   );
 }
 
-export function useAuth() {
+const SSR_AUTH: AuthContextType = {
+  user: null,
+  session: null,
+  loading: false,
+  signIn: async () => ({ error: null }),
+  signUp: async () => ({ error: null }),
+  signOut: async () => {},
+};
+
+export function useAuth(): AuthContextType {
   const context = useContext(AuthContext);
-  if (context === undefined) {
-    throw new Error('useAuth must be used within an AuthProvider');
-  }
+  // Safe default during SSR pre-rendering (no AuthProvider in server entry)
+  if (context === undefined) return SSR_AUTH;
   return context;
 }
