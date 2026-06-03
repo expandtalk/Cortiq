@@ -1,15 +1,15 @@
-# CortIQ — Analytics for the Agentic Web
+# CortIQ — AI Bot Intelligence & Analytics
 
 <div align="center">
 
-**Track AI agents, human visitors and Core Web Vitals — cookie-free and GDPR-compliant**
+**Not all AI traffic is equal. CortIQ classifies training crawlers, agentic browsers, and citation bots — so you know which ones matter.**
 
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5.3-3178C6?logo=typescript)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase)](https://supabase.com/)
 [![License](https://img.shields.io/badge/license-MIT-green.svg)](LICENSE)
 
-[🌐 Website](https://cortiq.se) · [📖 Integration Guide](./INTEGRATION-GUIDE.md) · [🔒 GDPR Guide](./GDPR.md) · [🚀 Deployment](./DEPLOYMENT.md)
+[🌐 Website](https://cortiq.se) · [🤖 Bot Intelligence](https://cortiq.se/bot-intelligence) · [📖 Integration Guide](./INTEGRATION-GUIDE.md) · [🔒 GDPR Guide](./GDPR.md) · [🚀 Deployment](./DEPLOYMENT.md)
 
 </div>
 
@@ -17,9 +17,17 @@
 
 ## What is CortIQ?
 
-AI agents — ChatGPT Browser, Perplexity, Claude, Gemini — are visiting websites at scale. Standard analytics tools see them as noise and filter them out. CortIQ treats them as a distinct traffic source and shows you exactly what they do.
+1 in 31 web visits is now an AI bot — up from 1 in 200 at the start of 2025 (TollBit Q4 2025). But most analytics platforms either filter them out as noise or treat them as a binary block/allow decision. Neither helps you understand what they're worth.
 
-At the same time, CortIQ covers human visitor analytics (heatmaps, sessions, forms, A/B tests) without relying on cookies. Server-side tracking means no consent banner is required for the base analytics layer.
+CortIQ is the first platform that classifies AI traffic into three distinct categories:
+
+| Type | Examples | Value |
+|------|----------|-------|
+| **Training Crawlers** | GPTBot, ClaudeBot, BLEXBot | Infrastructure cost — no referral traffic |
+| **Agentic Browsers** | ChatGPT Browser, Perplexity Comet, Claude Browser | Real visitors acting on behalf of users |
+| **Citation Crawlers** | PerplexityBot, Google-Extended, YouBot | AI search indexing — indirect visibility signal |
+
+Beyond bot intelligence, CortIQ covers full human visitor analytics (heatmaps, sessions, forms, A/B tests) without relying on cookies. Server-side tracking means no consent banner is required for the base analytics layer.
 
 ---
 
@@ -55,8 +63,10 @@ At the same time, CortIQ covers human visitor analytics (heatmaps, sessions, for
 
 ## Unique selling points
 
-### 1. Dedicated AI agent analytics
-Most analytics platforms count AI agent visits as bots and discard them. CortIQ classifies them by agent type, tracks their behaviour separately, and shows you how AI-driven traffic converts — so you can optimise for the audience that increasingly controls what content gets surfaced.
+### 1. AI bot intelligence — not just detection
+Bot blockers tell you what to stop. CortIQ tells you what matters. Every AI visit is classified as a training crawler (infrastructure cost), agentic browser (real user intent), or citation crawler (visibility signal). You see counts, percentages, and journeys per category — not just a total bot number.
+
+AI bot traffic grew 300% in 2025 (Akamai). Without classification, you cannot tell whether that growth is costing you server budget or sending you qualified visitors.
 
 ### 2. Cookie-free by default
 CortIQ's server-side tracking collects no personal data in the browser and sets no cookies. Under GDPR, this is lawful under legitimate interest (Art. 6.1.f) — no consent banner needed for this layer. You see 100% of traffic instead of the 60–70% that accept cookies.
