@@ -2,7 +2,7 @@
 
 **Between:**
 - **Data Controller:** The legal entity or individual ("Customer") who has registered an account with CortIQ and embeds the CortIQ tracking script on their website(s).
-- **Data Processor:** Expandtalk AB, org. nr. [ORG NR], Sweden ("CortIQ").
+- **Data Processor:** Expandtalk Corporation AB, org. nr. 559358-8824, Sweden ("CortIQ").
 
 This Data Processing Agreement ("DPA") is entered into as part of the CortIQ Terms of Service and governs the processing of personal data by CortIQ on behalf of the Customer, in accordance with Article 28 of the General Data Protection Regulation (EU) 2016/679 ("GDPR").
 
@@ -123,7 +123,7 @@ This DPA is governed by the laws of Sweden. Any disputes arising from this DPA s
 
 ## 10. Contact
 
-**Data Processor (CortIQ / Expandtalk AB)**
+**Data Processor (CortIQ / Expandtalk Corporation AB, org. nr. 559358-8824)**
 Email: [daniel@expandtalk.se](mailto:daniel@expandtalk.se)
 Website: [cortiq.se](https://cortiq.se)
 
