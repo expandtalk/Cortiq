@@ -249,7 +249,7 @@ cortiq/
 
 | Feature | Status |
 |---------|--------|
-| Scroll heatmaps | ❌ Click heatmaps only |
+| Scroll heatmaps | ✅ Depth funnel (25/50/75/100%) |
 | Multivariate testing | ❌ A/B (2 variants) only |
 | Attention maps | ❌ Not implemented |
 | Mobile app | ❌ Not planned |

@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { HeatmapVisualization } from '@/components/dashboard/HeatmapVisualization';
+import { ScrollDepthChart } from '@/components/dashboard/ScrollDepthChart';
 import { PageSelector } from '@/components/dashboard/PageSelector';
 import { HeatmapFilters } from '@/components/dashboard/HeatmapFilters';
 import { MobileHeatmapInsights } from '@/components/dashboard/MobileHeatmapInsights';
@@ -53,7 +54,7 @@ export function HeatmapTab({ siteId, selectedSite, dateRange }: HeatmapTabProps)
         siteId={siteId || ''}
         selectedPage={selectedUrl}
         onPageChange={setSelectedUrl}
-        placeholder="Välj sida för heatmap-analys"
+        placeholder="Select page for heatmap analysis"
       />
       
       <HeatmapFilters 
@@ -71,13 +72,21 @@ export function HeatmapTab({ siteId, selectedSite, dateRange }: HeatmapTabProps)
         />
       )}
       
-      <HeatmapVisualization 
-        heatmapData={heatmapData}
-        selectedUrl={selectedUrl}
-        loading={loading}
-        filters={filters}
-        siteId={siteId}
-      />
+      {filters.interactionType === 'scroll' ? (
+        <ScrollDepthChart
+          heatmapData={heatmapData}
+          selectedUrl={selectedUrl}
+          loading={loading}
+        />
+      ) : (
+        <HeatmapVisualization
+          heatmapData={heatmapData}
+          selectedUrl={selectedUrl}
+          loading={loading}
+          filters={filters}
+          siteId={siteId}
+        />
+      )}
     </div>
   );
 }

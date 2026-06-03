@@ -141,8 +141,9 @@
         utmSource: utm.utmSource,
         utmMedium: utm.utmMedium,
         utmCampaign: utm.utmCampaign,
-        canvasFingerprint: getCanvasFingerprint(),
-        webglFingerprint: webgl ? JSON.stringify(webgl) : null
+        // Canvas/WebGL fingerprinting requires explicit consent under GDPR
+        canvasFingerprint: config.fingerprintConsent === true ? getCanvasFingerprint() : null,
+        webglFingerprint: config.fingerprintConsent === true && webgl ? JSON.stringify(webgl) : null
       };
 
       const response = await fetch(`${API_URL}/visitor-identification`, {
@@ -283,6 +284,70 @@
     });
   }
 
+  // Track scroll depth milestones (25%, 50%, 75%, 100%)
+  function setupScrollTracking() {
+    const milestones = [25, 50, 75, 100];
+    const reached = new Set();
+
+    function getScrollDepth() {
+      const scrolled = window.scrollY + window.innerHeight;
+      const total = Math.max(document.documentElement.scrollHeight, 1);
+      return Math.round((scrolled / total) * 100);
+    }
+
+    function onScroll() {
+      const depth = getScrollDepth();
+      for (const m of milestones) {
+        if (depth >= m && !reached.has(m)) {
+          reached.add(m);
+          const siteId = SITE_ID;
+          const apiKey = API_KEY || SITE_ID;
+          fetch(`${API_URL}/track-event`, {
+            method: 'POST',
+            headers: { Authorization: `Bearer ${apiKey}`, 'Content-Type': 'application/json' },
+            body: JSON.stringify({
+              company_id: siteId,
+              site_id: siteId,
+              session_id: SESSION_ID,
+              event_type: 'heatmap',
+              content_type: 'page',
+              content_id: window.location.pathname,
+              platform: PLATFORM,
+              metadata: {
+                url: window.location.href,
+                device_type: getDeviceType(),
+                interaction_type: 'scroll',
+                scroll_depth: m,
+                x_coordinate: 0,
+                y_coordinate: m,
+                grid_x: 0,
+                grid_y: m,
+                viewport_width: window.innerWidth,
+                viewport_height: window.innerHeight,
+              },
+              timestamp: Date.now(),
+            }),
+            keepalive: true,
+          }).catch(() => {});
+        }
+      }
+    }
+
+    // Reset milestones on SPA navigation
+    window.addEventListener('cortiq:pageview', () => reached.clear());
+
+    let ticking = false;
+    window.addEventListener('scroll', () => {
+      if (!ticking) {
+        requestAnimationFrame(() => { onScroll(); ticking = false; });
+        ticking = true;
+      }
+    }, { passive: true });
+
+    // Check on load in case the page is already scrolled
+    onScroll();
+  }
+
   // Handle SPA navigation (for frameworks like React, Vue, etc.)
   let lastPath = window.location.pathname;
   function checkPathChange() {
@@ -336,6 +401,7 @@
     // Setup automatic tracking
     setupClickTracking();
     setupConversionTracking();
+    setupScrollTracking();
   }
 
   // Start initialization
