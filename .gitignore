@@ -22,9 +22,6 @@ supabase/.env.local
 # Supabase CLI temp files (contain project ref, pooler URL, org ID)
 supabase/.temp/
 
-# Internal project config — contains company names, client info, credentials placeholders
-CLAUDE.md
-
 # Client-specific briefs (contain email addresses and project details)
 docs/itsakerhet-app-developer-brief.md
 
