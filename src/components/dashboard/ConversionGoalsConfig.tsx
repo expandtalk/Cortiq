@@ -66,16 +66,16 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
       if (error) throw error;
 
       toast({
-        title: "✅ Konverteringsmål sparade",
-        description: "Dina konverteringsmål har uppdaterats"
+        title: "✅ Conversion goals saved",
+        description: "Your conversion goals have been updated"
       });
 
       onUpdate?.();
     } catch (error) {
       console.error('Error saving conversion goals:', error);
       toast({
-        title: "❌ Fel",
-        description: "Kunde inte spara konverteringsmål",
+        title: "❌ Error",
+        description: "Could not save conversion goals",
         variant: "destructive"
       });
     } finally {
@@ -86,8 +86,8 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
   const addGoal = () => {
     if (!newGoal.name || !newGoal.selector) {
       toast({
-        title: "⚠️ Ofullständig information",
-        description: "Ange namn och CSS-selektor",
+        title: "⚠️ Incomplete information",
+        description: "Enter a name and CSS selector",
         variant: "destructive"
       });
       return;
@@ -120,35 +120,35 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
 
   const getGoalTypeLabel = (type: string) => {
     switch (type) {
-      case 'form_submission': return 'Formulärskickning';
-      case 'element_click': return 'Elementklick';
-      case 'phone_click': return 'Telefonklick';
-      case 'page_visit': return 'Sidbesök';
+      case 'form_submission': return 'Form submission';
+      case 'element_click': return 'Element click';
+      case 'phone_click': return 'Phone click';
+      case 'page_visit': return 'Page visit';
       default: return type;
     }
   };
 
   const predefinedGoals = [
     {
-      name: 'Kontaktformulär',
+      name: 'Contact form',
       type: 'form_submission' as const,
       selector: 'form[name="contact"], #contact-form, .contact-form',
       value: 50
     },
     {
-      name: 'Telefonklick',
+      name: 'Phone click',
       type: 'phone_click' as const,
       selector: 'a[href^="tel:"], .phone-link, .call-button',
       value: 25
     },
     {
-      name: 'Offertförfrågan',
+      name: 'Quote request',
       type: 'form_submission' as const,
       selector: 'form[name="quote"], #quote-form, .quote-form',
       value: 100
     },
     {
-      name: 'Newsletter-registrering',
+      name: 'Newsletter signup',
       type: 'form_submission' as const,
       selector: 'form[name="newsletter"], #newsletter, .newsletter-signup',
       value: 15
@@ -160,19 +160,19 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Target className="h-5 w-5 text-green-500" />
-          Konverteringsmål
+          Conversion goals
         </CardTitle>
         <p className="text-sm text-muted-foreground">
-          Definiera viktiga åtgärder som användare kan ta på din webbplats
+          Define important actions users can take on your website
         </p>
       </CardHeader>
       <CardContent className="space-y-6">
         {/* Befintliga mål */}
         <div className="space-y-3">
-          <h4 className="font-medium">Aktiva konverteringsmål ({goals.length})</h4>
+          <h4 className="font-medium">Active conversion goals ({goals.length})</h4>
           {goals.length === 0 ? (
             <p className="text-sm text-muted-foreground">
-              Inga konverteringsmål konfigurerade än. Lägg till nedan.
+              No conversion goals configured yet. Add one below.
             </p>
           ) : (
             <div className="space-y-2">
@@ -186,7 +186,7 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
                         {getGoalTypeLabel(goal.type)} • {goal.selector}
                       </div>
                     </div>
-                    <Badge variant="outline">{goal.value || 0} poäng</Badge>
+                    <Badge variant="outline">{goal.value || 0} points</Badge>
                   </div>
                   <Button
                     variant="ghost"
@@ -203,7 +203,7 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
 
         {/* Snabbmål */}
         <div className="space-y-3">
-          <h4 className="font-medium">Snabba mallar</h4>
+          <h4 className="font-medium">Quick templates</h4>
           <div className="grid gap-2">
             {predefinedGoals.map((goal, index) => (
               <Button
@@ -220,7 +220,7 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
                 className="justify-start"
               >
                 {getGoalIcon(goal.type)}
-                {goal.name} ({goal.value} poäng)
+                {goal.name} ({goal.value} points)
               </Button>
             ))}
           </div>
@@ -228,21 +228,21 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
 
         {/* Lägg till nytt mål */}
         <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-          <h4 className="font-medium">Lägg till nytt mål</h4>
-          
+          <h4 className="font-medium">Add new goal</h4>
+
           <div className="grid gap-4">
             <div>
-              <Label htmlFor="goal-name">Målnamn</Label>
+              <Label htmlFor="goal-name">Goal name</Label>
               <Input
                 id="goal-name"
-                placeholder="t.ex. Kontaktformulär"
+                placeholder="e.g. Contact form"
                 value={newGoal.name || ''}
                 onChange={(e) => setNewGoal({ ...newGoal, name: e.target.value })}
               />
             </div>
 
             <div>
-              <Label htmlFor="goal-type">Typ</Label>
+              <Label htmlFor="goal-type">Type</Label>
               <Select
                 value={newGoal.type}
                 onValueChange={(value: any) => setNewGoal({ ...newGoal, type: value })}
@@ -251,29 +251,29 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="form_submission">Formulärskickning</SelectItem>
-                  <SelectItem value="element_click">Elementklick</SelectItem>
-                  <SelectItem value="phone_click">Telefonklick</SelectItem>
-                  <SelectItem value="page_visit">Sidbesök</SelectItem>
+                  <SelectItem value="form_submission">Form submission</SelectItem>
+                  <SelectItem value="element_click">Element click</SelectItem>
+                  <SelectItem value="phone_click">Phone click</SelectItem>
+                  <SelectItem value="page_visit">Page visit</SelectItem>
                 </SelectContent>
               </Select>
             </div>
 
             <div>
-              <Label htmlFor="goal-selector">CSS-selektor</Label>
+              <Label htmlFor="goal-selector">CSS selector</Label>
               <Input
                 id="goal-selector"
-                placeholder="t.ex. #contact-form, .contact-button"
+                placeholder="e.g. #contact-form, .contact-button"
                 value={newGoal.selector || ''}
                 onChange={(e) => setNewGoal({ ...newGoal, selector: e.target.value })}
               />
               <p className="text-xs text-muted-foreground mt-1">
-                CSS-selektor som identifierar elementet på din webbplats
+                CSS selector that identifies the element on your website
               </p>
             </div>
 
             <div>
-              <Label htmlFor="goal-value">Poängvärde (valfritt)</Label>
+              <Label htmlFor="goal-value">Point value (optional)</Label>
               <Input
                 id="goal-value"
                 type="number"
@@ -285,7 +285,7 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
 
             <Button onClick={addGoal} size="sm">
               <Plus className="h-4 w-4 mr-2" />
-              Lägg till mål
+              Add goal
             </Button>
           </div>
         </div>
@@ -296,7 +296,7 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
           disabled={isLoading}
           className="w-full"
         >
-          {isLoading ? 'Sparar...' : 'Spara konverteringsmål'}
+          {isLoading ? 'Saving...' : 'Save conversion goals'}
         </Button>
       </CardContent>
     </Card>

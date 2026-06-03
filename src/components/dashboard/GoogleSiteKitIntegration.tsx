@@ -100,8 +100,8 @@ export function GoogleSiteKitIntegration({
   const handleSync = async () => {
     if (!siteKitStatus?.detected) {
       toast({
-        title: "Site Kit inte upptäckt",
-        description: "Google Site Kit verkar inte vara installerat eller aktiverat på denna webbplats.",
+        title: "Site Kit not detected",
+        description: "Google Site Kit does not appear to be installed or activated on this website.",
         variant: "destructive"
       });
       return;
@@ -121,20 +121,19 @@ export function GoogleSiteKitIntegration({
 
       if (data.success) {
         toast({
-          title: "Synkronisering slutförd",
-          description: "Site Kit-data har synkroniserats framgångsrikt."
+          title: "Sync complete",
+          description: "Site Kit data has been synced successfully."
         });
-        
-        // Uppdatera status
+
         await checkSiteKitStatus();
       } else {
-        throw new Error(data.message || 'Synkronisering misslyckades');
+        throw new Error(data.message || 'Sync failed');
       }
     } catch (error) {
       console.error('Sync failed:', error);
       toast({
-        title: "Synkronisering misslyckades",
-        description: error instanceof Error ? error.message : "Ett okänt fel uppstod.",
+        title: "Sync failed",
+        description: error instanceof Error ? error.message : "An unknown error occurred.",
         variant: "destructive"
       });
     } finally {
@@ -157,22 +156,22 @@ export function GoogleSiteKitIntegration({
     return (
       <div className="flex items-center justify-center p-8">
         <Loader2 className="h-6 w-6 animate-spin mr-2" />
-        <span>Kontrollerar Site Kit-status...</span>
+        <span>Checking Site Kit status...</span>
       </div>
     );
   }
 
   const getStatusBadge = () => {
     if (!siteKitStatus?.detected) {
-      return <Badge variant="secondary">Inte upptäckt</Badge>;
+      return <Badge variant="secondary">Not detected</Badge>;
     }
     if (!siteKitStatus.configured) {
-      return <Badge variant="outline">Inte konfigurerad</Badge>;
+      return <Badge variant="outline">Not configured</Badge>;
     }
     if (siteKitStatus.analytics.connected || siteKitStatus.searchConsole.connected) {
-      return <Badge variant="default">Konfigurerad</Badge>;
+      return <Badge variant="default">Configured</Badge>;
     }
-    return <Badge variant="secondary">Delvis konfigurerad</Badge>;
+    return <Badge variant="secondary">Partially configured</Badge>;
   };
 
   return (
@@ -193,7 +192,7 @@ export function GoogleSiteKitIntegration({
           />
         </div>
         <CardDescription>
-          Automatisk integration med Google Site Kit plugin för WordPress
+          Automatic integration with the Google Site Kit plugin for WordPress
         </CardDescription>
       </CardHeader>
 
@@ -202,13 +201,13 @@ export function GoogleSiteKitIntegration({
           <Alert>
             <AlertTriangle className="h-4 w-4" />
             <AlertDescription>
-              <strong>Google Site Kit inte upptäckt</strong><br />
-              För att använda denna integration måste Google Site Kit vara installerat och aktiverat på din WordPress-webbplats.
+              <strong>Google Site Kit not detected</strong><br />
+              To use this integration, Google Site Kit must be installed and activated on your WordPress website.
               <div className="mt-2">
                 <Button variant="outline" size="sm" asChild>
                   <a href="https://wordpress.org/plugins/google-site-kit/" target="_blank" rel="noopener noreferrer">
                     <ExternalLink className="h-4 w-4 mr-2" />
-                    Installera Site Kit
+                    Install Site Kit
                   </a>
                 </Button>
               </div>
@@ -228,7 +227,7 @@ export function GoogleSiteKitIntegration({
                   <Label className="font-medium">Google Analytics</Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {siteKitStatus.analytics.connected ? 'Ansluten' : 'Inte ansluten'}
+                  {siteKitStatus.analytics.connected ? 'Connected' : 'Not connected'}
                 </p>
                 {siteKitStatus.analytics.propertyId && (
                   <p className="text-xs text-muted-foreground">
@@ -247,7 +246,7 @@ export function GoogleSiteKitIntegration({
                   <Label className="font-medium">Search Console</Label>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {siteKitStatus.searchConsole.connected ? 'Ansluten' : 'Inte ansluten'}
+                  {siteKitStatus.searchConsole.connected ? 'Connected' : 'Not connected'}
                 </p>
               </div>
             </div>
@@ -256,7 +255,7 @@ export function GoogleSiteKitIntegration({
             {siteKitStatus.lastSync && (
               <div className="p-3 rounded-lg bg-muted/50">
                 <p className="text-sm">
-                  <strong>Senaste synkronisering:</strong> {new Date(siteKitStatus.lastSync).toLocaleString('sv-SE')}
+                  <strong>Last sync:</strong> {new Date(siteKitStatus.lastSync).toLocaleString('sv-SE')}
                 </p>
               </div>
             )}
@@ -271,12 +270,12 @@ export function GoogleSiteKitIntegration({
                 {syncing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Synkroniserar...
+                    Syncing...
                   </>
                 ) : (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Synkronisera nu
+                    Sync now
                   </>
                 )}
               </Button>
@@ -284,7 +283,7 @@ export function GoogleSiteKitIntegration({
               <Button variant="outline" size="sm" asChild>
                 <a href={`${selectedSite.domain}/wp-admin/admin.php?page=googlesitekit-dashboard`} target="_blank" rel="noopener noreferrer">
                   <ExternalLink className="h-4 w-4 mr-2" />
-                  Öppna Site Kit
+                  Open Site Kit
                 </a>
               </Button>
             </div>
@@ -294,9 +293,9 @@ export function GoogleSiteKitIntegration({
               <Alert>
                 <CheckCircle className="h-4 w-4" />
                 <AlertDescription>
-                  <strong>Integration aktiverad!</strong><br />
-                  Data från dina Site Kit-anslutningar synkroniseras automatiskt och visas i dashboarden.
-                  Detta inkluderar Search Console-data, Analytics-metrics och PageSpeed-resultat.
+                  <strong>Integration enabled!</strong><br />
+                  Data from your Site Kit connections is synced automatically and displayed in the dashboard.
+                  This includes Search Console data, Analytics metrics, and PageSpeed results.
                 </AlertDescription>
               </Alert>
             )}

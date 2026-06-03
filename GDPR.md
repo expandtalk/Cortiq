@@ -156,7 +156,7 @@ If you accept the Statistics category in our cookie banner, we also collect: ses
 
 All data is stored in the EU. We retain analytics data for [X] days. You have the right to request deletion by contacting [CONTACT EMAIL].
 
-**Sub-processor:** CortIQ (Expandtalk AB), [https://cortiq.se](https://cortiq.se)
+**Sub-processor:** CortIQ (Expandtalk Corporation AB), [https://cortiq.se](https://cortiq.se)
 
 ---
 

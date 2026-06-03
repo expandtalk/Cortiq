@@ -30,7 +30,7 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
 
   const handleImport = async () => {
     if (!selectedFile) {
-      toast.error('Välj en loggfil först');
+      toast.error('Select a log file first');
       return;
     }
 
@@ -55,7 +55,7 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
       }
 
       setImportResult(data);
-      toast.success(`Import klar! ${data.stats.processed_lines} rader processade`);
+      toast.success(`Import complete! ${data.stats.processed_lines} rows processed`);
       setSelectedFile(null);
       
       // Reset file input
@@ -64,7 +64,7 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
 
     } catch (error: any) {
       console.error('Import error:', error);
-      toast.error('Fel vid import: ' + error.message);
+      toast.error('Import error: ' + error.message);
     } finally {
       setIsUploading(false);
     }
@@ -76,9 +76,9 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
         <div className="flex items-center space-x-3">
           <Upload className="h-6 w-6 text-primary" />
           <div>
-            <CardTitle>Importera Server-loggar</CardTitle>
+            <CardTitle>Import Server Logs</CardTitle>
             <CardDescription>
-              Ladda upp server-loggfiler för cookiefree analytics (IP-anonymisering sker automatiskt)
+              Upload server log files for cookie-free analytics (IP anonymization is automatic)
             </CardDescription>
           </div>
         </div>
@@ -87,7 +87,7 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
         {/* Format Information */}
         <Alert>
           <FileText className="h-4 w-4" />
-          <AlertTitle>Loggfilsformat som stöds:</AlertTitle>
+          <AlertTitle>Supported log file formats:</AlertTitle>
           <AlertDescription className="space-y-2 mt-2">
             <div className="text-sm space-y-1">
               <p><strong>Combined Log Format (Apache/Nginx):</strong></p>
@@ -112,10 +112,10 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
 
         {/* Format Selection */}
         <div className="space-y-2">
-          <Label htmlFor="log-format">Loggfilsformat</Label>
+          <Label htmlFor="log-format">Log file format</Label>
           <Select value={logFormat} onValueChange={(value) => setLogFormat(value as LogFormat)}>
             <SelectTrigger id="log-format">
-              <SelectValue placeholder="Välj format" />
+              <SelectValue placeholder="Select format" />
             </SelectTrigger>
             <SelectContent>
               <SelectItem value="combined">Combined Log Format (Apache/Nginx)</SelectItem>
@@ -127,7 +127,7 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
 
         {/* File Upload */}
         <div className="space-y-2">
-          <Label htmlFor="log-file-input">Välj loggfil</Label>
+          <Label htmlFor="log-file-input">Select log file</Label>
           <div className="flex items-center space-x-2">
             <input
               id="log-file-input"
@@ -154,12 +154,12 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
           {isUploading ? (
             <>
               <Loader2 className="mr-2 h-4 w-4 animate-spin" />
-              Importerar...
+              Importing...
             </>
           ) : (
             <>
               <Upload className="mr-2 h-4 w-4" />
-              Importera loggfil
+              Import log file
             </>
           )}
         </Button>
@@ -172,16 +172,16 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
             ) : (
               <CheckCircle2 className="h-4 w-4 text-green-500" />
             )}
-            <AlertTitle>Import genomförd</AlertTitle>
+            <AlertTitle>Import complete</AlertTitle>
             <AlertDescription>
               <div className="space-y-1 mt-2 text-sm">
-                <p>✓ Totalt antal rader: {importResult.stats.total_lines}</p>
-                <p>✓ Processade rader: {importResult.stats.processed_lines}</p>
+                <p>✓ Total rows: {importResult.stats.total_lines}</p>
+                <p>✓ Processed rows: {importResult.stats.processed_lines}</p>
                 {importResult.stats.failed_lines > 0 && (
-                  <p className="text-yellow-600">⚠ Misslyckade rader: {importResult.stats.failed_lines}</p>
+                  <p className="text-yellow-600">⚠ Failed rows: {importResult.stats.failed_lines}</p>
                 )}
                 <p className="text-xs text-muted-foreground mt-2">
-                  IP-adresser har anonymiserats omedelbart (IP → Land → Raderad)
+                  IP addresses have been anonymized immediately (IP → Country → Deleted)
                 </p>
               </div>
             </AlertDescription>
@@ -190,13 +190,13 @@ export function ServerLogImporter({ siteId }: ServerLogImporterProps) {
 
         {/* Privacy Notice */}
         <div className="bg-primary/5 p-4 rounded-lg">
-          <h4 className="font-semibold mb-2 text-sm">🔒 Integritet & GDPR</h4>
+          <h4 className="font-semibold mb-2 text-sm">🔒 Privacy & GDPR</h4>
           <ul className="text-xs text-muted-foreground space-y-1">
-            <li>✓ IP-adresser anonymiseras <strong>omedelbart</strong> vid import</li>
-            <li>✓ Endast land/region lagras - aldrig IP-adresser</li>
-            <li>✓ Bot-trafik exkluderas automatiskt</li>
-            <li>✓ Data aggregeras för cookiefree analytics</li>
-            <li>✓ Ingen cookie-banner krävs (GDPR Art. 6.1.f)</li>
+            <li>✓ IP addresses are anonymized <strong>immediately</strong> on import</li>
+            <li>✓ Only country/region is stored — never IP addresses</li>
+            <li>✓ Bot traffic is automatically excluded</li>
+            <li>✓ Data is aggregated for cookie-free analytics</li>
+            <li>✓ No cookie banner required (GDPR Art. 6.1.f)</li>
           </ul>
         </div>
       </CardContent>

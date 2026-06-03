@@ -83,14 +83,14 @@ export function useUpdateGDPRSettings() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['gdpr-settings', data.site_id] });
       toast({
-        title: "GDPR inställningar uppdaterade",
-        description: "Dina GDPR-inställningar har sparats."
+        title: "GDPR settings updated",
+        description: "Your GDPR settings have been saved."
       });
     },
     onError: () => {
       toast({
-        title: "Fel",
-        description: "Kunde inte uppdatera GDPR-inställningar.",
+        title: "Error",
+        description: "Could not update GDPR settings.",
         variant: "destructive"
       });
     }
@@ -137,14 +137,14 @@ export function useCreateDataRequest() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['data-requests', data.site_id] });
       toast({
-        title: "Begäran skickad",
-        description: "Din begäran har registrerats och kommer att behandlas inom 30 dagar."
+        title: "Request submitted",
+        description: "Your request has been registered and will be processed within 30 days."
       });
     },
     onError: () => {
       toast({
-        title: "Fel",
-        description: "Kunde inte skicka begäran.",
+        title: "Error",
+        description: "Could not submit request.",
         variant: "destructive"
       });
     }

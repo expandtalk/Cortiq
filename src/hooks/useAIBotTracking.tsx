@@ -73,10 +73,13 @@ export const useAIBotTracking = (siteId: string | null, days: number = 7) => {
         .map(([date, traffic]) => ({ date, traffic }))
         .sort((a, b) => a.date.localeCompare(b.date));
 
-      // Top URLs
+      // Top URLs — exclude static assets
+      const ASSET_URL_RE = /\.(css|js|mjs|png|jpg|jpeg|gif|webp|svg|ico|woff2?|ttf|eot|otf|json|xml|txt|pdf|map)(\?|$)/i;
       const urlCounts: Record<string, number> = {};
       traffic?.forEach(t => {
-        urlCounts[t.url] = (urlCounts[t.url] || 0) + 1;
+        if (t.url && !ASSET_URL_RE.test(t.url)) {
+          urlCounts[t.url] = (urlCounts[t.url] || 0) + 1;
+        }
       });
 
       const topUrls = Object.entries(urlCounts)

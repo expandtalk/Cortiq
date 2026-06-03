@@ -103,8 +103,8 @@ export function CreateABTestDialog({ open, onOpenChange, siteId }: CreateABTestD
           <DialogTitle>Create New A/B Test</DialogTitle>
           <div className="mt-2 p-3 bg-blue-50 border border-blue-200 rounded-md">
             <p className="text-sm text-blue-800">
-              <strong>Viktigt:</strong> A/B-testet kräver att tracking-skriptet är installerat på din webbplats. 
-              Gå till Setup-fliken för installationsinstruktioner.
+              <strong>Important:</strong> The A/B test requires the tracking script to be installed on your website.
+              Go to the Setup tab for installation instructions.
             </p>
           </div>
         </DialogHeader>

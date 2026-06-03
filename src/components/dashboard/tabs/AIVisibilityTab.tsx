@@ -1,6 +1,7 @@
 import { useState, useEffect, useCallback } from 'react';
 import { supabase } from '@/integrations/supabase/client';
 import { useSites } from '@/hooks/useSites';
+import { GSCAIPerformanceSection } from '@/components/dashboard/GSCAIPerformanceSection';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
@@ -85,7 +86,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
 
   async function runAudit() {
     const url = auditUrl.trim();
-    if (!url) { toast.error('Ange URL:en som ska analyseras.'); return; }
+    if (!url) { toast.error('Enter the URL to analyze.'); return; }
     const normalized = `https://${url.replace(/^https?:\/\//i, '')}`;
     setRunning(true);
     try {
@@ -93,7 +94,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
         body: { siteId, url: normalized },
       });
       if (error || !data?.success) {
-        let msg = data?.error ?? error?.message ?? 'Audit misslyckades';
+        let msg = data?.error ?? error?.message ?? 'Audit failed';
         try {
           const body = await (error as any)?.context?.json?.();
           if (body?.error) msg = body.error;
@@ -101,7 +102,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
         throw new Error(msg);
       }
       setAudit(data.audit);
-      toast.success('AI Visibility-audit klar');
+      toast.success('AI Visibility audit complete');
     } catch (err) {
       toast.error((err as Error).message);
     } finally {
@@ -112,7 +113,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
   if (loading) {
     return (
       <div className="flex items-center justify-center py-24 text-muted-foreground">
-        <RefreshCw className="h-5 w-5 animate-spin mr-2" /> Laddar...
+        <RefreshCw className="h-5 w-5 animate-spin mr-2" /> Loading...
       </div>
     );
   }
@@ -127,7 +128,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
             AI Visibility
           </h2>
           <p className="text-sm text-muted-foreground mt-1">
-            Mäter hur troligt det är att AI-system (ChatGPT, Claude, Perplexity) citerar din sajt.
+            Measures how likely AI systems (ChatGPT, Claude, Perplexity) are to cite your site.
           </p>
         </div>
         <div className="flex gap-2">
@@ -141,7 +142,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
           />
           <Button onClick={runAudit} disabled={running || !auditUrl.trim()} className="shrink-0">
             <RefreshCw className={`h-4 w-4 mr-2 ${running ? 'animate-spin' : ''}`} />
-            {running ? 'Analyserar…' : audit ? 'Kör ny audit' : 'Kör audit'}
+            {running ? 'Analyzing…' : audit ? 'Run new audit' : 'Run audit'}
           </Button>
         </div>
       </div>
@@ -150,8 +151,8 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
         <Card className="border-dashed">
           <CardContent className="py-16 text-center text-muted-foreground">
             <Sparkles className="h-10 w-10 mx-auto mb-4 opacity-30" />
-            <p className="font-medium">Ingen audit ännu</p>
-            <p className="text-sm mt-1">Klicka "Kör första audit" för att analysera AI-synligheten.</p>
+            <p className="font-medium">No audit yet</p>
+            <p className="text-sm mt-1">Click "Run audit" to analyze AI visibility.</p>
           </CardContent>
         </Card>
       ) : (
@@ -169,10 +170,10 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
             </Card>
 
             {[
-              { label: 'Innehåll', score: audit.content_score, icon: FileText, desc: 'Rubriker, ordantal, struktur' },
-              { label: 'Tekniskt', score: audit.technical_score, icon: Code2, desc: 'Meta, canonical, HTTPS' },
-              { label: 'Schema', score: audit.schema_score, icon: Globe, desc: 'JSON-LD strukturerad data' },
-              { label: 'Crawlers', score: audit.crawler_score, icon: Bot, desc: 'Robots.txt AI-åtkomst' },
+              { label: 'Content', score: audit.content_score, icon: FileText, desc: 'Headings, word count, structure' },
+              { label: 'Technical', score: audit.technical_score, icon: Code2, desc: 'Meta, canonical, HTTPS' },
+              { label: 'Schema', score: audit.schema_score, icon: Globe, desc: 'JSON-LD structured data' },
+              { label: 'Crawlers', score: audit.crawler_score, icon: Bot, desc: 'Robots.txt AI access' },
             ].map(({ label, score, icon: Icon, desc }) => (
               <Card key={label} className="bg-card border-border">
                 <CardContent className="pt-5">
@@ -193,12 +194,12 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Bot className="h-4 w-4" /> AI Crawler-åtkomst
+                  <Bot className="h-4 w-4" /> AI Crawler access
                 </CardTitle>
                 <CardDescription>
                   {audit.has_llms_txt
-                    ? <span className="text-green-400 flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> llms.txt hittades</span>
-                    : <span className="text-yellow-400 flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> Ingen llms.txt</span>}
+                    ? <span className="text-green-400 flex items-center gap-1"><CheckCircle2 className="h-3 w-3" /> llms.txt found</span>
+                    : <span className="text-yellow-400 flex items-center gap-1"><AlertTriangle className="h-3 w-3" /> No llms.txt</span>}
                 </CardDescription>
               </CardHeader>
               <CardContent className="space-y-2">
@@ -208,7 +209,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
                     <div className="flex items-center gap-2">
                       {CRAWLER_ICON(audit.crawler_access[crawler] ?? 'unknown')}
                       <span className="text-xs text-muted-foreground capitalize">
-                        {audit.crawler_access[crawler] ?? 'okänd'}
+                        {audit.crawler_access[crawler] ?? 'unknown'}
                       </span>
                     </div>
                   </div>
@@ -220,9 +221,9 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
             <Card>
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Code2 className="h-4 w-4" /> Schema.org-markup
+                  <Code2 className="h-4 w-4" /> Schema.org markup
                 </CardTitle>
-                <CardDescription>Strukturerad data som hjälper AI att förstå innehållet</CardDescription>
+                <CardDescription>Structured data that helps AI understand the content</CardDescription>
               </CardHeader>
               <CardContent>
                 {audit.schema_types.length > 0 ? (
@@ -234,21 +235,21 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
                 ) : (
                   <p className="text-sm text-muted-foreground flex items-center gap-2">
                     <XCircle className="h-4 w-4 text-red-400" />
-                    Ingen JSON-LD hittades
+                    No JSON-LD found
                   </p>
                 )}
                 {(audit.findings.wordCount as number) > 0 && (
                   <div className="mt-4 pt-4 border-t space-y-1.5 text-sm">
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">Ordantal</span>
+                      <span className="text-muted-foreground">Word count</span>
                       <span>{audit.findings.wordCount as number}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">H1-rubriker</span>
+                      <span className="text-muted-foreground">H1 headings</span>
                       <span>{audit.findings.h1Count as number}</span>
                     </div>
                     <div className="flex justify-between">
-                      <span className="text-muted-foreground">H2-rubriker</span>
+                      <span className="text-muted-foreground">H2 headings</span>
                       <span>{audit.findings.h2Count as number}</span>
                     </div>
                     <div className="flex justify-between">
@@ -266,7 +267,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
             <Card className="border-purple-500/20 bg-purple-500/5">
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
-                  <Sparkles className="h-4 w-4 text-purple-400" /> Claude Citability-analys
+                  <Sparkles className="h-4 w-4 text-purple-400" /> Claude Citability Analysis
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -281,9 +282,9 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
               <CardHeader className="pb-3">
                 <CardTitle className="text-base flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4" />
-                  Åtgärder ({audit.recommendations.length})
+                  Actions ({audit.recommendations.length})
                 </CardTitle>
-                <CardDescription>Sorterade efter prioritet — åtgärda High-issues först</CardDescription>
+                <CardDescription>Sorted by priority — fix High issues first</CardDescription>
               </CardHeader>
               <CardContent className="space-y-3">
                 {audit.recommendations.map((rec, i) => (
@@ -307,7 +308,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
                       <>
                         <Separator />
                         <div className="px-4 py-3 text-sm text-muted-foreground bg-muted/20">
-                          <span className="font-medium text-foreground">Åtgärd: </span>
+                          <span className="font-medium text-foreground">Fix: </span>
                           {rec.fix}
                         </div>
                       </>
@@ -320,12 +321,21 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
 
           {/* Footer metadata */}
           <p className="text-xs text-muted-foreground text-right">
-            Senaste audit: {new Date(audit.created_at).toLocaleString('sv-SE')}
+            Last audit: {new Date(audit.created_at).toLocaleString('en-GB')}
             {audit.audit_duration_ms && ` · ${(audit.audit_duration_ms / 1000).toFixed(1)}s`}
             {' · '}<span className="font-mono">{audit.url}</span>
           </p>
         </>
       )}
+
+      {/* Google Search Console – Generative AI Performance */}
+      <div className="space-y-2">
+        <h3 className="text-lg font-semibold">Google AI Search Performance</h3>
+        <p className="text-sm text-muted-foreground">
+          Impressions from AI Overviews, AI Mode, and Discover AI — fetched from your GSC connection.
+        </p>
+        <GSCAIPerformanceSection siteId={siteId} />
+      </div>
     </div>
   );
 }

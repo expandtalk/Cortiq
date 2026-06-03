@@ -290,7 +290,7 @@ export function NavigationAnalytics({ siteId, selectedSite }: NavigationAnalytic
           <CardContent>
             <div className="text-2xl font-bold">{overallTotalClicks.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              Menyer: {totalClicks.toLocaleString()} + Länkar: {totalInteractionClicks.toLocaleString()}
+              Menus: {totalClicks.toLocaleString()} + Links: {totalInteractionClicks.toLocaleString()}
             </p>
             <p className="text-xs text-muted-foreground">
               Last {selectedDays} days
@@ -464,8 +464,8 @@ export function NavigationAnalytics({ siteId, selectedSite }: NavigationAnalytic
             <div className="space-y-6">
               <div className="text-center py-8 text-muted-foreground">
                 <Navigation className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p className="text-lg font-medium mb-2">Ingen navigation-data hittad</p>
-                <p className="text-sm">WordPress-menyerna behöver synkroniseras med Supabase för att visa navigationsanalytik.</p>
+                <p className="text-lg font-medium mb-2">No navigation data found</p>
+                <p className="text-sm">WordPress menus need to be synced with Supabase to show navigation analytics.</p>
               </div>
               
               {/* Navigation Sync Component - Always show when no data */}
@@ -480,10 +480,10 @@ export function NavigationAnalytics({ siteId, selectedSite }: NavigationAnalytic
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Link className="h-5 w-5" />
-            Viktiga Navigationsinteraktioner
+            Key Navigation Interactions
           </CardTitle>
            <p className="text-sm text-muted-foreground">
-             Mest klickade navigationslement på webbplatsen (exklusive admin/redigeringsverktyg)
+             Most clicked navigation elements on the website (excluding admin/editing tools)
            </p>
         </CardHeader>
         <CardContent>
@@ -513,7 +513,7 @@ export function NavigationAnalytics({ siteId, selectedSite }: NavigationAnalytic
                   </div>
                   <div className="text-right">
                     <div className="text-lg font-bold">{interaction.count}</div>
-                    <div className="text-xs text-muted-foreground">klick</div>
+                    <div className="text-xs text-muted-foreground">clicks</div>
                   </div>
                 </div>
               ))}
@@ -521,8 +521,8 @@ export function NavigationAnalytics({ siteId, selectedSite }: NavigationAnalytic
           ) : (
             <div className="text-center py-8 text-muted-foreground">
               <Link className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Inga navigationsinteraktioner att visa för denna period</p>
-              <p className="text-xs mt-2">Interaktioner från ImportantInteractions har flyttats hit för bättre organisation</p>
+              <p>No navigation interactions to display for this period</p>
+              <p className="text-xs mt-2">Interactions from ImportantInteractions have been moved here for better organization</p>
             </div>
           )}
         </CardContent>

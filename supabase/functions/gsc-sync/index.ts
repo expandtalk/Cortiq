@@ -60,6 +60,48 @@ async function queryGSC(
   }));
 }
 
+// AI search types to attempt — Google is rolling these out gradually.
+// If the API returns 400/403 the type is not yet available for this property; we skip silently.
+const AI_SEARCH_TYPES = ['AI_OVERVIEWS', 'AI_MODE', 'DISCOVER_AI'] as const;
+type AISearchType = typeof AI_SEARCH_TYPES[number];
+type AIDimension  = 'page' | 'country' | 'device';
+
+interface AIRow { value: string; impressions: number }
+
+async function queryGSCAI(
+  accessToken: string,
+  propertyUrl: string,
+  startDate: string,
+  endDate: string,
+  searchType: AISearchType,
+  dimension: AIDimension,
+  rowLimit = 200
+): Promise<AIRow[] | null> {
+  const res = await fetch(
+    `https://www.googleapis.com/webmasters/v3/sites/${encodeURIComponent(propertyUrl)}/searchAnalytics/query`,
+    {
+      method: 'POST',
+      headers: { Authorization: `Bearer ${accessToken}`, 'Content-Type': 'application/json' },
+      body: JSON.stringify({ startDate, endDate, dimensions: [dimension], searchType, rowLimit }),
+    }
+  );
+
+  // 400 / 403 = search type not yet available for this property — not an error
+  if (res.status === 400 || res.status === 403) return null;
+
+  if (!res.ok) {
+    const err = await res.json().catch(() => ({}));
+    console.error(`GSC AI query failed (${searchType}/${dimension}):`, err);
+    return null;
+  }
+
+  const data = await res.json();
+  return (data.rows || []).map((row: any) => ({
+    value:       row.keys[0],
+    impressions: row.impressions ?? 0,
+  }));
+}
+
 Deno.serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -179,6 +221,33 @@ Deno.serve(async (req) => {
       }
     }
 
+    // Fetch AI performance data for all available search types and dimensions
+    const aiDimensions: AIDimension[] = ['page', 'country', 'device'];
+    const aiRows: object[] = [];
+
+    await Promise.all(
+      AI_SEARCH_TYPES.flatMap(searchType =>
+        aiDimensions.map(async dimension => {
+          const results = await queryGSCAI(
+            accessToken, credential.property_url, startStr, endStr, searchType, dimension
+          );
+          if (results) {
+            results.forEach(r => aiRows.push({
+              site_id, period_start: startStr, period_end: endStr,
+              search_type: searchType, dimension, value: r.value, impressions: r.impressions,
+            }));
+          }
+        })
+      )
+    );
+
+    if (aiRows.length > 0) {
+      const { error: aiUpsertError } = await supabase
+        .from('gsc_ai_data')
+        .upsert(aiRows, { onConflict: 'site_id,period_start,period_end,search_type,dimension,value', ignoreDuplicates: false });
+      if (aiUpsertError) console.error('GSC AI data upsert failed:', aiUpsertError);
+    }
+
     // Update last_sync_at
     await supabase
       .from('site_google_credentials')
@@ -191,6 +260,7 @@ Deno.serve(async (req) => {
         synced: rows.length,
         queries: queries.length,
         pages: pages.length,
+        ai_synced: aiRows.length,
         period: { start: startStr, end: endStr },
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }

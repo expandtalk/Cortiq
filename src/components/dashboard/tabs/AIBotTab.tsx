@@ -57,7 +57,7 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
         <div>
           <h2 className="text-3xl font-bold">AI Bot Intelligence</h2>
           <p className="text-muted-foreground mt-1">
-            Spåra AI-agents, deras resor och konverteringar
+            Track AI agents, their journeys, and conversions
           </p>
         </div>
         <div className="flex items-center gap-3">
@@ -66,9 +66,9 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
               <SelectValue />
             </SelectTrigger>
             <SelectContent>
-              <SelectItem value="7">Senaste 7 dagarna</SelectItem>
-              <SelectItem value="30">Senaste 30 dagarna</SelectItem>
-              <SelectItem value="90">Senaste 90 dagarna</SelectItem>
+              <SelectItem value="7">Last 7 days</SelectItem>
+              <SelectItem value="30">Last 30 days</SelectItem>
+              <SelectItem value="90">Last 90 days</SelectItem>
             </SelectContent>
           </Select>
           <Badge variant="outline" className="flex items-center gap-2">
@@ -85,7 +85,7 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
           <AlertDescription>
             <div className="space-y-2">
               <p className="font-semibold">No AI bot activity detected yet</p>
-              <p>Installera det kombinerade AI-tracking scriptet på din webbplats:</p>
+              <p>Install the combined AI tracking script on your website:</p>
               <pre className="bg-muted p-3 rounded-md text-xs overflow-x-auto mt-2">
 {`<script 
   src="${window.location.origin}/ai-tracking-unified.js"
@@ -95,7 +95,7 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
 </script>`}
               </pre>
               <p className="text-sm text-muted-foreground mt-2">
-                Lägg till scriptet i &lt;head&gt;-sektionen. Data visas när AI-bottar och AI-söktrafik besöker din webbplats.
+                Add the script to the &lt;head&gt; section. Data will appear when AI bots and AI search traffic visit your website.
               </p>
             </div>
           </AlertDescription>
@@ -107,7 +107,7 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
         <TabsList>
           <TabsTrigger value="overview" className="flex items-center gap-2">
             <Bot className="h-4 w-4" />
-            Översikt
+            Overview
           </TabsTrigger>
           <TabsTrigger value="journey" className="flex items-center gap-2">
             <Route className="h-4 w-4" />
@@ -180,7 +180,7 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
               <CardContent>
                 <div className="text-2xl font-bold">{journeyData?.conversions || 0}</div>
                 <p className="text-xs text-muted-foreground mt-1">
-                  {journeyData?.conversionRate.toFixed(1) || 0}% konverteringsgrad
+                  {journeyData?.conversionRate.toFixed(1) || 0}% conversion rate
                 </p>
               </CardContent>
             </Card>
@@ -260,7 +260,7 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Snitt sidor/session</CardTitle>
+                    <CardTitle className="text-sm font-medium">Avg. pages/session</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{journeyData?.avgPagesPerSession.toFixed(1) || 0}</div>
@@ -268,7 +268,7 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Snitt assets/session</CardTitle>
+                    <CardTitle className="text-sm font-medium">Avg. assets/session</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold">{journeyData?.avgAssetsPerSession.toFixed(1) || 0}</div>
@@ -277,7 +277,7 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
                 </Card>
                 <Card>
                   <CardHeader className="pb-2">
-                    <CardTitle className="text-sm font-medium">Når konvertering</CardTitle>
+                    <CardTitle className="text-sm font-medium">Reaches conversion</CardTitle>
                   </CardHeader>
                   <CardContent>
                     <div className="text-2xl font-bold text-green-500">{journeyData?.conversionRate.toFixed(1) || 0}%</div>
@@ -295,11 +295,11 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
               <Alert>
                 <Route className="h-4 w-4" />
                 <AlertDescription>
-                  <p className="font-semibold">Varför är detta viktigt?</p>
+                  <p className="font-semibold">Why does this matter?</p>
                   <p className="text-sm mt-1">
-                    Råa request-volymer är en "vanity metric". Den verkliga insikten ligger i att följa 
-                    agenternas väg genom sajten till konverteringssidan. Om många requests inte når 
-                    konverteringsvägen vet du att resan är trasig för AI-agenter.
+                    Raw request volumes are a vanity metric. The real insight is in following
+                    agents along their path through the site to the conversion page. If many requests
+                    never reach the conversion path, the journey is broken for AI agents.
                   </p>
                 </AlertDescription>
               </Alert>
@@ -321,29 +321,29 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
               {/* Explanation */}
               <Card>
                 <CardHeader>
-                  <CardTitle>Varför spelar browser-typ roll?</CardTitle>
+                  <CardTitle>Why does browser type matter?</CardTitle>
                 </CardHeader>
                 <CardContent className="space-y-4">
                   <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                     <div className="p-4 rounded-lg bg-green-500/10 border border-green-500/20">
                       <h4 className="font-medium text-green-700 dark:text-green-400">Visual Browser</h4>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Accepterar cookies ~78% av tiden. Syns i GA4 men skapar konstiga metrics 
-                        (desktop-trafik, Chrome-uppsving, udda engagement).
+                        Accepts cookies ~78% of the time. Appears in GA4 but creates odd metrics
+                        (desktop traffic spikes, Chrome surges, unusual engagement).
                       </p>
                     </div>
                     <div className="p-4 rounded-lg bg-amber-500/10 border border-amber-500/20">
                       <h4 className="font-medium text-amber-700 dark:text-amber-400">Headless Browser</h4>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Exekverar JavaScript men renderar inte visuellt. Används ofta för 
-                        automation och training crawlers. Kan detekteras via webdriver-signaler.
+                        Executes JavaScript but does not render visually. Often used for
+                        automation and training crawlers. Detectable via webdriver signals.
                       </p>
                     </div>
                     <div className="p-4 rounded-lg bg-blue-500/10 border border-blue-500/20">
                       <h4 className="font-medium text-blue-700 dark:text-blue-400">Text-based Browser</h4>
                       <p className="text-sm text-muted-foreground mt-1">
-                        Helt osynlig för cookie-baserad analytics. Kan INTE spåras av GA4.
-                        Kräver server-side eller bot log-analys.
+                        Completely invisible to cookie-based analytics. CANNOT be tracked by GA4.
+                        Requires server-side or bot log analysis.
                       </p>
                     </div>
                   </div>

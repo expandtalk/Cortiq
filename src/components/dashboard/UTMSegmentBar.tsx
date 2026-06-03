@@ -130,7 +130,7 @@ export function UTMSegmentBar({ className = '' }: Props) {
           className="h-7 px-2.5 text-xs rounded-full border-dashed"
           onClick={openCreate}
         >
-          <Plus className="h-3.5 w-3.5 mr-1" />Nytt segment
+          <Plus className="h-3.5 w-3.5 mr-1" />New segment
         </Button>
       </div>
 

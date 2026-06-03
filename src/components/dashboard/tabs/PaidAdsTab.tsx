@@ -196,7 +196,7 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
               <MousePointerClick className="h-10 w-10 text-primary" />
               <div>
                 <p className="text-2xl font-bold">{totalClicks.toLocaleString()}</p>
-                <p className="text-sm text-muted-foreground">Klick</p>
+                <p className="text-sm text-muted-foreground">Clicks</p>
                 <Badge variant="outline" className="text-xs w-fit mx-auto">
                   CTR: {overallCTR.toFixed(2)}%
                 </Badge>
@@ -301,10 +301,10 @@ export function PaidAdsTab({ selectedSite }: PaidAdsTabProps) {
             <table className="w-full">
               <thead>
                 <tr className="border-b">
-                  <th className="text-left p-3 font-medium">Kampanj</th>
-                  <th className="text-right p-3 font-medium">Källa</th>
-                  <th className="text-right p-3 font-medium">Kostnad</th>
-                  <th className="text-right p-3 font-medium">Klick</th>
+                  <th className="text-left p-3 font-medium">Campaign</th>
+                  <th className="text-right p-3 font-medium">Source</th>
+                  <th className="text-right p-3 font-medium">Cost</th>
+                  <th className="text-right p-3 font-medium">Clicks</th>
                   <th className="text-right p-3 font-medium">Impressions</th>
                   <th className="text-right p-3 font-medium">CTR</th>
                   <th className="text-right p-3 font-medium">CPC</th>

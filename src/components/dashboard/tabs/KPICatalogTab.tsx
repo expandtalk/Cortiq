@@ -52,19 +52,19 @@ export const KPICatalogTab = ({ selectedSite }: KPICatalogTabProps) => {
         <div>
             <h2 className="text-3xl font-bold tracking-tight">KPI Katalog - AI Bot Analytics</h2>
             <p className="text-muted-foreground mt-2">
-              Realistiska mätvärden baserade på faktisk data från din webbplats. Alla KPI:er är GDPR-kompatibla.
+              Realistic metrics based on actual data from your website. All KPIs are GDPR-compatible.
             </p>
           </div>
           <div className="text-right">
             <div className="text-2xl font-bold">{activatedCount}/{totalCount}</div>
-            <div className="text-sm text-muted-foreground">Aktiverade KPI:er</div>
+            <div className="text-sm text-muted-foreground">Activated KPIs</div>
           </div>
         </div>
 
         <Alert>
           <AlertCircle className="h-4 w-4" />
           <AlertDescription>
-            KPI:er markerade som "Delvis" kräver integration med externa verktyg (Google Search Console eller Bing Webmaster Tools).
+            KPIs marked as "Partial" require integration with external tools (Google Search Console or Bing Webmaster Tools).
           </AlertDescription>
         </Alert>
       </div>
@@ -76,9 +76,9 @@ export const KPICatalogTab = ({ selectedSite }: KPICatalogTabProps) => {
             <AlertCircle className="h-5 w-5 text-destructive" />
           </div>
           <div>
-            <h3 className="text-xl font-semibold">Kritiska KPI:er</h3>
+            <h3 className="text-xl font-semibold">Critical KPIs</h3>
             <p className="text-sm text-muted-foreground">
-              Grundläggande mätvärden för din AI-synlighet
+              Core metrics for your AI visibility
             </p>
           </div>
           <Badge variant="destructive" className="ml-auto">
@@ -107,9 +107,9 @@ export const KPICatalogTab = ({ selectedSite }: KPICatalogTabProps) => {
             <TrendingUp className="h-5 w-5 text-primary" />
           </div>
           <div>
-            <h3 className="text-xl font-semibold">Live Data KPI:er</h3>
+            <h3 className="text-xl font-semibold">Live Data KPIs</h3>
             <p className="text-sm text-muted-foreground">
-              Realtidsdata om din AI-trafik och externa integrationer
+              Real-time data about your AI traffic and external integrations
             </p>
           </div>
           <Badge variant="secondary" className="ml-auto">

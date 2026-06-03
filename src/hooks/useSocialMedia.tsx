@@ -110,7 +110,7 @@ export function useSocialMedia(siteId: string, year: number) {
         a.bounces     += Number(row.bounces);
         if (monthIdx >= 0 && monthIdx < 12) a.monthly[monthIdx] += s;
 
-        const campaign = (row.utm_campaign as string) || '(ingen kampanj)';
+        const campaign = (row.utm_campaign as string) || '(no campaign)';
         a.campaigns[campaign] = (a.campaigns[campaign] ?? 0) + s;
       });
 
@@ -147,7 +147,7 @@ export function useSocialMedia(siteId: string, year: number) {
         hasDarkSocial: directCount > totalSessions * 0.3,
       });
     } catch (err: any) {
-      setError(err?.message ?? err?.error_description ?? 'Kunde inte hämta social media-data');
+      setError(err?.message ?? err?.error_description ?? 'Could not fetch social media data');
     } finally {
       setLoading(false);
     }

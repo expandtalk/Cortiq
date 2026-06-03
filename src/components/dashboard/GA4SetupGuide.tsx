@@ -10,14 +10,14 @@ export function GA4SetupGuide() {
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Search className="h-5 w-5" />
-          Konfigurera Söktermsanalys i GA4
+          Configure Search Term Analysis in GA4
         </CardTitle>
       </CardHeader>
       <CardContent className="space-y-6">
         <Alert>
           <Settings className="h-4 w-4" />
           <AlertDescription>
-            Söktermsanalys kräver specifik konfiguration i Google Analytics 4 för att fungera korrekt.
+            Search term analysis requires specific configuration in Google Analytics 4 to work correctly.
           </AlertDescription>
         </Alert>
 
@@ -25,15 +25,15 @@ export function GA4SetupGuide() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-xs">1</Badge>
-              <h3 className="font-semibold">Aktivera Enhanced Ecommerce (om du har e-handel)</h3>
+              <h3 className="font-semibold">Enable Enhanced Ecommerce (if you have e-commerce)</h3>
             </div>
             <div className="ml-8 space-y-2">
               <p className="text-sm text-muted-foreground">
-                Gå till din GA4-egenskap → <strong>Admin</strong> → <strong>Enhanced Ecommerce Settings</strong>
+                Go to your GA4 property → <strong>Admin</strong> → <strong>Enhanced Ecommerce Settings</strong>
               </p>
               <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-4">
-                <li>Aktivera "Enable Enhanced Ecommerce Reporting"</li>
-                <li>Konfigurera produktdimensioner om du säljer produkter</li>
+                <li>Enable "Enable Enhanced Ecommerce Reporting"</li>
+                <li>Configure product dimensions if you sell products</li>
               </ul>
             </div>
           </div>
@@ -41,16 +41,16 @@ export function GA4SetupGuide() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-xs">2</Badge>
-              <h3 className="font-semibold">Konfigurera Search Tracking</h3>
+              <h3 className="font-semibold">Configure Search Tracking</h3>
             </div>
             <div className="ml-8 space-y-2">
               <p className="text-sm text-muted-foreground">
-                Gå till <strong>Events</strong> → <strong>Conversions</strong> i GA4 Admin
+                Go to <strong>Events</strong> → <strong>Conversions</strong> i GA4 Admin
               </p>
               <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-4">
-                <li>Skapa en ny händelse för "view_search_results"</li>
-                <li>Lägg till parametern "search_term" för att fånga sökord</li>
-                <li>Markera händelsen som en konvertering om relevant</li>
+                <li>Create a new event for "view_search_results"</li>
+                <li>Add the parameter "search_term" to capture search terms</li>
+                <li>Mark the event as a conversion if relevant</li>
               </ul>
             </div>
           </div>
@@ -58,16 +58,16 @@ export function GA4SetupGuide() {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-xs">3</Badge>
-              <h3 className="font-semibold">Lägg till på din webbplats</h3>
+              <h3 className="font-semibold">Add to your website</h3>
             </div>
             <div className="ml-8 space-y-2">
               <p className="text-sm text-muted-foreground">
-                Implementera search tracking i din webbplats kod:
+                Implement search tracking in your website code:
               </p>
               <div className="bg-muted p-3 rounded text-sm font-mono">
-                <pre>{`// När användare söker
+                <pre>{`// When user searches
 gtag('event', 'view_search_results', {
-  search_term: 'användarens sökterm',
+  search_term: 'user search term',
   event_category: 'engagement',
   custom_parameter_1: 'additional_info'
 });`}</pre>
@@ -78,15 +78,15 @@ gtag('event', 'view_search_results', {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-xs">4</Badge>
-              <h3 className="font-semibold">WordPress-specifik konfiguration</h3>
+              <h3 className="font-semibold">WordPress-specific configuration</h3>
             </div>
             <div className="ml-8 space-y-2">
               <p className="text-sm text-muted-foreground">
-                Om du använder WordPress med ett sökplugin:
+                If you use WordPress with a search plugin:
               </p>
               <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-4">
-                <li><strong>SearchWP:</strong> Aktivera GA4-integration i plugininställningar</li>
-                <li><strong>Ajax Search Lite:</strong> Lägg till custom tracking kod</li>
+                <li><strong>SearchWP:</strong> Enable GA4-integration in plugin settings</li>
+                <li><strong>Ajax Search Lite:</strong> Add custom tracking code</li>
                 <li><strong>Standard WordPress-sök:</strong> Modifiera search.php för att skicka tracking</li>
               </ul>
             </div>
@@ -95,16 +95,16 @@ gtag('event', 'view_search_results', {
           <div className="space-y-3">
             <div className="flex items-center gap-2">
               <Badge variant="outline" className="w-6 h-6 rounded-full p-0 flex items-center justify-center text-xs">5</Badge>
-              <h3 className="font-semibold">Kontrollera konfigurationen</h3>
+              <h3 className="font-semibold">Check the configuration</h3>
             </div>
             <div className="ml-8 space-y-2">
               <p className="text-sm text-muted-foreground">
-                Verifiera att allt fungerar:
+                Verify that everything works:
               </p>
               <ul className="text-sm text-muted-foreground space-y-1 list-disc list-inside ml-4">
-                <li>Gå till <strong>Realtime</strong> → <strong>Events</strong> i GA4</li>
-                <li>Sök på din webbplats och se att "view_search_results" loggas</li>
-                <li>Kontrollera att "search_term" parametern innehåller rätt data</li>
+                <li>Go to <strong>Realtime</strong> → <strong>Events</strong> i GA4</li>
+                <li>Search your website and verify that "view_search_results" loggas</li>
+                <li>Check that "search_term" parametern innehåller rätt data</li>
               </ul>
             </div>
           </div>
@@ -113,17 +113,17 @@ gtag('event', 'view_search_results', {
         <div className="mt-6 p-4 bg-green-50 border border-green-200 rounded-lg">
           <div className="flex items-center gap-2 mb-2">
             <CheckCircle className="h-5 w-5 text-green-600" />
-            <h4 className="font-semibold text-green-800">Efter konfiguration</h4>
+            <h4 className="font-semibold text-green-800">After configuration</h4>
           </div>
           <p className="text-sm text-green-700">
-            När du har ställt in search tracking kommer söktermsanalysen i denna dashboard att automatiskt börja visa data inom 24-48 timmar.
+            Once you have set up search tracking, the search term analysis in this dashboard will automatically start showing data within 24-48 hours.
           </p>
         </div>
 
         <div className="mt-4 p-4 bg-blue-50 border border-blue-200 rounded-lg">
-          <h4 className="font-semibold text-blue-800 mb-2">Behöver hjälp?</h4>
+          <h4 className="font-semibold text-blue-800 mb-2">Need help?</h4>
           <p className="text-sm text-blue-700 mb-3">
-            Kontakta vårt support-team eller se detaljerad dokumentation:
+            Contact our support team or see detailed documentation:
           </p>
           <div className="flex flex-wrap gap-2">
             <a 

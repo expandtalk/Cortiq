@@ -32,9 +32,9 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
   return (
     <div className="max-w-4xl mx-auto space-y-8 p-6">
       <div className="text-center space-y-4">
-        <h1 className="text-3xl font-bold">Integritetspolicy</h1>
+        <h1 className="text-3xl font-bold">Privacy Policy</h1>
         <p className="text-lg text-muted-foreground">
-          Vi värnar om din integritet och följer GDPR-lagstiftningen
+          We care about your privacy and comply with GDPR legislation
         </p>
       </div>
 
@@ -43,37 +43,35 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Cookies och Spårning
+            Cookies and Tracking
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-4">
             <div>
-              <h4 className="font-semibold">Nödvändiga Cookies</h4>
+              <h4 className="font-semibold">Necessary Cookies</h4>
               <p className="text-sm text-muted-foreground">
-                Används för grundläggande funktionalitet på webbplatsen. Dessa cookies är nödvändiga 
-                och kan inte inaktiveras.
+                Used for basic website functionality. These cookies are required and cannot be disabled.
               </p>
             </div>
             
             <div>
-              <h4 className="font-semibold">Analytiska Cookies</h4>
+              <h4 className="font-semibold">Analytics Cookies</h4>
               <p className="text-sm text-muted-foreground">
-                Hjälper oss att förstå hur besökare använder webbplatsen genom att samla in anonymiserad 
-                information om sidvisningar, klick och användarinteraktioner. IP-adresser anonymiseras 
-                automatiskt.
+                Helps us understand how visitors use the website by collecting anonymized information
+                about page views, clicks, and user interactions. IP addresses are automatically anonymized.
               </p>
             </div>
 
             <div>
-              <h4 className="font-semibold">Data som samlas in:</h4>
+              <h4 className="font-semibold">Data collected:</h4>
               <ul className="text-sm text-muted-foreground list-disc list-inside space-y-1">
-                <li>Anonymiserade IP-adresser</li>
-                <li>Webbläsarinformation (typ, version)</li>
-                <li>Enhetsinformation (skärmstorlek, enhetstyp)</li>
-                <li>Sidvisningar och navigeringsmönster</li>
-                <li>Klickpositioner (för heatmap-analys)</li>
-                <li>Formulärinteraktioner (ej innehåll)</li>
+                <li>Anonymized IP addresses</li>
+                <li>Browser information (type, version)</li>
+                <li>Device information (screen size, device type)</li>
+                <li>Page views and navigation patterns</li>
+                <li>Click positions (for heatmap analysis)</li>
+                <li>Form interactions (not content)</li>
               </ul>
             </div>
           </div>
@@ -83,23 +81,22 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
       {/* Legal Basis */}
       <Card>
         <CardHeader>
-          <CardTitle>Rättslig grund för behandling</CardTitle>
+          <CardTitle>Legal basis for processing</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             <div>
-              <h4 className="font-semibold">Samtycke (Art. 6.1.a GDPR)</h4>
+              <h4 className="font-semibold">Consent (Art. 6.1.a GDPR)</h4>
               <p className="text-sm text-muted-foreground">
-                Analytiska cookies och spårning baseras på ditt uttryckliga samtycke som du kan 
-                återkalla när som helst.
+                Analytics cookies and tracking are based on your explicit consent, which you may withdraw at any time.
               </p>
             </div>
             
             <div>
-              <h4 className="font-semibold">Berättigat intresse (Art. 6.1.f GDPR)</h4>
+              <h4 className="font-semibold">Legitimate interest (Art. 6.1.f GDPR)</h4>
               <p className="text-sm text-muted-foreground">
-                Nödvändiga cookies för webbplatsens funktionalitet baseras på vårt berättigade 
-                intresse av att tillhandahålla en fungerande webbplats.
+                Necessary cookies for website functionality are based on our legitimate interest
+                in providing a working website.
               </p>
             </div>
           </div>
@@ -109,9 +106,9 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
       {/* Data Rights */}
       <Card>
         <CardHeader>
-          <CardTitle>Dina rättigheter enligt GDPR</CardTitle>
+          <CardTitle>Your rights under GDPR</CardTitle>
           <CardDescription>
-            Du har följande rättigheter gällande dina personuppgifter
+            You have the following rights regarding your personal data
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -119,9 +116,9 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
             <div className="flex items-start gap-3">
               <Info className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h4 className="font-semibold">Rätt till information</h4>
+                <h4 className="font-semibold">Right to information</h4>
                 <p className="text-sm text-muted-foreground">
-                  Du har rätt att få information om hur vi behandlar dina personuppgifter.
+                  You have the right to receive information about how we process your personal data.
                 </p>
               </div>
             </div>
@@ -129,9 +126,9 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
             <div className="flex items-start gap-3">
               <Download className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h4 className="font-semibold">Rätt till dataportabilitet</h4>
+                <h4 className="font-semibold">Right to data portability</h4>
                 <p className="text-sm text-muted-foreground">
-                  Du kan begära att få ut dina personuppgifter i ett maskinläsbart format.
+                  You can request a copy of your personal data in a machine-readable format.
                 </p>
               </div>
             </div>
@@ -139,9 +136,9 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
             <div className="flex items-start gap-3">
               <Trash2 className="h-5 w-5 text-primary mt-0.5" />
               <div>
-                <h4 className="font-semibold">Rätt till radering</h4>
+                <h4 className="font-semibold">Right to erasure</h4>
                 <p className="text-sm text-muted-foreground">
-                  Du kan begära att vi raderar dina personuppgifter ("rätten att bli glömd").
+                  You can request that we delete your personal data ("the right to be forgotten").
                 </p>
               </div>
             </div>
@@ -152,9 +149,9 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
       {/* Data Requests */}
       <Card>
         <CardHeader>
-          <CardTitle>Begär dina data eller radering</CardTitle>
+          <CardTitle>Request your data or deletion</CardTitle>
           <CardDescription>
-            Använd formulären nedan för att utöva dina GDPR-rättigheter
+            Use the forms below to exercise your GDPR rights
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -163,21 +160,21 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Download className="h-4 w-4" />
-                Exportera mina data
+                Export my data
               </h4>
               <form onSubmit={handleSubmit(handleDataRequest('export'))} className="space-y-3">
                 <div>
-                  <Label htmlFor="export-email">Email-adress</Label>
+                  <Label htmlFor="export-email">Email address</Label>
                   <Input
                     id="export-email"
                     type="email"
-                    placeholder="din@email.com"
+                    placeholder="your@email.com"
                     {...register('email', { required: true })}
                   />
                 </div>
                 <Button type="submit" className="w-full" disabled={createRequest.isPending}>
                   <Download className="h-4 w-4 mr-2" />
-                  Begär dataexport
+                  Request data export
                 </Button>
               </form>
             </div>
@@ -186,15 +183,15 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
             <div className="space-y-4">
               <h4 className="font-semibold flex items-center gap-2">
                 <Trash2 className="h-4 w-4" />
-                Radera mina data
+                Delete my data
               </h4>
               <form onSubmit={handleSubmit(handleDataRequest('deletion'))} className="space-y-3">
                 <div>
-                  <Label htmlFor="delete-email">Email-adress</Label>
+                  <Label htmlFor="delete-email">Email address</Label>
                   <Input
                     id="delete-email"
                     type="email"
-                    placeholder="din@email.com"
+                    placeholder="your@email.com"
                     {...register('email', { required: true })}
                   />
                 </div>
@@ -205,19 +202,19 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
                   disabled={createRequest.isPending}
                 >
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Begär radering
+                  Request deletion
                 </Button>
               </form>
             </div>
           </div>
 
           <div className="text-sm text-muted-foreground bg-muted p-4 rounded-lg">
-            <p className="font-semibold mb-2">Viktigt att veta:</p>
+            <p className="font-semibold mb-2">Important to know:</p>
             <ul className="space-y-1 list-disc list-inside">
-              <li>Begäranden behandlas inom 30 dagar enligt GDPR</li>
-              <li>Du kommer att få en bekräftelse via email</li>
-              <li>Vi kan behöva verifiera din identitet innan vi behandlar begäran</li>
-              <li>Vissa data kan behöva bevaras av juridiska skäl</li>
+              <li>Requests are processed within 30 days as required by GDPR</li>
+              <li>You will receive a confirmation via email</li>
+              <li>We may need to verify your identity before processing the request</li>
+              <li>Certain data may need to be retained for legal reasons</li>
             </ul>
           </div>
         </CardContent>
@@ -228,14 +225,14 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Mail className="h-5 w-5" />
-            Kontakta oss
+            Contact us
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
             {contactEmail && (
               <div>
-                <h4 className="font-semibold">Allmänna frågor</h4>
+                <h4 className="font-semibold">General enquiries</h4>
                 <p className="text-sm text-muted-foreground">
                   <a href={`mailto:${contactEmail}`} className="text-primary hover:underline">
                     {contactEmail}
@@ -246,9 +243,9 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
             
             {dpoEmail && (
               <div>
-                <h4 className="font-semibold">Dataskyddsombud (DPO)</h4>
+                <h4 className="font-semibold">Data Protection Officer (DPO)</h4>
                 <p className="text-sm text-muted-foreground">
-                  För frågor om dataskydd och GDPR:
+                  For questions about data protection and GDPR:
                   <br />
                   <a href={`mailto:${dpoEmail}`} className="text-primary hover:underline">
                     {dpoEmail}
@@ -258,10 +255,10 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
             )}
             
             <div>
-              <h4 className="font-semibold">Tillsynsmyndighet</h4>
+              <h4 className="font-semibold">Supervisory authority</h4>
               <p className="text-sm text-muted-foreground">
-                Du har rätt att lämna klagomål till Integritetsskyddsmyndigheten (IMY) om du 
-                anser att vi behandlar dina personuppgifter felaktigt.
+                You have the right to lodge a complaint with your national data protection authority
+                if you believe we are processing your personal data incorrectly.
               </p>
             </div>
           </div>
@@ -270,7 +267,7 @@ export function PrivacyPolicy({ siteId, siteName, contactEmail, dpoEmail }: Priv
 
       {/* Last Updated */}
       <div className="text-center text-sm text-muted-foreground">
-        <p>Denna integritetspolicy uppdaterades senast: {new Date().toLocaleDateString('sv-SE')}</p>
+        <p>This privacy policy was last updated: {new Date().toLocaleDateString()}</p>
       </div>
     </div>
   );

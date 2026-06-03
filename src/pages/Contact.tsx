@@ -30,7 +30,7 @@ const Contact = () => {
             </h1>
             <p className="text-xl md:text-2xl text-muted-foreground mb-12 animate-fade-in leading-relaxed">
               Ready to start measuring AI agents and optimizing your website?
-              Get in touch with us at Expandtalk.
+              Get in touch with us at Expandtalk Corporation AB.
             </p>
           </div>
         </div>
@@ -43,13 +43,13 @@ const Contact = () => {
             <Card className="glass shadow-elegant border-2 border-primary/20">
               <CardHeader className="text-center pb-8">
                 <Badge className="mb-4 bg-gradient-accent text-white mx-auto">
-                  Expandtalk
+                  Expandtalk Corporation AB
                 </Badge>
                 <CardTitle className="text-3xl md:text-4xl text-gradient-primary">
                   Contact Information
                 </CardTitle>
                 <CardDescription className="text-lg mt-4">
-                  CortIQ is developed by Expandtalk - Your partner in advanced web analytics
+                  CortIQ is developed by Expandtalk Corporation AB — Your partner in advanced web analytics
                 </CardDescription>
               </CardHeader>
 
@@ -59,7 +59,7 @@ const Contact = () => {
                   <div className="space-y-3">
                     <h3 className="text-2xl font-bold text-foreground">Daniel Larsson</h3>
                     <p className="text-lg text-muted-foreground">Founder & CEO</p>
-                    <p className="text-primary font-semibold">Expandtalk</p>
+                    <p className="text-primary font-semibold">Expandtalk Corporation AB</p>
                   </div>
                 </div>
 
@@ -124,7 +124,7 @@ const Contact = () => {
                   >
                     <Button className="bg-gradient-primary hover-scale hover-glow text-lg px-8 py-6 h-auto">
                       <Mail className="mr-2 h-5 w-5" />
-                      Visit Expandtalk Contact Page
+                      Visit Expandtalk Corporation AB
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </a>

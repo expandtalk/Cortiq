@@ -20,8 +20,8 @@ export function AddSiteForm({ onSiteAdded }: AddSiteFormProps) {
   const addSite = async () => {
     if (!newSite.name.trim() || !newSite.domain.trim()) {
       toast({
-        title: "⚠️ Fel",
-        description: "Vänligen fyll i både namn och domän",
+        title: "⚠️ Error",
+        description: "Please fill in both name and domain",
         variant: "destructive"
       });
       return;
@@ -58,26 +58,26 @@ export function AddSiteForm({ onSiteAdded }: AddSiteFormProps) {
       }
 
       if (!data) {
-        throw new Error('Ingen data returnerades från databasen');
+        throw new Error('No data returned from the database');
       }
 
       toast({
-        title: "✅ Webbsida tillagd!",
-        description: `${data.site_name} - Tracking-ID: ${data.tracking_id}`,
+        title: "✅ Website added!",
+        description: `${data.site_name} - Tracking ID: ${data.tracking_id}`,
       });
 
       setNewSite({ name: '', domain: '' });
       onSiteAdded();
     } catch (error: any) {
       console.error('Error adding site:', error);
-      let errorMessage = "Kunde inte lägga till webbsida";
+      let errorMessage = "Could not add website";
       
       if (error?.message) {
         errorMessage += `: ${error.message}`;
       }
       
       toast({
-        title: "❌ Fel",
+        title: "❌ Error",
         description: errorMessage,
         variant: "destructive"
       });
@@ -89,22 +89,22 @@ export function AddSiteForm({ onSiteAdded }: AddSiteFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Lägg till webbsida</CardTitle>
-        <CardDescription>Skapa tracking för en ny webbsida</CardDescription>
+        <CardTitle>Add website</CardTitle>
+        <CardDescription>Set up tracking for a new website</CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
         <div className="grid grid-cols-2 gap-4">
           <div>
-            <Label htmlFor="siteName">Webbsidans namn</Label>
+            <Label htmlFor="siteName">Website name</Label>
             <Input
               id="siteName"
               value={newSite.name}
               onChange={(e) => setNewSite({ ...newSite, name: e.target.value })}
-              placeholder="Min Webbsida"
+              placeholder="My Website"
             />
           </div>
           <div>
-            <Label htmlFor="domain">Domän</Label>
+            <Label htmlFor="domain">Domain</Label>
             <Input
               id="domain"
               value={newSite.domain}
@@ -114,7 +114,7 @@ export function AddSiteForm({ onSiteAdded }: AddSiteFormProps) {
           </div>
         </div>
         <Button onClick={addSite} disabled={isLoading}>
-          {isLoading ? 'Lägger till...' : 'Lägg till webbsida'}
+          {isLoading ? 'Adding...' : 'Add website'}
         </Button>
       </CardContent>
     </Card>

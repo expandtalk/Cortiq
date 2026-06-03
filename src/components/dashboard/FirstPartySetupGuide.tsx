@@ -23,14 +23,14 @@ export function FirstPartySetupGuide({ selectedSite }: FirstPartySetupGuideProps
       await navigator.clipboard.writeText(text);
       setCopiedIndex(index);
       toast({
-        title: "Kopierat!",
-        description: "Koden har kopierats till urklipp"
+        title: "Copied!",
+        description: "The code has been copied to clipboard"
       });
       setTimeout(() => setCopiedIndex(null), 2000);
     } catch (err) {
       toast({
-        title: "Fel",
-        description: "Kunde inte kopiera till urklipp",
+        title: "Error",
+        description: "Could not copy to clipboard",
         variant: "destructive"
       });
     }
@@ -116,32 +116,32 @@ export default {
           </div>
           
           <p className="text-sm text-muted-foreground">
-            Konfigurera first-party tracking för att undvika ad-blockers och förbättra prestanda. 
-            First-party cookies lagras på din egen domän och blockeras inte av webbläsare.
+            Configure first-party tracking to avoid ad blockers and improve performance. 
+            First-party cookies are stored on your own domain and are not blocked by browsers.
           </p>
 
           <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mt-6">
             <div className="p-4 rounded-lg bg-card-elevated border">
               <Globe className="h-8 w-8 text-primary mb-2" />
-              <h3 className="font-mono-bold text-sm">Samma Domän</h3>
+              <h3 className="font-mono-bold text-sm">Same Domain</h3>
               <p className="text-xs text-muted-foreground">
-                Cookies lagras på din domän istället för tredjepartsdomän
+                Cookies are stored on your domain instead of a third-party domain
               </p>
             </div>
             
             <div className="p-4 rounded-lg bg-card-elevated border">
               <Shield className="h-8 w-8 text-green-500 mb-2" />
-              <h3 className="font-mono-bold text-sm">Ad-block Säker</h3>
+              <h3 className="font-mono-bold text-sm">Ad-block Safe</h3>
               <p className="text-xs text-muted-foreground">
-                Blockeras inte av ad-blockers eller tracking protection
+                Not blocked by ad blockers or tracking protection
               </p>
             </div>
             
             <div className="p-4 rounded-lg bg-card-elevated border">
               <Zap className="h-8 w-8 text-yellow-500 mb-2" />
-              <h3 className="font-mono-bold text-sm">Snabbare</h3>
+              <h3 className="font-mono-bold text-sm">Faster</h3>
               <p className="text-xs text-muted-foreground">
-                Mindre latency och bättre prestanda
+                Less latency and better performance
               </p>
             </div>
           </div>
@@ -159,7 +159,7 @@ export default {
 
           <TabsContent value="script" className="space-y-4">
             <div>
-              <h3 className="font-mono-bold text-sm mb-2">1. Lägg till script i &lt;head&gt;</h3>
+              <h3 className="font-mono-bold text-sm mb-2">1. Add script to &lt;head&gt;</h3>
               <div className="relative">
                 <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
                   <code>{firstPartyScriptCode}</code>
@@ -176,7 +176,7 @@ export default {
             </div>
 
             <div>
-              <h3 className="font-mono-bold text-sm mb-2">2. Ladda ner tracking script</h3>
+              <h3 className="font-mono-bold text-sm mb-2">2. Download tracking script</h3>
               <Button 
                 variant="outline" 
                 onClick={() => {
@@ -187,10 +187,10 @@ export default {
                 }}
               >
                 <Server className="h-4 w-4 mr-2" />
-                Ladda ner first-party-tracking.js
+                Download first-party-tracking.js
               </Button>
               <p className="text-xs text-muted-foreground mt-2">
-                Placera filen i /js/ mappen på din webbserver
+                Place the file in the /js/ folder on your web server
               </p>
             </div>
           </TabsContent>
@@ -216,7 +216,7 @@ export default {
 
           <TabsContent value="nginx" className="space-y-4">
             <div>
-              <h3 className="font-mono-bold text-sm mb-2">Nginx Proxy Konfiguration</h3>
+              <h3 className="font-mono-bold text-sm mb-2">Nginx Proxy Configuration</h3>
               <div className="relative">
                 <pre className="bg-muted p-4 rounded-lg text-sm overflow-x-auto">
                   <code>{nginxConfig}</code>
@@ -254,28 +254,28 @@ export default {
         </Tabs>
       </DashboardCard>
 
-      <DashboardCard title="Fördelar med First-Party Tracking" variant={3}>
+      <DashboardCard title="Benefits of First-Party Tracking" variant={3}>
         <div className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="space-y-2">
-              <h3 className="font-mono-bold text-sm text-green-500">✓ Fördelar</h3>
+              <h3 className="font-mono-bold text-sm text-green-500">✓ Benefits</h3>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Blockeras inte av ad-blockers</li>
-                <li>• Snabbare laddningstider</li>
-                <li>• Bättre cookies retention</li>
-                <li>• Mer pålitlig data</li>
-                <li>• GDPR-kompatibel</li>
-                <li>• Ingen CORS-problem</li>
+                <li>• Not blocked by ad blockers</li>
+                <li>• Faster laddningstider</li>
+                <li>• Better cookie retention</li>
+                <li>• More reliable data</li>
+                <li>• GDPR-compatible</li>
+                <li>• No CORS issues</li>
               </ul>
             </div>
             
             <div className="space-y-2">
-              <h3 className="font-mono-bold text-sm text-yellow-500">⚠ Krav</h3>
+              <h3 className="font-mono-bold text-sm text-yellow-500">⚠ Requirements</h3>
               <ul className="text-sm text-muted-foreground space-y-1">
-                <li>• Server-side proxy krävs</li>
-                <li>• Måste hostas på samma domän</li>
-                <li>• Kräver server-konfiguration</li>
-                <li>• Environment variables behövs</li>
+                <li>• Server-side proxy required</li>
+                <li>• Must be hosted on the same domain</li>
+                <li>• Requires server configuration</li>
+                <li>• Environment variables required</li>
               </ul>
             </div>
           </div>

@@ -17,7 +17,7 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Smartphone className="h-5 w-5" />
-            Mobilanalys
+            Mobile Analysis
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -40,13 +40,13 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Smartphone className="h-5 w-5" />
-            Mobilanalys
+            Mobile Analysis
           </CardTitle>
-          <CardDescription>Ingen mobildata tillgänglig</CardDescription>
+          <CardDescription>No mobile data available</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Inga mobilinteraktioner hittades för den valda tidsperioden.
+            No mobile interactions found for the selected time period.
           </p>
         </CardContent>
       </Card>
@@ -58,14 +58,14 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
   
   // Device brand analysis
   const brandCounts = mobileData.reduce((acc, point) => {
-    const brand = point.mobile_device_brand || 'Okänd';
+    const brand = point.mobile_device_brand || 'Unknown';
     acc[brand] = (acc[brand] || 0) + point.intensity;
     return acc;
   }, {} as Record<string, number>);
 
   // OS analysis
   const osCounts = mobileData.reduce((acc, point) => {
-    const os = point.operating_system || 'Okänt';
+    const os = point.operating_system || 'Unknown';
     acc[os] = (acc[os] || 0) + point.intensity;
     return acc;
   }, {} as Record<string, number>);
@@ -98,7 +98,7 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
           Mobilanalys
         </CardTitle>
         <CardDescription>
-          Detaljerad analys av mobilanvändning och touch-interaktioner
+          Detailed analysis of mobile usage and touch interactions
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -108,14 +108,14 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
             <Hand className="h-4 w-4 text-blue-600" />
             <div>
               <div className="text-sm font-medium text-blue-800">{totalMobileInteractions}</div>
-              <div className="text-xs text-blue-600">Totala mobil-interaktioner</div>
+              <div className="text-xs text-blue-600">Total mobile interactions</div>
             </div>
           </div>
           <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
             <Target className="h-4 w-4 text-green-600" />
             <div>
               <div className="text-sm font-medium text-green-800">{touchPercentage}%</div>
-              <div className="text-xs text-green-600">Touch-interaktioner</div>
+              <div className="text-xs text-green-600">Touch interactions</div>
             </div>
           </div>
           {avgTouchForce > 0 && (
@@ -123,7 +123,7 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
               <Zap className="h-4 w-4 text-purple-600" />
               <div>
                 <div className="text-sm font-medium text-purple-800">{avgTouchForce.toFixed(1)}</div>
-                <div className="text-xs text-purple-600">Genomsnittlig touch-kraft</div>
+                <div className="text-xs text-purple-600">Average touch force</div>
               </div>
             </div>
           )}
@@ -133,7 +133,7 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
         <div className="space-y-3">
           <h4 className="text-sm font-medium flex items-center gap-2">
             <TrendingUp className="h-4 w-4" />
-            Populäraste mobil-märken
+            Top mobile brands
           </h4>
           <div className="space-y-2">
             {topBrands.map(([brand, count], index) => {
@@ -145,7 +145,7 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
                       #{index + 1} {brand}
                     </span>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-muted-foreground">{count} interaktioner</span>
+                      <span className="text-sm text-muted-foreground">{count} interactions</span>
                       <Badge variant="secondary">{percentage}%</Badge>
                     </div>
                   </div>
@@ -160,7 +160,7 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
         <div className="space-y-3">
           <h4 className="text-sm font-medium flex items-center gap-2">
             <Smartphone className="h-4 w-4" />
-            Operativsystem
+            Operating systems
           </h4>
           <div className="grid grid-cols-1 gap-2">
             {topOS.map(([os, count]) => {
@@ -182,20 +182,20 @@ export function MobileHeatmapInsights({ heatmapData, loading }: MobileHeatmapIns
         <div className="bg-muted/20 p-4 rounded-lg space-y-2">
           <h4 className="text-sm font-medium flex items-center gap-2">
             <Target className="h-4 w-4 text-orange-500" />
-            Mobil-insights
+            Mobile insights
           </h4>
           <div className="text-sm text-muted-foreground space-y-1">
             {touchPercentage > 80 && (
-              <p>✅ Hög touch-användning ({touchPercentage}%) indikerar god mobil-optimering</p>
+              <p>✅ High touch usage ({touchPercentage}%) indicates good mobile optimization</p>
             )}
             {touchPercentage < 50 && (
-              <p>⚠️ Låg touch-användning ({touchPercentage}%) kan indikera problem med mobil-UX</p>
+              <p>⚠️ Low touch usage ({touchPercentage}%) may indicate mobile UX issues</p>
             )}
             {topBrands[0] && topBrands[0][1] / totalMobileInteractions > 0.6 && (
-              <p>📱 Stark dominans av {topBrands[0][0]} ({Math.round((topBrands[0][1] / totalMobileInteractions) * 100)}%)</p>
+              <p>📱 Strong dominance of {topBrands[0][0]} ({Math.round((topBrands[0][1] / totalMobileInteractions) * 100)}%)</p>
             )}
             {avgTouchForce > 0 && (
-              <p>💪 Force Touch-data tillgänglig (genomsnitt: {avgTouchForce.toFixed(1)})</p>
+              <p>💪 Force Touch data available (average: {avgTouchForce.toFixed(1)})</p>
             )}
           </div>
         </div>

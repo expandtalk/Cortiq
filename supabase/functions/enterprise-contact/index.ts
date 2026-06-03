@@ -105,10 +105,10 @@ serve(async (req) => {
             <h2>Tack för din förfrågan!</h2>
             <p>Hej ${name},</p>
             <p>Vi har mottagit din förfrågan om vår Enterprise-lösning och kommer att återkomma inom 24 timmar.</p>
-            <p>Vårt team på Expandtalk kommer att kontakta dig för att diskutera hur vi kan hjälpa dig med skräddarsydda analyslösningar.</p>
+            <p>Vårt team på Expandtalk Corporation AB kommer att kontakta dig för att diskutera hur vi kan hjälpa dig med skräddarsydda analyslösningar.</p>
             <p>Med vänliga hälsningar,<br>
             Heatmap Analytics Team<br>
-            Expandtalk</p>
+            Expandtalk Corporation AB</p>
           `,
         });
 

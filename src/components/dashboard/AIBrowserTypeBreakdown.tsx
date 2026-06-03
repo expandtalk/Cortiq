@@ -16,25 +16,25 @@ const BROWSER_TYPE_CONFIG: Record<string, {
   visual: {
     label: 'Visual Browser',
     icon: Eye,
-    description: 'Renderar CSS/JS, accepterar ofta cookies',
+    description: 'Renders CSS/JS, often accepts cookies',
     color: 'bg-green-500'
   },
   headless: {
     label: 'Headless Browser',
     icon: Monitor,
-    description: 'Exekverar JS men ingen visuell rendering',
+    description: 'Executes JS but no visual rendering',
     color: 'bg-amber-500'
   },
   'text-based': {
     label: 'Text-based Browser',
     icon: FileText,
-    description: 'Ingen JS-exekvering, endast HTML',
+    description: 'No JS execution, HTML only',
     color: 'bg-blue-500'
   },
   unknown: {
-    label: 'Okänd',
+    label: 'Unknown',
     icon: HelpCircle,
-    description: 'Kunde inte avgöra browser-typ',
+    description: 'Could not determine browser type',
     color: 'bg-gray-500'
   }
 };
@@ -46,7 +46,7 @@ export const AIBrowserTypeBreakdown = ({ breakdown, totalSessions }: BrowserType
         <CardHeader>
           <CardTitle>Browser Type Detection</CardTitle>
           <CardDescription>
-            Ingen data tillgänglig ännu
+            No data available yet
           </CardDescription>
         </CardHeader>
       </Card>
@@ -58,7 +58,7 @@ export const AIBrowserTypeBreakdown = ({ breakdown, totalSessions }: BrowserType
       <CardHeader>
         <CardTitle>Browser Type Detection</CardTitle>
         <CardDescription>
-          Identifiera om agenter använder visual, headless eller text-baserade browsers
+          Identify whether agents use visual, headless, or text-based browsers
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -92,16 +92,16 @@ export const AIBrowserTypeBreakdown = ({ breakdown, totalSessions }: BrowserType
 
         {/* Insights */}
         <div className="mt-4 p-4 rounded-lg bg-primary/5 border border-primary/20">
-          <h4 className="font-medium text-sm mb-2">Insikter</h4>
+          <h4 className="font-medium text-sm mb-2">Insights</h4>
           <ul className="text-xs text-muted-foreground space-y-1">
             {breakdown.find(b => b.type === 'visual')?.percentage > 50 && (
-              <li>• Majoriteten av agenterna använder visuella browsers - de kommer synas i GA4</li>
+              <li>• The majority of agents use visual browsers — they will appear in GA4</li>
             )}
             {breakdown.find(b => b.type === 'text-based')?.percentage > 30 && (
-              <li>• Många text-baserade agents - dessa är helt osynliga för cookie-baserad analytics</li>
+              <li>• Many text-based agents — these are completely invisible to cookie-based analytics</li>
             )}
             {breakdown.find(b => b.type === 'headless')?.percentage > 20 && (
-              <li>• Headless browsers kan indikera automation eller training crawlers</li>
+              <li>• Headless browsers may indicate automation or training crawlers</li>
             )}
           </ul>
         </div>

@@ -29,10 +29,10 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <Plus className="h-5 w-5 text-green-600" />
-              Lägg till webbplats
+              Add website
             </CardTitle>
             <p className="text-muted-foreground">
-              Registrera en ny webbplats för att börja spåra analytics och heatmaps
+              Register a new website to start tracking analytics and heatmaps
             </p>
           </CardHeader>
           <CardContent>
@@ -46,7 +46,7 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Globe className="h-5 w-5 text-blue-600" />
-                Välj aktiv webbplats
+                Select active website
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -68,12 +68,12 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <Download className="h-5 w-5 text-primary" />
-                  WordPress Plugin - Expandtalk.se
+                  WordPress Plugin — CortIQ by Expandtalk Corporation AB
                 </div>
                 <ChevronDown className="h-4 w-4" />
               </CardTitle>
               <p className="text-muted-foreground">
-                Ladda ner WordPress-pluginet utvecklat av Expandtalk.se för enkel installation på din webbplats.
+                Download the WordPress plugin developed by Expandtalk Corporation AB for easy installation on your website.
               </p>
             </CardHeader>
           </CollapsibleTrigger>
@@ -82,11 +82,11 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
               <PluginDownloader trackingId={selectedSite?.tracking_id} />
               
               <div className="mt-6 space-y-4">
-                <h3 className="text-lg font-semibold">Installation & Konfiguration</h3>
+                <h3 className="text-lg font-semibold">Installation & Configuration</h3>
                 <div className="bg-muted p-4 rounded-lg space-y-2">
-                  <div><strong>Tracking ID:</strong> {selectedSite?.tracking_id || 'Välj en webbplats först'}</div>
-                  <div><strong>Supabase-integration:</strong> <span className="text-green-600">Redo att använda</span></div>
-                  <div><strong>Google Analytics:</strong> Ange din GA4 Measurement ID i inställningarna</div>
+                  <div><strong>Tracking ID:</strong> {selectedSite?.tracking_id || 'Select a website first'}</div>
+                  <div><strong>Supabase integration:</strong> <span className="text-green-600">Ready to use</span></div>
+                  <div><strong>Google Analytics:</strong> Enter your GA4 Measurement ID in settings</div>
                 </div>
               </div>
             </CardContent>
@@ -107,7 +107,7 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
                 <ChevronDown className="h-4 w-4" />
               </CardTitle>
               <p className="text-muted-foreground">
-                Installation för Headless CMS-system och Adobe Enterprise Manager
+                Installation for Headless CMS systems and Adobe Enterprise Manager
               </p>
             </CardHeader>
           </CollapsibleTrigger>
@@ -117,13 +117,13 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
               <div className="border-l-4 border-purple-500 pl-4 space-y-3">
                 <h3 className="text-lg font-semibold text-purple-700">Headless CMS Installation</h3>
                 <p className="text-sm text-muted-foreground">
-                  För moderna headless CMS-lösningar som Strapi, Contentful, eller Sanity
+                  For modern headless CMS solutions such as Strapi, Contentful, or Sanity
                 </p>
                 
                 <div className="bg-purple-50 p-4 rounded-lg space-y-3">
-                  <h4 className="font-medium">1. Integrera tracking-scriptet</h4>
+                  <h4 className="font-medium">1. Integrate the tracking script</h4>
                   <div className="bg-gray-900 text-green-400 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`<!-- Lägg till i ditt template eller layout-fil -->
+                    {`<!-- Add to your template or layout file -->
 <script>
   window.heatmapAnalytics = {
     trackingId: '${selectedSite?.tracking_id || 'din-tracking-id'}',
@@ -133,7 +133,7 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
 <script src="https://itsäkerhet.com/tracking-script.js" async></script>`}
                   </div>
                   
-                  <h4 className="font-medium">2. API-integration för innehållshantering</h4>
+                  <h4 className="font-medium">2. API integration for content management</h4>
                   <div className="bg-gray-900 text-green-400 p-3 rounded text-sm font-mono overflow-x-auto">
                     {`// REST API för cookiefree analytics
 GET /wp-json/heatmap/v2/cookiefree-analytics
@@ -149,15 +149,15 @@ Content-Type: application/json
 }`}
                   </div>
                   
-                  <h4 className="font-medium">3. Konfiguration för populära CMS</h4>
+                  <h4 className="font-medium">3. Configuration for popular CMS</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div className="bg-white p-3 rounded border">
                       <strong className="text-blue-600">Strapi</strong>
-                      <p className="text-sm mt-1">Använd plugin-systemet för att integrera tracking i alla sidor automatiskt</p>
+                      <p className="text-sm mt-1">Use the plugin system to integrate tracking into all pages automatically</p>
                     </div>
                     <div className="bg-white p-3 rounded border">
                       <strong className="text-green-600">Contentful</strong>
-                      <p className="text-sm mt-1">Integrera via webhooks och custom delivery API</p>
+                      <p className="text-sm mt-1">Integrate via webhooks and custom delivery API</p>
                     </div>
                   </div>
                 </div>
@@ -167,7 +167,7 @@ Content-Type: application/json
               <div className="border-l-4 border-red-500 pl-4 space-y-3">
                 <h3 className="text-lg font-semibold text-red-700">Adobe Enterprise Manager (AEM)</h3>
                 <p className="text-sm text-muted-foreground">
-                  Företagslösning för Adobe Experience Manager och Adobe Analytics integration
+                  Enterprise solution for Adobe Experience Manager and Adobe Analytics integration
                 </p>
                 
                 <div className="bg-red-50 p-4 rounded-lg space-y-3">
@@ -215,11 +215,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                     </p>
                   </div>
                   
-                  <h4 className="font-medium">4. Enterprise Säkerhetskonfiguration</h4>
+                  <h4 className="font-medium">4. Enterprise Security Configuration</h4>
                   <div className="bg-yellow-50 p-3 rounded border-l-4 border-yellow-400">
                     <p className="text-sm">
-                      <strong>Viktigt:</strong> För enterprise-miljöer, kontakta support för dedicated Supabase-instans, 
-                      custom CORS-policies och IP-whitlisting för säker dataöverföring.
+                      <strong>Important:</strong> For enterprise environments, contact support for a dedicated Supabase instance,
+                      custom CORS policies, and IP whitelisting for secure data transfer.
                     </p>
                   </div>
                 </div>
@@ -229,11 +229,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
               <div className="bg-blue-50 p-4 rounded-lg border-l-4 border-blue-500">
                 <h4 className="font-medium text-blue-800">Enterprise Support</h4>
                 <p className="text-sm text-blue-700 mt-1">
-                  För avancerad integration med Headless CMS eller Adobe Enterprise Manager, 
-                  kontakta vårt enterprise-team för skräddarsydd implementation och support.
+                  For advanced integration with Headless CMS or Adobe Enterprise Manager,
+                  contact our enterprise team for a tailored implementation and support.
                 </p>
                 <Button className="mt-2" variant="outline" size="sm">
-                  Kontakta Enterprise Support
+                  Contact Enterprise Support
                 </Button>
               </div>
             </CardContent>
@@ -252,7 +252,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-orange-500" />
-            🆕 Senaste uppdateringar - Version 2.0
+            🆕 Latest updates - Version 2.0
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -260,13 +260,13 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Google Analytics 4 Integration</strong> - Fullständig GA4-synkronisering
+                <strong>Google Analytics 4 Integration</strong> - Full GA4 synchronization
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Förbättrat Admin-gränssnitt</strong> - Alla inställningar på ett ställe
+                <strong>Improved Admin Interface</strong> - All settings in one place
               </div>
             </div>
             <div className="flex items-start gap-2">
@@ -278,20 +278,20 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Prestandaoptimering</strong> - Ännu snabbare och effektivare
+                <strong>Performance optimization</strong> - Even faster and more efficient
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Korrekt Expandtalk.se-branding</strong> - Ingen förvirring
+                <strong>Correct CortIQ branding</strong> - No confusion
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-orange-500">🍪</span>
               <div>
-                <strong>Version 2.0 - Rött tema = Cookie-hantering!</strong> Ta bort gamla versioner först. 
-                Denna version innehåller avancerad GDPR cookie-hantering med kategoriserade samtycken.
+                <strong>Version 2.0 - Red theme = Cookie management!</strong> Remove old versions first.
+                This version includes advanced GDPR cookie management with categorized consents.
               </div>
             </div>
           </div>

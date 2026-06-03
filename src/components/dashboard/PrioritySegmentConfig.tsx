@@ -29,54 +29,54 @@ export function PrioritySegmentConfig({ open, onOpenChange, onSave }: PrioritySe
   const availableSegments: Segment[] = [
     {
       id: 'new-customers',
-      name: 'Nya kunder',
-      description: 'Användare som besöker webbplatsen för första gången',
-      definition: 'Definieras som sessioner där användaren inte har några tidigare besök registrerade i systemet. Identifieras genom att kontrollera om session_id inte finns i tidigare tracking_sessions.',
+      name: 'New customers',
+      description: 'Users visiting the website for the first time',
+      definition: 'Defined as sessions where the user has no previous visits recorded in the system. Identified by checking whether session_id does not exist in previous tracking_sessions.',
       value: 245000,
       growth: 12.5,
       icon: <Users className="h-5 w-5 text-blue-500" />
     },
     {
-      id: 'returning-customers', 
-      name: 'Återkommande kunder',
-      description: 'Användare som har besökt webbplatsen tidigare',
-      definition: 'Definieras som sessioner där användaren har minst ett tidigare besök registrerat. Identifieras genom att matcha användar-IP eller browser fingerprint mot tidigare tracking_sessions.',
+      id: 'returning-customers',
+      name: 'Returning customers',
+      description: 'Users who have visited the website before',
+      definition: 'Defined as sessions where the user has at least one previous visit recorded. Identified by matching the user IP or browser fingerprint against previous tracking_sessions.',
       value: 380000,
       growth: 8.2,
       icon: <Target className="h-5 w-5 text-green-500" />
     },
     {
       id: 'premium-customers',
-      name: 'Premium kunder', 
-      description: 'Högvärdes användare baserat på beteende',
-      definition: 'Definieras som användare med hög engagement: >5 sidvisningar per session, >3 minuters sessionstid, eller användare som utfört konverteringar. Beräknas från page_views och conversion_events.',
+      name: 'Premium customers',
+      description: 'High-value users based on behavior',
+      definition: 'Defined as users with high engagement: >5 page views per session, >3 minutes session time, or users who have performed conversions. Calculated from page_views and conversion_events.',
       value: 125000,
       growth: 22.1,
       icon: <TrendingUp className="h-5 w-5 text-purple-500" />
     },
     {
       id: 'mobile-users',
-      name: 'Mobila användare',
-      description: 'Användare som besöker via mobila enheter',
-      definition: 'Definieras som sessioner där device_type = "mobile" i tracking_sessions tabellen.',
+      name: 'Mobile users',
+      description: 'Users visiting via mobile devices',
+      definition: 'Defined as sessions where device_type = "mobile" in the tracking_sessions table.',
       value: 195000,
       growth: 15.8,
       icon: <Smartphone className="h-5 w-5 text-orange-500" />
     },
     {
       id: 'desktop-users',
-      name: 'Desktop användare', 
-      description: 'Användare som besöker via desktop',
-      definition: 'Definieras som sessioner där device_type = "desktop" i tracking_sessions tabellen.',
+      name: 'Desktop users',
+      description: 'Users visiting via desktop',
+      definition: 'Defined as sessions where device_type = "desktop" in the tracking_sessions table.',
       value: 285000,
       growth: 5.4,
       icon: <Monitor className="h-5 w-5 text-gray-500" />
     },
     {
       id: 'organic-traffic',
-      name: 'Organisk trafik',
-      description: 'Användare från sökmotorer',
-      definition: 'Definieras som sessioner där referrer innehåller google.com, bing.com eller andra sökmotorer, eller där referrer är tom (direkt trafik).',
+      name: 'Organic traffic',
+      description: 'Users from search engines',
+      definition: 'Defined as sessions where referrer contains google.com, bing.com, or other search engines, or where referrer is empty (direct traffic).',
       value: 220000,
       growth: 9.7,
       icon: <Globe className="h-5 w-5 text-emerald-500" />
@@ -109,19 +109,19 @@ export function PrioritySegmentConfig({ open, onOpenChange, onSave }: PrioritySe
         <DialogHeader>
           <DialogTitle className="flex items-center gap-2">
             <Settings className="h-5 w-5" />
-            Konfigurera Prioriterade Segment
+            Configure Priority Segments
           </DialogTitle>
           <DialogDescription>
-            Välj upp till 3 segment som är viktigast för din analys. Dessa kommer att prioriteras i rapporter och insikter.
+            Select up to 3 segments most important to your analysis. These will be prioritized in reports and insights.
           </DialogDescription>
         </DialogHeader>
 
         <div className="space-y-6">
           <div>
             <div className="flex items-center justify-between mb-4">
-              <h3 className="text-lg font-medium">Tillgängliga Segment</h3>
+              <h3 className="text-lg font-medium">Available Segments</h3>
               <Badge variant="outline">
-                {selectedSegments.length}/3 valda
+                {selectedSegments.length}/3 selected
               </Badge>
             </div>
             
@@ -148,7 +148,7 @@ export function PrioritySegmentConfig({ open, onOpenChange, onSave }: PrioritySe
                           <h4 className="font-medium">{segment.name}</h4>
                           {selectedSegments.includes(segment.id) && (
                             <Badge variant="default" className="text-xs">
-                              Prioritet #{selectedSegments.indexOf(segment.id) + 1}
+                              Priority #{selectedSegments.indexOf(segment.id) + 1}
                             </Badge>
                           )}
                         </div>
@@ -177,14 +177,14 @@ export function PrioritySegmentConfig({ open, onOpenChange, onSave }: PrioritySe
 
           <div className="flex items-center justify-between pt-4 border-t">
             <div className="text-sm text-muted-foreground">
-              De valda segmenten kommer att prioriteras i alla analyser och rapporter
+              The selected segments will be prioritized in all analyses and reports
             </div>
             <div className="flex gap-2">
               <Button variant="outline" onClick={() => onOpenChange(false)}>
-                Avbryt
+                Cancel
               </Button>
               <Button onClick={handleSave} disabled={selectedSegments.length === 0}>
-                Spara konfiguration
+                Save configuration
               </Button>
             </div>
           </div>

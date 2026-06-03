@@ -24,7 +24,7 @@ export function AnalyticsOverview({ analytics }: AnalyticsOverviewProps) {
             <Users className="h-10 w-10 text-primary" />
             <div>
               <p className="text-2xl font-bold">{analytics.totalSessions.toLocaleString()}</p>
-              <p className="text-sm text-muted-foreground">Sessioner</p>
+              <p className="text-sm text-muted-foreground">Sessions</p>
             </div>
           </div>
         </CardContent>
@@ -36,7 +36,7 @@ export function AnalyticsOverview({ analytics }: AnalyticsOverviewProps) {
             <Eye className="h-10 w-10 text-primary" />
             <div>
               <p className="text-2xl font-bold">{analytics.totalPageViews.toLocaleString()}</p>
-              <p className="text-sm text-muted-foreground">Sidvisningar</p>
+              <p className="text-sm text-muted-foreground">Page views</p>
             </div>
           </div>
         </CardContent>
@@ -48,7 +48,7 @@ export function AnalyticsOverview({ analytics }: AnalyticsOverviewProps) {
             <Clock className="h-10 w-10 text-primary" />
             <div className="flex flex-col gap-1">
               <p className="text-xl font-bold">{formatTime(analytics.averageEngagementTime)}</p>
-              <p className="text-sm text-muted-foreground">Genomsnittlig engagemangstid</p>
+              <p className="text-sm text-muted-foreground">Average engagement time</p>
               <Badge variant="outline" className="text-xs w-fit mx-auto">
                 GA4-standard
               </Badge>
@@ -67,12 +67,12 @@ export function AnalyticsOverview({ analytics }: AnalyticsOverviewProps) {
             )}
             <div className="flex flex-col gap-1">
               <p className="text-2xl font-bold">{analytics.engagementRate}%</p>
-              <p className="text-sm text-muted-foreground">Engagemangsfrekvens</p>
+              <p className="text-sm text-muted-foreground">Engagement rate</p>
               <Badge 
                 variant={analytics.engagementRate >= 60 ? "default" : "secondary"} 
                 className="text-xs w-fit mx-auto"
               >
-                Ersätter avvisningsfrekvens
+                Replaces bounce rate
               </Badge>
             </div>
           </div>
@@ -84,27 +84,27 @@ export function AnalyticsOverview({ analytics }: AnalyticsOverviewProps) {
         <CardContent className="p-4">
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
             <div className="text-center">
-              <p className="font-medium text-muted-foreground">Sessionstid (alla)</p>
+              <p className="font-medium text-muted-foreground">Session time (all)</p>
               <p className="text-lg font-semibold">{formatTime(analytics.averageSessionDuration)}</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-muted-foreground">Engagemangstid (aktiva)</p>
+              <p className="font-medium text-muted-foreground">Engagement time (active)</p>
               <p className="text-lg font-semibold">{formatTime(analytics.averageEngagementTime)}</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-muted-foreground">Engagemangsfrekvens</p>
+              <p className="font-medium text-muted-foreground">Engagement rate</p>
               <p className="text-lg font-semibold">{analytics.engagementRate}%</p>
             </div>
             <div className="text-center">
-              <p className="font-medium text-muted-foreground">Tid per sidvisning</p>
+              <p className="font-medium text-muted-foreground">Time per page view</p>
               <p className="text-lg font-semibold">{formatTime(analytics.averageTimeOnSite)}</p>
             </div>
           </div>
           <div className="mt-4 p-3 bg-muted rounded-lg">
             <p className="text-xs text-muted-foreground">
-              <strong>GA4 Uppdatering:</strong> Vi använder nu Engagemangsfrekvens och Genomsnittlig Engagemangstid 
-              istället för Avvisningsfrekvens, enligt Google Analytics 4 standard. 
-              Engagemang = session {'>'}10s ELLER {'>'}1 sidvisning ELLER konvertering.
+              <strong>GA4 Update:</strong> We now use Engagement Rate and Average Engagement Time
+              instead of Bounce Rate, in line with Google Analytics 4 standards.
+              Engagement = session {'>'}10s OR {'>'}1 page view OR conversion.
             </p>
           </div>
         </CardContent>

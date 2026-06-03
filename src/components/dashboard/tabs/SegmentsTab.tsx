@@ -154,10 +154,10 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <PieChart className="h-5 w-5" />
-            Segment Hälsoöversikt
+            Segment Health Overview
           </CardTitle>
           <CardDescription>
-            Upptäck dolda insikter genom att analysera prestanda per segment
+            Discover hidden insights by analyzing performance per segment
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -165,7 +165,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-destructive rounded-full"></div>
-                <span className="text-sm font-medium">Hög variation (3)</span>
+                <span className="text-sm font-medium">High variance (3)</span>
               </div>
               <Switch 
                 checked={enabledSegments['high-variance']}
@@ -175,7 +175,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-warning rounded-full"></div>
-                <span className="text-sm font-medium">Medel variation (5)</span>
+                <span className="text-sm font-medium">Medium variance (5)</span>
               </div>
               <Switch 
                 checked={enabledSegments['medium-variance']}
@@ -185,7 +185,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
             <div className="flex items-center gap-3">
               <div className="flex items-center gap-2">
                 <div className="w-3 h-3 bg-success rounded-full"></div>
-                <span className="text-sm font-medium">Låg variation (2)</span>
+                <span className="text-sm font-medium">Low variance (2)</span>
               </div>
               <Switch 
                 checked={enabledSegments['low-variance']}
@@ -199,10 +199,10 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
       {/* Navigation */}
       <Tabs value={activeView} onValueChange={setActiveView}>
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Översikt</TabsTrigger>
-          <TabsTrigger value="performance">Prestanda</TabsTrigger>
-          <TabsTrigger value="revenue">Intäkt</TabsTrigger>
-          <TabsTrigger value="custom">Anpassade</TabsTrigger>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="performance">Performance</TabsTrigger>
+          <TabsTrigger value="revenue">Revenue</TabsTrigger>
+          <TabsTrigger value="custom">Custom</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -227,9 +227,9 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
             <Card>
               <CardContent className="text-center py-8">
                 <PieChart className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                <p className="text-muted-foreground mb-4">Ingen segmentdata tillgänglig</p>
+                <p className="text-muted-foreground mb-4">No segment data available</p>
                 <p className="text-sm text-muted-foreground">
-                  Data kommer att visas när du har tracking-sessioner och konverteringar
+                  Data will appear once you have tracking sessions and conversions
                 </p>
               </CardContent>
             </Card>
@@ -296,12 +296,12 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                         console.log('Show all segments for', metric.name);
                       }}
                     >
-                      Visa alla segment <ChevronRight className="h-3 w-3 ml-1" />
+                      Show all segments <ChevronRight className="h-3 w-3 ml-1" />
                     </Button>
                   )}
                   
                   <div className="pt-3 border-t text-sm text-muted-foreground bg-muted/30 p-2 rounded">
-                    <span className="font-medium">Största gapet:</span> {Math.round(metric.maxVariance)} sessioner
+                    <span className="font-medium">Largest gap:</span> {Math.round(metric.maxVariance)} sessions
                   </div>
                 </CardContent>
               </Card>
@@ -313,7 +313,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <AlertTriangle className="h-5 w-5 text-orange-500" />
-                Veckans viktigaste insikter
+                This week's top insights
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -332,11 +332,11 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     <div className="flex items-center gap-2 text-xs">
                       <span className="text-blue-600 font-medium">{insight.metric}</span>
                       <span>•</span>
-                      <span className="text-green-700">Åtgärd: {insight.action}</span>
+                      <span className="text-green-700">Action: {insight.action}</span>
                     </div>
                   </div>
                   <Button variant="outline" size="sm">
-                    Undersök
+                    Investigate
                   </Button>
                 </div>
               ))}
@@ -350,9 +350,9 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
           {!performanceCategory ? (
             <Card>
               <CardHeader>
-                <CardTitle>Prestanda Segment</CardTitle>
+                <CardTitle>Performance Segments</CardTitle>
                 <CardDescription>
-                  Analysera traffic källor, användarbeteende, enheter och geografi
+                  Analyze traffic sources, user behavior, devices, and geography
                 </CardDescription>
               </CardHeader>
               <CardContent>
@@ -363,7 +363,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     onClick={() => setPerformanceCategory('traffic')}
                   >
                     <Globe className="h-5 w-5 mb-2" />
-                    Traffic Källor
+                    Traffic Sources
                   </Button>
                   <Button 
                     variant="outline" 
@@ -371,7 +371,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     onClick={() => setPerformanceCategory('behavior')}
                   >
                     <Users className="h-5 w-5 mb-2" />
-                    Användarbeteende
+                    User Behavior
                   </Button>
                   <Button 
                     variant="outline" 
@@ -379,7 +379,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     onClick={() => setPerformanceCategory('devices')}
                   >
                     <Monitor className="h-5 w-5 mb-2" />
-                    Enheter & Tech
+                    Devices & Tech
                   </Button>
                   <Button 
                     variant="outline" 
@@ -387,7 +387,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     onClick={() => setPerformanceCategory('geography')}
                   >
                     <Target className="h-5 w-5 mb-2" />
-                    Geografisk
+                    Geographic
                   </Button>
                 </div>
               </CardContent>
@@ -400,7 +400,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                 onClick={() => setPerformanceCategory(null)}
                 className="mb-4"
               >
-                ← Tillbaka till kategorier
+                ← Back to categories
               </Button>
 
               {/* Traffic Källor */}
@@ -409,7 +409,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Globe className="h-5 w-5" />
-                      Traffic Källor Segment
+                      Traffic Source Segments
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -422,12 +422,12 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                               <div>
                                 <h3 className="font-medium">{segment.name}</h3>
                                 <p className="text-sm text-muted-foreground">
-                                  {segment.sessions} sessioner ({segment.percentage.toFixed(1)}%)
+                                  {segment.sessions} sessions ({segment.percentage.toFixed(1)}%)
                                 </p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="font-bold">{segment.users} användare</div>
+                              <div className="font-bold">{segment.users} users</div>
                               <div className="text-sm text-muted-foreground">
                                 Ø {(segment.avgSessionDuration / 60).toFixed(1)}min
                               </div>
@@ -438,8 +438,8 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <Globe className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>Ingen traffic källdata tillgänglig</p>
-                        <p className="text-sm">Kontrollera din Google Analytics integration</p>
+                        <p>No traffic source data available</p>
+                        <p className="text-sm">Check your Google Analytics integration</p>
                       </div>
                     )}
                   </CardContent>
@@ -452,7 +452,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Monitor className="h-5 w-5" />
-                      Enhets Segment
+                      Device Segments
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -467,14 +467,14 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                               <div>
                                 <h3 className="font-medium">{segment.name}</h3>
                                 <p className="text-sm text-muted-foreground">
-                                  {segment.sessions} sessioner ({segment.percentage.toFixed(1)}%)
+                                  {segment.sessions} sessions ({segment.percentage.toFixed(1)}%)
                                 </p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="font-bold">{segment.users} användare</div>
+                              <div className="font-bold">{segment.users} users</div>
                               <div className="text-sm text-muted-foreground">
-                                {segment.bounceRate.toFixed(1)}% avhopp
+                                {segment.bounceRate.toFixed(1)}% bounce
                               </div>
                             </div>
                           </div>
@@ -483,8 +483,8 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <Monitor className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>Ingen enhetsdata tillgänglig</p>
-                        <p className="text-sm">Data kommer från Google Analytics</p>
+                        <p>No device data available</p>
+                        <p className="text-sm">Data comes from Google Analytics</p>
                       </div>
                     )}
                   </CardContent>
@@ -497,7 +497,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Users className="h-5 w-5" />
-                      Användarbeteende Segment
+                      User Behavior Segment
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -510,14 +510,14 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                               <div>
                                 <h3 className="font-medium">{segment.name}</h3>
                                 <p className="text-sm text-muted-foreground">
-                                  {segment.sessions} sessioner ({segment.percentage.toFixed(1)}%)
+                                  {segment.sessions} sessions ({segment.percentage.toFixed(1)}%)
                                 </p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="font-bold">{segment.users} användare</div>
+                              <div className="font-bold">{segment.users} users</div>
                               <div className="text-sm text-muted-foreground">
-                                {segment.conversionRate.toFixed(2)}% konvertering
+                                {segment.conversionRate.toFixed(2)}% conversion
                               </div>
                             </div>
                           </div>
@@ -526,8 +526,8 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>Ingen användarbeteendedata tillgänglig</p>
-                        <p className="text-sm">Kontrollera din Google Analytics integration</p>
+                        <p>No user behavior data available</p>
+                        <p className="text-sm">Check your Google Analytics integration</p>
                       </div>
                     )}
                   </CardContent>
@@ -540,7 +540,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                   <CardHeader>
                     <CardTitle className="flex items-center gap-2">
                       <Target className="h-5 w-5" />
-                      Geografiska Segment
+                      Geographic Segments
                     </CardTitle>
                   </CardHeader>
                   <CardContent>
@@ -553,12 +553,12 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                               <div>
                                 <h3 className="font-medium">{segment.name}</h3>
                                 <p className="text-sm text-muted-foreground">
-                                  {segment.sessions} sessioner ({segment.percentage.toFixed(1)}%)
+                                  {segment.sessions} sessions ({segment.percentage.toFixed(1)}%)
                                 </p>
                               </div>
                             </div>
                             <div className="text-right">
-                              <div className="font-bold">{segment.users} användare</div>
+                              <div className="font-bold">{segment.users} users</div>
                               <div className="text-sm text-muted-foreground">
                                 Ø {(segment.avgSessionDuration / 60).toFixed(1)}min
                               </div>
@@ -569,8 +569,8 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     ) : (
                       <div className="text-center py-8 text-muted-foreground">
                         <Target className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                        <p>Ingen geografisk data tillgänglig</p>
-                        <p className="text-sm">Kontrollera din Google Analytics integration</p>
+                        <p>No geographic data available</p>
+                        <p className="text-sm">Check your Google Analytics integration</p>
                       </div>
                     )}
                   </CardContent>
@@ -586,12 +586,12 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
               <CardTitle className="flex items-center justify-between">
                 <div className="flex items-center gap-2">
                   <BarChart3 className="h-5 w-5" />
-                  Intäkt Segment
+                  Revenue Segments
                 </div>
-                <Badge variant="outline">Välj 3 viktigaste</Badge>
+                <Badge variant="outline">Select top 3</Badge>
               </CardTitle>
               <CardDescription>
-                Analysera intäkter baserat på kundsegment och beteende. Välj de 3 viktigaste segmenten att fokusera på.
+                Analyze revenue by customer segment and behavior. Select the 3 most important segments to focus on.
               </CardDescription>
             </CardHeader>
             <CardContent>
@@ -599,14 +599,14 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                 {/* All Available Segments */}
                 <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
                   {[
-                    { name: 'Nya kunder', value: 245000, growth: 12.5, priority: 1 },
-                    { name: 'Återkommande kunder', value: 380000, growth: 8.2, priority: 2 },
-                    { name: 'Premium kunder', value: 125000, growth: 22.1, priority: 3 },
-                    { name: 'Mobila användare', value: 195000, growth: 15.8 },
-                    { name: 'Desktop användare', value: 285000, growth: 5.4 },
-                    { name: 'Organisk trafik', value: 220000, growth: 9.7 },
-                    { name: 'Betald trafik', value: 160000, growth: 18.3 },
-                    { name: 'Email kampanj', value: 95000, growth: 28.5 },
+                    { name: 'New customers', value: 245000, growth: 12.5, priority: 1 },
+                    { name: 'Returning customers', value: 380000, growth: 8.2, priority: 2 },
+                    { name: 'Premium customers', value: 125000, growth: 22.1, priority: 3 },
+                    { name: 'Mobile users', value: 195000, growth: 15.8 },
+                    { name: 'Desktop users', value: 285000, growth: 5.4 },
+                    { name: 'Organic traffic', value: 220000, growth: 9.7 },
+                    { name: 'Paid traffic', value: 160000, growth: 18.3 },
+                    { name: 'Email campaign', value: 95000, growth: 28.5 },
                     { name: 'Social media', value: 75000, growth: 35.2 }
                   ].map((segment, index) => (
                     <Card 
@@ -638,7 +638,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
 
                 <div className="pt-4 border-t">
                   <p className="text-sm text-muted-foreground mb-3">
-                    De 3 viktigaste segmenten bidrar med <span className="font-bold">750 000 kr</span> av total intäkt
+                    The top 3 segments contribute <span className="font-bold">750 000 kr</span> of total revenue
                   </p>
                   <Button 
                     variant="outline" 
@@ -646,7 +646,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                     onClick={() => setShowPriorityConfig(true)}
                   >
                     <Settings className="h-4 w-4 mr-2" />
-                    Konfigurera prioriterade segment
+                    Configure priority segments
                   </Button>
                 </div>
               </div>
@@ -657,25 +657,25 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
         <TabsContent value="custom" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Anpassade Segment</CardTitle>
+              <CardTitle>Custom Segments</CardTitle>
               <CardDescription>
-                Skapa och hantera dina egna segment baserat på specifika kriterier
+                Create and manage your own segments based on specific criteria
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
-              {/* Fördefinierade segment att välja från */}
+              {/* Predefined segments to choose from */}
               <div>
-                <h4 className="font-medium mb-4">Välj segment att aktivera:</h4>
+                <h4 className="font-medium mb-4">Select segments to activate:</h4>
                 <div className="space-y-3">
                   {[
-                    { id: 'high-value', name: 'Högt värde användare', description: 'Användare med hög konverteringsfrekvens eller långa sessioner' },
-                    { id: 'mobile-users', name: 'Mobila användare', description: 'Fokus på mobilupplevelsen' },
-                    { id: 'returning-customers', name: 'Återkommande kunder', description: 'Användare som besökt flera gånger' },
-                    { id: 'bounce-risk', name: 'Studsningsrisk', description: 'Användare med hög sannolikhet att lämna snabbt' },
-                    { id: 'conversion-ready', name: 'Konverteringsklara', description: 'Användare nära köpbeslut' },
-                    { id: 'geographic-sweden', name: 'Svenska användare', description: 'Användare från Sverige' },
-                    { id: 'weekend-traffic', name: 'Helgtrafik', description: 'Användare som besöker på helger' },
-                    { id: 'social-media', name: 'Sociala medier trafik', description: 'Trafik från sociala plattformar' }
+                    { id: 'high-value', name: 'High-value users', description: 'Users with high conversion rate or long sessions' },
+                    { id: 'mobile-users', name: 'Mobile users', description: 'Focus on the mobile experience' },
+                    { id: 'returning-customers', name: 'Returning customers', description: 'Users who have visited multiple times' },
+                    { id: 'bounce-risk', name: 'Bounce risk', description: 'Users with a high likelihood of leaving quickly' },
+                    { id: 'conversion-ready', name: 'Conversion-ready', description: 'Users close to a purchase decision' },
+                    { id: 'geographic-sweden', name: 'Swedish users', description: 'Users from Sweden' },
+                    { id: 'weekend-traffic', name: 'Weekend traffic', description: 'Users who visit on weekends' },
+                    { id: 'social-media', name: 'Social media traffic', description: 'Traffic from social platforms' }
                   ].map(segment => (
                     <div key={segment.id} className="flex items-center space-x-3 p-3 border rounded-lg hover:bg-gray-50">
                       <input
@@ -689,7 +689,7 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
                         <div className="text-sm text-muted-foreground">{segment.description}</div>
                       </label>
                       <Badge variant="outline" className="text-xs">
-                        {segment.id === 'high-value' || segment.id === 'mobile-users' ? 'Aktiv' : 'Inaktiv'}
+                        {segment.id === 'high-value' || segment.id === 'mobile-users' ? 'Active' : 'Inactive'}
                       </Badge>
                     </div>
                   ))}
@@ -698,14 +698,14 @@ export function SegmentsTab({ selectedSite }: SegmentsTabProps) {
 
               <div className="border-t pt-6">
                 <div className="flex items-center justify-between mb-4">
-                  <h4 className="font-medium">Skapa eget segment</h4>
+                  <h4 className="font-medium">Create custom segment</h4>
                   <Button>
                     <Plus className="h-4 w-4 mr-2" />
-                    Nytt segment
+                    New segment
                   </Button>
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  Kombinera olika kriterier för att skapa skräddarsydda segment baserat på användaregenskaper, beteende och konverteringar.
+                  Combine different criteria to create tailored segments based on user properties, behavior, and conversions.
                 </p>
               </div>
             </CardContent>

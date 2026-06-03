@@ -8,11 +8,11 @@ export const usePluginDownloader = () => {
   const defaultFiles = {
     'heatmap-analytics.php': `<?php
 /**
- * Plugin Name: Heatmap Analytics Pro - Expandtalk.se
+ * Plugin Name: CortIQ Analytics
  * Plugin URI: https://expandtalk.se
  * Description: Professionell heatmap och användaranalys med GDPR-kompatibilitet
  * Version: 3.1.0
- * Author: Expandtalk.se
+ * Author: Expandtalk Corporation AB
  * Author URI: https://expandtalk.se
  * Requires at least: 5.0
  * Tested up to: 6.4
@@ -2166,7 +2166,7 @@ Stable tag: 3.1.0
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
 
-Professionell heatmap och användaranalys med GDPR-kompatibilitet från Expandtalk.se
+Professionell heatmap och användaranalys med GDPR-kompatibilitet från CortIQ (Expandtalk Corporation AB)
 
 == Description ==
 
@@ -2192,14 +2192,14 @@ Heatmap Analytics Pro ger dig djup insikt i hur användare interagerar med din w
 
 = Premium Support =
 
-Detta plugin utvecklas och underhålls av Expandtalk.se med fokus på prestanda, säkerhet och GDPR-efterlevnad.
+Detta plugin utvecklas och underhålls av Expandtalk Corporation AB med fokus på prestanda, säkerhet och GDPR-efterlevnad.
 
 == Installation ==
 
 1. Ladda upp plugin-filerna till '/wp-content/plugins/heatmap-analytics/' katalogen
 2. Aktivera plugin:et genom 'Plugins' menyn i WordPress
 3. Gå till Inställningar > Heatmap Analytics för att konfigurera
-4. Ange ditt tracking ID från Expandtalk.se Dashboard
+4. Ange ditt tracking ID från CortIQ (Expandtalk Corporation AB) Dashboard
 5. Aktivera GDPR-funktioner och konfigurera cookie-banner
 6. Spara inställningar och börja samla data!
 
@@ -2215,7 +2215,7 @@ Ja, plugin:et är utvecklat med GDPR i fokus. Det inkluderar funktioner för:
 
 = Var får jag mitt tracking ID? =
 
-Ditt tracking ID finns i din dashboard på Expandtalk.se. Registrera dig för att få tillgång till alla analysfunktioner.
+Ditt tracking ID finns i din dashboard på cortiq.se. Registrera dig för att få tillgång till alla analysfunktioner.
 
 = Påverkar plugin:et sidans prestanda? =
 
@@ -2282,7 +2282,7 @@ För support och frågor:
 
 == Credits ==
 
-Utvecklat av Expandtalk.se team med fokus på användarintegritet och GDPR-efterlevnad.`,
+Utvecklat av Expandtalk Corporation AB med fokus på användarintegritet och GDPR-efterlevnad.`,
 
       // Cookie Widget
       'includes/class-cookie-widget.php': `<?php

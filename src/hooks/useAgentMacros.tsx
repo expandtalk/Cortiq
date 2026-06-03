@@ -47,10 +47,10 @@ export const useAgentMacros = (siteId: string | null) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agent-macros', siteId] });
-      toast.success('Makro skapat');
+      toast.success('Macro created');
     },
     onError: (error: any) => {
-      toast.error(`Misslyckades skapa makro: ${error.message}`);
+      toast.error(`Failed to create macro: ${error.message}`);
     },
   });
 
@@ -68,10 +68,10 @@ export const useAgentMacros = (siteId: string | null) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agent-macros', siteId] });
-      toast.success('Makro uppdaterat');
+      toast.success('Macro updated');
     },
     onError: (error: any) => {
-      toast.error(`Misslyckades uppdatera makro: ${error.message}`);
+      toast.error(`Failed to update macro: ${error.message}`);
     },
   });
 
@@ -86,10 +86,10 @@ export const useAgentMacros = (siteId: string | null) => {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['agent-macros', siteId] });
-      toast.success('Makro borttaget');
+      toast.success('Macro deleted');
     },
     onError: (error: any) => {
-      toast.error(`Misslyckades ta bort makro: ${error.message}`);
+      toast.error(`Failed to delete macro: ${error.message}`);
     },
   });
 
@@ -106,7 +106,7 @@ export const useAgentMacros = (siteId: string | null) => {
       queryClient.invalidateQueries({ queryKey: ['agent-macros', siteId] });
     },
     onError: (error: any) => {
-      toast.error(`Misslyckades ändra status: ${error.message}`);
+      toast.error(`Failed to update status: ${error.message}`);
     },
   });
 

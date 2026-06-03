@@ -78,19 +78,19 @@ export function enrichCookieWithDefinition(
 // Funktion för att få svenska kategorinamn
 export function getCategoryDisplayName(categoryKey: string): string {
   const categoryMap: Record<string, string> = {
-    'nödvändig': 'Nödvändiga cookies',
-    'necessary': 'Nödvändiga cookies',
-    'analys': 'Prestanda cookies (analys)', 
-    'analytics': 'Prestanda cookies (analys)', 
-    'funktionell': 'Funktionella cookies (personlig anpassning)',
-    'preferences': 'Funktionella cookies (personlig anpassning)',
-    'marknadsföring': 'Riktade cookies (marknadsföring)',
-    'marketing': 'Riktade cookies (marknadsföring)',
-    'externt innehåll': 'Externt innehåll',
-    'social media': 'Sociala medier'
+    'nödvändig': 'Necessary cookies',
+    'necessary': 'Necessary cookies',
+    'analys': 'Performance cookies (analytics)',
+    'analytics': 'Performance cookies (analytics)',
+    'funktionell': 'Functional cookies (personalization)',
+    'preferences': 'Functional cookies (personalization)',
+    'marknadsföring': 'Targeting cookies (marketing)',
+    'marketing': 'Targeting cookies (marketing)',
+    'externt innehåll': 'External content',
+    'social media': 'Social media'
   };
-  
-  return categoryMap[categoryKey] || 'Övriga';
+
+  return categoryMap[categoryKey] || 'Other';
 }
 
 // Funktion för att få svenska beskrivning från cookie definition

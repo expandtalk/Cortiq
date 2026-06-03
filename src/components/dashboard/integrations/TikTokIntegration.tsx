@@ -80,7 +80,7 @@ export function TikTokIntegration({
           />
         </div>
         <CardDescription>
-          TikTok Pixel för konverteringsspårning och publik-building. <strong>Kräver enhanced GDPR compliance.</strong>
+          TikTok Pixel for conversion tracking and audience building. <strong>Requires enhanced GDPR compliance.</strong>
         </CardDescription>
       </CardHeader>
 
@@ -89,8 +89,8 @@ export function TikTokIntegration({
         <Alert variant="destructive">
           <AlertTriangle className="h-4 w-4" />
           <AlertDescription>
-            <strong>€530M böter 2025:</strong> TikTok har högsta regulatory risk. Kräver explicit consent för Kina-överföringar, 
-            åldersverifiering och enhanced blocking. <a href="#" className="underline">Läs compliance guide</a>
+            <strong>€530M fine 2025:</strong> TikTok carries the highest regulatory risk. Requires explicit consent for China data transfers,
+            age verification, and enhanced blocking. <a href="#" className="underline">Read compliance guide</a>
           </AlertDescription>
         </Alert>
 
@@ -108,7 +108,7 @@ export function TikTokIntegration({
               disabled={!isEnabled}
             />
             <p className="text-xs text-muted-foreground">
-              Hittas i TikTok Ads Manager → Events → Manage
+              Found in TikTok Ads Manager → Events → Manage
             </p>
           </div>
 
@@ -130,10 +130,10 @@ export function TikTokIntegration({
                 />
                 <div className="grid gap-1.5 leading-none">
                   <Label htmlFor="ageVerification" className="text-sm font-medium">
-                    Åldersverifiering (Artikel 8 GDPR) <span className="text-red-500">*</span>
+                    Age verification (Article 8 GDPR) <span className="text-red-500">*</span>
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Blockerar TikTok för användare under 16 år. Kräver parental consent.
+                    Blocks TikTok for users under 16. Requires parental consent.
                   </p>
                 </div>
               </div>
@@ -146,10 +146,10 @@ export function TikTokIntegration({
                 />
                 <div className="grid gap-1.5 leading-none">
                   <Label htmlFor="chinaTransfer" className="text-sm font-medium">
-                    Separata Kina-överföring consent <span className="text-red-500">*</span>
+                    Separate China data transfer consent <span className="text-red-500">*</span>
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Explicit disclosure för dataöverföringar till Kina enligt DPC-krav.
+                    Explicit disclosure for data transfers to China per DPC requirements.
                   </p>
                 </div>
               </div>
@@ -177,7 +177,7 @@ export function TikTokIntegration({
                     Advanced Matching
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Hash:ar email och telefon för bättre attribution. Höjer privacy risk.
+                    Hashes email and phone for better attribution. Increases privacy risk.
                   </p>
                 </div>
               </div>
@@ -193,7 +193,7 @@ export function TikTokIntegration({
                     Automatic Events
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Page view, click, scroll tracking. Standard för most implementations.
+                    Page view, click, scroll tracking. Standard for most implementations.
                   </p>
                 </div>
               </div>
@@ -209,7 +209,7 @@ export function TikTokIntegration({
                     Test Mode
                   </Label>
                   <p className="text-xs text-muted-foreground">
-                    Events skickas till Test Events i stället för live data.
+                    Events are sent to Test Events instead of live data.
                   </p>
                 </div>
               </div>
@@ -223,7 +223,7 @@ export function TikTokIntegration({
             <Clock className="h-4 w-4 text-orange-600" />
             <div>
               <p className="text-sm font-medium">Cookie Duration</p>
-              <p className="text-xs text-muted-foreground">13 månader (längst)</p>
+              <p className="text-xs text-muted-foreground">13 months (longest)</p>
             </div>
           </div>
           
@@ -231,7 +231,7 @@ export function TikTokIntegration({
             <Globe className="h-4 w-4 text-red-600" />
             <div>
               <p className="text-sm font-medium">Data Location</p>
-              <p className="text-xs text-muted-foreground">Kina + Singapore</p>
+              <p className="text-xs text-muted-foreground">China + Singapore</p>
             </div>
           </div>
           
@@ -239,7 +239,7 @@ export function TikTokIntegration({
             <Users className="h-4 w-4 text-blue-600" />
             <div>
               <p className="text-sm font-medium">Target Audience</p>
-              <p className="text-xs text-muted-foreground">13-34 år (Gen Z)</p>
+              <p className="text-xs text-muted-foreground">13-34 years (Gen Z)</p>
             </div>
           </div>
         </div>
@@ -251,10 +251,10 @@ export function TikTokIntegration({
             <AlertDescription>
               <strong>Implementation notes:</strong>
               <ul className="mt-2 list-disc list-inside text-sm space-y-1">
-                <li>Pixel blockeras tills explicit marketing consent</li>
-                <li>Separata consent för Kina-överföringar krävs</li>
-                <li>Åldersverifiering körs före pixel-loading</li>
-                <li>13-månaders cookie kräver renewal consent</li>
+                <li>Pixel is blocked until explicit marketing consent</li>
+                <li>Separate consent for China data transfers is required</li>
+                <li>Age verification runs before pixel loading</li>
+                <li>13-month cookie requires renewal consent</li>
                 <li>Manual blocking implementation (ej native API)</li>
               </ul>
             </AlertDescription>

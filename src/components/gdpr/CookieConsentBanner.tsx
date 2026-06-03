@@ -24,9 +24,9 @@ const SYSTEM_COOKIES = [
     cookie_name: 'gdpr_consent',
     provider_name: 'CortIQ',
     category_key: 'nödvändig',
-    purpose: 'Lagrar användarens cookie-samtycke för GDPR-efterlevnad',
-    description: 'Nödvändig cookie som kommer ihåg dina cookie-inställningar och samtycke',
-    expiry: '1 år'
+    purpose: 'Stores the user\'s cookie consent for GDPR compliance',
+    description: 'Required cookie that remembers your cookie settings and consent',
+    expiry: '1 year'
   }
 ];
 
@@ -344,21 +344,21 @@ export function CookieConsentBanner({
               
               <div className="flex-1 space-y-4">
                 <div>
-                  <h3 className="text-lg font-semibold mb-2">Vi respekterar din integritet</h3>
+                  <h3 className="text-lg font-semibold mb-2">We respect your privacy</h3>
                   <p className="text-sm text-muted-foreground">
-                    Vi använder cookies för att förbättra din upplevelse på vår webbplats. 
-                    Nödvändiga cookies krävs för grundläggande funktionalitet, medan 
-                    analysdata hjälper oss att förstå hur du använder sajten.
+                    We use cookies to improve your experience on our website.
+                    Necessary cookies are required for basic functionality, while
+                    analytics data helps us understand how you use the site.
                     {privacyPolicyUrl && (
                       <>
-                        {' '}Läs mer i vår{' '}
-                        <a 
-                          href={privacyPolicyUrl} 
-                          target="_blank" 
+                        {' '}Read more in our{' '}
+                        <a
+                          href={privacyPolicyUrl}
+                          target="_blank"
                           rel="noopener noreferrer"
                           className="text-primary hover:underline"
                         >
-                          integritetspolicy
+                          privacy policy
                         </a>.
                       </>
                     )}
@@ -368,25 +368,25 @@ export function CookieConsentBanner({
                 <div className="flex flex-wrap gap-3">
                   <Button onClick={handleAcceptAll} className="flex items-center gap-2">
                     <Shield className="h-4 w-4" />
-                    Acceptera alla
+                    Accept all
                   </Button>
-                  
-                  <Button 
-                    variant="outline" 
+
+                  <Button
+                    variant="outline"
                     onClick={handleRejectAll}
                     className="flex items-center gap-2"
                   >
                     <X className="h-4 w-4" />
-                    Avvisa alla
+                    Reject all
                   </Button>
-                  
-                  <Button 
-                    variant="ghost" 
+
+                  <Button
+                    variant="ghost"
                     onClick={() => setShowSettings(true)}
                     className="flex items-center gap-2"
                   >
                     <Settings className="h-4 w-4" />
-                    Anpassa inställningar
+                    Customize settings
                   </Button>
                 </div>
               </div>
@@ -398,7 +398,7 @@ export function CookieConsentBanner({
       <Dialog open={showSettings} onOpenChange={setShowSettings}>
         <DialogContent className="max-w-2xl">
           <DialogHeader>
-            <DialogTitle>Cookie-inställningar</DialogTitle>
+            <DialogTitle>Cookie settings</DialogTitle>
           </DialogHeader>
           
           <div className="space-y-6">
@@ -406,8 +406,8 @@ export function CookieConsentBanner({
               {/* Necessary Cookies */}
               <CookieCategory
                 id="necessary"
-                title="Nödvändiga cookies"
-                description="Dessa cookies är nödvändiga för att webbplatsen ska fungera korrekt. De kan inte inaktiveras."
+                title="Necessary cookies"
+                description="These cookies are required for the website to function correctly. They cannot be disabled."
                 checked={consent.necessary}
                 disabled={true}
                 count={cookieCounts.necessary}
@@ -425,8 +425,8 @@ export function CookieConsentBanner({
               {/* Analytics Cookies */}
               <CookieCategory
                 id="analytics"
-                title="Analytiska cookies"
-                description="Hjälper oss att förstå hur besökare interagerar med webbplatsen genom att samla in anonymiserad information."
+                title="Analytics cookies"
+                description="Helps us understand how visitors interact with the website by collecting anonymized information."
                 checked={consent.analytics}
                 onCheckedChange={(checked) => 
                   setConsentState(prev => ({ ...prev, analytics: !!checked }))
@@ -446,8 +446,8 @@ export function CookieConsentBanner({
               {/* Marketing Cookies */}
               <CookieCategory
                 id="marketing"
-                title="Marknadsföringscookies"
-                description="Används för att spåra besökare över webbplatser för att visa relevanta annonser."
+                title="Marketing cookies"
+                description="Used to track visitors across websites to show relevant advertisements."
                 checked={consent.marketing}
                 onCheckedChange={(checked) => 
                   setConsentState(prev => ({ ...prev, marketing: !!checked }))
@@ -467,8 +467,8 @@ export function CookieConsentBanner({
               {/* Preferences Cookies */}
               <CookieCategory
                 id="preferences"
-                title="Preferenscookies"
-                description="Lagrar dina preferenser och inställningar för att anpassa webbplatsen efter dina behov."
+                title="Preference cookies"
+                description="Stores your preferences and settings to customize the website to your needs."
                 checked={consent.preferences}
                 onCheckedChange={(checked) => 
                   setConsentState(prev => ({ ...prev, preferences: !!checked }))
@@ -488,10 +488,10 @@ export function CookieConsentBanner({
 
             <div className="flex justify-end space-x-3">
               <Button variant="outline" onClick={() => setShowSettings(false)}>
-                Avbryt
+                Cancel
               </Button>
               <Button onClick={handleSaveSettings}>
-                Spara inställningar
+                Save settings
               </Button>
             </div>
           </div>
@@ -553,7 +553,7 @@ function CookieCategory({
                  onClick={onToggleExpanded}
                  className="h-8 w-8 p-0 z-10"
                  type="button"
-                 aria-label={expanded ? "Dölj cookies" : "Visa cookies"}
+                 aria-label={expanded ? "Hide cookies" : "Show cookies"}
                >
                  <ChevronDown className={`h-4 w-4 transition-transform duration-200 ${expanded ? 'rotate-180' : ''}`} />
                </Button>
@@ -579,26 +579,24 @@ function CookieCategory({
                       </Badge>
                     )}
                   </div>
-                  {/* Använd svenska beskrivning om tillgänglig */}
                   {(cookie.enhanced_description || cookie.description || cookie.cookie_purpose) && (
                     <p className="text-muted-foreground mb-1">
                       {cookie.enhanced_description || cookie.description || cookie.cookie_purpose}
                     </p>
                   )}
-                  {/* Visa syfte om tillgängligt */}
                   {(cookie.enhanced_purpose || cookie.purpose) && (
                     <p className="text-muted-foreground mb-1 italic">
-                      Syfte: {cookie.enhanced_purpose || cookie.purpose}
+                      Purpose: {cookie.enhanced_purpose || cookie.purpose}
                     </p>
                   )}
                   <div className="flex items-center gap-4 text-muted-foreground">
                     {(cookie.enhanced_expiry || cookie.expiry || cookie.cookie_expiry) && (
-                      <span>Utgår: {cookie.enhanced_expiry || cookie.expiry || cookie.cookie_expiry}</span>
+                      <span>Expires: {cookie.enhanced_expiry || cookie.expiry || cookie.cookie_expiry}</span>
                     )}
                     {cookie.is_third_party && (
                       <span className="flex items-center gap-1">
                         <Info className="h-3 w-3" />
-                        Tredje part
+                        Third party
                       </span>
                     )}
                   </div>

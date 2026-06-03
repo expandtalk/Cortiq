@@ -28,9 +28,9 @@ const statusColors = {
 };
 
 const statusLabels = {
-  activated: "Aktiverad",
-  partial: "Delvis",
-  planned: "Planerat",
+  activated: "Active",
+  partial: "Partial",
+  planned: "Planned",
 };
 
 const priorityColors = {
@@ -92,7 +92,7 @@ export const KPIMetricCard = ({ metric, onToggle, orderNumber, value, loading }:
           <div className="flex items-start gap-2">
             <TrendingUp className="h-4 w-4 mt-0.5 flex-shrink-0" />
             <div>
-              <p className="text-sm font-medium mb-1">Affärsnytta</p>
+              <p className="text-sm font-medium mb-1">Business value</p>
               <p className="text-sm">{metric.businessValue}</p>
             </div>
           </div>
@@ -100,7 +100,7 @@ export const KPIMetricCard = ({ metric, onToggle, orderNumber, value, loading }:
 
         <div className="space-y-2">
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-medium">Datakällor:</span>
+            <span className="font-medium">Data sources:</span>
             <div className="flex flex-wrap gap-1">
               {metric.dataSources.map((source, idx) => (
                 <Badge key={idx} variant="secondary" className="text-xs">
@@ -110,7 +110,7 @@ export const KPIMetricCard = ({ metric, onToggle, orderNumber, value, loading }:
             </div>
           </div>
           <div className="flex items-center gap-2 text-sm">
-            <span className="font-medium">Integrationer:</span>
+            <span className="font-medium">Integrations:</span>
             <div className="flex flex-wrap gap-1">
               {metric.integrations.slice(0, 2).map((integration, idx) => (
                 <Badge key={idx} variant="outline" className="text-xs">
@@ -134,7 +134,7 @@ export const KPIMetricCard = ({ metric, onToggle, orderNumber, value, loading }:
               disabled={metric.status === 'planned'}
             />
             <span className="text-sm font-medium">
-              {metric.enabled ? 'Deaktivera' : 'Aktivera KPI'}
+              {metric.enabled ? 'Disable' : 'Enable KPI'}
             </span>
           </div>
 
@@ -142,7 +142,7 @@ export const KPIMetricCard = ({ metric, onToggle, orderNumber, value, loading }:
             <DialogTrigger asChild>
               <Button variant="ghost" size="sm" className="gap-2">
                 <Info className="h-4 w-4" />
-                Mer info
+                More info
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
@@ -156,7 +156,7 @@ export const KPIMetricCard = ({ metric, onToggle, orderNumber, value, loading }:
               </DialogHeader>
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-semibold mb-2">Beskrivning</h4>
+                  <h4 className="font-semibold mb-2">Description</h4>
                   <p className="text-sm text-muted-foreground">
                     {metric.description}
                   </p>
@@ -164,12 +164,12 @@ export const KPIMetricCard = ({ metric, onToggle, orderNumber, value, loading }:
                 <div>
                   <h4 className="font-semibold mb-2 flex items-center gap-2">
                     <TrendingUp className="h-4 w-4" />
-                    Affärsnytta
+                    Business value
                   </h4>
                   <p className="text-sm">{metric.businessValue}</p>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Datakällor</h4>
+                  <h4 className="font-semibold mb-2">Data sources</h4>
                   <div className="flex flex-wrap gap-2">
                     {metric.dataSources.map((source, idx) => (
                       <Badge key={idx} variant="secondary">
@@ -179,7 +179,7 @@ export const KPIMetricCard = ({ metric, onToggle, orderNumber, value, loading }:
                   </div>
                 </div>
                 <div>
-                  <h4 className="font-semibold mb-2">Integrationer</h4>
+                  <h4 className="font-semibold mb-2">Integrations</h4>
                   <div className="flex flex-wrap gap-2">
                     {metric.integrations.map((integration, idx) => (
                       <Badge key={idx} variant="outline">

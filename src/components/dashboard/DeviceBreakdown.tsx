@@ -15,7 +15,7 @@ export function DeviceBreakdown({ deviceBreakdown }: DeviceBreakdownProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Enhetsfördelning</CardTitle>
+        <CardTitle>Device breakdown</CardTitle>
       </CardHeader>
       <CardContent>
         <div className="space-y-4">

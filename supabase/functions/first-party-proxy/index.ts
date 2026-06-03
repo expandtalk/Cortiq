@@ -17,21 +17,45 @@ const corsHeaders = {
 const supabaseUrl = Deno.env.get('SUPABASE_URL')!;
 const supabaseKey = Deno.env.get('SUPABASE_ANON_KEY')!;
 
+// Only allow proxying to these specific Supabase paths
+const ALLOWED_PATH_PREFIXES = [
+  '/functions/v1/track-event',
+  '/functions/v1/visitor-identification',
+  '/functions/v1/pixel-tracking',
+  '/functions/v1/ai-bot-tracker',
+  '/functions/v1/cookiefree-analytics',
+  '/functions/v1/gdpr-compliant-tracking',
+  '/functions/v1/behavioral-analysis',
+  '/rest/v1/tracking_events',
+  '/rest/v1/page_views',
+  '/rest/v1/tracking_sessions',
+  '/rest/v1/heatmap_data',
+];
+
 serve(async (req) => {
   try {
     if (req.method === 'OPTIONS') {
-      return new Response(null, { 
+      return new Response(null, {
         status: 200,
-        headers: corsHeaders 
+        headers: corsHeaders
       });
     }
 
     const url = new URL(req.url);
     const targetPath = url.searchParams.get('path');
-    
+
     if (!targetPath) {
       return new Response(JSON.stringify({ error: 'Missing path parameter' }), {
         status: 400,
+        headers: { ...corsHeaders, 'Content-Type': 'application/json' }
+      });
+    }
+
+    // Validate path against whitelist to prevent path traversal
+    const isAllowed = ALLOWED_PATH_PREFIXES.some(prefix => targetPath.startsWith(prefix));
+    if (!isAllowed || targetPath.includes('..') || targetPath.includes('//')) {
+      return new Response(JSON.stringify({ error: 'Path not allowed' }), {
+        status: 403,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }

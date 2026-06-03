@@ -204,7 +204,7 @@ export function FlowVisualization({
         overflow: 'hidden'
       },
       data: {
-        label: currentScreenshot ? '' : 'Ingen skärmdump tillgänglig',
+        label: currentScreenshot ? '' : 'No screenshot available',
       },
     }
   ];
@@ -241,7 +241,7 @@ export function FlowVisualization({
           overflow: 'hidden'
         },
         data: {
-          label: currentScreenshot ? '' : 'Ingen skärmdump tillgänglig',
+          label: currentScreenshot ? '' : 'No screenshot available',
         },
       }
     ];
@@ -310,9 +310,9 @@ export function FlowVisualization({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Flame className="h-5 w-5 text-orange-500" />
-            Flow Visualisering
+            Flow Visualization
           </CardTitle>
-          <CardDescription>Laddar visualiseringsdata...</CardDescription>
+          <CardDescription>Loading visualization data...</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center min-h-[400px]">
@@ -345,10 +345,10 @@ export function FlowVisualization({
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <Flame className="h-5 w-5 text-orange-500" />
-          Flow Visualisering
+          Flow Visualization
         </CardTitle>
         <CardDescription>
-          Visualiserar interaktionspunkter för {selectedUrl} (exkluderar admin-klick)
+          Visualizing interaction points for {selectedUrl} (exkluderar admin-klick)
         </CardDescription>
       </CardHeader>
       <CardContent>
@@ -356,7 +356,7 @@ export function FlowVisualization({
           <TabsList className="grid w-full grid-cols-4">
             <TabsTrigger value="all" className="flex items-center gap-2">
               <MousePointer className="h-4 w-4" />
-              Alla ({counts.all})
+              All ({counts.all})
             </TabsTrigger>
             <TabsTrigger value="navigation" className="flex items-center gap-2">
               <Navigation className="h-4 w-4" />
@@ -364,11 +364,11 @@ export function FlowVisualization({
             </TabsTrigger>
             <TabsTrigger value="forms" className="flex items-center gap-2">
               <FormInput className="h-4 w-4" />
-              Formulär & Lead ({counts.forms})
+              Forms & Leads ({counts.forms})
             </TabsTrigger>
             <TabsTrigger value="contact" className="flex items-center gap-2">
               <Contact className="h-4 w-4" />
-              Kontakt & Konvertering ({counts.contact})
+              Contact & Conversion ({counts.contact})
             </TabsTrigger>
           </TabsList>
 

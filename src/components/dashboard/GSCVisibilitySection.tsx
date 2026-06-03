@@ -63,9 +63,9 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
       .sort(([a], [b]) => a.localeCompare(b))
       .map(([month, d]) => ({
         name: new Date(month + '-01').toLocaleDateString('sv-SE', { month: 'short', year: '2-digit' }),
-        Organiskt:    d.organic,
-        Varumärke:    d.branded,
-        Impressioner: d.impressions,
+        Organic:    d.organic,
+        Brand:      d.branded,
+        Impressions: d.impressions,
         Position: d.posWeightTotal > 0 ? +(d.posWeightedSum / d.posWeightTotal).toFixed(1) : null,
       }));
   }, [monthly.data, brandKeywords]);
@@ -98,10 +98,10 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
             <Search className="h-5 w-5 text-muted-foreground" />
             <div>
               <p className="text-sm font-medium">Google Search Console</p>
-              <p className="text-xs text-muted-foreground">Anslut för att se månadsvis söksynlighet här.</p>
+              <p className="text-xs text-muted-foreground">Connect to see monthly search visibility here.</p>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={onNavigateToIntegrations}>Anslut</Button>
+          <Button variant="outline" size="sm" onClick={onNavigateToIntegrations}>Connect</Button>
         </CardContent>
       </Card>
     );
@@ -115,10 +115,10 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
             <Search className="h-5 w-5 text-muted-foreground" />
             <div>
               <p className="text-sm font-medium">Search Console ansluten</p>
-              <p className="text-xs text-muted-foreground">Kör "Synka 13 månader" i Inställningar → Integrationer för att ladda månadsdata.</p>
+              <p className="text-xs text-muted-foreground">Run "Sync 13 months" in Settings → Integrations to load monthly data.</p>
             </div>
           </div>
-          <Button variant="outline" size="sm" onClick={onNavigateToIntegrations}>Inställningar</Button>
+          <Button variant="outline" size="sm" onClick={onNavigateToIntegrations}>Settings</Button>
         </CardContent>
       </Card>
     );
@@ -129,19 +129,19 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
       {/* Summary row */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
         <Card><CardContent className="p-3">
-          <p className="text-xs text-muted-foreground">Totala klick</p>
+          <p className="text-xs text-muted-foreground">Total clicks</p>
           <p className="text-xl font-bold">{fmt(summary.totalClicks)}</p>
         </CardContent></Card>
         <Card><CardContent className="p-3">
-          <p className="text-xs text-muted-foreground">Impressioner</p>
+          <p className="text-xs text-muted-foreground">Impressions</p>
           <p className="text-xl font-bold">{fmt(summary.totalImpressions)}</p>
         </CardContent></Card>
         <Card><CardContent className="p-3">
-          <p className="text-xs text-muted-foreground">Snitt CTR</p>
+          <p className="text-xs text-muted-foreground">Avg CTR</p>
           <p className="text-xl font-bold">{(summary.avgCtr * 100).toFixed(1)}%</p>
         </CardContent></Card>
         <Card><CardContent className="p-3">
-          <p className="text-xs text-muted-foreground">Snittposition</p>
+          <p className="text-xs text-muted-foreground">Avg position</p>
           <p className="text-xl font-bold">{summary.avgPosition.toFixed(1)}</p>
         </CardContent></Card>
       </div>
@@ -151,18 +151,18 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
         <CardContent className="p-4">
           <div className="flex items-center justify-between mb-3">
             <div className="flex items-center gap-2">
-              <p className="text-sm font-medium">Söksynlighet & positionstrend</p>
+              <p className="text-sm font-medium">Search visibility & position trend</p>
               {lastSync && (
                 <span className="text-xs text-muted-foreground">
-                  (synkad {new Date(lastSync).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short', year: 'numeric' })}{' '}
-                  — <button className="underline hover:text-foreground" onClick={onNavigateToIntegrations}>uppdatera</button>)
+                  (synced {new Date(lastSync).toLocaleDateString('sv-SE', { day: 'numeric', month: 'short', year: 'numeric' })}{' '}
+                  — <button className="underline hover:text-foreground" onClick={onNavigateToIntegrations}>update</button>)
                 </span>
               )}
             </div>
             {brandTerms.length > 0 && (
               <div className="flex gap-3 text-xs text-muted-foreground">
-                <span>Varumärke: <strong className="text-emerald-600">{fmt(brandedClicks)}</strong></span>
-                <span>Organiskt: <strong className="text-blue-600">{fmt(nonBrandedClicks)}</strong></span>
+                <span>Brand: <strong className="text-emerald-600">{fmt(brandedClicks)}</strong></span>
+                <span>Organic: <strong className="text-blue-600">{fmt(nonBrandedClicks)}</strong></span>
               </div>
             )}
           </div>
@@ -182,17 +182,17 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
               />
               <Tooltip
                 formatter={(value: number, name: string) =>
-                  name === 'Position' ? [`#${value}`, 'Snittposition'] : [fmt(value), name]
+                  name === 'Position' ? [`#${value}`, 'Avg. position'] : [fmt(value), name]
                 }
               />
               <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
               {brandTerms.length > 0 ? (
                 <>
-                  <Bar yAxisId="clicks" dataKey="Organiskt"  stackId="a" fill="#3b82f6" fillOpacity={0.8} radius={[0,0,0,0]} />
-                  <Bar yAxisId="clicks" dataKey="Varumärke"  stackId="a" fill="#10b981" fillOpacity={0.8} radius={[2,2,0,0]} />
+                  <Bar yAxisId="clicks" dataKey="Organic"  stackId="a" fill="#3b82f6" fillOpacity={0.8} radius={[0,0,0,0]} />
+                  <Bar yAxisId="clicks" dataKey="Brand"    stackId="a" fill="#10b981" fillOpacity={0.8} radius={[2,2,0,0]} />
                 </>
               ) : (
-                <Bar yAxisId="clicks" dataKey="Organiskt" fill="#3b82f6" fillOpacity={0.8} radius={[2,2,0,0]} name="Klick" />
+                <Bar yAxisId="clicks" dataKey="Organic" fill="#3b82f6" fillOpacity={0.8} radius={[2,2,0,0]} name="Clicks" />
               )}
               <Line
                 yAxisId="pos"
@@ -208,7 +208,7 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
             </ComposedChart>
           </ResponsiveContainer>
           <p className="text-xs text-muted-foreground mt-2">
-            Gul linje = genomsnittlig sökposition (lägre = bättre, dvs. upp i diagrammet).
+            Yellow line = average search position (lower = better, i.e. higher in the chart).
           </p>
         </CardContent>
       </Card>
@@ -226,7 +226,7 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >
-              Sökord <Badge variant="secondary" className="ml-1 text-xs">{queries.length}</Badge>
+              Keywords <Badge variant="secondary" className="ml-1 text-xs">{queries.length}</Badge>
             </button>
             <button
               onClick={() => { setActiveTab('pages'); setPgPage(0); setPgFilter(''); }}
@@ -236,7 +236,7 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
                   : 'text-muted-foreground hover:text-foreground hover:bg-muted'
               }`}
             >
-              Sidor <Badge variant="secondary" className="ml-1 text-xs">{pages.length}</Badge>
+              Pages <Badge variant="secondary" className="ml-1 text-xs">{pages.length}</Badge>
             </button>
           </div>
 
@@ -244,7 +244,7 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
             <>
               <div className="flex items-center gap-2 mb-3">
                 <Input
-                  placeholder="Filtrera sökord…"
+                  placeholder="Filter keywords…"
                   value={kwFilter}
                   onChange={e => { setKwFilter(e.target.value); setKwPage(0); }}
                   className="h-7 text-xs max-w-xs"
@@ -253,11 +253,11 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
                   <div className="flex gap-2 text-xs text-muted-foreground ml-auto">
                     <span className="flex items-center gap-1">
                       <span className="w-2 h-2 rounded-full bg-emerald-500 inline-block" />
-                      Varumärke ({brandedQueries.length})
+                      Brand ({brandedQueries.length})
                     </span>
                     <span className="flex items-center gap-1">
                       <span className="w-2 h-2 rounded-full bg-blue-500 inline-block" />
-                      Organiskt ({nonBrandedQueries.length})
+                      Organic ({nonBrandedQueries.length})
                     </span>
                   </div>
                 )}
@@ -268,8 +268,8 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
                   <thead>
                     <tr className="border-b text-muted-foreground">
                       <th className="text-left py-1.5 pr-2 font-medium w-6">#</th>
-                      <th className="text-left py-1.5 pr-3 font-medium">Sökord</th>
-                      <th className="text-right py-1.5 pr-3 font-medium">Klick</th>
+                      <th className="text-left py-1.5 pr-3 font-medium">Keyword</th>
+                      <th className="text-right py-1.5 pr-3 font-medium">Clicks</th>
                       <th className="text-right py-1.5 pr-3 font-medium">Impr.</th>
                       <th className="text-right py-1.5 pr-3 font-medium">CTR</th>
                       <th className="text-right py-1.5 font-medium">Pos.</th>
@@ -308,7 +308,7 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
               {kwTotalPages > 1 && (
                 <div className="flex items-center justify-between mt-3 pt-2 border-t">
                   <span className="text-xs text-muted-foreground">
-                    {kwPage * PAGE_SIZE + 1}–{Math.min((kwPage + 1) * PAGE_SIZE, filteredKw.length)} av {filteredKw.length}
+                    {kwPage * PAGE_SIZE + 1}–{Math.min((kwPage + 1) * PAGE_SIZE, filteredKw.length)} of {filteredKw.length}
                   </span>
                   <div className="flex gap-1">
                     <Button variant="outline" size="sm" className="h-7 px-2 text-xs" disabled={kwPage === 0} onClick={() => setKwPage(p => p - 1)}>
@@ -327,7 +327,7 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
             <>
               <div className="mb-3">
                 <Input
-                  placeholder="Filtrera sidor…"
+                  placeholder="Filter pages…"
                   value={pgFilter}
                   onChange={e => { setPgFilter(e.target.value); setPgPage(0); }}
                   className="h-7 text-xs max-w-xs"
@@ -339,8 +339,8 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
                   <thead>
                     <tr className="border-b text-muted-foreground">
                       <th className="text-left py-1.5 pr-2 font-medium w-6">#</th>
-                      <th className="text-left py-1.5 pr-3 font-medium">Sida</th>
-                      <th className="text-right py-1.5 pr-3 font-medium">Klick</th>
+                      <th className="text-left py-1.5 pr-3 font-medium">Page</th>
+                      <th className="text-right py-1.5 pr-3 font-medium">Clicks</th>
                       <th className="text-right py-1.5 pr-3 font-medium">Impr.</th>
                       <th className="text-right py-1.5 pr-3 font-medium">CTR</th>
                       <th className="text-right py-1.5 font-medium">Pos.</th>
@@ -375,7 +375,7 @@ export function GSCVisibilitySection({ siteId, onNavigateToIntegrations }: GSCVi
               {pgTotalPages > 1 && (
                 <div className="flex items-center justify-between mt-3 pt-2 border-t">
                   <span className="text-xs text-muted-foreground">
-                    {pgPage * PAGE_SIZE + 1}–{Math.min((pgPage + 1) * PAGE_SIZE, filteredPg.length)} av {filteredPg.length}
+                    {pgPage * PAGE_SIZE + 1}–{Math.min((pgPage + 1) * PAGE_SIZE, filteredPg.length)} of {filteredPg.length}
                   </span>
                   <div className="flex gap-1">
                     <Button variant="outline" size="sm" className="h-7 px-2 text-xs" disabled={pgPage === 0} onClick={() => setPgPage(p => p - 1)}>

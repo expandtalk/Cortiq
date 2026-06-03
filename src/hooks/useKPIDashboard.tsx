@@ -111,7 +111,7 @@ export function useKPIDashboard(siteId: string, year: number = 2025) {
       // Initialize months
       const months = Array.from({ length: 12 }, (_, idx) => ({
         month: (idx + 1).toString().padStart(2, '0'),
-        monthName: ['Januari','Februari','Mars','April','Maj','Juni','Juli','Augusti','September','Oktober','November','December'][idx],
+        monthName: ['January','February','March','April','May','June','July','August','September','October','November','December'][idx],
         uniqueUsers: 0,
         totalUsers: 0,
         newUsers: 0,
@@ -178,8 +178,8 @@ export function useKPIDashboard(siteId: string, year: number = 2025) {
     // Initialize all 12 months with zero values
     const allMonths = Array.from({ length: 12 }, (_, index) => ({
       month: (index + 1).toString().padStart(2, '0'),
-      monthName: ['Januari', 'Februari', 'Mars', 'April', 'Maj', 'Juni', 
-                 'Juli', 'Augusti', 'September', 'Oktober', 'November', 'December'][index],
+      monthName: ['January', 'February', 'March', 'April', 'May', 'June',
+                 'July', 'August', 'September', 'October', 'November', 'December'][index],
       uniqueUsers: 0,
       totalUsers: 0,
       newUsers: 0,

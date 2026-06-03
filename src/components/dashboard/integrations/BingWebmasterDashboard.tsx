@@ -63,7 +63,7 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
         });
 
         if (!response.ok) {
-          throw new Error('Kunde inte hämta data från Bing Webmaster Tools API');
+          throw new Error('Could not fetch data from Bing Webmaster Tools API');
         }
 
         const result = await response.json();
@@ -80,7 +80,7 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
         });
       } catch (err) {
         console.error('Bing Webmaster API error:', err);
-        setError(err instanceof Error ? err.message : 'Okänt fel vid hämtning av Bing data');
+        setError(err instanceof Error ? err.message : 'Unknown error fetching Bing data');
       } finally {
         setLoading(false);
       }
@@ -93,7 +93,7 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
     return (
       <div className="flex items-center justify-center p-8">
         <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Hämtar data från Bing Webmaster Tools...</span>
+        <span className="ml-2">Fetching data from Bing Webmaster Tools...</span>
       </div>
     );
   }
@@ -109,7 +109,7 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
   if (!data) {
     return (
       <Alert>
-        <AlertDescription>Ingen data tillgänglig från Bing Webmaster Tools.</AlertDescription>
+        <AlertDescription>No data available from Bing Webmaster Tools.</AlertDescription>
       </Alert>
     );
   }
@@ -140,21 +140,21 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
       {/* Search Performance */}
       <Card>
         <CardHeader>
-          <CardTitle>Sökprestanda i Bing (Senaste 30 dagarna)</CardTitle>
+          <CardTitle>Bing Search Performance (Last 30 days)</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-4">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <MousePointer className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Klick</span>
+                <span className="text-sm text-muted-foreground">Clicks</span>
               </div>
               <div className="text-2xl font-bold">{data.searchPerformance.totalClicks.toLocaleString()}</div>
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Eye className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Visningar</span>
+                <span className="text-sm text-muted-foreground">Impressions</span>
               </div>
               <div className="text-2xl font-bold">{data.searchPerformance.totalImpressions.toLocaleString()}</div>
             </div>
@@ -163,20 +163,20 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
               <div className="text-2xl font-bold">{data.searchPerformance.averageCTR}%</div>
             </div>
             <div className="space-y-2">
-              <span className="text-sm text-muted-foreground">Genomsnittlig position</span>
+              <span className="text-sm text-muted-foreground">Average position</span>
               <div className="text-2xl font-bold">{data.searchPerformance.averagePosition}</div>
             </div>
           </div>
 
           <div className="mt-6">
-            <h4 className="font-semibold mb-3">Toppfrågor i Bing</h4>
+            <h4 className="font-semibold mb-3">Top queries in Bing</h4>
             <div className="space-y-2">
               {data.searchPerformance.topQueries.map((query, index) => (
                 <div key={index} className="flex justify-between items-center p-2 rounded-lg bg-muted/50">
                   <span className="font-medium">{query.query}</span>
                   <div className="flex gap-4 text-sm text-muted-foreground">
-                    <span>{query.clicks} klick</span>
-                    <span>{query.impressions} visningar</span>
+                    <span>{query.clicks} clicks</span>
+                    <span>{query.impressions} impressions</span>
                   </div>
                 </div>
               ))}
@@ -189,47 +189,47 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
-            <CardTitle>Indexeringsstatus</CardTitle>
+            <CardTitle>Indexing status</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Totalt antal sidor</span>
+                <span className="text-sm text-muted-foreground">Total pages</span>
                 <span className="font-bold">{data.indexingStatus.totalPages}</span>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <CheckCircle className="h-4 w-4 text-green-600" />
-                  <span className="text-sm text-muted-foreground">Indexerade sidor</span>
+                  <span className="text-sm text-muted-foreground">Indexed pages</span>
                 </div>
                 <span className="font-bold text-green-600">{data.indexingStatus.indexedPages}</span>
               </div>
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Blockerade sidor</span>
+                <span className="text-sm text-muted-foreground">Blocked pages</span>
                 <span className="font-bold">{data.indexingStatus.blockedPages}</span>
               </div>
               <div className="flex justify-between items-center">
                 <div className="flex items-center gap-2">
                   <AlertTriangle className="h-4 w-4 text-red-600" />
-                  <span className="text-sm text-muted-foreground">Fel</span>
+                  <span className="text-sm text-muted-foreground">Errors</span>
                 </div>
                 <span className="font-bold text-red-600">{data.indexingStatus.errorsCount}</span>
               </div>
             </div>
 
             <div className="border-t pt-4 mt-4">
-              <h5 className="font-semibold mb-2">Crawling-statistik</h5>
+              <h5 className="font-semibold mb-2">Crawl statistics</h5>
               <div className="space-y-2 text-sm">
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Crawl-förfrågningar</span>
+                  <span className="text-muted-foreground">Crawl requests</span>
                   <span>{data.crawlStats.crawlRequests}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Crawl-fel</span>
+                  <span className="text-muted-foreground">Crawl errors</span>
                   <span className="text-red-600">{data.crawlStats.crawlErrors}</span>
                 </div>
                 <div className="flex justify-between">
-                  <span className="text-muted-foreground">Senaste crawl</span>
+                  <span className="text-muted-foreground">Last crawl</span>
                   <span>{data.crawlStats.lastCrawl}</span>
                 </div>
               </div>
@@ -240,7 +240,7 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
         <Card>
           <CardHeader>
             <CardTitle className="flex items-center justify-between">
-              Webbplatshälsa
+              Site health
               <Badge variant={getHealthBadgeVariant(data.siteHealth.score)}>
                 {data.siteHealth.score}/100
               </Badge>
@@ -248,7 +248,7 @@ export function BingWebmasterDashboard({ selectedSite, apiKey }: BingWebmasterDa
           </CardHeader>
           <CardContent>
             <div className="space-y-3">
-              <h5 className="font-semibold">Identifierade problem</h5>
+              <h5 className="font-semibold">Identified issues</h5>
               {data.siteHealth.issues.map((issue, index) => (
                 <div key={index} className="flex justify-between items-center p-2 rounded-lg bg-muted/50">
                   <div className="flex items-center gap-2">

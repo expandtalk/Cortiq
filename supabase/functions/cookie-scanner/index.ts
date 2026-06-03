@@ -46,7 +46,7 @@ const COOKIE_DATABASE: Record<string, Partial<DetectedCookie>> = {
   '_gid': { category: 'analytics', provider: 'Google Analytics', purpose: 'Distinguish users' },
   '_gat': { category: 'analytics', provider: 'Google Analytics', purpose: 'Throttle request rate' },
   '_gtag': { category: 'analytics', provider: 'Google Analytics', purpose: 'Google Analytics tracking' },
-  'heatmap_*': { category: 'analytics', provider: 'Heatmap Analytics (Expandtalk.se)', purpose: 'User behavior tracking' },
+  'heatmap_*': { category: 'analytics', provider: 'CortIQ Analytics (Expandtalk Corporation AB)', purpose: 'User behavior tracking' },
   
   // Marketing
   '_fbp': { category: 'marketing', provider: 'Facebook', purpose: 'Facebook browser tracking' },
@@ -197,10 +197,10 @@ async function scanWebsite(url: string): Promise<{ cookies: DetectedCookie[], sc
       // Check for Heatmap Analytics
       if (inlineScript.includes('HeatmapAnalytics') || inlineScript.includes('expandtalk')) {
         const script: DetectedScript = {
-          name: 'Heatmap Analytics (Expandtalk.se)',
+          name: 'CortIQ Analytics (Expandtalk Corporation AB)',
           type: 'inline_script',
           category: 'analytics',
-          provider: 'Expandtalk.se',
+          provider: 'Expandtalk Corporation AB',
           purpose: 'User behavior and heatmap tracking',
           detected_cookies: ['heatmap_session', 'heatmap_consent']
         };

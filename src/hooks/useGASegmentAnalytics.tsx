@@ -63,12 +63,12 @@ export function useGASegmentAnalytics(siteId: string | null, startDate?: string,
 
       if (gaData?.deviceSegments) {
         const deviceMetric: GASegmentMetric = {
-          name: 'Enhetssegment',
+          name: 'Device segment',
           totalValue: gaData.totalSessions,
-          unit: 'sessioner',
+          unit: 'sessions',
           segments: gaData.deviceSegments.map((segment: any) => ({
             id: segment.deviceCategory,
-            name: segment.deviceCategory === 'mobile' ? 'Mobil' : 
+            name: segment.deviceCategory === 'mobile' ? 'Mobile' :
                   segment.deviceCategory === 'desktop' ? 'Desktop' : 'Tablet',
             sessions: segment.sessions,
             users: segment.users,
@@ -81,15 +81,15 @@ export function useGASegmentAnalytics(siteId: string | null, startDate?: string,
         };
 
         const channelMetric: GASegmentMetric = {
-          name: 'Kanalsegment',
+          name: 'Channel segment',
           totalValue: gaData.totalSessions,
-          unit: 'sessioner',
+          unit: 'sessions',
           segments: gaData.channelSegments?.map((segment: any) => ({
             id: segment.channelGrouping,
-            name: segment.channelGrouping === 'Organic Search' ? 'Organisk sökning' :
-                  segment.channelGrouping === 'Direct' ? 'Direkt' :
-                  segment.channelGrouping === 'Referral' ? 'Hänvisning' :
-                  segment.channelGrouping === 'Social' ? 'Sociala medier' : segment.channelGrouping,
+            name: segment.channelGrouping === 'Organic Search' ? 'Organic Search' :
+                  segment.channelGrouping === 'Direct' ? 'Direct' :
+                  segment.channelGrouping === 'Referral' ? 'Referral' :
+                  segment.channelGrouping === 'Social' ? 'Social' : segment.channelGrouping,
             sessions: segment.sessions,
             users: segment.users,
             conversions: segment.conversions,
@@ -101,9 +101,9 @@ export function useGASegmentAnalytics(siteId: string | null, startDate?: string,
         };
 
         const geoMetric: GASegmentMetric = {
-          name: 'Geografiska segment',
+          name: 'Geographic segments',
           totalValue: gaData.totalSessions,
-          unit: 'sessioner',
+          unit: 'sessions',
           segments: gaData.geoSegments?.map((segment: any) => ({
             id: segment.country,
             name: segment.country,
@@ -118,12 +118,12 @@ export function useGASegmentAnalytics(siteId: string | null, startDate?: string,
         };
 
         const behaviorMetric: GASegmentMetric = {
-          name: 'Användarbeteende',
+          name: 'User behavior',
           totalValue: gaData.totalSessions,
-          unit: 'sessioner',
+          unit: 'sessions',
           segments: gaData.behaviorSegments?.map((segment: any) => ({
             id: segment.userType,
-            name: segment.userType === 'new' ? 'Nya användare' : 'Återkommande användare',
+            name: segment.userType === 'new' ? 'New users' : 'Returning users',
             sessions: segment.sessions,
             users: segment.users,
             conversions: segment.conversions,
@@ -140,8 +140,8 @@ export function useGASegmentAnalytics(siteId: string | null, startDate?: string,
     } catch (error) {
       console.error('Error loading GA segment data:', error);
       toast({
-        title: "⚠️ Varning",
-        description: "Kunde inte ladda Google Analytics segmentdata"
+        title: "⚠️ Warning",
+        description: "Could not load Google Analytics segment data"
       });
       // Fallback till intern data
       loadFallbackSegmentData(siteId);
@@ -180,20 +180,20 @@ export function useGASegmentAnalytics(siteId: string | null, startDate?: string,
 
     const deviceSegments: GASegment[] = Object.entries(deviceStats).map(([device, stats]) => ({
       id: device,
-      name: device === 'mobile' ? 'Mobil' : device === 'desktop' ? 'Desktop' : device,
+      name: device === 'mobile' ? 'Mobile' : device === 'desktop' ? 'Desktop' : device,
       sessions: stats.sessions,
       users: stats.sessions, // Approximation
-      conversions: 0, // Skulle behöva kopplas till conversion_events
+      conversions: 0,
       conversionRate: 0,
-      bounceRate: 0, // Skulle behöva beräknas från session data
+      bounceRate: 0,
       avgSessionDuration: stats.sessions > 0 ? stats.totalDuration / stats.sessions : 0,
       percentage: (stats.sessions / sessions.length) * 100
     }));
 
     const fallbackMetric: GASegmentMetric = {
-      name: 'Enhetssegment (intern data)',
+      name: 'Device segment (internal data)',
       totalValue: sessions.length,
-      unit: 'sessioner',
+      unit: 'sessions',
       segments: deviceSegments
     };
 

@@ -28,7 +28,7 @@ export function HeatmapPageSelector({
 
   const getPageTitle = (url: string) => {
     const formatted = formatUrl(url);
-    if (formatted === '/' || formatted === '') return 'Startsida';
+    if (formatted === '/' || formatted === '') return 'Home';
     return formatted.length > 50 ? formatted.substring(0, 50) + '...' : formatted;
   };
 
@@ -36,7 +36,7 @@ export function HeatmapPageSelector({
     return (
       <div className="flex items-center gap-2 p-4 bg-muted/50 rounded-lg">
         <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent"></div>
-        <span className="text-sm text-muted-foreground">Laddar sidor...</span>
+        <span className="text-sm text-muted-foreground">Loading pages...</span>
       </div>
     );
   }
@@ -46,7 +46,7 @@ export function HeatmapPageSelector({
       <div className="flex items-center gap-2 p-4 bg-muted/50 rounded-lg">
         <Globe className="h-4 w-4 text-muted-foreground" />
         <span className="text-sm text-muted-foreground">
-          Inga sidor med heatmap-data hittades
+          No pages with heatmap data found
         </span>
       </div>
     );
@@ -56,12 +56,12 @@ export function HeatmapPageSelector({
     <div className="space-y-2">
       <div className="flex items-center gap-2 mb-3">
         <TrendingUp className="h-4 w-4 text-primary" />
-        <h3 className="text-sm font-medium">Välj sida att visa heatmap för</h3>
+        <h3 className="text-sm font-medium">Select page to show heatmap for</h3>
       </div>
       
       <Select value={selectedUrl} onValueChange={onUrlChange}>
         <SelectTrigger className="w-full">
-          <SelectValue placeholder="Välj en sida">
+          <SelectValue placeholder="Select a page">
             {selectedUrl && (
               <div className="flex items-center gap-2">
                 <Globe className="h-4 w-4" />
@@ -83,7 +83,7 @@ export function HeatmapPageSelector({
                   <span className="truncate max-w-[200px]">{getPageTitle(page.url)}</span>
                 </div>
                 <Badge variant="secondary" className="ml-2">
-                  {page.pageViews} visningar
+                  {page.pageViews} views
                 </Badge>
               </div>
             </SelectItem>
@@ -93,7 +93,7 @@ export function HeatmapPageSelector({
       
       {selectedUrl && (
         <div className="text-xs text-muted-foreground bg-muted/30 p-2 rounded">
-          <strong>Fullständig URL:</strong> {selectedUrl}
+          <strong>Full URL:</strong> {selectedUrl}
         </div>
       )}
     </div>

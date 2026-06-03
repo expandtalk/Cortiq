@@ -60,7 +60,7 @@ export function DashboardHeader({ selectedSite, sites, onSiteSelect, dateRange, 
                 >
                   <span className="flex items-center gap-2">
                     <div className={`w-2 h-2 rounded-full ${selectedSite?.is_active ? 'bg-green-500' : 'bg-gray-400'}`} />
-                    {selectedSite ? `${selectedSite.site_name} (${selectedSite.domain})` : 'Välj site'}
+                    {selectedSite ? `${selectedSite.site_name} (${selectedSite.domain})` : 'Select site'}
                   </span>
                   <ChevronDown className="h-4 w-4 opacity-50" />
                 </Button>

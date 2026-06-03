@@ -96,7 +96,7 @@ export function usePaidAdsAnalytics(siteId: string, startDate?: string, endDate?
         const errorMessage = err instanceof Error ? err.message : 'Failed to fetch paid ads analytics';
         setError(errorMessage);
         toast({
-          title: 'Fel vid hämtning av annonsdata',
+          title: 'Error fetching ad data',
           description: errorMessage,
           variant: 'destructive'
         });

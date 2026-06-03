@@ -9,26 +9,18 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.50.3";
 
-// Simple in-memory rate limiter (per site_id)
-const rateLimits = new Map<string, { count: number; resetAt: number }>();
-const RATE_LIMIT = 1000; // requests per window
-const RATE_WINDOW = 60 * 1000; // 1 minute
-
-function checkRateLimit(siteId: string): boolean {
-  const now = Date.now();
-  const limit = rateLimits.get(siteId);
-
-  if (!limit || now > limit.resetAt) {
-    rateLimits.set(siteId, { count: 1, resetAt: now + RATE_WINDOW });
-    return true;
+// DB-backed rate limiter — works across all function instances (no cold-start reset)
+async function checkRateLimit(supabase: ReturnType<typeof createClient>, siteId: string): Promise<boolean> {
+  const { data, error } = await supabase.rpc('check_rate_limit', {
+    p_key: `visitor:${siteId}`,
+    p_max_count: 500,
+    p_window_sec: 60,
+  });
+  if (error) {
+    console.error('Rate limit check error:', error.message);
+    return true; // fail open rather than block legitimate traffic
   }
-
-  if (limit.count >= RATE_LIMIT) {
-    return false;
-  }
-
-  limit.count++;
-  return true;
+  return data === true;
 }
 
 // =====================================================
@@ -313,8 +305,8 @@ serve(async (req) => {
     const supabaseServiceKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseServiceKey);
 
-    // SECURITY: Check rate limit
-    if (!checkRateLimit(requestData.siteId)) {
+    // SECURITY: Check rate limit (DB-backed, works across all instances)
+    if (!await checkRateLimit(supabase, requestData.siteId)) {
       return new Response(
         JSON.stringify({ error: 'Rate limit exceeded' }),
         {

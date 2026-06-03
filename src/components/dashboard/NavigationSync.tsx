@@ -51,17 +51,17 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
       setSyncStatus('success');
       
       toast({
-        title: "✅ Sync begärd",
-        description: "Navigation-synkning har begärts. WordPress-pluginet kommer att synka nästa gång sidan laddas."
+        title: "✅ Sync requested",
+        description: "Navigation sync has been requested. The WordPress plugin will sync the next time the page loads."
       });
 
     } catch (error) {
       console.error('Manual sync error:', error);
       setSyncStatus('error');
-      
+
       toast({
-        title: "❌ Sync misslyckades",
-        description: "Kunde inte begära navigation-synkning.",
+        title: "❌ Sync failed",
+        description: "Could not request navigation sync.",
         variant: "destructive"
       });
     } finally {
@@ -82,7 +82,7 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
           WordPress Navigation Sync
         </CardTitle>
         <CardDescription>
-          Synkronisera WordPress-menystruktur för exakt navigation tracking
+          Sync WordPress menu structure for accurate navigation tracking
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -91,8 +91,8 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Ingen navigation-data hittad.</strong> Se till att WordPress-pluginet är installerat 
-                och aktiverat, och att minst en meny är konfigurerad på din WordPress-sida.
+                <strong>No navigation data found.</strong> Make sure the WordPress plugin is installed
+                and activated, and that at least one menu is configured on your WordPress site.
               </AlertDescription>
             </Alert>
             
@@ -101,9 +101,9 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
               <div className="flex items-center gap-3">
                 <RefreshCw className="h-5 w-5 text-muted-foreground" />
                 <div>
-                  <h4 className="font-medium">Första synkning</h4>
+                  <h4 className="font-medium">First sync</h4>
                   <p className="text-sm text-muted-foreground">
-                    Tryck för att försöka synka navigation från WordPress
+                    Press to attempt syncing navigation from WordPress
                   </p>
                 </div>
               </div>
@@ -116,12 +116,12 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
                 {syncing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Synkar...
+                    Syncing...
                   </>
                 ) : (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Synka nu
+                    Sync now
                   </>
                 )}
               </Button>
@@ -143,10 +143,10 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
                   <h4 className="font-medium">Sync Status</h4>
                   <p className="text-sm text-muted-foreground">
                     {syncStatus === 'success' 
-                      ? 'Senaste sync lyckades'
+                      ? 'Last sync succeeded'
                       : syncStatus === 'error'
-                      ? 'Sync misslyckades'
-                      : 'Redo för synkning'
+                      ? 'Sync failed'
+                      : 'Ready to sync'
                     }
                   </p>
                 </div>
@@ -160,12 +160,12 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
                 {syncing ? (
                   <>
                     <Loader2 className="h-4 w-4 mr-2 animate-spin" />
-                    Synkar...
+                    Syncing...
                   </>
                 ) : (
                   <>
                     <RefreshCw className="h-4 w-4 mr-2" />
-                    Synka nu
+                    Sync now
                   </>
                 )}
               </Button>
@@ -176,7 +176,7 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
               <div className="flex items-center gap-3 p-4 border rounded-lg">
                 <Menu className="h-5 w-5 text-blue-600" />
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Menyposter</p>
+                  <p className="text-sm font-medium text-muted-foreground">Menu items</p>
                   <p className="text-xl font-bold">{totalMenuItems}</p>
                 </div>
               </div>
@@ -184,7 +184,7 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
               <div className="flex items-center gap-3 p-4 border rounded-lg">
                 <Navigation className="h-5 w-5 text-green-600" />
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Menyplaceringar</p>
+                  <p className="text-sm font-medium text-muted-foreground">Menu locations</p>
                   <p className="text-xl font-bold">{menuLocations.length}</p>
                 </div>
               </div>
@@ -192,11 +192,11 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
               <div className="flex items-center gap-3 p-4 border rounded-lg">
                 <Clock className="h-5 w-5 text-purple-600" />
                 <div>
-                  <p className="text-sm font-medium text-muted-foreground">Senaste sync</p>
+                  <p className="text-sm font-medium text-muted-foreground">Last sync</p>
                   <p className="text-sm font-bold">
-                    {navigationConfig.last_sync 
+                    {navigationConfig.last_sync
                       ? new Date(navigationConfig.last_sync).toLocaleDateString('sv-SE')
-                      : 'Aldrig'
+                      : 'Never'
                     }
                   </p>
                 </div>
@@ -206,7 +206,7 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
             {/* Menu Locations */}
             {menuLocations.length > 0 && (
               <div>
-                <h4 className="font-medium mb-2">Aktiva menyplaceringar:</h4>
+                <h4 className="font-medium mb-2">Active menu locations:</h4>
                 <div className="flex flex-wrap gap-2">
                   {menuLocations.map((location: string) => (
                     <Badge key={location} variant="secondary" className="capitalize">
@@ -221,9 +221,9 @@ export function NavigationSync({ selectedSite }: NavigationSyncProps) {
             <Alert>
               <AlertCircle className="h-4 w-4" />
               <AlertDescription>
-                <strong>Automatisk synkning:</strong> Navigation-strukturen synkas automatiskt när 
-                du uppdaterar menyer i WordPress. Använd "Synka nu" endast om du misstänker att 
-                datan inte är uppdaterad.
+                <strong>Automatic sync:</strong> The navigation structure syncs automatically when
+                you update menus in WordPress. Use "Sync now" only if you suspect the
+                data is not up to date.
               </AlertDescription>
             </Alert>
           </div>

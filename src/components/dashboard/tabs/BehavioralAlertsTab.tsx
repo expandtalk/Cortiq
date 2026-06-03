@@ -51,12 +51,12 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
     
     if (result.success) {
       toast({
-        title: "Analys genomförd",
-        description: `${result.results?.incidentsCreated || 0} nya incidenter upptäckta`
+        title: "Analysis completed",
+        description: `${result.results?.incidentsCreated || 0} new incidents detected`
       });
     } else {
       toast({
-        title: "Analys misslyckades", 
+        title: "Analysis failed",
         description: result.error,
         variant: "destructive"
       });
@@ -69,14 +69,14 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
     
     if (result.success) {
       toast({
-        title: "Incident uppdaterad",
-        description: `Status ändrad till ${status}`
+        title: "Incident updated",
+        description: `Status changed to ${status}`
       });
       setSelectedIncident(null);
       setIncidentNotes('');
     } else {
       toast({
-        title: "Uppdatering misslyckades",
+        title: "Update failed",
         description: result.error,
         variant: "destructive"
       });
@@ -88,12 +88,12 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
     
     if (result.success) {
       toast({
-        title: "Varningsregel uppdaterad",
-        description: `Regel ${isActive ? 'aktiverad' : 'inaktiverad'}`
+        title: "Alert rule updated",
+        description: `Rule ${isActive ? 'enabled' : 'disabled'}`
       });
     } else {
       toast({
-        title: "Uppdatering misslyckades",
+        title: "Update failed",
         description: result.error,
         variant: "destructive"
       });
@@ -137,9 +137,9 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
       case 'rage_clicks':
         return (
           <div className="text-sm space-y-1">
-            <p><strong>Plats:</strong> {data.location}</p>
-            <p><strong>Antal klick:</strong> {data.clicks_count}</p>
-            <p><strong>Tidsperiod:</strong> {data.time_window}s</p>
+            <p><strong>Location:</strong> {data.location}</p>
+            <p><strong>Click count:</strong> {data.clicks_count}</p>
+            <p><strong>Time window:</strong> {data.time_window}s</p>
             <p><strong>URL:</strong> {data.url}</p>
           </div>
         );
@@ -147,25 +147,25 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
         return (
           <div className="text-sm space-y-1">
             <p><strong>Bounce rate:</strong> {data.bounce_rate?.toFixed(1)}%</p>
-            <p><strong>Totala sessioner:</strong> {data.total_sessions}</p>
-            <p><strong>Avvisade sessioner:</strong> {data.bounced_sessions}</p>
+            <p><strong>Total sessions:</strong> {data.total_sessions}</p>
+            <p><strong>Bounced sessions:</strong> {data.bounced_sessions}</p>
           </div>
         );
       case 'form_abandonment':
         return (
           <div className="text-sm space-y-1">
-            <p><strong>Formulär:</strong> {data.form_type} ({data.form_id})</p>
-            <p><strong>Avhoppsfrekvens:</strong> {data.abandonment_rate?.toFixed(1)}%</p>
-            <p><strong>Avhoppade:</strong> {data.abandoned_sessions}/{data.total_sessions}</p>
+            <p><strong>Form:</strong> {data.form_type} ({data.form_id})</p>
+            <p><strong>Abandonment rate:</strong> {data.abandonment_rate?.toFixed(1)}%</p>
+            <p><strong>Abandoned:</strong> {data.abandoned_sessions}/{data.total_sessions}</p>
           </div>
         );
       case 'mobile_conversion_drop':
         return (
           <div className="text-sm space-y-1">
-            <p><strong>Mobil konvertering:</strong> {data.mobile_conversion_rate?.toFixed(1)}%</p>
-            <p><strong>Desktop konvertering:</strong> {data.desktop_conversion_rate?.toFixed(1)}%</p>
-            <p><strong>Förhållande:</strong> {data.conversion_ratio?.toFixed(1)}x</p>
-            <p><strong>Minskning:</strong> {data.drop_percentage?.toFixed(1)}%</p>
+            <p><strong>Mobile conversion:</strong> {data.mobile_conversion_rate?.toFixed(1)}%</p>
+            <p><strong>Desktop conversion:</strong> {data.desktop_conversion_rate?.toFixed(1)}%</p>
+            <p><strong>Ratio:</strong> {data.conversion_ratio?.toFixed(1)}x</p>
+            <p><strong>Drop:</strong> {data.drop_percentage?.toFixed(1)}%</p>
           </div>
         );
       default:
@@ -189,7 +189,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
         <div>
           <h2 className="text-2xl font-bold">Alarming Behavior Tracking</h2>
           <p className="text-muted-foreground">
-            Automatisk upptäckt av onormalt användarbeteende
+            Automatic detection of abnormal user behavior
           </p>
         </div>
         <Button 
@@ -198,7 +198,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
           className="flex items-center gap-2"
         >
           <Play className="h-4 w-4" />
-          {analysisRunning ? 'Analyserar...' : 'Kör analys'}
+          {analysisRunning ? 'Analyzing...' : 'Run analysis'}
         </Button>
       </div>
 
@@ -206,7 +206,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Öppna incidenter</CardTitle>
+            <CardTitle className="text-sm font-medium">Open incidents</CardTitle>
             <AlertTriangle className="h-4 w-4 text-red-500" />
           </CardHeader>
           <CardContent>
@@ -216,7 +216,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Kritiska varningar</CardTitle>
+            <CardTitle className="text-sm font-medium">Critical alerts</CardTitle>
             <Shield className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
@@ -226,7 +226,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Höga varningar</CardTitle>
+            <CardTitle className="text-sm font-medium">High alerts</CardTitle>
             <AlertTriangle className="h-4 w-4 text-orange-500" />
           </CardHeader>
           <CardContent>
@@ -236,7 +236,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Aktiva regler</CardTitle>
+            <CardTitle className="text-sm font-medium">Active rules</CardTitle>
             <Settings className="h-4 w-4 text-green-500" />
           </CardHeader>
           <CardContent>
@@ -247,26 +247,26 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
 
       <Tabs defaultValue="incidents" className="space-y-4">
         <TabsList>
-          <TabsTrigger value="incidents">Incidenter</TabsTrigger>
-          <TabsTrigger value="alerts">Varningsregler</TabsTrigger>
+          <TabsTrigger value="incidents">Incidents</TabsTrigger>
+          <TabsTrigger value="alerts">Alert rules</TabsTrigger>
         </TabsList>
 
         <TabsContent value="incidents" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Senaste incidenter</CardTitle>
+              <CardTitle>Recent incidents</CardTitle>
               <CardDescription>
-                Automatiskt upptäckta beteendeanomalier
+                Automatically detected behavioral anomalies
               </CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="text-center py-8">Laddar incidenter...</div>
+                <div className="text-center py-8">Loading incidents...</div>
               ) : incidents.length === 0 ? (
                 <div className="text-center py-8 text-muted-foreground">
                   <CheckCircle className="h-12 w-12 mx-auto mb-4 text-green-500" />
-                  <p>Inga incidenter upptäckta</p>
-                  <p className="text-sm">Kör en analys för att kontrollera aktuell data</p>
+                  <p>No incidents detected</p>
+                  <p className="text-sm">Run an analysis to check current data</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -311,14 +311,14 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
                                 )}
                               >
                                 <Eye className="h-4 w-4 mr-1" />
-                                Hantera
+                                Manage
                               </Button>
                             </div>
                             
                             {selectedIncident === incident.id && (
                               <div className="space-y-3 p-3 bg-muted/50 rounded-lg">
                                 <Textarea
-                                  placeholder="Lägg till anteckningar..."
+                                  placeholder="Add notes..."
                                   value={incidentNotes}
                                   onChange={(e) => setIncidentNotes(e.target.value)}
                                   rows={3}
@@ -329,7 +329,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
                                     variant="outline"
                                     onClick={() => handleUpdateIncidentStatus(incident.id, 'investigating')}
                                   >
-                                    Undersök
+                                    Investigate
                                   </Button>
                                   <Button
                                     size="sm"
@@ -337,7 +337,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
                                     onClick={() => handleUpdateIncidentStatus(incident.id, 'resolved')}
                                   >
                                     <CheckCircle className="h-4 w-4 mr-1" />
-                                    Lös
+                                    Resolve
                                   </Button>
                                   <Button
                                     size="sm"
@@ -345,7 +345,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
                                     onClick={() => handleUpdateIncidentStatus(incident.id, 'dismissed')}
                                   >
                                     <XCircle className="h-4 w-4 mr-1" />
-                                    Avvisa
+                                    Dismiss
                                   </Button>
                                 </div>
                               </div>
@@ -355,7 +355,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
                         
                         {incident.notes && (
                           <div className="mt-3 p-2 bg-muted/30 rounded text-sm">
-                            <strong>Anteckningar:</strong> {incident.notes}
+                            <strong>Notes:</strong> {incident.notes}
                           </div>
                         )}
                       </CardContent>
@@ -370,14 +370,14 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
         <TabsContent value="alerts" className="space-y-4">
           <Card>
             <CardHeader>
-              <CardTitle>Varningsregler</CardTitle>
+              <CardTitle>Alert rules</CardTitle>
               <CardDescription>
-                Konfigurera automatiska beteendevarningar
+                Configure automatic behavioral alerts
               </CardDescription>
             </CardHeader>
             <CardContent>
               {loading ? (
-                <div className="text-center py-8">Laddar varningsregler...</div>
+                <div className="text-center py-8">Loading alert rules...</div>
               ) : (
                 <div className="space-y-4">
                   {alerts.map((alert) => (
@@ -404,7 +404,7 @@ export function BehavioralAlertsTab({ selectedSite }: BehavioralAlertsTabProps) 
                       </CardHeader>
                       <CardContent>
                         <div className="text-sm text-muted-foreground">
-                          <strong>Konfiguration:</strong>
+                          <strong>Configuration:</strong>
                           <pre className="mt-1 p-2 bg-muted/50 rounded text-xs overflow-auto">
                             {JSON.stringify(alert.threshold_config, null, 2)}
                           </pre>

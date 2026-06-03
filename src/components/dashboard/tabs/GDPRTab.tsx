@@ -12,7 +12,7 @@ export function GDPRTab({ selectedSite }: GDPRTabProps) {
   return (
     <Tabs defaultValue="gdpr" className="space-y-6">
       <TabsList className="grid w-full grid-cols-2">
-        <TabsTrigger value="gdpr">GDPR Inställningar</TabsTrigger>
+        <TabsTrigger value="gdpr">GDPR Settings</TabsTrigger>
         <TabsTrigger value="cmp">CMP Dashboard</TabsTrigger>
       </TabsList>
       

@@ -200,8 +200,8 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
     } catch (error) {
       console.error('Error loading funnel data:', error);
       toast({
-        title: "❌ Fel",
-        description: "Kunde inte ladda funnel-data",
+        title: "❌ Error",
+        description: "Could not load funnel data",
         variant: "destructive"
       });
     } finally {
@@ -240,7 +240,7 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
         <div className="text-right">
           <div className="text-2xl font-bold">{value}</div>
           <div className="text-sm text-muted-foreground">
-            {percentage.toFixed(1)}% av besökare
+            {percentage.toFixed(1)}% of visitors
           </div>
         </div>
       </div>
@@ -254,40 +254,40 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Filter className="h-5 w-5 text-purple-500" />
-            Konverteringstratt Analys
+            Conversion Funnel Analysis
           </CardTitle>
           <p className="text-sm text-muted-foreground">
-            Analysera hela konverteringsflödet för en specifik sida
+            Analyze the full conversion flow for a specific page
           </p>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid gap-4 md:grid-cols-2">
             <div>
-              <Label htmlFor="page-url">Välj sida att analysera</Label>
+              <Label htmlFor="page-url">Select page to analyze</Label>
               <div className="space-y-2">
-                <PageSelector 
+                <PageSelector
                   siteId={siteId}
                   selectedPage={selectedUrl}
                   onPageChange={setSelectedUrl}
-                  placeholder="Välj en sida att analysera..."
+                  placeholder="Select a page to analyze..."
                 />
                 <div className="text-xs text-muted-foreground">
-                  Viktiga sidor som kontakt, jobb och tjänster prioriteras först
+                  Important pages such as contact, jobs, and services are prioritized first
                 </div>
               </div>
             </div>
 
             <div>
-              <Label htmlFor="time-range">Tidsperiod</Label>
+              <Label htmlFor="time-range">Time period</Label>
               <Select value={timeRange} onValueChange={setTimeRange}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="1">Senaste 24h</SelectItem>
-                  <SelectItem value="7">Senaste 7 dagarna</SelectItem>
-                  <SelectItem value="30">Senaste 30 dagarna</SelectItem>
-                  <SelectItem value="90">Senaste 90 dagarna</SelectItem>
+                  <SelectItem value="1">Last 24h</SelectItem>
+                  <SelectItem value="7">Last 7 days</SelectItem>
+                  <SelectItem value="30">Last 30 days</SelectItem>
+                  <SelectItem value="90">Last 90 days</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -314,7 +314,7 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
                   <Eye className="h-5 w-5 text-blue-500" />
                   <div>
                     <div className="text-2xl font-bold">{funnelData.pageVisits}</div>
-                    <div className="text-sm text-muted-foreground">Sidbesök</div>
+                    <div className="text-sm text-muted-foreground">Page visits</div>
                   </div>
                 </div>
               </CardContent>
@@ -326,7 +326,7 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
                   <MousePointer className="h-5 w-5 text-green-500" />
                   <div>
                     <div className="text-2xl font-bold">{funnelData.totalClicks}</div>
-                    <div className="text-sm text-muted-foreground">Totala klick</div>
+                    <div className="text-sm text-muted-foreground">Total clicks</div>
                   </div>
                 </div>
               </CardContent>
@@ -338,7 +338,7 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
                   <Send className="h-5 w-5 text-purple-500" />
                   <div>
                     <div className="text-2xl font-bold">{funnelData.formSubmissions}</div>
-                    <div className="text-sm text-muted-foreground">Formulär skickade</div>
+                    <div className="text-sm text-muted-foreground">Forms submitted</div>
                   </div>
                 </div>
               </CardContent>
@@ -350,7 +350,7 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
                   <TrendingUp className="h-5 w-5 text-orange-500" />
                   <div>
                     <div className="text-2xl font-bold">{funnelData.conversionRate.toFixed(1)}%</div>
-                    <div className="text-sm text-muted-foreground">Konverteringsgrad</div>
+                    <div className="text-sm text-muted-foreground">Conversion rate</div>
                   </div>
                 </div>
               </CardContent>
@@ -360,19 +360,19 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
           {/* Detaljerad Funnel */}
           <Card>
             <CardHeader>
-              <CardTitle>Konverteringstratt</CardTitle>
+              <CardTitle>Conversion Funnel</CardTitle>
               <p className="text-sm text-muted-foreground">
-                Flöde från sidbesök till konvertering
+                Flow from page visit to conversion
               </p>
             </CardHeader>
             <CardContent className="space-y-4">
               <FunnelStep
                 icon={Eye}
-                title="1. Sidbesök"
+                title="1. Page visits"
                 value={funnelData.pageVisits}
                 total={funnelData.pageVisits}
                 color="blue"
-                description="Antal unika besök på denna sida"
+                description="Number of unique visits to this page"
               />
 
               <div className="flex justify-center">
@@ -381,11 +381,11 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
 
               <FunnelStep
                 icon={FormInput}
-                title="2. Formulärinteraktion"
+                title="2. Form interaction"
                 value={funnelData.formStarts}
                 total={funnelData.pageVisits}
                 color="green"
-                description="Började fylla i formulär eller klickade i fält"
+                description="Started filling in form or clicked a field"
               />
 
               <div className="flex justify-center">
@@ -394,33 +394,33 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
 
               <FunnelStep
                 icon={Send}
-                title="3. Formulär skickat"
+                title="3. Form submitted"
                 value={funnelData.formSubmissions}
                 total={funnelData.pageVisits}
                 color="purple"
-                description="Slutförde och skickade formuläret"
+                description="Completed and submitted the form"
               />
 
               {/* Alternativa konverteringar */}
               <div className="border-t pt-4 mt-6">
-                <h4 className="font-medium mb-3">Alternativa konverteringar</h4>
+                <h4 className="font-medium mb-3">Alternative conversions</h4>
                 <div className="grid gap-3 md:grid-cols-2">
                   <FunnelStep
                     icon={Phone}
-                    title="Telefonklick"
+                    title="Phone click"
                     value={funnelData.phoneClicks}
                     total={funnelData.pageVisits}
                     color="orange"
-                    description="Klickade på telefonnummer"
+                    description="Clicked on phone number"
                   />
 
                   <FunnelStep
                     icon={Users}
-                    title="Email-klick"
+                    title="Email click"
                     value={funnelData.emailClicks}
                     total={funnelData.pageVisits}
                     color="indigo"
-                    description="Klickade på email-adress"
+                    description="Clicked on email address"
                   />
                 </div>
               </div>
@@ -433,17 +433,17 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
                     <div className="flex items-center gap-2 p-3 bg-red-50 rounded-lg">
                       <TrendingDown className="h-5 w-5 text-red-500" />
                       <div className="text-sm">
-                        <strong>Hög avhoppsfrekvens:</strong> {funnelData.dropoffRate.toFixed(1)}% hoppar av från formuläret. 
-                        Överväg att förenkla formuläret.
+                        <strong>High drop-off rate:</strong> {funnelData.dropoffRate.toFixed(1)}% abandon the form.
+                        Consider simplifying the form.
                       </div>
                     </div>
                   )}
-                  
+
                   {funnelData.conversionRate > 5 && (
                     <div className="flex items-center gap-2 p-3 bg-green-50 rounded-lg">
                       <TrendingUp className="h-5 w-5 text-green-500" />
                       <div className="text-sm">
-                        <strong>Bra konvertering:</strong> {funnelData.conversionRate.toFixed(1)}% konverteringsgrad är över genomsnittet.
+                        <strong>Good conversion:</strong> {funnelData.conversionRate.toFixed(1)}% conversion rate is above average.
                       </div>
                     </div>
                   )}
@@ -452,8 +452,8 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
                     <div className="flex items-center gap-2 p-3 bg-blue-50 rounded-lg">
                       <Phone className="h-5 w-5 text-blue-500" />
                       <div className="text-sm">
-                        <strong>Telefon föredras:</strong> Fler klickar på telefon än skickar formulär. 
-                        Överväg att göra telefonnumret mer prominent.
+                        <strong>Phone preferred:</strong> More users click the phone number than submit the form.
+                        Consider making the phone number more prominent.
                       </div>
                     </div>
                   )}
@@ -468,7 +468,7 @@ export function PageFunnelAnalyzer({ siteId }: PageFunnelAnalyzerProps) {
         <Card>
           <CardContent className="p-8 text-center">
             <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-            <p>Analyserar konverteringstratt...</p>
+            <p>Analyzing conversion funnel...</p>
           </CardContent>
         </Card>
       )}

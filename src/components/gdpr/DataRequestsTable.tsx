@@ -5,7 +5,6 @@ import { Button } from '@/components/ui/button';
 import { Download, FileText, Trash2, Clock } from 'lucide-react';
 import { useDataRequests, type DataRequest } from '@/hooks/useGDPR';
 import { format } from 'date-fns';
-import { sv } from 'date-fns/locale';
 
 interface DataRequestsTableProps {
   siteId: string;
@@ -23,10 +22,10 @@ export function DataRequestsTable({ siteId }: DataRequestsTableProps) {
     } as const;
 
     const labels = {
-      pending: 'Väntar',
-      processing: 'Behandlas',
-      completed: 'Klar',
-      failed: 'Misslyckades'
+      pending: 'Pending',
+      processing: 'Processing',
+      completed: 'Completed',
+      failed: 'Failed'
     };
 
     return (
@@ -52,20 +51,20 @@ export function DataRequestsTable({ siteId }: DataRequestsTableProps) {
   const getTypeLabel = (type: DataRequest['request_type']) => {
     const labels = {
       export: 'Export',
-      deletion: 'Radering',
-      portability: 'Portabilitet'
+      deletion: 'Deletion',
+      portability: 'Portability'
     };
     return labels[type] || type;
   };
 
   if (isLoading) {
-    return <div>Laddar databegäranden...</div>;
+    return <div>Loading data requests...</div>;
   }
 
   if (!requests || requests.length === 0) {
     return (
       <div className="text-center py-8 text-muted-foreground">
-        Inga databegäranden ännu
+        No data requests yet
       </div>
     );
   }
@@ -75,12 +74,12 @@ export function DataRequestsTable({ siteId }: DataRequestsTableProps) {
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Typ</TableHead>
+            <TableHead>Type</TableHead>
             <TableHead>Email</TableHead>
             <TableHead>Status</TableHead>
-            <TableHead>Skapad</TableHead>
-            <TableHead>Utgår</TableHead>
-            <TableHead>Åtgärder</TableHead>
+            <TableHead>Created</TableHead>
+            <TableHead>Expires</TableHead>
+            <TableHead>Actions</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -95,22 +94,22 @@ export function DataRequestsTable({ siteId }: DataRequestsTableProps) {
               <TableCell>{request.email}</TableCell>
               <TableCell>{getStatusBadge(request.status)}</TableCell>
               <TableCell>
-                {format(new Date(request.created_at), 'PPp', { locale: sv })}
+                {format(new Date(request.created_at), 'PPp')}
               </TableCell>
               <TableCell>
-                {format(new Date(request.expires_at), 'PPp', { locale: sv })}
+                {format(new Date(request.expires_at), 'PPp')}
               </TableCell>
               <TableCell>
                 <div className="flex items-center gap-2">
                   {request.status === 'completed' && request.request_type === 'export' && (
                     <Button size="sm" variant="outline">
                       <Download className="h-3 w-3 mr-1" />
-                      Ladda ner
+                      Download
                     </Button>
                   )}
                   {request.status === 'pending' && (
                     <Button size="sm" variant="outline">
-                      Behandla
+                      Process
                     </Button>
                   )}
                 </div>

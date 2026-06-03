@@ -26,42 +26,42 @@ export function QuickNavigation({ activeTab, onTabChange, insights }: QuickNavig
   const navItems = [
     {
       id: 'overview',
-      label: 'Översikt',
+      label: 'Overview',
       icon: BarChart3,
-      description: 'Huvudöversikt och nyckeltal',
+      description: 'Main overview and key metrics',
       badge: insights?.newInsights
     },
     {
       id: 'analytics',
       label: 'Analytics',
       icon: TrendingUp,
-      description: 'Detaljerad trafikanalys'
+      description: 'Detailed traffic analysis'
     },
     {
       id: 'heatmap',
       label: 'Heatmap',
       icon: MousePointer,
-      description: 'Användarinteraktioner'
+      description: 'User interactions'
     },
     {
       id: 'form-analytics',
-      label: 'Formulär',
+      label: 'Forms',
       icon: FormInput,
-      description: 'Formuläranalys och konvertering'
+      description: 'Form analytics and conversion'
     },
     {
       id: 'ai',
-      label: 'AI Insikter',
+      label: 'AI Insights',
       icon: Brain,
-      description: 'Automatiska rekommendationer',
+      description: 'Automatic recommendations',
       badge: insights?.urgentIssues,
       badgeVariant: 'destructive' as const
     },
     {
       id: 'segments',
-      label: 'Segment',
+      label: 'Segments',
       icon: Users,
-      description: 'Målgruppsanalys'
+      description: 'Audience analysis'
     }
   ];
 

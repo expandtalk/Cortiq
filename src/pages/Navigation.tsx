@@ -20,17 +20,17 @@ export default function Navigation() {
           <div className="max-w-7xl mx-auto">
             <div className="mb-8">
               <h1 className="text-3xl font-bold text-gradient-primary mb-2">
-                Navigering
+                Navigation
               </h1>
               <p className="text-muted-foreground">
-                Analysera hur användare navigerar på din webbplats och optimera menystrukturen.
+                Analyze how users navigate your website and optimize menu structure.
               </p>
             </div>
 
             <div className="mb-6">
               <Card>
                 <CardHeader>
-                  <CardTitle>Välj webbplats</CardTitle>
+                  <CardTitle>Select website</CardTitle>
                 </CardHeader>
                 <CardContent>
                   <SiteSelector

@@ -16,10 +16,10 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
       <Card className="glass shadow-elegant">
         <CardHeader>
           <CardTitle>Server Log Analytics</CardTitle>
-          <CardDescription>Cookiefree data från server-loggar</CardDescription>
+          <CardDescription>Cookie-free data from server logs</CardDescription>
         </CardHeader>
         <CardContent>
-          <p className="text-muted-foreground">Laddar...</p>
+          <p className="text-muted-foreground">Loading...</p>
         </CardContent>
       </Card>
     );
@@ -30,11 +30,11 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
       <Card className="glass shadow-elegant">
         <CardHeader>
           <CardTitle>Server Log Analytics</CardTitle>
-          <CardDescription>Cookiefree data från server-loggar</CardDescription>
+          <CardDescription>Cookie-free data from server logs</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground">
-            Ingen data tillgänglig. Importera server-loggar för att se statistik.
+            No data available. Import server logs to view statistics.
           </p>
         </CardContent>
       </Card>
@@ -90,39 +90,39 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
       <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
         <Card className="glass">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Totala Sidvisningar</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Page Views</CardTitle>
             <BarChart3 className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalPageViews.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              Från server-loggar
+              From server logs
             </p>
           </CardContent>
         </Card>
 
         <Card className="glass">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unika Besökare (est.)</CardTitle>
+            <CardTitle className="text-sm font-medium">Unique Visitors (est.)</CardTitle>
             <Globe className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{totalUniqueVisitors.toLocaleString()}</div>
             <p className="text-xs text-muted-foreground">
-              Anonymiserat från IP
+              Anonymized from IP
             </p>
           </CardContent>
         </Card>
 
         <Card className="glass">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Genomsnittlig Laddningstid</CardTitle>
+            <CardTitle className="text-sm font-medium">Average Load Time</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{avgLoadTime}ms</div>
             <p className="text-xs text-muted-foreground">
-              Performance-data
+              Performance data
             </p>
           </CardContent>
         </Card>
@@ -157,7 +157,7 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Monitor className="h-5 w-5" />
-              <span>Enhetstyp</span>
+              <span>Device type</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -184,7 +184,7 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
           <CardHeader>
             <CardTitle className="flex items-center space-x-2">
               <Globe className="h-5 w-5" />
-              <span>Webbläsare</span>
+              <span>Browsers</span>
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -214,8 +214,8 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
       {/* Top Pages */}
       <Card className="glass shadow-elegant">
         <CardHeader>
-          <CardTitle>Populäraste Sidor</CardTitle>
-          <CardDescription>Från server-loggar</CardDescription>
+          <CardTitle>Top Pages</CardTitle>
+          <CardDescription>From server logs</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -225,7 +225,7 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
                   <Badge variant="outline">{index + 1}</Badge>
                   <span className="text-sm font-mono">{url}</span>
                 </div>
-                <span className="text-sm font-semibold">{count} visningar</span>
+                <span className="text-sm font-semibold">{count} views</span>
               </div>
             ))}
           </div>
@@ -237,9 +237,9 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Globe className="h-5 w-5" />
-            <span>Geografisk Fördelning</span>
+            <span>Geographic Distribution</span>
           </CardTitle>
-          <CardDescription>Anonymiserat från IP-adresser</CardDescription>
+          <CardDescription>Anonymized from IP addresses</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -248,7 +248,7 @@ export function ServerLogAnalytics({ siteId, dateRange }: ServerLogAnalyticsProp
               .map(([country, count]) => (
                 <div key={country} className="text-center p-3 bg-primary/5 rounded-lg">
                   <div className="text-2xl font-bold">{country}</div>
-                  <div className="text-sm text-muted-foreground">{count} besök</div>
+                  <div className="text-sm text-muted-foreground">{count} visits</div>
                   <div className="text-xs text-muted-foreground">
                     {Math.round((count / totalPageViews) * 100)}%
                   </div>

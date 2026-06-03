@@ -50,14 +50,14 @@ export function useGA4SearchTerms({ siteId, dateRange }: GA4SearchTermsProps) {
         
         // Provide user-friendly error messages
         if (functionError.message?.includes('PERMISSION_DENIED') || data?.details?.includes('PERMISSION_DENIED')) {
-          throw new Error('GA4 service account saknar behörighet till denna property. Kontrollera att service account har "Viewer"-åtkomst i GA4.');
+          throw new Error('GA4 service account lacks permission for this property. Ensure the service account has "Viewer" access in GA4.');
         } else if (functionError.message?.includes('not found') || data?.details?.includes('not found')) {
-          throw new Error('GA4 property kunde inte hittas. Kontrollera att GA4 Property ID är korrekt konfigurerat.');
+          throw new Error('GA4 property could not be found. Check that the GA4 Property ID is correctly configured.');
         } else if (functionError.message?.includes('GA4_SERVICE_ACCOUNT_KEY') || data?.error?.includes('GA4 API key')) {
-          throw new Error('GA4 service account är inte konfigurerad. Kontakta administratör för att lägga till GA4 API-nyckel.');
+          throw new Error('GA4 service account is not configured. Contact your administrator to add the GA4 API key.');
         }
-        
-        throw new Error(data?.error || functionError.message || 'Kunde inte hämta GA4 söktermer');
+
+        throw new Error(data?.error || functionError.message || 'Could not fetch GA4 search terms');
       }
 
       console.log('GA4 Search Terms data received:', data);

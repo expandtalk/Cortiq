@@ -45,7 +45,6 @@ Deno.serve(async (req) => {
     }
 
     const apiKey = authHeader.replace('Bearer ', '');
-    console.log('Received API key (first 10 chars):', apiKey.substring(0, 10));
 
     // Parse request body
     const body: TrackingEventRequest = await req.json();

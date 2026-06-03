@@ -59,14 +59,14 @@ export function AITab({ selectedSite }: AITabProps) {
       <div className="space-y-6">
         <div className="flex items-center space-x-2">
           <Bot className="h-6 w-6 text-primary animate-pulse" />
-          <h2 className="text-2xl font-bold">AI-trafikanalys</h2>
+          <h2 className="text-2xl font-bold">AI Traffic Analysis</h2>
           {useNative && (
-            <Badge variant="secondary" className="text-xs">Cookiefri tracking</Badge>
+            <Badge variant="secondary" className="text-xs">Cookie-free tracking</Badge>
           )}
         </div>
         <div className="text-center py-12">
           <div className="animate-spin h-8 w-8 border-4 border-primary border-t-transparent rounded-full mx-auto mb-4"></div>
-          <p>{useNative ? 'Hämtar cookiefri AI-trafikdata...' : 'Hämtar AI-trafikdata från Google Analytics...'}</p>
+          <p>{useNative ? 'Fetching cookie-free AI traffic data...' : 'Fetching AI traffic data from Google Analytics...'}</p>
         </div>
       </div>
     );
@@ -77,7 +77,7 @@ export function AITab({ selectedSite }: AITabProps) {
       <div className="space-y-6">
         <div className="flex items-center space-x-2">
           <Bot className="h-6 w-6 text-destructive" />
-          <h2 className="text-2xl font-bold">AI-trafikanalys</h2>
+          <h2 className="text-2xl font-bold">AI Traffic Analysis</h2>
         </div>
         <Card>
           <CardContent className="pt-6">
@@ -101,15 +101,15 @@ export function AITab({ selectedSite }: AITabProps) {
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-2">
           <Bot className="h-6 w-6 text-primary" />
-          <h2 className="text-2xl font-bold">AI-trafikanalys</h2>
+          <h2 className="text-2xl font-bold">AI Traffic Analysis</h2>
           {useNative && (
             <Badge variant="default" className="text-xs">
-              🔒 Cookiefri tracking
+              🔒 Cookie-free tracking
             </Badge>
           )}
           {!useNative && (
             <Badge variant="outline" className="text-xs">
-              GA4-integration
+              GA4 integration
             </Badge>
           )}
         </div>
@@ -118,9 +118,9 @@ export function AITab({ selectedSite }: AITabProps) {
             <SelectValue />
           </SelectTrigger>
           <SelectContent>
-            <SelectItem value="7">Senaste 7 dagarna</SelectItem>
-            <SelectItem value="30">Senaste 30 dagarna</SelectItem>
-            <SelectItem value="90">Senaste 90 dagarna</SelectItem>
+            <SelectItem value="7">Last 7 days</SelectItem>
+            <SelectItem value="30">Last 30 days</SelectItem>
+            <SelectItem value="90">Last 90 days</SelectItem>
           </SelectContent>
         </Select>
       </div>
@@ -129,7 +129,7 @@ export function AITab({ selectedSite }: AITabProps) {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Totala Sessioner</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Sessions</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -140,12 +140,12 @@ export function AITab({ selectedSite }: AITabProps) {
               ) : growthTrend >= 0 ? (
                 <>
                   <TrendingUp className="h-3 w-3 mr-1 text-green-500" />
-                  {Math.abs(growthTrend).toFixed(1)}% från föregående period
+                  {Math.abs(growthTrend).toFixed(1)}% from previous period
                 </>
               ) : (
                 <>
                   <TrendingDown className="h-3 w-3 mr-1 text-red-500" />
-                  {Math.abs(growthTrend).toFixed(1)}% från föregående period
+                  {Math.abs(growthTrend).toFixed(1)}% from previous period
                 </>
               )}
             </div>
@@ -154,39 +154,39 @@ export function AITab({ selectedSite }: AITabProps) {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Unika Användare</CardTitle>
+            <CardTitle className="text-sm font-medium">Unique Users</CardTitle>
             <MousePointer className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{data?.totalUsers || 0}</div>
             <p className="text-xs text-muted-foreground">
-              Från AI-plattformar
+              From AI platforms
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Konverteringsgrad</CardTitle>
+            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{conversionRate.toFixed(2)}%</div>
             <p className="text-xs text-muted-foreground">
-              Från AI-trafik
+              From AI traffic
             </p>
           </CardContent>
         </Card>
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Bästa Plattform</CardTitle>
+            <CardTitle className="text-sm font-medium">Top Platform</CardTitle>
             <Zap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-lg font-bold">{topPlatform?.platform || 'Ingen data'}</div>
+            <div className="text-lg font-bold">{topPlatform?.platform || 'No data'}</div>
             <p className="text-xs text-muted-foreground">
-              {topPlatform?.sessions || 0} sessioner
+              {topPlatform?.sessions || 0} sessions
             </p>
           </CardContent>
         </Card>
@@ -197,10 +197,10 @@ export function AITab({ selectedSite }: AITabProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Brain className="h-5 w-5" />
-            AI-plattformar
+            AI Platforms
           </CardTitle>
           <CardDescription>
-            Trafik från olika AI-verktyg och chatbots
+            Traffic from various AI tools and chatbots
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -208,12 +208,12 @@ export function AITab({ selectedSite }: AITabProps) {
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Plattform</TableHead>
-                  <TableHead className="text-right">Sessioner</TableHead>
-                  <TableHead className="text-right">Användare</TableHead>
-                  <TableHead className="text-right">Konverteringar</TableHead>
-                  <TableHead className="text-right">Engagemang</TableHead>
-                  <TableHead className="text-right">Genomsn. tid</TableHead>
+                  <TableHead>Platform</TableHead>
+                  <TableHead className="text-right">Sessions</TableHead>
+                  <TableHead className="text-right">Users</TableHead>
+                  <TableHead className="text-right">Conversions</TableHead>
+                  <TableHead className="text-right">Engagement</TableHead>
+                  <TableHead className="text-right">Avg. duration</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -281,19 +281,19 @@ export function AITab({ selectedSite }: AITabProps) {
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <BarChart3 className="h-5 w-5" />
-              Populäraste landningssidor från AI
+              Top landing pages from AI
             </CardTitle>
             <CardDescription>
-              Sidor som AI-användare besöker först
+              Pages AI users visit first
             </CardDescription>
           </CardHeader>
           <CardContent>
             <Table>
               <TableHeader>
                 <TableRow>
-                  <TableHead>Sida</TableHead>
-                  <TableHead className="text-right">Sessioner</TableHead>
-                  <TableHead className="text-right">Användare</TableHead>
+                  <TableHead>Page</TableHead>
+                  <TableHead className="text-right">Sessions</TableHead>
+                  <TableHead className="text-right">Users</TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
@@ -317,44 +317,44 @@ export function AITab({ selectedSite }: AITabProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Lightbulb className="h-5 w-5" />
-            AI-trafikinsikter
+            AI Traffic Insights
           </CardTitle>
           <CardDescription>
-            Automatisk analys av din AI-trafik
+            Automated analysis of your AI traffic
           </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-medium mb-2">Trafikmönster</h4>
+              <h4 className="font-medium mb-2">Traffic patterns</h4>
               {data?.totalSessions && data.totalSessions > 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  {useNative ? 
-                    `${topPlatform?.platform || 'ChatGPT'} är din främsta AI-källa med ${((topPlatform?.sessions || 0) / data.totalSessions * 100).toFixed(1)}% av all AI-trafik. Data spåras cookiefritt och GDPR-kompatibelt.` :
-                    `${topPlatform?.platform || 'ChatGPT'} är din främsta AI-källa med ${((topPlatform?.sessions || 0) / data.totalSessions * 100).toFixed(1)}% av all AI-trafik.${growthTrend > 0 ? ` AI-trafiken växer med ${growthTrend.toFixed(1)}% jämfört med föregående period.` : ''}`
+                  {useNative ?
+                    `${topPlatform?.platform || 'ChatGPT'} is your top AI source with ${((topPlatform?.sessions || 0) / data.totalSessions * 100).toFixed(1)}% of all AI traffic. Data is tracked cookie-free and GDPR-compliant.` :
+                    `${topPlatform?.platform || 'ChatGPT'} is your top AI source with ${((topPlatform?.sessions || 0) / data.totalSessions * 100).toFixed(1)}% of all AI traffic.${growthTrend > 0 ? ` AI traffic is growing by ${growthTrend.toFixed(1)}% compared to the previous period.` : ''}`
                   }
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  Ingen AI-trafik upptäckt än. {useNative ? 'Installera tracking-scriptet för att börja spåra AI-trafik cookiefritt.' : 'AI-användare hittar ofta webbplatser genom att fråga chatbots om rekommendationer.'}
+                  No AI traffic detected yet. {useNative ? 'Install the tracking script to start tracking AI traffic cookie-free.' : 'AI users often find websites by asking chatbots for recommendations.'}
                 </p>
               )}
             </div>
             
             <div className="p-4 bg-muted rounded-lg">
-              <h4 className="font-medium mb-2">Engagemang</h4>
+              <h4 className="font-medium mb-2">Engagement</h4>
               {data?.totalSessions && data.totalSessions > 0 ? (
                 <p className="text-sm text-muted-foreground">
-                  {useNative ? 
-                    `AI-användare har ${((data as any).bounceRate || 0).toFixed(1)}% bounce rate och spenderar i genomsnitt ${Math.round((data as any).avgSessionDuration || 0)} sekunder på sajten.${(data as any).bounceRate < 50 ? ' Detta är bra engagemang!' : ''}` :
-                    (data as any).summary && (data as any).summary.averageEngagementRate > 0 ? 
-                      `AI-användare har ${((data as any).summary.averageEngagementRate * 100).toFixed(1)}% engagemang och spenderar i genomsnitt ${Math.round((data as any).summary.averageSessionDuration)} sekunder på sajten.${(data as any).summary.averageEngagementRate > 0.5 ? ' Detta är högt engagemang!' : ''}` :
-                      'AI-användare är ofta mycket målinriktade och söker specifik information.'
+                  {useNative ?
+                    `AI users have a ${((data as any).bounceRate || 0).toFixed(1)}% bounce rate and spend an average of ${Math.round((data as any).avgSessionDuration || 0)} seconds on the site.${(data as any).bounceRate < 50 ? ' That is good engagement!' : ''}` :
+                    (data as any).summary && (data as any).summary.averageEngagementRate > 0 ?
+                      `AI users have ${((data as any).summary.averageEngagementRate * 100).toFixed(1)}% engagement and spend an average of ${Math.round((data as any).summary.averageSessionDuration)} seconds on the site.${(data as any).summary.averageEngagementRate > 0.5 ? ' That is high engagement!' : ''}` :
+                      'AI users are typically highly goal-oriented and seek specific information.'
                   }
                 </p>
               ) : (
                 <p className="text-sm text-muted-foreground">
-                  AI-användare är ofta mycket målinriktade och söker specifik information. Optimera för snabba svar på vanliga frågor.
+                  AI users are typically highly goal-oriented and seek specific information. Optimize for quick answers to common questions.
                 </p>
               )}
             </div>

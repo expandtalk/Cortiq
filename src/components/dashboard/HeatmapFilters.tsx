@@ -33,23 +33,23 @@ export function HeatmapFilters({
   };
 
   const deviceOptions = [
-    { value: 'all', label: 'Alla enheter', icon: Monitor },
+    { value: 'all', label: 'All devices', icon: Monitor },
     { value: 'desktop', label: 'Desktop', icon: Monitor },
-    { value: 'mobile', label: 'Mobil', icon: Smartphone },
+    { value: 'mobile', label: 'Mobile', icon: Smartphone },
     { value: 'tablet', label: 'Tablet', icon: Tablet },
   ];
 
   const dayOptions = [
-    { value: 365, label: 'Senaste året' },
-    { value: 30, label: 'Senaste månaden' },
-    { value: 7, label: 'Senaste veckan' },
+    { value: 365, label: 'Last year' },
+    { value: 30, label: 'Last month' },
+    { value: 7, label: 'Last week' },
   ];
 
   const interactionOptions = [
-    { value: 'all', label: 'Alla interaktioner', icon: MousePointer },
-    { value: 'click', label: 'Klick', icon: MousePointer },
+    { value: 'all', label: 'All interactions', icon: MousePointer },
+    { value: 'click', label: 'Clicks', icon: MousePointer },
     { value: 'scroll', label: 'Scroll', icon: Move },
-    { value: 'mousemove', label: 'Musrörelser', icon: Hand },
+    { value: 'mousemove', label: 'Mouse movement', icon: Hand },
   ];
 
   return (
@@ -78,7 +78,7 @@ export function HeatmapFilters({
       <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
         {/* Device Type Filter */}
         <div className="space-y-2">
-          <label className="text-xs font-medium text-muted-foreground">Enhetstyp</label>
+          <label className="text-xs font-medium text-muted-foreground">Device type</label>
           <Select 
             value={filters.deviceType || 'all'} 
             onValueChange={(value) => onFiltersChange({ ...filters, deviceType: value as any })}
@@ -87,7 +87,7 @@ export function HeatmapFilters({
               <SelectValue>
                 <div className="flex items-center gap-2">
                   {React.createElement(deviceIcons[filters.deviceType || 'all'], { className: "h-4 w-4" })}
-                  <span>{deviceOptions.find(d => d.value === filters.deviceType)?.label || 'Alla enheter'}</span>
+                  <span>{deviceOptions.find(d => d.value === filters.deviceType)?.label || 'All devices'}</span>
                 </div>
               </SelectValue>
             </SelectTrigger>
@@ -106,7 +106,7 @@ export function HeatmapFilters({
 
         {/* Time Period Filter */}
         <div className="space-y-2">
-          <label className="text-xs font-medium text-muted-foreground">Tidsperiod</label>
+          <label className="text-xs font-medium text-muted-foreground">Time period</label>
           <Select 
             value={String(filters.days || 365)} 
             onValueChange={(value) => onFiltersChange({ ...filters, days: parseInt(value) })}
@@ -115,7 +115,7 @@ export function HeatmapFilters({
               <SelectValue>
                 <div className="flex items-center gap-2">
                   <Calendar className="h-4 w-4" />
-                  <span>{dayOptions.find(d => d.value === filters.days)?.label || 'Alla tillgängliga data'}</span>
+                  <span>{dayOptions.find(d => d.value === filters.days)?.label || 'All available data'}</span>
                 </div>
               </SelectValue>
             </SelectTrigger>
@@ -134,7 +134,7 @@ export function HeatmapFilters({
 
         {/* Interaction Type Filter */}
         <div className="space-y-2">
-          <label className="text-xs font-medium text-muted-foreground">Interaktionstyp</label>
+          <label className="text-xs font-medium text-muted-foreground">Interaction type</label>
           <Select 
             value={filters.interactionType || 'click'} 
             onValueChange={(value) => onFiltersChange({ ...filters, interactionType: value as any })}
@@ -143,7 +143,7 @@ export function HeatmapFilters({
               <SelectValue>
                 <div className="flex items-center gap-2">
                   {React.createElement(interactionIcons[filters.interactionType || 'click'], { className: "h-4 w-4" })}
-                  <span>{interactionOptions.find(i => i.value === filters.interactionType)?.label || 'Klick'}</span>
+                  <span>{interactionOptions.find(i => i.value === filters.interactionType)?.label || 'Clicks'}</span>
                 </div>
               </SelectValue>
             </SelectTrigger>
@@ -170,10 +170,10 @@ export function HeatmapFilters({
           {loading ? (
             <>
               <div className="h-4 w-4 animate-spin rounded-full border-2 border-primary border-t-transparent mr-2"></div>
-              Uppdaterar...
+              Updating...
             </>
           ) : (
-            'Tillämpa filter'
+            'Apply filters'
           )}
         </Button>
       </div>

@@ -1,7 +1,7 @@
 -- =====================================================
 -- UNIFIED VISITOR PROFILE - DATABASE FUNCTIONS
 -- =====================================================
--- Functions för visitor identification, scoring och segmentation
+-- Functions fÃ¶r visitor identification, scoring och segmentation
 --
 -- Created: 2026-02-10
 -- =====================================================
@@ -123,7 +123,7 @@ $$;
 -- =====================================================
 -- 2. ENGAGEMENT SCORE CALCULATION
 -- =====================================================
--- Beräknar engagement score 0-100 baserat på beteende
+-- BerÃ¤knar engagement score 0-100 baserat pÃ¥ beteende
 
 CREATE OR REPLACE FUNCTION public.calculate_engagement_score(
   p_visitor_id UUID
@@ -246,7 +246,7 @@ $$;
 -- =====================================================
 -- 4. SEGMENT CLASSIFICATION
 -- =====================================================
--- Klassificerar visitor i segments baserat på rules
+-- Klassificerar visitor i segments baserat pÃ¥ rules
 
 CREATE OR REPLACE FUNCTION public.classify_visitor_segments(
   p_visitor_id UUID
@@ -607,8 +607,8 @@ AS $$
   OFFSET p_offset;
 $$;
 
--- Create unique index instead of constraint (supports expressions)
-CREATE UNIQUE INDEX unique_visitor_session_link
+-- CREATE UNIQUE INDEX IF NOT EXISTS instead of constraint (supports expressions)
+CREATE UNIQUE INDEX IF NOT EXISTS unique_visitor_session_link
 ON public.visitor_session_links (
   visitor_id,
   COALESCE(human_session_id, '00000000-0000-0000-0000-000000000000'::UUID),

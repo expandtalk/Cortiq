@@ -43,8 +43,8 @@ export function useScreenshots() {
       console.log('Screenshot function response:', data);
 
       toast({
-        title: "Skärmdump tagen",
-        description: `Skärmdump av ${url} har sparats`,
+        title: "Screenshot taken",
+        description: `Screenshot of ${url} has been saved`,
       });
 
       return data;
@@ -52,8 +52,8 @@ export function useScreenshots() {
       console.error('Screenshot error:', error);
       toast({
         variant: "destructive",
-        title: "Fel vid skärmdump",
-        description: error.message || "Kunde inte ta skärmdump av sidan",
+        title: "Screenshot error",
+        description: error.message || "Could not take a screenshot of the page",
       });
       throw error;
     } finally {

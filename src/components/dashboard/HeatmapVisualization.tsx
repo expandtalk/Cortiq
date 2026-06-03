@@ -73,7 +73,7 @@ export function HeatmapVisualization({
 
     // Validate file type
     if (!file.type.startsWith('image/')) {
-      alert('Vänligen välj en bildfil');
+      alert('Please select an image file');
       return;
     }
 
@@ -127,11 +127,11 @@ export function HeatmapVisualization({
       setScreenshots(newScreenshotData);
       
       // Success message
-      alert('Skärmdump uppladdad!');
+      alert('Screenshot uploaded!');
       
     } catch (error) {
       console.error('Error uploading screenshot:', error);
-      alert('Fel vid uppladdning av skärmdump');
+      alert('Error uploading screenshot');
     } finally {
       setIsUploading(false);
       // Clear file input
@@ -237,9 +237,9 @@ export function HeatmapVisualization({
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Flame className="h-5 w-5 text-orange-500" />
-            Heatmap Visualisering
+            Heatmap Visualization
           </CardTitle>
-          <CardDescription>Laddar heatmap data...</CardDescription>
+          <CardDescription>Loading heatmap data...</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex items-center justify-center min-h-[400px]">
@@ -257,7 +257,7 @@ export function HeatmapVisualization({
           <div className="flex-1">
             <CardTitle className="flex items-center gap-2 text-xl">
               <Flame className="h-6 w-6 text-red-500" />
-              Heatmap Visualisering
+              Heatmap Visualization
             </CardTitle>
             <div className="mt-2 space-y-1">
               {pageTitle && (
@@ -269,7 +269,7 @@ export function HeatmapVisualization({
                 {selectedUrl}
               </div>
               <CardDescription>
-                Visar {filters?.interactionType === 'all' ? 'alla interaktioner' : filters?.interactionType || 'klick'} 
+                Showing {filters?.interactionType === 'all' ? 'all interactions' : filters?.interactionType || 'clicks'}
                 {filters?.deviceType && filters.deviceType !== 'all' && (
                   <span className="inline-flex items-center gap-1 ml-2">
                     {getDeviceIcon(filters.deviceType)}
@@ -291,7 +291,7 @@ export function HeatmapVisualization({
               ) : (
                 <Camera className="h-4 w-4 mr-1" />
               )}
-              {currentScreenshot ? 'Uppdatera skärmdump' : 'Ta skärmdump'}
+              {currentScreenshot ? 'Update screenshot' : 'Take screenshot'}
             </Button>
             
             <div className="flex flex-col gap-2">
@@ -309,7 +309,7 @@ export function HeatmapVisualization({
                       ) : (
                         <Upload className="h-4 w-4 mr-1" />
                       )}
-                      {isUploading ? 'Laddar upp...' : 'Ladda upp skärmdump'}
+                      {isUploading ? 'Uploading...' : 'Upload screenshot'}
                     </span>
                   </Button>
                 </label>
@@ -325,15 +325,15 @@ export function HeatmapVisualization({
                 const deviceType = filters?.deviceType || 'desktop';
                 const getRecommendedSize = () => {
                   switch (deviceType) {
-                    case 'mobile': return '375×667px (eller liknande mobilformat)';
-                    case 'tablet': return '768×1024px (eller liknande tabletformat)';
-                    case 'desktop': return '1920×1080px (eller större)';
-                    default: return '1920×1080px (eller större)';
+                    case 'mobile': return '375×667px (or similar mobile format)';
+                    case 'tablet': return '768×1024px (or similar tablet format)';
+                    case 'desktop': return '1920×1080px (or larger)';
+                    default: return '1920×1080px (or larger)';
                   }
                 };
                 return (
                   <p className="text-xs text-muted-foreground">
-                    Rekommenderad storlek: {getRecommendedSize()}
+                    Recommended size: {getRecommendedSize()}
                   </p>
                 );
               })()}
@@ -345,7 +345,7 @@ export function HeatmapVisualization({
               onClick={() => window.open(selectedUrl, '_blank')}
             >
               <ExternalLink className="h-4 w-4 mr-1" />
-              Öppna sida
+              Open page
             </Button>
           </div>
         </div>
@@ -358,21 +358,21 @@ export function HeatmapVisualization({
               <BarChart3 className="h-4 w-4 text-blue-500" />
               <div>
                 <div className="text-sm font-medium">{heatmapData.length}</div>
-                <div className="text-xs text-muted-foreground">Punkter</div>
+                <div className="text-xs text-muted-foreground">Points</div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
               <Zap className="h-4 w-4 text-orange-500" />
               <div>
                 <div className="text-sm font-medium">{totalInteractions}</div>
-                <div className="text-xs text-muted-foreground">Interaktioner</div>
+                <div className="text-xs text-muted-foreground">Interactions</div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
               <Flame className="h-4 w-4 text-red-500" />
               <div>
                 <div className="text-sm font-medium">{maxIntensity}</div>
-                <div className="text-xs text-muted-foreground">Max intensitet</div>
+                <div className="text-xs text-muted-foreground">Max intensity</div>
               </div>
             </div>
             <div className="flex items-center gap-2 p-3 bg-green-50 border border-green-200 rounded-lg">
@@ -391,7 +391,7 @@ export function HeatmapVisualization({
             </div>
             <div className="flex items-center gap-2 p-3 bg-muted/50 rounded-lg">
               <div className="text-sm font-medium">{filters?.days || 7}</div>
-              <div className="text-xs text-muted-foreground">Dagar</div>
+              <div className="text-xs text-muted-foreground">Days</div>
             </div>
           </div>
 
@@ -399,7 +399,7 @@ export function HeatmapVisualization({
           <Tabs value={viewMode} onValueChange={(value) => setViewMode(value as any)}>
             <TabsList>
               <TabsTrigger value="heatmap">Heatmap</TabsTrigger>
-              <TabsTrigger value="points">Punkter</TabsTrigger>
+              <TabsTrigger value="points">Points</TabsTrigger>
             </TabsList>
 
             <TabsContent value="heatmap" className="mt-4">
@@ -469,9 +469,9 @@ export function HeatmapVisualization({
                       ) : (
                         <div className="flex flex-col items-center justify-center h-full text-gray-500 bg-gray-50">
                           <Camera className="h-12 w-12 mb-4 text-gray-400" />
-                          <h3 className="text-lg font-medium mb-2">Ingen skärmdump tillgänglig</h3>
+                          <h3 className="text-lg font-medium mb-2">No screenshot available</h3>
                           <p className="text-sm text-center max-w-md mb-4">
-                            Ta en skärmdump av denna sida för att se heatmapen overlayad på den riktiga designen.
+                            Take a screenshot of this page to see the heatmap overlaid on the actual design.
                           </p>
                           <Button 
                             onClick={handleTakeScreenshot}
@@ -481,12 +481,12 @@ export function HeatmapVisualization({
                             {screenshotLoading ? (
                               <>
                                 <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                                Tar skärmdump...
+                                Taking screenshot...
                               </>
                             ) : (
                               <>
                                 <Camera className="h-4 w-4 mr-2" />
-                                Ta skärmdump
+                                Take screenshot
                               </>
                             )}
                           </Button>
@@ -498,12 +498,12 @@ export function HeatmapVisualization({
                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 bg-black/50 backdrop-blur-sm">
                          <div className="bg-white/90 rounded-lg p-6 max-w-md">
                            <div className="text-4xl mb-4">🔍</div>
-                           <h3 className="text-lg font-medium text-gray-800 mb-2">Ingen heatmap-data</h3>
+                           <h3 className="text-lg font-medium text-gray-800 mb-2">No heatmap data</h3>
                            <p className="text-sm text-gray-600">
-                             Det finns ingen {filters?.interactionType === 'all' ? 'interaktions' : filters?.interactionType || 'klick'}-data för denna sida under den valda tidsperioden.
+                             There is no {filters?.interactionType === 'all' ? 'interaction' : filters?.interactionType || 'click'} data for this page in the selected time period.
                            </p>
                            <div className="mt-4 text-xs text-gray-500">
-                             Installera WordPress-pluginet för att börja samla in data
+                             Install the WordPress plugin to start collecting data
                            </div>
                          </div>
                        </div>
@@ -612,9 +612,9 @@ export function HeatmapVisualization({
                      {!validScreenshot && heatmapData.length === 0 && (
                        <div className="absolute inset-0 flex flex-col items-center justify-center text-center z-30 bg-white/90 backdrop-blur-sm">
                          <Camera className="h-12 w-12 mb-4 text-gray-400" />
-                         <h3 className="text-lg font-medium text-gray-600 mb-2">Skärmdump behövs</h3>
+                         <h3 className="text-lg font-medium text-gray-600 mb-2">Screenshot needed</h3>
                          <p className="text-sm text-gray-500 max-w-md mb-4">
-                           Ta en skärmdump av denna sida för att visualisera heatmap-datan på den riktiga designen.
+                           Take a screenshot of this page to visualize the heatmap data on the actual design.
                          </p>
                          <Button 
                            onClick={handleTakeScreenshot}
@@ -624,12 +624,12 @@ export function HeatmapVisualization({
                            {screenshotLoading ? (
                              <>
                                <RefreshCw className="h-4 w-4 mr-2 animate-spin" />
-                               Tar skärmdump...
+                               Taking screenshot...
                              </>
                            ) : (
                              <>
                                <Camera className="h-4 w-4 mr-2" />
-                               Ta skärmdump
+                               Take screenshot
                              </>
                            )}
                          </Button>
@@ -644,7 +644,7 @@ export function HeatmapVisualization({
               <div className="space-y-4">
                 {heatmapData.length === 0 ? (
                   <div className="text-center py-8 text-muted-foreground">
-                    Ingen data att visa
+                    No data to display
                   </div>
                 ) : (
                   <div className="grid gap-2 max-h-[400px] overflow-y-auto">
@@ -658,7 +658,7 @@ export function HeatmapVisualization({
                             </div>
                             <div className="text-xs text-muted-foreground">
                               {point.grid_x !== undefined && point.grid_y !== undefined ? (
-                                <>Grid: ({point.grid_x}, {point.grid_y}) • GDPR-säker</>
+                                <>Grid: ({point.grid_x}, {point.grid_y}) • GDPR-safe</>
                               ) : (
                                 <>Position: ({point.x_coordinate || 0}, {point.y_coordinate || 0}) • Legacy</>
                               )}
@@ -691,33 +691,33 @@ export function HeatmapVisualization({
           {/* Enhanced Legend */}
           <div className="space-y-3 pt-4 border-t">
             <div className="flex items-center gap-4">
-              <span className="text-sm font-medium text-muted-foreground">Intensitet:</span>
+              <span className="text-sm font-medium text-muted-foreground">Intensity:</span>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-blue-500 rounded-full shadow-sm"></div>
-                  <span className="text-xs">Låg (1-20%)</span>
+                  <span className="text-xs">Low (1-20%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-yellow-500 rounded-full shadow-sm"></div>
-                  <span className="text-xs">Medel (21-40%)</span>
+                  <span className="text-xs">Medium (21-40%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-orange-500 rounded-full shadow-md shadow-orange-400/50"></div>
-                  <span className="text-xs">Hög (41-60%)</span>
+                  <span className="text-xs">High (41-60%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-red-500 rounded-full shadow-md shadow-red-400/50"></div>
-                  <span className="text-xs">Mycket hög (61-80%)</span>
+                  <span className="text-xs">Very high (61-80%)</span>
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-red-600 rounded-full shadow-lg shadow-red-500/60"></div>
-                  <span className="text-xs">Extremt hög (81-100%)</span>
+                  <span className="text-xs">Extremely high (81-100%)</span>
                 </div>
               </div>
             </div>
             
             <div className="flex items-center gap-4">
-              <span className="text-sm font-medium text-muted-foreground">Områden:</span>
+              <span className="text-sm font-medium text-muted-foreground">Zones:</span>
               <div className="flex items-center gap-3">
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-green-100 border border-green-200 rounded"></div>
@@ -729,7 +729,7 @@ export function HeatmapVisualization({
                 </div>
                 <div className="flex items-center gap-2">
                   <div className="w-4 h-4 bg-gradient-to-b from-transparent to-gray-300 rounded"></div>
-                  <span className="text-xs">Uppmärksamhet minskar nedåt</span>
+                  <span className="text-xs">Attention decreases downward</span>
                 </div>
               </div>
             </div>

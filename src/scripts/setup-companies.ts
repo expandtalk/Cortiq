@@ -79,7 +79,7 @@ async function setupCompanies() {
     } else {
       console.log(`✅ ${data.name}`);
       console.log(`   Company ID: ${data.id}`);
-      console.log(`   API Key: ${data.api_key}`);
+      console.log(`   API Key: ${data.api_key.substring(0, 8)}...`);
       console.log('');
     }
   }

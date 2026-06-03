@@ -105,10 +105,10 @@ export function useCreateAgent() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['agent-registry', variables.site_id] });
-      toast.success('Agent registrerad');
+      toast.success('Agent registered');
     },
     onError: (error) => {
-      toast.error('Kunde inte registrera agent: ' + error.message);
+      toast.error('Could not register agent: ' + error.message);
     },
   });
 }
@@ -130,10 +130,10 @@ export function useUpdateAgent() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['agent-registry', data.site_id] });
-      toast.success('Agent uppdaterad');
+      toast.success('Agent updated');
     },
     onError: (error) => {
-      toast.error('Kunde inte uppdatera agent: ' + error.message);
+      toast.error('Could not update agent: ' + error.message);
     },
   });
 }
@@ -153,10 +153,10 @@ export function useDeleteAgent() {
     },
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['agent-registry', data.siteId] });
-      toast.success('Agent borttagen');
+      toast.success('Agent removed');
     },
     onError: (error) => {
-      toast.error('Kunde inte ta bort agent: ' + error.message);
+      toast.error('Could not remove agent: ' + error.message);
     },
   });
 }

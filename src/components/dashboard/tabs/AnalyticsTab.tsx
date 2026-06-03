@@ -43,15 +43,15 @@ export function AnalyticsTab({ analytics, dateRange }: AnalyticsTabProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Prestanda-metrics</CardTitle>
+            <CardTitle>Performance metrics</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
             <div className="text-sm text-muted-foreground">
-              <p>• Trafikkällor: ✅ Implementerat (Google Analytics)</p>
-              <p>• Konverteringsrate: ✅ Implementerat (Funnel Analyzer)</p>
-              <p>• Formulär-analys: ✅ Implementerat (Funnel Analyzer)</p>
-              <p>• Laddningstid: Kommer implementeras</p>
-              <p>• Core Web Vitals: Kommer implementeras</p>
+              <p>• Traffic sources: ✅ Implemented (Google Analytics)</p>
+              <p>• Conversion rate: ✅ Implemented (Funnel Analyzer)</p>
+              <p>• Form analysis: ✅ Implemented (Funnel Analyzer)</p>
+              <p>• Load time: Coming soon</p>
+              <p>• Core Web Vitals: Coming soon</p>
             </div>
           </CardContent>
         </Card>

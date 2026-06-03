@@ -17,7 +17,7 @@ export function RealTimeWidget({ siteId }: RealTimeWidgetProps) {
         <CardHeader>
           <div className="flex items-center space-x-2">
             <Activity className="h-5 w-5" />
-            <CardTitle>Realtid</CardTitle>
+            <CardTitle>Real-time</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
@@ -35,11 +35,11 @@ export function RealTimeWidget({ siteId }: RealTimeWidgetProps) {
         <CardHeader>
           <div className="flex items-center space-x-2">
             <Activity className="h-5 w-5" />
-            <CardTitle>Realtid</CardTitle>
+            <CardTitle>Real-time</CardTitle>
           </div>
         </CardHeader>
         <CardContent>
-          <p className="text-sm text-muted-foreground">Kunde inte ladda realtidsdata</p>
+          <p className="text-sm text-muted-foreground">Could not load real-time data</p>
         </CardContent>
       </Card>
     );
@@ -53,7 +53,7 @@ export function RealTimeWidget({ siteId }: RealTimeWidgetProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Activity className="h-5 w-5" />
-            <CardTitle>Realtid</CardTitle>
+            <CardTitle>Real-time</CardTitle>
             <div className="flex items-center space-x-1">
               <div className="w-2 h-2 bg-green-500 rounded-full animate-pulse" />
               <span className="text-xs text-muted-foreground">Live</span>
@@ -61,7 +61,7 @@ export function RealTimeWidget({ siteId }: RealTimeWidgetProps) {
           </div>
         </div>
         <CardDescription>
-          Senast uppdaterad: {stats.lastUpdated.toLocaleTimeString('sv-SE')}
+          Last updated: {stats.lastUpdated.toLocaleTimeString('sv-SE')}
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -69,7 +69,7 @@ export function RealTimeWidget({ siteId }: RealTimeWidgetProps) {
         <div className="flex items-center justify-between">
           <div className="flex items-center space-x-2">
             <Eye className="h-4 w-4 text-muted-foreground" />
-            <span className="text-sm">Aktiva besökare</span>
+            <span className="text-sm">Active visitors</span>
           </div>
           <Badge variant={stats.activeVisitors > 0 ? "default" : "secondary"}>
             {stats.activeVisitors}
@@ -78,17 +78,17 @@ export function RealTimeWidget({ siteId }: RealTimeWidgetProps) {
 
         {/* Page Views Today */}
         <div className="flex items-center justify-between">
-          <span className="text-sm">Sidvisningar idag</span>
+          <span className="text-sm">Page views today</span>
           <span className="font-semibold">{stats.pageViewsToday.toLocaleString('sv-SE')}</span>
         </div>
 
         {/* Top Page */}
         {stats.topPage && (
           <div>
-            <p className="text-sm text-muted-foreground mb-1">Populäraste sida idag</p>
+            <p className="text-sm text-muted-foreground mb-1">Top page today</p>
             <div className="text-xs bg-muted p-2 rounded">
               <p className="font-medium truncate">{stats.topPage.url}</p>
-              <p className="text-muted-foreground">{stats.topPage.views} visningar</p>
+              <p className="text-muted-foreground">{stats.topPage.views} views</p>
             </div>
           </div>
         )}
@@ -96,7 +96,7 @@ export function RealTimeWidget({ siteId }: RealTimeWidgetProps) {
         {/* Device Breakdown */}
         {totalSessions > 0 && (
           <div>
-            <p className="text-sm text-muted-foreground mb-2">Enhetsfördelning idag</p>
+            <p className="text-sm text-muted-foreground mb-2">Device breakdown today</p>
             <div className="space-y-2">
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center space-x-1">
@@ -108,7 +108,7 @@ export function RealTimeWidget({ siteId }: RealTimeWidgetProps) {
               <div className="flex items-center justify-between text-xs">
                 <div className="flex items-center space-x-1">
                   <Smartphone className="h-3 w-3" />
-                  <span>Mobil</span>
+                  <span>Mobile</span>
                 </div>
                 <span>{Math.round((stats.deviceBreakdown.mobile / totalSessions) * 100)}%</span>
               </div>

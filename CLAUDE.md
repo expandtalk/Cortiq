@@ -1,6 +1,6 @@
 # CLAUDE.md — CortIQ
 
-CortIQ is an open-source web analytics platform focused on AI bot intelligence and cookie-free tracking. It is one of three products built by Expandtalk:
+CortIQ is an open-source web analytics platform focused on AI bot intelligence and cookie-free tracking. It is one of three products built by Expandtalk Corporation AB:
 
 | Product | Purpose |
 |---------|---------|

@@ -27,7 +27,7 @@ function fmtDur(s: number): string {
   return `${m}:${Math.floor(s % 60).toString().padStart(2, '0')}`;
 }
 
-const MONTH_SHORT = ['Jan','Feb','Mar','Apr','Maj','Jun','Jul','Aug','Sep','Okt','Nov','Dec'];
+const MONTH_SHORT = ['Jan','Feb','Mar','Apr','May','Jun','Jul','Aug','Sep','Oct','Nov','Dec'];
 
 // ── Platform icon initials ─────────────────────────────────────────────────
 function PlatformBadge({ platform, size = 'md' }: { platform: PlatformStats; size?: 'sm' | 'md' }) {
@@ -73,17 +73,17 @@ function PlatformCard({ p, rank, totalSessions }: { p: PlatformStats; rank: numb
               <div className="flex items-center gap-2">
                 <span className="font-semibold">{p.label}</span>
                 <Badge variant="outline" className="text-[10px] px-1.5 py-0">#{rank}</Badge>
-                <span className="text-xs text-muted-foreground">{share.toFixed(1)}% av social trafik</span>
+                <span className="text-xs text-muted-foreground">{share.toFixed(1)}% of social traffic</span>
               </div>
               <p className="text-xs text-muted-foreground mt-0.5">
-                {fmt(p.sessions)} sessioner · {fmt(p.uniqueUsers)} besökare
+                {fmt(p.sessions)} sessions · {fmt(p.uniqueUsers)} visitors
               </p>
             </div>
           </div>
           <button
             onClick={() => setOpen(v => !v)}
             className="text-muted-foreground hover:text-foreground transition-colors"
-            aria-label="Expandera"
+            aria-label="Expand"
           >
             {open ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />}
           </button>
@@ -95,17 +95,17 @@ function PlatformCard({ p, rank, totalSessions }: { p: PlatformStats; rank: numb
         <div className="grid grid-cols-3 gap-3 text-center mb-3">
           <div>
             <p className="text-lg font-bold">{fmt(p.pageViews)}</p>
-            <p className="text-[11px] text-muted-foreground">Sidvisningar</p>
+            <p className="text-[11px] text-muted-foreground">Page views</p>
           </div>
           <div>
             <p className="text-lg font-bold">{fmtDur(p.avgDuration)}</p>
-            <p className="text-[11px] text-muted-foreground">Snitt tid</p>
+            <p className="text-[11px] text-muted-foreground">Avg. time</p>
           </div>
           <div>
             <p className={`text-lg font-bold ${p.bounceRate > 70 ? 'text-red-500' : p.bounceRate < 40 ? 'text-emerald-600' : ''}`}>
               {p.bounceRate.toFixed(0)}%
             </p>
-            <p className="text-[11px] text-muted-foreground">Avhoppade</p>
+            <p className="text-[11px] text-muted-foreground">Bounced</p>
           </div>
         </div>
 
@@ -119,7 +119,7 @@ function PlatformCard({ p, rank, totalSessions }: { p: PlatformStats; rank: numb
             {p.campaigns.length > 0 && (
               <div>
                 <p className="text-xs font-semibold text-muted-foreground mb-1.5 flex items-center gap-1">
-                  <Tag className="h-3 w-3" /> UTM-kampanjer
+                  <Tag className="h-3 w-3" /> UTM campaigns
                 </p>
                 <div className="space-y-1">
                   {p.campaigns.map(c => {
@@ -142,14 +142,14 @@ function PlatformCard({ p, rank, totalSessions }: { p: PlatformStats; rank: numb
             {/* Monthly bar chart */}
             <div>
               <p className="text-xs font-semibold text-muted-foreground mb-1.5 flex items-center gap-1">
-                <BarChart3 className="h-3 w-3" /> Månadsvis trafik
+                <BarChart3 className="h-3 w-3" /> Monthly traffic
               </p>
               <ResponsiveContainer width="100%" height={100}>
                 <BarChart data={p.monthlyTrend.map((v, i) => ({ m: MONTH_SHORT[i], v }))}
                   margin={{ top: 2, right: 2, left: -20, bottom: 0 }}>
                   <XAxis dataKey="m" tick={{ fontSize: 9 }} />
                   <YAxis tick={{ fontSize: 9 }} width={30} />
-                  <Tooltip formatter={(v: number) => [v, 'Sessioner']} />
+                  <Tooltip formatter={(v: number) => [v, 'Sessions']} />
                   <Bar dataKey="v" fill={p.color} fillOpacity={0.85} radius={[2,2,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
@@ -187,7 +187,7 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
           <AlertCircle className="h-8 w-8 mx-auto mb-3 opacity-40" />
           <p className="text-muted-foreground mb-4">{error}</p>
           <Button onClick={refetch} variant="outline" size="sm">
-            <RefreshCw className="h-4 w-4 mr-2" />Försök igen
+            <RefreshCw className="h-4 w-4 mr-2" />Try again
           </Button>
         </CardContent>
       </Card>
@@ -197,8 +197,8 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
   // Cross-platform comparison chart data
   const compareData = platforms.map(p => ({
     name: p.label,
-    Sessioner: p.sessions,
-    Besökare: p.uniqueUsers,
+    Sessions: p.sessions,
+    Visitors: p.uniqueUsers,
     fill: p.color,
   }));
 
@@ -222,7 +222,7 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
             Social Media Analytics
           </h1>
           <p className="text-muted-foreground text-sm mt-1">
-            UTM-baserad spårning · Referrertrafik · {selectedSite.site_name}
+            UTM-based tracking · Referral traffic · {selectedSite.site_name}
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -243,11 +243,11 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
       {/* ── Summary cards ── */}
       <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
         {[
-          { label: 'Social sessioner', value: fmt(summary.totalSessions), icon: MousePointer, color: 'pink' },
-          { label: 'Unika besökare', value: fmt(summary.totalUniqueUsers), icon: Users, color: 'purple' },
-          { label: 'Aktiva plattformar', value: String(platforms.length), icon: Share2, color: 'blue' },
+          { label: 'Social sessions', value: fmt(summary.totalSessions), icon: MousePointer, color: 'pink' },
+          { label: 'Unique visitors', value: fmt(summary.totalUniqueUsers), icon: Users, color: 'purple' },
+          { label: 'Active platforms', value: String(platforms.length), icon: Share2, color: 'blue' },
           {
-            label: 'Toppkanal',
+            label: 'Top channel',
             value: platforms[0]?.label ?? '—',
             icon: TrendingUp,
             color: 'emerald'
@@ -271,9 +271,9 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
         <Card>
           <CardContent className="py-14 text-center">
             <Share2 className="h-10 w-10 mx-auto mb-4 opacity-30" />
-            <h3 className="font-semibold mb-1">Ingen social trafik detekterad för {selectedYear}</h3>
+            <h3 className="font-semibold mb-1">No social traffic detected for {selectedYear}</h3>
             <p className="text-sm text-muted-foreground max-w-md mx-auto mb-4">
-              Social trafik identifieras via referrer (besökarens föregående sida) eller UTM-parametrar. Se till att märka upp dina sociala länkar med UTM-taggar för bästa spårning.
+              Social traffic is identified via referrer (the visitor's previous page) or UTM parameters. Make sure to tag your social links with UTM tags for best tracking results.
             </p>
             <div className="inline-block text-left bg-muted/60 rounded-lg p-4 text-xs font-mono">
               ?utm_source=facebook&utm_medium=social&utm_campaign=kampanjnamn
@@ -289,7 +289,7 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
             <CardHeader className="pb-2">
               <CardTitle className="text-base flex items-center gap-2">
                 <BarChart3 className="h-4 w-4 text-muted-foreground" />
-                Plattformsjämförelse — sessioner & besökare
+                Platform comparison — sessions & visitors
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -300,8 +300,8 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
                   <YAxis tickFormatter={v => fmt(Number(v))} tick={{ fontSize: 11 }} width={40} />
                   <Tooltip formatter={(v: number) => fmt(v)} />
                   <Legend iconSize={10} wrapperStyle={{ fontSize: 11 }} />
-                  <Bar dataKey="Sessioner" fill="#ec4899" fillOpacity={0.85} radius={[3,3,0,0]} />
-                  <Bar dataKey="Besökare"  fill="#8b5cf6" fillOpacity={0.7}  radius={[3,3,0,0]} />
+                  <Bar dataKey="Sessions" fill="#ec4899" fillOpacity={0.85} radius={[3,3,0,0]} />
+                  <Bar dataKey="Visitors"  fill="#8b5cf6" fillOpacity={0.7}  radius={[3,3,0,0]} />
                 </BarChart>
               </ResponsiveContainer>
             </CardContent>
@@ -313,7 +313,7 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
               <CardHeader className="pb-2">
                 <CardTitle className="text-base flex items-center gap-2">
                   <TrendingUp className="h-4 w-4 text-muted-foreground" />
-                  Månadsvis trafik per plattform — {selectedYear}
+                  Monthly traffic by platform — {selectedYear}
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -338,7 +338,7 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
           <div>
             <h2 className="text-base font-semibold mb-3 flex items-center gap-2">
               <Share2 className="h-4 w-4 text-muted-foreground" />
-              Per plattform
+              Per platform
             </h2>
             <div className="grid grid-cols-1 md:grid-cols-2 xl:grid-cols-3 gap-4">
               {platforms.map((p, i) => (
@@ -354,25 +354,24 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
         <CardHeader className="pb-2">
           <CardTitle className="text-sm flex items-center gap-2 text-amber-800 dark:text-amber-300">
             <Lightbulb className="h-4 w-4" />
-            Om "dark social" och mätningsbegränsningar
+            About "dark social" and measurement limitations
           </CardTitle>
         </CardHeader>
         <CardContent className="text-xs text-amber-900/80 dark:text-amber-300/80 space-y-2">
           <p>
-            <strong>Dark social</strong> — delningar via direktmeddelanden (WhatsApp, Messenger, SMS) och e-post
-            syns vanligtvis som <em>direkt trafik</em> och fångas inte här. Det kan innebära att social
-            faktiskt driver mer trafik än vad som visas.
+            <strong>Dark social</strong> — shares via direct messages (WhatsApp, Messenger, SMS) and email
+            typically show as <em>direct traffic</em> and are not captured here. Social may actually be driving more traffic than shown.
           </p>
           <p>
-            <strong>Märk upp dina länkar</strong> med UTM-parametrar för alla publicerade inlägg för att maximera
-            spårningsnoggrannheten. Exempel:
+            <strong>Tag your links</strong> with UTM parameters for all published posts to maximize
+            tracking accuracy. Example:
           </p>
           <code className="block bg-amber-100 rounded px-2 py-1 font-mono">
-            ?utm_source=instagram&utm_medium=social&utm_campaign=produkt-launch-2025
+            ?utm_source=instagram&utm_medium=social&utm_campaign=product-launch-2025
           </code>
           <p className="flex items-start gap-1">
-            <span className="mt-0.5">Fas 2 (roadmap):</span>
-            <span>Meta Business Suite API-integration för räckvidd, impressions och engagement rate direkt från plattformen — oavsett om besökaren klickar vidare till din sajt.</span>
+            <span className="mt-0.5">Phase 2 (roadmap):</span>
+            <span>Meta Business Suite API integration for reach, impressions, and engagement rate directly from the platform — regardless of whether the visitor clicks through to your site.</span>
           </p>
         </CardContent>
       </Card>
@@ -383,10 +382,10 @@ export function SocialMediaTab({ selectedSite }: SocialMediaTabProps) {
           <div className="flex items-center gap-3">
             <ExternalLink className="h-5 w-5 text-muted-foreground flex-shrink-0" />
             <div>
-              <p className="text-sm font-medium">Roadmap: Fas 2 & 3 — Nativa plattformsintegrationer</p>
+              <p className="text-sm font-medium">Roadmap: Phase 2 & 3 — Native platform integrations</p>
               <p className="text-xs text-muted-foreground mt-0.5">
-                <strong>Fas 2:</strong> Meta Business Suite (Facebook + Instagram) — räckvidd, impressions, engagement rate, follower-tillväxt.&ensp;
-                <strong>Fas 3:</strong> LinkedIn Marketing API + TikTok for Business API.
+                <strong>Phase 2:</strong> Meta Business Suite (Facebook + Instagram) — reach, impressions, engagement rate, follower growth.&ensp;
+                <strong>Phase 3:</strong> LinkedIn Marketing API + TikTok for Business API.
               </p>
             </div>
           </div>

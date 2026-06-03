@@ -42,10 +42,10 @@ interface OrganizationMembersProps {
 }
 
 const roleConfig: Record<OrgRole, { label: string; icon: React.ComponentType<{ className?: string }>; color: string }> = {
-  owner: { label: 'Ägare', icon: Crown, color: 'bg-yellow-500/10 text-yellow-600' },
+  owner: { label: 'Owner', icon: Crown, color: 'bg-yellow-500/10 text-yellow-600' },
   admin: { label: 'Admin', icon: Shield, color: 'bg-blue-500/10 text-blue-600' },
-  member: { label: 'Medlem', icon: User, color: 'bg-green-500/10 text-green-600' },
-  viewer: { label: 'Läsare', icon: Eye, color: 'bg-gray-500/10 text-gray-600' },
+  member: { label: 'Member', icon: User, color: 'bg-green-500/10 text-green-600' },
+  viewer: { label: 'Viewer', icon: Eye, color: 'bg-gray-500/10 text-gray-600' },
 };
 
 export function OrganizationMembers({ organizationId }: OrganizationMembersProps) {
@@ -66,7 +66,7 @@ export function OrganizationMembers({ organizationId }: OrganizationMembersProps
   };
 
   const handleRemoveMember = (memberId: string) => {
-    if (confirm('Är du säker på att du vill ta bort denna medlem?')) {
+    if (confirm('Are you sure you want to remove this member?')) {
       removeMember.mutate({ memberId, organizationId });
     }
   };
@@ -75,7 +75,7 @@ export function OrganizationMembers({ organizationId }: OrganizationMembersProps
     return (
       <Card>
         <CardContent className="p-6">
-          <p className="text-muted-foreground">Laddar teammedlemmar...</p>
+          <p className="text-muted-foreground">Loading team members...</p>
         </CardContent>
       </Card>
     );
@@ -89,16 +89,16 @@ export function OrganizationMembers({ organizationId }: OrganizationMembersProps
             <div>
               <CardTitle className="flex items-center gap-2">
                 <Users className="h-5 w-5" />
-                Teammedlemmar
+                Team members
               </CardTitle>
               <CardDescription>
-                Hantera vem som har åtkomst till organisationen
+                Manage who has access to the organization
               </CardDescription>
             </div>
             {canManageMembers && (
               <Button onClick={() => setShowInviteDialog(true)}>
                 <UserPlus className="h-4 w-4 mr-2" />
-                Bjud in
+                Invite
               </Button>
             )}
           </div>
@@ -124,9 +124,9 @@ export function OrganizationMembers({ organizationId }: OrganizationMembersProps
                     </Avatar>
                     <div>
                       <p className="font-medium">
-                        {member.profile?.full_name || member.email || 'Okänd användare'}
+                        {member.profile?.full_name || member.email || 'Unknown user'}
                         {isCurrentUser && (
-                          <span className="text-xs text-muted-foreground ml-2">(du)</span>
+                          <span className="text-xs text-muted-foreground ml-2">(you)</span>
                         )}
                       </p>
                       <Badge variant="secondary" className={config.color}>
@@ -145,20 +145,20 @@ export function OrganizationMembers({ organizationId }: OrganizationMembersProps
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => handleRoleChange(member.id, 'admin')}>
-                          Gör till admin
+                          Make admin
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleRoleChange(member.id, 'member')}>
-                          Gör till medlem
+                          Make member
                         </DropdownMenuItem>
                         <DropdownMenuItem onClick={() => handleRoleChange(member.id, 'viewer')}>
-                          Gör till läsare
+                          Make viewer
                         </DropdownMenuItem>
                         <DropdownMenuSeparator />
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="text-destructive"
                           onClick={() => handleRemoveMember(member.id)}
                         >
-                          Ta bort från team
+                          Remove from team
                         </DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
@@ -169,7 +169,7 @@ export function OrganizationMembers({ organizationId }: OrganizationMembersProps
             
             {members?.length === 0 && (
               <p className="text-center text-muted-foreground py-8">
-                Inga teammedlemmar ännu
+                No team members yet
               </p>
             )}
           </div>
@@ -179,34 +179,34 @@ export function OrganizationMembers({ organizationId }: OrganizationMembersProps
       <Dialog open={showInviteDialog} onOpenChange={setShowInviteDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Bjud in teammedlem</DialogTitle>
+            <DialogTitle>Invite team member</DialogTitle>
             <DialogDescription>
-              Bjud in någon till din organisation. De får tillgång till alla sajter.
+              Invite someone to your organization. They will get access to all sites.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="invite-email">E-postadress</Label>
+              <Label htmlFor="invite-email">Email address</Label>
               <Input
                 id="invite-email"
                 type="email"
                 value={inviteEmail}
                 onChange={(e) => setInviteEmail(e.target.value)}
-                placeholder="kollega@foretag.se"
+                placeholder="colleague@company.com"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="invite-role">Roll</Label>
+              <Label htmlFor="invite-role">Role</Label>
               <Select value={inviteRole} onValueChange={(v) => setInviteRole(v as OrgRole)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="admin">Admin - Full åtkomst</SelectItem>
-                  <SelectItem value="member">Medlem - Kan hantera sajter</SelectItem>
-                  <SelectItem value="viewer">Läsare - Endast läsbehörighet</SelectItem>
+                  <SelectItem value="admin">Admin - Full access</SelectItem>
+                  <SelectItem value="member">Member - Can manage sites</SelectItem>
+                  <SelectItem value="viewer">Viewer - Read-only access</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -214,10 +214,10 @@ export function OrganizationMembers({ organizationId }: OrganizationMembersProps
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowInviteDialog(false)}>
-              Avbryt
+              Cancel
             </Button>
             <Button disabled={!inviteEmail}>
-              Skicka inbjudan
+              Send invitation
             </Button>
           </DialogFooter>
         </DialogContent>

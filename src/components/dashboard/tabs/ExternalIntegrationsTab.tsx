@@ -22,10 +22,10 @@ interface ExternalIntegrationsTabProps {
 
 const integrationItems: IntegrationItem[] = [
   // WordPress & CMS
-  { key: 'sitekit', name: 'Google Site Kit', category: 'wordpress', enabledField: 'sitekit_integration_enabled', description: 'Auto-detekterar och synkroniserar Site Kit-data', isWordPress: true },
-  
+  { key: 'sitekit', name: 'Google Site Kit', category: 'wordpress', enabledField: 'sitekit_integration_enabled', description: 'Auto-detects and synchronizes Site Kit data', isWordPress: true },
+
   // Analytics
-  { key: 'heatmap', name: 'CortIQ Visual Analytics', category: 'analytics', enabledField: 'heatmap_tracking_enabled', description: 'Intern heatmap-spårning' },
+  { key: 'heatmap', name: 'CortIQ Visual Analytics', category: 'analytics', enabledField: 'heatmap_tracking_enabled', description: 'Internal heatmap tracking' },
   { key: 'google-analytics', name: 'Google Analytics', category: 'analytics', enabledField: 'ga_integration_enabled', configField: 'ga_measurement_id', placeholder: 'G-XXXXXXXXXX' },
   { key: 'hotjar', name: 'Hotjar', category: 'analytics', enabledField: 'hotjar_enabled', configField: 'hotjar_site_id', placeholder: 'Site ID' },
   { key: 'clarity', name: 'Microsoft Clarity', category: 'analytics', enabledField: 'microsoft_clarity_enabled', configField: 'microsoft_clarity_project_id', placeholder: 'Project ID' },
@@ -160,7 +160,7 @@ function IntegrationSection({ title, icon: Icon, items, siteData, onUpdate, sele
               {item.secondaryConfigField && isEnabled && !item.isActive && (
                 <div className="pl-11">
                   <Label className="text-xs text-muted-foreground mb-2 block">
-                    Server-Side API (Valfritt)
+                    Server-Side API (Optional)
                   </Label>
                   <Input
                     placeholder={item.secondaryPlaceholder}
@@ -180,7 +180,7 @@ function IntegrationSection({ title, icon: Icon, items, siteData, onUpdate, sele
         {hasChanges && (
           <div className="flex justify-end pt-4 border-t">
             <Button onClick={handleSave}>
-              Spara ändringar
+              Save changes
             </Button>
           </div>
         )}
@@ -212,7 +212,7 @@ export function ExternalIntegrationsTab({ selectedSite }: ExternalIntegrationsTa
       <div className="space-y-2">
         <h2 className="text-2xl font-bold">Integration Hub</h2>
         <p className="text-muted-foreground">
-          Hantera alla dina marknadsförings- och analysverktyg. Endast aktiverade integrations kommer att visas i cookie-bannern.
+          Manage all your marketing and analytics tools. Only enabled integrations will appear in the cookie banner.
         </p>
       </div>
 
@@ -220,8 +220,8 @@ export function ExternalIntegrationsTab({ selectedSite }: ExternalIntegrationsTa
       <Alert>
         <Info className="h-4 w-4" />
         <AlertDescription>
-          <strong>GDPR-Smart:</strong> När du aktiverar en integration läggs dess cookies automatiskt till i 
-          cookie-bannern. Inaktiverade verktyg visas inte för besökarna, vilket minskar komplexiteten.
+          <strong>GDPR-Smart:</strong> When you enable an integration, its cookies are automatically added to
+          the cookie banner. Disabled tools are not shown to visitors, reducing complexity.
         </AlertDescription>
       </Alert>
 
@@ -229,7 +229,7 @@ export function ExternalIntegrationsTab({ selectedSite }: ExternalIntegrationsTa
         {/* WordPress Integrations */}
         {wordpressItems.length > 0 && (
           <IntegrationSection
-            title="🔌 WordPress Integrationer"
+            title="🔌 WordPress Integrations"
             icon={Settings}
             items={wordpressItems}
             siteData={siteData}
@@ -278,9 +278,9 @@ export function ExternalIntegrationsTab({ selectedSite }: ExternalIntegrationsTa
       {/* Legacy Integrations */}
       <Card>
         <CardHeader>
-          <CardTitle>🔗 API Integrationer (Advanced)</CardTitle>
+          <CardTitle>🔗 API Integrations (Advanced)</CardTitle>
           <CardDescription>
-            Direkta API-kopplingar för avancerade användare
+            Direct API connections for advanced users
           </CardDescription>
         </CardHeader>
         <CardContent>

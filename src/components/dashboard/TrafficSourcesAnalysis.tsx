@@ -204,26 +204,26 @@ const getChannelColor = (channel: string): string => {
 
 const getDateRangeText = (startDate?: string, endDate?: string): string => {
   if (!startDate || !endDate) {
-    return 'Senaste 30 dagarna';
+    return 'Last 30 days';
   }
-  
+
   const start = new Date(startDate);
   const end = new Date(endDate);
   const diffTime = Math.abs(end.getTime() - start.getTime());
   const diffDays = Math.ceil(diffTime / (1000 * 60 * 60 * 24));
-  
+
   if (diffDays <= 1) {
-    return 'Senaste 24 timmarna';
+    return 'Last 24 hours';
   } else if (diffDays <= 7) {
-    return 'Senaste 7 dagarna';
+    return 'Last 7 days';
   } else if (diffDays <= 30) {
-    return 'Senaste 30 dagarna';
+    return 'Last 30 days';
   } else if (diffDays <= 90) {
-    return 'Senaste 90 dagarna';
+    return 'Last 90 days';
   } else if (diffDays <= 365) {
-    return `${diffDays} dagar`;
+    return `${diffDays} days`;
   } else {
-    return 'Senaste året';
+    return 'Last year';
   }
 };
 
@@ -273,10 +273,10 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
         const isPermIssue = details.includes('PERMISSION_DENIED');
         setUsingFallback(true);
         toast({
-          title: isPermIssue ? 'Saknar GA4-behörighet' : 'Kunde inte hämta GA4-data',
+          title: isPermIssue ? 'Missing GA4 permission' : 'Could not fetch GA4 data',
           description: isPermIssue
-            ? 'Servicekontot saknar åtkomst till GA4-propertyn. Visar intern tracking-data istället.'
-            : 'Visar intern tracking-data istället.',
+            ? 'The service account lacks access to the GA4 property. Showing internal tracking data instead.'
+            : 'Showing internal tracking data instead.',
           variant: 'destructive',
         });
         await loadTrackingData();
@@ -453,8 +453,8 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
       setLastUpdated(new Date());
     } catch (error) {
       toast({
-        title: "❌ Fel",
-        description: "Kunde inte ladda trafikdata. Kontrollera GA-integration."
+        title: "❌ Error",
+        description: "Could not load traffic data. Check your GA integration."
       });
     } finally {
       setIsLoading(false);
@@ -473,15 +473,15 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <TrendingUp className="h-5 w-5" />
-            Trafikkällor
+            Traffic sources
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="text-center py-8 text-muted-foreground">
             <TrendingUp className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="mb-4">Google Analytics krävs för trafikkällor</p>
+            <p className="mb-4">Google Analytics is required for traffic sources</p>
             <Button variant="outline" className="mx-auto">
-              Konfigurera GA Integration
+              Configure GA Integration
             </Button>
           </div>
         </CardContent>
@@ -517,15 +517,15 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <TrendingUp className="h-5 w-5" />
-          Trafikkällor & Kanaler
+          Traffic Sources & Channels
         </CardTitle>
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Period: {getDateRangeText(startDate, endDate)} • Verklig data från din webbplats
+            Period: {getDateRangeText(startDate, endDate)} • Real data from your website
           </p>
           {lastUpdated && (
             <Badge variant="secondary" className="text-xs">
-              Uppdaterad: {lastUpdated.toLocaleTimeString()}
+              Updated: {lastUpdated.toLocaleTimeString()}
             </Badge>
           )}
         </div>
@@ -535,7 +535,7 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
           <Alert>
             <AlertCircle className="h-4 w-4" />
             <AlertDescription>
-              Visar intern tracking-data eftersom GA4-data inte kunde hämtas. Kontrollera att servicekontot har åtkomst till GA4-propertyn.
+              Showing internal tracking data because GA4 data could not be fetched. Check that the service account has access to the GA4 property.
             </AlertDescription>
           </Alert>
         )}
@@ -551,26 +551,26 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
             <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="text-center p-4 rounded-lg bg-blue-50 border border-blue-200">
                 <div className="text-2xl font-bold text-blue-600">{totalSessions.toLocaleString()}</div>
-                <div className="text-sm text-blue-600/70">Totala sessioner</div>
+                <div className="text-sm text-blue-600/70">Total sessions</div>
               </div>
               <div className="text-center p-4 rounded-lg bg-green-50 border border-green-200">
               <div className="text-2xl font-bold text-green-600">{totalUsers.toLocaleString()}</div>
-              <div className="text-sm text-green-600/70">Aktiva användare</div>
+              <div className="text-sm text-green-600/70">Active users</div>
               </div>
               <div className="text-center p-4 rounded-lg bg-purple-50 border border-purple-200">
                 <div className="text-2xl font-bold text-purple-600">{totalConversions.toLocaleString()}</div>
-                <div className="text-sm text-purple-600/70">Konverteringar</div>
+                <div className="text-sm text-purple-600/70">Conversions</div>
               </div>
               <div className="text-center p-4 rounded-lg bg-orange-50 border border-orange-200">
                 <div className="text-2xl font-bold text-orange-600">{conversionRate.toFixed(1)}%</div>
-                <div className="text-sm text-orange-600/70">Konverteringsgrad</div>
+                <div className="text-sm text-orange-600/70">Conversion rate</div>
               </div>
             </div>
 
             {/* All Traffic Sources */}
             <div>
               <div className="flex items-center justify-between mb-4">
-                <h3 className="font-medium">Alla trafikkällor ({trafficSources.length})</h3>
+                <h3 className="font-medium">All traffic sources ({trafficSources.length})</h3>
                 {totalPages > 1 && (
                   <div className="flex items-center gap-2">
                     <Button 
@@ -582,7 +582,7 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
                       <ChevronLeft className="h-4 w-4" />
                     </Button>
                     <span className="text-sm text-muted-foreground">
-                      {currentPage} av {totalPages}
+                      {currentPage} of {totalPages}
                     </span>
                     <Button 
                       variant="outline" 
@@ -625,7 +625,7 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
                           />
                         </div>
                         <div className="text-xs text-muted-foreground min-w-0 flex gap-2">
-                          <span>{source.conversions} konv.</span>
+                          <span>{source.conversions} conv.</span>
                           <span>({sourceConversionRate.toFixed(1)}%)</span>
                         </div>
                       </div>
@@ -637,7 +637,7 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
 
             <div className="flex justify-between items-center pt-4 border-t">
               <Button variant="outline" size="sm" onClick={loadTrafficSources} disabled={isLoading}>
-                {isLoading ? 'Laddar...' : 'Uppdatera data'}
+                {isLoading ? 'Loading...' : 'Refresh data'}
               </Button>
               <Button
                 variant="outline"
@@ -651,7 +651,7 @@ export function TrafficSourcesAnalysis({ siteId, startDate, endDate, selectedSit
                 }}
               >
                 <ExternalLink className="h-4 w-4 mr-1" />
-                Öppna GA
+                Open GA
               </Button>
             </div>
           </>

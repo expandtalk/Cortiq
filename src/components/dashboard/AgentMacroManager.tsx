@@ -107,9 +107,9 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
 
   const getMacroTypeLabel = (type: string) => {
     switch (type) {
-      case 'browser_profile': return 'Browser Profil';
-      case 'detection_rule': return 'Detektionsregel';
-      case 'tracking_config': return 'Tracking-konfiguration';
+      case 'browser_profile': return 'Browser Profile';
+      case 'detection_rule': return 'Detection Rule';
+      case 'tracking_config': return 'Tracking Configuration';
       default: return type;
     }
   };
@@ -121,29 +121,29 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
           <div>
             <CardTitle className="flex items-center gap-2">
               <Shield className="h-5 w-5" />
-              Agent Browser Makron
+              Agent Browser Macros
             </CardTitle>
             <CardDescription>
-              Hantera säkra konfigurationer för olika agentiska webbläsare och detektionsregler
+              Manage secure configurations for different agentic browsers and detection rules
             </CardDescription>
           </div>
           <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
             <DialogTrigger asChild>
               <Button onClick={resetForm}>
                 <Plus className="h-4 w-4 mr-2" />
-                Nytt Makro
+                New Macro
               </Button>
             </DialogTrigger>
             <DialogContent className="max-w-2xl">
               <DialogHeader>
-                <DialogTitle>{editingMacro ? 'Redigera' : 'Skapa'} Makro</DialogTitle>
+                <DialogTitle>{editingMacro ? 'Edit' : 'Create'} Macro</DialogTitle>
                 <DialogDescription>
-                  Konfigurera säker tracking och detektering för agentiska webbläsare
+                  Configure secure tracking and detection for agentic browsers
                 </DialogDescription>
               </DialogHeader>
               <form onSubmit={handleSubmit} className="space-y-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Namn</Label>
+                  <Label htmlFor="name">Name</Label>
                   <Input
                     id="name"
                     value={formData.name}
@@ -154,7 +154,7 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="description">Beskrivning</Label>
+                  <Label htmlFor="description">Description</Label>
                   <Textarea
                     id="description"
                     value={formData.description}
@@ -164,7 +164,7 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
                 </div>
 
                 <div className="space-y-2">
-                  <Label htmlFor="macro_type">Makrotyp</Label>
+                  <Label htmlFor="macro_type">Macro type</Label>
                   <Select
                     value={formData.macro_type}
                     onValueChange={(value: any) => setFormData(prev => ({ ...prev, macro_type: value }))}
@@ -173,16 +173,16 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="browser_profile">Browser Profil</SelectItem>
-                      <SelectItem value="detection_rule">Detektionsregel</SelectItem>
-                      <SelectItem value="tracking_config">Tracking-konfiguration</SelectItem>
+                      <SelectItem value="browser_profile">Browser Profile</SelectItem>
+                      <SelectItem value="detection_rule">Detection Rule</SelectItem>
+                      <SelectItem value="tracking_config">Tracking Configuration</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
 
                 {formData.macro_type === 'browser_profile' && (
                   <div className="space-y-2">
-                    <Label>Snabbmallar</Label>
+                    <Label>Quick templates</Label>
                     <div className="grid grid-cols-2 gap-2">
                       {Object.keys(BROWSER_PROFILE_TEMPLATES).map(template => (
                         <Button
@@ -200,7 +200,7 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
                 )}
 
                 <div className="space-y-2">
-                  <Label htmlFor="config">Konfiguration (JSON)</Label>
+                  <Label htmlFor="config">Configuration (JSON)</Label>
                   <Textarea
                     id="config"
                     value={JSON.stringify(formData.config, null, 2)}
@@ -220,16 +220,16 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
                 <Alert>
                   <Shield className="h-4 w-4" />
                   <AlertDescription>
-                    All konfiguration valideras och sanitizeras innan den används. Undvik att lägga till känslig information.
+                    All configuration is validated and sanitized before use. Avoid adding sensitive information.
                   </AlertDescription>
                 </Alert>
 
                 <div className="flex justify-end gap-2">
                   <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                    Avbryt
+                    Cancel
                   </Button>
                   <Button type="submit">
-                    {editingMacro ? 'Uppdatera' : 'Skapa'}
+                    {editingMacro ? 'Update' : 'Create'}
                   </Button>
                 </div>
               </form>
@@ -239,9 +239,9 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
       </CardHeader>
       <CardContent>
         {isLoading ? (
-          <p className="text-sm text-muted-foreground">Laddar makron...</p>
+          <p className="text-sm text-muted-foreground">Loading macros...</p>
         ) : macros.length === 0 ? (
-          <p className="text-sm text-muted-foreground">Inga makron ännu. Skapa ditt första makro för att komma igång.</p>
+          <p className="text-sm text-muted-foreground">No macros yet. Create your first macro to get started.</p>
         ) : (
           <div className="space-y-4">
             {macros.map((macro) => (
@@ -250,13 +250,13 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
                   <div className="flex items-center gap-2 mb-1">
                     <h4 className="font-medium">{macro.name}</h4>
                     <Badge variant="outline">{getMacroTypeLabel(macro.macro_type)}</Badge>
-                    {macro.is_active && <Badge variant="default">Aktiv</Badge>}
+                    {macro.is_active && <Badge variant="default">Active</Badge>}
                   </div>
                   {macro.description && (
                     <p className="text-sm text-muted-foreground mb-2">{macro.description}</p>
                   )}
                   <details className="text-xs">
-                    <summary className="cursor-pointer text-muted-foreground">Visa konfiguration</summary>
+                    <summary className="cursor-pointer text-muted-foreground">Show configuration</summary>
                     <pre className="mt-2 p-2 bg-muted rounded text-xs overflow-auto">
                       {JSON.stringify(macro.config, null, 2)}
                     </pre>
@@ -278,7 +278,7 @@ export const AgentMacroManager = ({ siteId }: AgentMacroManagerProps) => {
                     variant="ghost"
                     size="icon"
                     onClick={() => {
-                      if (confirm('Är du säker på att du vill ta bort detta makro?')) {
+                      if (confirm('Are you sure you want to delete this macro?')) {
                         deleteMacro(macro.id);
                       }
                     }}

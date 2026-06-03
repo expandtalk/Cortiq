@@ -1,8 +1,8 @@
 -- =====================================================
 -- UNIFIED VISITOR PROFILE SYSTEM
 -- =====================================================
--- Foundation för AI-first analytics med persistent visitor tracking
--- Länkar ihop alla sessions (human + AI agent) till en unified profile
+-- Foundation fÃ¶r AI-first analytics med persistent visitor tracking
+-- LÃ¤nkar ihop alla sessions (human + AI agent) till en unified profile
 --
 -- Created: 2026-02-10
 -- Purpose: Enable visitor-level analytics, segmentation, and AI insights
@@ -11,16 +11,16 @@
 -- =====================================================
 -- 1. UNIFIED VISITORS TABLE
 -- =====================================================
--- Central tabell för persistent visitor tracking
+-- Central tabell fÃ¶r persistent visitor tracking
 -- Skapar en "golden record" per unique visitor
 
-CREATE TABLE public.unified_visitors (
+CREATE TABLE IF NOT EXISTS public.unified_visitors (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   site_id UUID NOT NULL REFERENCES public.sites(id) ON DELETE CASCADE,
 
   -- Identification
   visitor_fingerprint TEXT NOT NULL, -- Device fingerprint (cookieless)
-  first_session_id TEXT, -- Första session ID för tracking
+  first_session_id TEXT, -- FÃ¶rsta session ID fÃ¶r tracking
 
   -- Classification
   visitor_type TEXT NOT NULL DEFAULT 'unknown', -- 'human', 'ai_agent', 'bot', 'unknown'
@@ -45,9 +45,9 @@ CREATE TABLE public.unified_visitors (
   avg_pages_per_session FLOAT DEFAULT 0,
 
   -- Engagement scoring
-  engagement_score FLOAT DEFAULT 0, -- 0-100 score baserat på beteende
-  recency_score FLOAT DEFAULT 0, -- 0-100 baserat på hur nyligen de besökte
-  frequency_score FLOAT DEFAULT 0, -- 0-100 baserat på besöksfrekvens
+  engagement_score FLOAT DEFAULT 0, -- 0-100 score baserat pÃ¥ beteende
+  recency_score FLOAT DEFAULT 0, -- 0-100 baserat pÃ¥ hur nyligen de besÃ¶kte
+  frequency_score FLOAT DEFAULT 0, -- 0-100 baserat pÃ¥ besÃ¶ksfrekvens
 
   -- Business metrics
   total_conversions INTEGER DEFAULT 0,
@@ -58,10 +58,10 @@ CREATE TABLE public.unified_visitors (
 
   -- Segmentation
   segments TEXT[] DEFAULT ARRAY[]::TEXT[], -- ['high_intent', 'technical', 'price_sensitive', etc]
-  primary_segment TEXT, -- Huvudsegment för snabb filtrering
+  primary_segment TEXT, -- Huvudsegment fÃ¶r snabb filtrering
   rfm_segment TEXT, -- RFM segmentering: 'champion', 'loyal', 'at_risk', etc
 
-  -- Device & browser (för humans)
+  -- Device & browser (fÃ¶r humans)
   primary_device_type TEXT, -- 'desktop', 'mobile', 'tablet'
   primary_browser TEXT,
   primary_os TEXT,
@@ -100,10 +100,10 @@ CREATE TABLE public.unified_visitors (
 -- =====================================================
 -- 2. VISITOR SESSIONS LINK TABLE
 -- =====================================================
--- Länkar unified visitors till deras sessions
--- Supports både human sessions och AI agent sessions
+-- LÃ¤nkar unified visitors till deras sessions
+-- Supports bÃ¥de human sessions och AI agent sessions
 
-CREATE TABLE public.visitor_session_links (
+CREATE TABLE IF NOT EXISTS public.visitor_session_links (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   visitor_id UUID NOT NULL REFERENCES public.unified_visitors(id) ON DELETE CASCADE,
   site_id UUID NOT NULL REFERENCES public.sites(id) ON DELETE CASCADE,
@@ -134,9 +134,9 @@ CREATE TABLE public.visitor_session_links (
 -- 3. VISITOR EVENTS TABLE
 -- =====================================================
 -- Aggregerad event history per visitor
--- Används för snabb behavioral analysis
+-- AnvÃ¤nds fÃ¶r snabb behavioral analysis
 
-CREATE TABLE public.visitor_events (
+CREATE TABLE IF NOT EXISTS public.visitor_events (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   visitor_id UUID NOT NULL REFERENCES public.unified_visitors(id) ON DELETE CASCADE,
   site_id UUID NOT NULL REFERENCES public.sites(id) ON DELETE CASCADE,
@@ -145,7 +145,7 @@ CREATE TABLE public.visitor_events (
   event_type TEXT NOT NULL, -- 'pageview', 'click', 'conversion', 'form_submit', etc
   event_category TEXT, -- 'engagement', 'conversion', 'navigation', etc
   page_url TEXT,
-  element_selector TEXT, -- För clicks
+  element_selector TEXT, -- FÃ¶r clicks
 
   -- Context
   session_type TEXT NOT NULL, -- 'human' or 'ai_agent'
@@ -162,9 +162,9 @@ CREATE TABLE public.visitor_events (
 -- =====================================================
 -- 4. VISITOR SEGMENTS DEFINITIONS
 -- =====================================================
--- Definiera olika segment för automatisk klassificering
+-- Definiera olika segment fÃ¶r automatisk klassificering
 
-CREATE TABLE public.visitor_segment_definitions (
+CREATE TABLE IF NOT EXISTS public.visitor_segment_definitions (
   id UUID PRIMARY KEY DEFAULT gen_random_uuid(),
   site_id UUID REFERENCES public.sites(id) ON DELETE CASCADE, -- NULL = global segment
 
@@ -201,30 +201,30 @@ CREATE TABLE public.visitor_segment_definitions (
 -- =====================================================
 
 -- Unified visitors indexes
-CREATE INDEX idx_unified_visitors_site_id ON public.unified_visitors(site_id);
-CREATE INDEX idx_unified_visitors_fingerprint ON public.unified_visitors(visitor_fingerprint);
-CREATE INDEX idx_unified_visitors_site_fingerprint ON public.unified_visitors(site_id, visitor_fingerprint);
-CREATE INDEX idx_unified_visitors_type ON public.unified_visitors(visitor_type);
-CREATE INDEX idx_unified_visitors_last_seen ON public.unified_visitors(last_seen_at DESC);
-CREATE INDEX idx_unified_visitors_engagement ON public.unified_visitors(engagement_score DESC);
-CREATE INDEX idx_unified_visitors_segments ON public.unified_visitors USING GIN(segments);
-CREATE INDEX idx_unified_visitors_primary_segment ON public.unified_visitors(primary_segment);
+CREATE INDEX IF NOT EXISTS idx_unified_visitors_site_id ON public.unified_visitors(site_id);
+CREATE INDEX IF NOT EXISTS idx_unified_visitors_fingerprint ON public.unified_visitors(visitor_fingerprint);
+CREATE INDEX IF NOT EXISTS idx_unified_visitors_site_fingerprint ON public.unified_visitors(site_id, visitor_fingerprint);
+CREATE INDEX IF NOT EXISTS idx_unified_visitors_type ON public.unified_visitors(visitor_type);
+CREATE INDEX IF NOT EXISTS idx_unified_visitors_last_seen ON public.unified_visitors(last_seen_at DESC);
+CREATE INDEX IF NOT EXISTS idx_unified_visitors_engagement ON public.unified_visitors(engagement_score DESC);
+CREATE INDEX IF NOT EXISTS idx_unified_visitors_segments ON public.unified_visitors USING GIN(segments);
+CREATE INDEX IF NOT EXISTS idx_unified_visitors_primary_segment ON public.unified_visitors(primary_segment);
 
 -- Visitor session links indexes
-CREATE INDEX idx_visitor_session_links_visitor ON public.visitor_session_links(visitor_id);
-CREATE INDEX idx_visitor_session_links_human_session ON public.visitor_session_links(human_session_id);
-CREATE INDEX idx_visitor_session_links_ai_session ON public.visitor_session_links(ai_agent_session_id);
-CREATE INDEX idx_visitor_session_links_type ON public.visitor_session_links(session_type);
+CREATE INDEX IF NOT EXISTS idx_visitor_session_links_visitor ON public.visitor_session_links(visitor_id);
+CREATE INDEX IF NOT EXISTS idx_visitor_session_links_human_session ON public.visitor_session_links(human_session_id);
+CREATE INDEX IF NOT EXISTS idx_visitor_session_links_ai_session ON public.visitor_session_links(ai_agent_session_id);
+CREATE INDEX IF NOT EXISTS idx_visitor_session_links_type ON public.visitor_session_links(session_type);
 
 -- Visitor events indexes
-CREATE INDEX idx_visitor_events_visitor ON public.visitor_events(visitor_id);
-CREATE INDEX idx_visitor_events_occurred_at ON public.visitor_events(occurred_at DESC);
-CREATE INDEX idx_visitor_events_type ON public.visitor_events(event_type);
-CREATE INDEX idx_visitor_events_site_type ON public.visitor_events(site_id, event_type);
+CREATE INDEX IF NOT EXISTS idx_visitor_events_visitor ON public.visitor_events(visitor_id);
+CREATE INDEX IF NOT EXISTS idx_visitor_events_occurred_at ON public.visitor_events(occurred_at DESC);
+CREATE INDEX IF NOT EXISTS idx_visitor_events_type ON public.visitor_events(event_type);
+CREATE INDEX IF NOT EXISTS idx_visitor_events_site_type ON public.visitor_events(site_id, event_type);
 
 -- Segment definitions indexes
-CREATE INDEX idx_segment_definitions_site ON public.visitor_segment_definitions(site_id);
-CREATE INDEX idx_segment_definitions_active ON public.visitor_segment_definitions(is_active);
+CREATE INDEX IF NOT EXISTS idx_segment_definitions_site ON public.visitor_segment_definitions(site_id);
+CREATE INDEX IF NOT EXISTS idx_segment_definitions_active ON public.visitor_segment_definitions(is_active);
 
 -- =====================================================
 -- 6. ROW LEVEL SECURITY
@@ -236,6 +236,7 @@ ALTER TABLE public.visitor_events ENABLE ROW LEVEL SECURITY;
 ALTER TABLE public.visitor_segment_definitions ENABLE ROW LEVEL SECURITY;
 
 -- Site owners can view their visitors
+DROP POLICY IF EXISTS "Site owners can view unified visitors" ON public.unified_visitors;
 CREATE POLICY "Site owners can view unified visitors"
 ON public.unified_visitors FOR SELECT
 USING (
@@ -247,24 +248,28 @@ USING (
 );
 
 -- Service role full access
+DROP POLICY IF EXISTS "Service role full access to unified visitors" ON public.unified_visitors;
 CREATE POLICY "Service role full access to unified visitors"
 ON public.unified_visitors FOR ALL
 USING (auth.jwt()->>'role' = 'service_role')
 WITH CHECK (auth.jwt()->>'role' = 'service_role');
 
 -- Visitor session links policies
+DROP POLICY IF EXISTS "Service role full access to visitor session links" ON public.visitor_session_links;
 CREATE POLICY "Service role full access to visitor session links"
 ON public.visitor_session_links FOR ALL
 USING (true)
 WITH CHECK (true);
 
 -- Visitor events policies
+DROP POLICY IF EXISTS "Service role full access to visitor events" ON public.visitor_events;
 CREATE POLICY "Service role full access to visitor events"
 ON public.visitor_events FOR ALL
 USING (true)
 WITH CHECK (true);
 
 -- Segment definitions policies
+DROP POLICY IF EXISTS "Site owners can manage segment definitions" ON public.visitor_segment_definitions;
 CREATE POLICY "Site owners can manage segment definitions"
 ON public.visitor_segment_definitions FOR ALL
 USING (
@@ -280,11 +285,13 @@ USING (
 -- =====================================================
 
 -- Auto-update updated_at timestamp
+DROP TRIGGER IF EXISTS update_unified_visitors_updated_at ON public.unified_visitors;
 CREATE TRIGGER update_unified_visitors_updated_at
   BEFORE UPDATE ON public.unified_visitors
   FOR EACH ROW
   EXECUTE FUNCTION public.update_updated_at_column();
 
+DROP TRIGGER IF EXISTS update_segment_definitions_updated_at ON public.visitor_segment_definitions;
 CREATE TRIGGER update_segment_definitions_updated_at
   BEFORE UPDATE ON public.visitor_segment_definitions
   FOR EACH ROW

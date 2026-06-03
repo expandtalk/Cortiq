@@ -63,14 +63,14 @@ export function KPITab({ selectedSite }: KPITabProps) {
       if (error || !data?.success) {
         console.error('GA4 permission check failed:', error || data);
         toast({
-          title: 'GA4-åtkomst misslyckades',
-          description: (error?.message || data?.error || 'Okänt fel'),
+          title: 'GA4 access failed',
+          description: (error?.message || data?.error || 'Unknown error'),
           variant: 'destructive',
         });
       } else {
         toast({
-          title: 'GA4-åtkomst OK',
-          description: `Lyckades hämta data (${data.totals?.sessions || 0} sessioner).`,
+          title: 'GA4 access OK',
+          description: `Successfully fetched data (${data.totals?.sessions || 0} sessions).`,
         });
       }
     } finally {
@@ -81,8 +81,8 @@ export function KPITab({ selectedSite }: KPITabProps) {
   const runDebugTest = async () => {
     if (!selectedSite.id) {
       toast({
-        title: 'Ingen site vald',
-        description: 'Välj en site först',
+        title: 'No site selected',
+        description: 'Select a site first',
         variant: 'destructive',
       });
       return;
@@ -96,7 +96,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
 
       if (error) {
         toast({
-          title: 'Debug-funktionen misslyckades',
+          title: 'Debug function failed',
           description: error.message,
           variant: 'destructive',
         });
@@ -105,26 +105,26 @@ export function KPITab({ selectedSite }: KPITabProps) {
         // Debug function returned structured error
         const { error: debugError, debugId } = data;
         toast({
-          title: `Fel i steg: ${debugError.step}`,
+          title: `Error in step: ${debugError.step}`,
           description: `${debugError.message} (Debug ID: ${debugId})`,
           variant: 'destructive',
         });
         console.error(`🔍 Debug ID ${debugId}:`, data);
-        
+
         // Show helpful tips in console
         if (debugError.tips?.length > 0) {
-          console.log('🛠️ Felsökningstips:', debugError.tips);
+          console.log('🛠️ Debug tips:', debugError.tips);
         }
       } else {
         toast({
-          title: 'Debug lyckades!',
-          description: `GA4-anslutningen fungerar (Debug ID: ${data.debugId})`,
+          title: 'Debug succeeded!',
+          description: `GA4 connection is working (Debug ID: ${data.debugId})`,
         });
         console.log('✅ Debug success:', data);
       }
     } catch (err) {
       toast({
-        title: 'Debug-test misslyckades',
+        title: 'Debug test failed',
         description: err instanceof Error ? err.message : String(err),
         variant: 'destructive',
       });
@@ -137,8 +137,8 @@ export function KPITab({ selectedSite }: KPITabProps) {
   const runKPIDebug = async () => {
     if (!selectedSite.id) {
       toast({
-        title: 'Ingen site vald',
-        description: 'Välj en site först',
+        title: 'No site selected',
+        description: 'Select a site first',
         variant: 'destructive',
       });
       return;
@@ -160,7 +160,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
 
       if (error) {
         toast({
-          title: 'KPI Debug misslyckades',
+          title: 'KPI Debug failed',
           description: error.message,
           variant: 'destructive',
         });
@@ -169,25 +169,25 @@ export function KPITab({ selectedSite }: KPITabProps) {
         // Strukturerat fel från debug-funktionen
         const { error: debugError, debugId } = data;
         toast({
-          title: `KPI fel i steg: ${debugError.step}`,
+          title: `KPI error in step: ${debugError.step}`,
           description: `${debugError.message} (Debug ID: ${debugId})`,
           variant: 'destructive',
         });
         console.error(`🔍 KPI Debug ID ${debugId}:`, data);
       } else {
-        // Lyckades - visa resultat
+        // Succeeded — show results
         const successSections = Object.keys(data.results || {});
         const failedSections = Object.keys(data.errors || {});
         
         if (failedSections.length === 0) {
           toast({
-            title: 'KPI Debug lyckades!',
-            description: `Alla sektioner fungerar: ${successSections.join(', ')}`,
+            title: 'KPI Debug succeeded!',
+            description: `All sections working: ${successSections.join(', ')}`,
           });
         } else {
           toast({
-            title: 'KPI delvis lyckad',
-            description: `Fungerar: ${successSections.join(', ')}. Misslyckas: ${failedSections.join(', ')}`,
+            title: 'KPI partially succeeded',
+            description: `Working: ${successSections.join(', ')}. Failing: ${failedSections.join(', ')}`,
             variant: 'destructive',
           });
         }
@@ -198,11 +198,11 @@ export function KPITab({ selectedSite }: KPITabProps) {
           debugId: data.debugId
         });
         
-        // Visa detaljer för misslyckade sektioner
+        // Show details for failed sections
         if (failedSections.length > 0) {
           failedSections.forEach(section => {
             const err = data.errors[section];
-            console.error(`❌ Sektion ${section} misslyckades:`, err);
+            console.error(`❌ Section ${section} failed:`, err);
           });
         }
       }
@@ -255,7 +255,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
         <div className="flex items-center justify-between">
           <div>
             <h1 className="text-2xl font-bold">KPI Dashboard - {selectedYear}</h1>
-            <p className="text-muted-foreground">Hämtar data från Google Analytics...</p>
+            <p className="text-muted-foreground">Fetching data from Google Analytics...</p>
           </div>
         </div>
         <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
@@ -280,10 +280,10 @@ export function KPITab({ selectedSite }: KPITabProps) {
         <Card>
           <CardContent className="text-center py-8">
             <BarChart3 className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="text-muted-foreground mb-4">Kunde inte hämta KPI-data</p>
+            <p className="text-muted-foreground mb-4">Could not fetch KPI data</p>
             <p className="text-sm text-muted-foreground mb-4">{error}</p>
             <Button onClick={() => refetch()} variant="outline">
-              Försök igen
+              Try again
             </Button>
           </CardContent>
         </Card>
@@ -299,10 +299,10 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <div className="flex items-center justify-between">
             <div>
               <h1 className="text-3xl font-bold text-foreground mb-2">KPI</h1>
-              <p className="text-muted-foreground">Ingen GA4‑data tillgänglig just nu. Kör testet nedan.</p>
+              <p className="text-muted-foreground">No GA4 data available right now. Run the test below.</p>
             </div>
             <Button onClick={handleGA4Check} variant="outline" className="h-11" disabled={checkingGA}>
-              {checkingGA ? 'Testar...' : 'Testa GA4-åtkomst'}
+              {checkingGA ? 'Testing...' : 'Test GA4 access'}
             </Button>
           </div>
         </div>
@@ -371,20 +371,20 @@ export function KPITab({ selectedSite }: KPITabProps) {
             <div className="flex items-center gap-4">
               <p className="text-lg text-muted-foreground">{selectedSite.site_name}</p>
               <Badge variant="secondary" className="text-sm">
-                Rapport för {selectedYear}
+                Report for {selectedYear}
               </Badge>
             </div>
           </div>
           <div className="flex items-center gap-6">
             <div className="text-right">
-              <p className="text-sm text-muted-foreground">Rapportperiod</p>
-              <p className="font-semibold">Helår {selectedYear}</p>
+              <p className="text-sm text-muted-foreground">Report period</p>
+              <p className="font-semibold">Full year {selectedYear}</p>
             </div>
             <div className="flex items-center gap-3">
               <Calendar className="h-5 w-5 text-primary" />
               <Select value={selectedYear.toString()} onValueChange={(value) => setSelectedYear(parseInt(value))}>
                 <SelectTrigger className="w-36 h-11">
-                  <SelectValue placeholder="Välj år" />
+                  <SelectValue placeholder="Select year" />
                 </SelectTrigger>
                 <SelectContent>
                   <SelectItem value="2025">2025</SelectItem>
@@ -397,13 +397,13 @@ export function KPITab({ selectedSite }: KPITabProps) {
             </div>
             <div className="flex gap-2">
               <Button onClick={handleGA4Check} variant="outline" className="h-11" disabled={checkingGA}>
-                {checkingGA ? 'Testar...' : 'Testa GA4-åtkomst'}
+                {checkingGA ? 'Testing...' : 'Test GA4 access'}
               </Button>
               <Button onClick={runDebugTest} variant="destructive" className="h-11" disabled={checkingGA}>
-                Debug GA4-fel
+                Debug GA4 errors
               </Button>
               <Button onClick={runKPIDebug} variant="secondary" className="h-11" disabled={checkingGA}>
-                Debug KPI-sektioner
+                Debug KPI sections
               </Button>
             </div>
           </div>
@@ -416,12 +416,12 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center text-blue-700">
               <Users className="h-5 w-5 mr-2" />
-              Aktiva Användare
+              Active Users
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-blue-900">{formatNumber(yearlyTotals.users)}</div>
-            <p className="text-sm text-blue-600/70 mt-1">Totalt för {selectedYear}</p>
+            <p className="text-sm text-blue-600/70 mt-1">Total for {selectedYear}</p>
           </CardContent>
         </Card>
 
@@ -429,12 +429,12 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center text-green-700">
               <MousePointer className="h-5 w-5 mr-2" />
-              Sessioner
+              Sessions
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-green-900">{formatNumber(yearlyTotals.sessions)}</div>
-            <p className="text-sm text-green-600/70 mt-1">Totalt för {selectedYear}</p>
+            <p className="text-sm text-green-600/70 mt-1">Total for {selectedYear}</p>
           </CardContent>
         </Card>
 
@@ -442,7 +442,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center text-purple-700">
               <Clock className="h-5 w-5 mr-2" />
-              Genomsnittlig Tid
+              Average Time
             </CardTitle>
           </CardHeader>
           <CardContent>
@@ -455,12 +455,12 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <CardHeader className="pb-3">
             <CardTitle className="text-sm font-medium flex items-center text-orange-700">
               <Target className="h-5 w-5 mr-2" />
-              Konvertering
+              Conversion
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-3xl font-bold text-orange-900">{(avgConversionRate || 0).toFixed(1)}%</div>
-            <p className="text-sm text-orange-600/70 mt-1">Genomsnitt {selectedYear}</p>
+            <p className="text-sm text-orange-600/70 mt-1">Average {selectedYear}</p>
           </CardContent>
         </Card>
       </div>
@@ -471,10 +471,10 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="text-xl font-bold text-foreground">
-                Detaljerad Månadsanalys {selectedYear}
+                Detailed Monthly Analysis {selectedYear}
               </CardTitle>
               <CardDescription className="text-base mt-1">
-                Komplett KPI-översikt för styrelserapporter och stakeholder-presentationer
+                Complete KPI overview for board reports and stakeholder presentations
               </CardDescription>
             </div>
             <Button 
@@ -483,7 +483,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
               className="bg-white/50 hover:bg-white/70 flex items-center gap-2"
             >
               <Printer className="h-4 w-4" />
-              Exportera PDF
+              Export PDF
             </Button>
           </div>
         </CardHeader>
@@ -503,25 +503,25 @@ export function KPITab({ selectedSite }: KPITabProps) {
               <tbody>
                 {/* Traffic Metrics */}
                 <tr className="border-b hover:bg-muted/30 bg-blue-50/30">
-                  <td className="p-2 font-medium sticky left-0 bg-blue-50/30 border-r">Nya Användare</td>
+                  <td className="p-2 font-medium sticky left-0 bg-blue-50/30 border-r">New Users</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.newUsers || 0)}</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Aktiva Användare</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Active Users</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.uniqueUsers)}</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Sessioner</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Sessions</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.sessions)}</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Sidor/Session</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Pages/Session</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{(month.pageViewsPerSession || 0).toFixed(1)}</td>
                   ))}
@@ -529,19 +529,19 @@ export function KPITab({ selectedSite }: KPITabProps) {
                 
                 {/* Engagement Metrics */}
                 <tr className="border-b hover:bg-muted/30 bg-green-50/30">
-                  <td className="p-2 font-medium sticky left-0 bg-green-50/30 border-r">Genomsnitt Tid</td>
+                  <td className="p-2 font-medium sticky left-0 bg-green-50/30 border-r">Avg. Time</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatDuration(month.avgDuration)}</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Avhoppsfrekvens</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Bounce rate</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{(month.bounceRate || 0).toFixed(1)}%</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Sidvisningar</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Page views</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.pageViews || 0)}</td>
                   ))}
@@ -549,31 +549,31 @@ export function KPITab({ selectedSite }: KPITabProps) {
                 
                 {/* Conversion Metrics */}
                 <tr className="border-b hover:bg-muted/30 bg-purple-50/30">
-                  <td className="p-2 font-medium sticky left-0 bg-purple-50/30 border-r">Konverteringar</td>
+                  <td className="p-2 font-medium sticky left-0 bg-purple-50/30 border-r">Conversions</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.conversions || 0)}</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Konv. Rate</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Conv. Rate</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{(month.conversionRate || 0).toFixed(1)}%</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Transaktioner</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Transactions</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.transactions || 0)}</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Total Intäkt</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Total Revenue</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.revenue)} kr</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Köp Intäkt</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Purchase Revenue</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.purchaseRevenue || 0)} kr</td>
                   ))}
@@ -581,13 +581,13 @@ export function KPITab({ selectedSite }: KPITabProps) {
                 
                 {/* Event Metrics */}
                 <tr className="border-b hover:bg-muted/30 bg-orange-50/30">
-                  <td className="p-2 font-medium sticky left-0 bg-orange-50/30 border-r">Events Total</td>
+                  <td className="p-2 font-medium sticky left-0 bg-orange-50/30 border-r">Total Events</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{formatNumber(month.eventCount || 0)}</td>
                   ))}
                 </tr>
                 <tr className="border-b hover:bg-muted/30">
-                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Events/Användare</td>
+                  <td className="p-2 font-medium sticky left-0 bg-background border-r">Events/User</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">{(month.eventCountPerUser || 0).toFixed(1)}</td>
                   ))}
@@ -595,7 +595,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
                 
                 {/* Growth Metrics */}
                 <tr className="border-b hover:bg-muted/30 bg-yellow-50/30">
-                  <td className="p-2 font-medium sticky left-0 bg-yellow-50/30 border-r">Tillväxt %</td>
+                  <td className="p-2 font-medium sticky left-0 bg-yellow-50/30 border-r">Growth %</td>
                   {monthlyData.map((month) => (
                     <td key={month.month} className="text-center p-2">
                       <div className="flex items-center justify-center gap-1">
@@ -621,7 +621,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
       <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
         <Card>
           <CardHeader>
-            <CardTitle>Månadsvis Användare {selectedYear}</CardTitle>
+            <CardTitle>Monthly Users {selectedYear}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -629,7 +629,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="monthName" tickFormatter={(value) => value.slice(0, 3)} />
                 <YAxis />
-                <Tooltip formatter={(value) => [formatNumber(Number(value)), 'Användare']} />
+                <Tooltip formatter={(value) => [formatNumber(Number(value)), 'Users']} />
                 <Bar dataKey="uniqueUsers" fill="hsl(var(--primary))" />
               </BarChart>
             </ResponsiveContainer>
@@ -638,7 +638,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
 
         <Card>
           <CardHeader>
-            <CardTitle>Månadsvis Sessioner {selectedYear}</CardTitle>
+            <CardTitle>Monthly Sessions {selectedYear}</CardTitle>
           </CardHeader>
           <CardContent>
             <ResponsiveContainer width="100%" height={300}>
@@ -646,7 +646,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
                 <CartesianGrid strokeDasharray="3 3" />
                 <XAxis dataKey="monthName" tickFormatter={(value) => value.slice(0, 3)} />
                 <YAxis />
-                <Tooltip formatter={(value) => [formatNumber(Number(value)), 'Sessioner']} />
+                <Tooltip formatter={(value) => [formatNumber(Number(value)), 'Sessions']} />
                 <Line type="monotone" dataKey="sessions" stroke="hsl(var(--primary))" strokeWidth={2} />
               </LineChart>
             </ResponsiveContainer>
@@ -660,10 +660,10 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <CardHeader className="border-b bg-gradient-to-r from-blue-50/50 to-transparent">
             <CardTitle className="text-lg font-bold flex items-center text-blue-900">
               <Globe className="h-5 w-5 mr-3" />
-              Trafikkällor & Prestanda {selectedYear}
+              Traffic sources & Performance {selectedYear}
             </CardTitle>
             <CardDescription className="text-blue-700/70">
-              Analys av de mest värdefulla trafikkanalerna
+              Analysis of the most valuable traffic channels
             </CardDescription>
           </CardHeader>
           <CardContent className="pt-6">
@@ -677,13 +677,13 @@ export function KPITab({ selectedSite }: KPITabProps) {
                     <div>
                       <p className="font-medium">{channel.name}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatNumber(channel.users)} användare
+                        {formatNumber(channel.users)} users
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">{formatNumber(channel.sessions)}</p>
-                    <p className="text-sm text-muted-foreground">{(channel.conversionRate || 0).toFixed(1)}% konv.</p>
+                    <p className="text-sm text-muted-foreground">{(channel.conversionRate || 0).toFixed(1)}% conv.</p>
                   </div>
                 </div>
               ))}
@@ -698,9 +698,9 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Share2 className="h-5 w-5 mr-2" />
-              Social Media Trafik {selectedYear}
+              Social Media Traffic {selectedYear}
             </CardTitle>
-            <CardDescription>Prestanda från sociala plattformar</CardDescription>
+            <CardDescription>Performance from social platforms</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -713,14 +713,14 @@ export function KPITab({ selectedSite }: KPITabProps) {
                     <div>
                       <p className="font-medium capitalize">{social.dimensions.sessionSource}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatNumber(social.metrics.activeUsers?.current || 0)} användare
+                        {formatNumber(social.metrics.activeUsers?.current || 0)} users
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">{formatNumber(social.metrics.sessions?.current || 0)}</p>
                     <p className="text-sm text-muted-foreground">
-                      {((social.metrics.conversions?.current || 0) / (social.metrics.sessions?.current || 1) * 100).toFixed(1)}% konv.
+                      {((social.metrics.conversions?.current || 0) / (social.metrics.sessions?.current || 1) * 100).toFixed(1)}% conv.
                     </p>
                   </div>
                 </div>
@@ -736,9 +736,9 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Bot className="h-5 w-5 mr-2" />
-              AI-Trafik {selectedYear}
+              AI Traffic {selectedYear}
             </CardTitle>
-            <CardDescription>Trafik från AI-plattformar</CardDescription>
+            <CardDescription>Traffic from AI platforms</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -749,13 +749,13 @@ export function KPITab({ selectedSite }: KPITabProps) {
                     <div>
                       <p className="font-medium capitalize">{platform.platform}</p>
                       <p className="text-sm text-muted-foreground">
-                        {formatNumber(platform.users)} användare
+                        {formatNumber(platform.users)} users
                       </p>
                     </div>
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">{formatNumber(platform.sessions)}</p>
-                    <p className="text-sm text-muted-foreground">sessioner</p>
+                    <p className="text-sm text-muted-foreground">sessions</p>
                   </div>
                 </div>
               ))}
@@ -770,9 +770,9 @@ export function KPITab({ selectedSite }: KPITabProps) {
           <CardHeader>
             <CardTitle className="flex items-center">
               <Mail className="h-5 w-5 mr-2" />
-              Events & Nyhetsbrev {selectedYear}
+              Events & Newsletter {selectedYear}
             </CardTitle>
-            <CardDescription>Event-prestanda och nyhetsbrev engagement</CardDescription>
+            <CardDescription>Event performance and newsletter engagement</CardDescription>
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
@@ -791,7 +791,7 @@ export function KPITab({ selectedSite }: KPITabProps) {
                   </div>
                   <div className="text-right">
                     <p className="font-semibold">{formatNumber(event.metrics.activeUsers?.current || 0)}</p>
-                    <p className="text-sm text-muted-foreground">användare</p>
+                    <p className="text-sm text-muted-foreground">users</p>
                   </div>
                 </div>
               ))}

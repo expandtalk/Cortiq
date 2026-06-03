@@ -101,7 +101,7 @@ export function useSegmentAnalytics(siteId: string | null) {
         
         return {
           id: device,
-          name: device === 'mobile' ? 'Mobil' : device === 'desktop' ? 'Desktop' : device === 'tablet' ? 'Tablet' : device,
+          name: device === 'mobile' ? 'Mobile' : device === 'desktop' ? 'Desktop' : device === 'tablet' ? 'Tablet' : device,
           value: conversionRate,
           variance: 0, // Beräknas senare
           impact: volumeImpact > 50 ? 'high' : volumeImpact > 20 ? 'medium' : 'low',
@@ -122,7 +122,7 @@ export function useSegmentAnalytics(siteId: string | null) {
       });
 
       const conversionMetric: SegmentMetric = {
-        name: 'Konverteringsgrad',
+        name: 'Conversion rate',
         overallValue: overallConversionRate,
         unit: '%',
         varianceScore: calculateVariance(deviceSegments),
@@ -156,7 +156,7 @@ export function useSegmentAnalytics(siteId: string | null) {
         
         return {
           id: type,
-          name: type === 'new' ? 'Nya besökare' : 'Återkommande',
+          name: type === 'new' ? 'New visitors' : 'Returning',
           value: revenuePerSession,
           variance: 0,
           impact: volumeImpact > 40 ? 'high' : 'medium',
@@ -174,7 +174,7 @@ export function useSegmentAnalytics(siteId: string | null) {
       });
 
       const revenueMetric: SegmentMetric = {
-        name: 'Intäkt per session',
+        name: 'Revenue per session',
         overallValue: overallRevenuePerSession,
         unit: 'kr',
         varianceScore: calculateVariance(userTypeSegments),
@@ -199,11 +199,11 @@ export function useSegmentAnalytics(siteId: string | null) {
         generatedInsights.push({
           id: 1,
           type: 'high_variance',
-          title: mobileSegment.variance < 0 ? 'Mobil underpresterande' : 'Mobil överpresterande',
-          description: `Mobil konverterar ${Math.abs(mobileSegment.variance).toFixed(0)}% ${mobileSegment.variance < 0 ? 'sämre' : 'bättre'} än desktop`,
+          title: mobileSegment.variance < 0 ? 'Mobile underperforming' : 'Mobile overperforming',
+          description: `Mobile converts ${Math.abs(mobileSegment.variance).toFixed(0)}% ${mobileSegment.variance < 0 ? 'worse' : 'better'} than desktop`,
           impact: mobileSegment.volumeImpact > 50 ? 'high' : 'medium',
-          action: mobileSegment.variance < 0 ? 'Optimera mobil användarupplevelse' : 'Fokusera mer på mobiltrafik',
-          metric: 'Konverteringsgrad'
+          action: mobileSegment.variance < 0 ? 'Optimize mobile user experience' : 'Focus more on mobile traffic',
+          metric: 'Conversion rate'
         });
       }
 

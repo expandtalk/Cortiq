@@ -16,11 +16,11 @@ interface AIAgentFunnelProps {
 
 const PAGE_TYPE_LABELS: Record<string, string> = {
   landing: 'Landing Page',
-  category: 'Kategori',
-  product: 'Produkt',
+  category: 'Category',
+  product: 'Product',
   checkout: 'Checkout',
-  conversion: 'Konvertering',
-  other: 'Övriga'
+  conversion: 'Conversion',
+  other: 'Other'
 };
 
 const PAGE_TYPE_COLORS: Record<string, string> = {
@@ -42,12 +42,12 @@ export const AIAgentFunnel = ({ funnel, totalSessions }: AIAgentFunnelProps) => 
             Agent Journey Funnel
           </CardTitle>
           <CardDescription>
-            Ingen funnel-data tillgänglig ännu
+            No funnel data available yet
           </CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-sm text-muted-foreground">
-            Data visas när AI-agenter börjar besöka din sajt och vi kan spåra deras resa.
+            Data will appear once AI agents start visiting your site and we can track their journey.
           </p>
         </CardContent>
       </Card>
@@ -60,7 +60,7 @@ export const AIAgentFunnel = ({ funnel, totalSessions }: AIAgentFunnelProps) => 
     sortOrder.indexOf(a.page_type) - sortOrder.indexOf(b.page_type)
   );
 
-  const maxSessions = Math.max(...funnel.map(f => f.sessions_count));
+  const maxSessions = funnel.length > 0 ? Math.max(...funnel.map(f => f.sessions_count)) : 0;
 
   return (
     <Card>
@@ -70,7 +70,7 @@ export const AIAgentFunnel = ({ funnel, totalSessions }: AIAgentFunnelProps) => 
           Agent Journey Funnel
         </CardTitle>
         <CardDescription>
-          Se var AI-agenter fastnar och om de når konverteringsmålet
+          See where AI agents drop off and whether they reach the conversion goal
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-4">
@@ -123,7 +123,7 @@ export const AIAgentFunnel = ({ funnel, totalSessions }: AIAgentFunnelProps) => 
           </div>
           {sortedFunnel.find(f => f.page_type === 'conversion') && (
             <div className="flex justify-between items-center mt-2">
-              <span className="text-sm text-muted-foreground">Konverteringsgrad:</span>
+              <span className="text-sm text-muted-foreground">Conversion rate:</span>
               <Badge variant="default" className="bg-green-500">
                 {totalSessions > 0 
                   ? ((sortedFunnel.find(f => f.page_type === 'conversion')?.sessions_count || 0) / totalSessions * 100).toFixed(1)

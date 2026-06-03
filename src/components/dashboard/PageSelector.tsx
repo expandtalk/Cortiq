@@ -18,7 +18,7 @@ interface PageData {
   unique_visitors: number;
 }
 
-export function PageSelector({ siteId, selectedPage, onPageChange, placeholder = "Välj sida att analysera" }: PageSelectorProps) {
+export function PageSelector({ siteId, selectedPage, onPageChange, placeholder = "Select page to analyze" }: PageSelectorProps) {
   const [pages, setPages] = useState<PageData[]>([]);
   const [isLoading, setIsLoading] = useState(false);
   const [showCustomInput, setShowCustomInput] = useState(false);
@@ -69,7 +69,7 @@ export function PageSelector({ siteId, selectedPage, onPageChange, placeholder =
   };
 
   const formatPageUrl = (url: string) => {
-    if (url === '/') return 'Startsida';
+    if (url === '/') return 'Home';
     
     // Ta bort protokoll och domän, visa bara sökvägen
     try {
@@ -101,7 +101,7 @@ export function PageSelector({ siteId, selectedPage, onPageChange, placeholder =
     return (
       <div className="flex gap-2 w-[300px]">
         <Input
-          placeholder="Ange URL (t.ex. https://example.com)"
+          placeholder="Enter URL (e.g. https://example.com)"
           value={customUrl}
           onChange={(e) => setCustomUrl(e.target.value)}
           onKeyPress={(e) => e.key === 'Enter' && handleCustomUrlSubmit()}
@@ -111,7 +111,7 @@ export function PageSelector({ siteId, selectedPage, onPageChange, placeholder =
           <Plus className="h-4 w-4" />
         </Button>
         <Button variant="outline" onClick={() => setShowCustomInput(false)}>
-          Avbryt
+          Cancel
         </Button>
       </div>
     );
@@ -120,7 +120,7 @@ export function PageSelector({ siteId, selectedPage, onPageChange, placeholder =
   return (
     <Select value={selectedPage || ''} onValueChange={handleSelectChange} disabled={isLoading}>
       <SelectTrigger className="w-[300px]">
-        <SelectValue placeholder={isLoading ? "Laddar sidor..." : placeholder} />
+        <SelectValue placeholder={isLoading ? "Loading pages..." : placeholder} />
       </SelectTrigger>
       <SelectContent>
         {pages.some(p => p.page_url === 'custom-url') && (
@@ -128,9 +128,9 @@ export function PageSelector({ siteId, selectedPage, onPageChange, placeholder =
             <div className="flex items-center gap-2 min-w-0">
               <Plus className="h-4 w-4 flex-shrink-0" />
               <div className="min-w-0">
-                <p className="font-medium">Ange URL manuellt</p>
+                <p className="font-medium">Enter URL manually</p>
                 <p className="text-xs text-muted-foreground">
-                  För att ta skärmdump av valfri sida
+                  To take a screenshot of any page
                 </p>
               </div>
             </div>
@@ -143,7 +143,7 @@ export function PageSelector({ siteId, selectedPage, onPageChange, placeholder =
               <div className="min-w-0">
                 <p className="font-medium truncate">{formatPageUrl(page.page_url)}</p>
                 <p className="text-xs text-muted-foreground">
-                  {page.page_views} visningar
+                  {page.page_views} views
                 </p>
               </div>
             </div>

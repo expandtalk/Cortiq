@@ -7,7 +7,7 @@ CortIQ is a web analytics platform designed for the Agentic Web — the emerging
 CortIQ is the first analytics platform with a dedicated module for tracking and analyzing AI agent behavior on websites. Beyond AI tracking, it provides a comprehensive analytics stack: cookie-free server-side tracking, click heatmaps, session recording, A/B testing, form analytics, geolocation maps, and a GDPR-compliant consent management platform (CMP).
 
 **Production URL:** https://cortiq.se
-**Company:** Expandtalk Corporation, Sweden
+**Company:** Expandtalk Corporation AB Sweden
 **Status:** Invite-only beta
 
 ---

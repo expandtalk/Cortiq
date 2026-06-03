@@ -64,7 +64,7 @@ export function OrganizationSelector({ selectedOrgId, onSelectOrg }: Organizatio
       <Button variant="outline" disabled className="w-full justify-between">
         <span className="flex items-center gap-2">
           <Building2 className="h-4 w-4" />
-          Laddar...
+          Loading...
         </span>
       </Button>
     );
@@ -78,7 +78,7 @@ export function OrganizationSelector({ selectedOrgId, onSelectOrg }: Organizatio
             <span className="flex items-center gap-2 truncate">
               <Building2 className="h-4 w-4 flex-shrink-0" />
               <span className="truncate">
-                {selectedOrg?.name || 'Välj organisation'}
+                {selectedOrg?.name || 'Select organization'}
               </span>
             </span>
             <ChevronDown className="h-4 w-4 flex-shrink-0 opacity-50" />
@@ -103,7 +103,7 @@ export function OrganizationSelector({ selectedOrgId, onSelectOrg }: Organizatio
           
           <DropdownMenuItem onClick={() => setShowCreateDialog(true)}>
             <Plus className="h-4 w-4 mr-2" />
-            Skapa ny organisation
+            Create new organization
           </DropdownMenuItem>
         </DropdownMenuContent>
       </DropdownMenu>
@@ -111,15 +111,15 @@ export function OrganizationSelector({ selectedOrgId, onSelectOrg }: Organizatio
       <Dialog open={showCreateDialog} onOpenChange={setShowCreateDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Skapa ny organisation</DialogTitle>
+            <DialogTitle>Create new organization</DialogTitle>
             <DialogDescription>
-              En organisation kan ha flera sajter och teammedlemmar.
+              An organization can have multiple sites and team members.
             </DialogDescription>
           </DialogHeader>
           
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="org-name">Organisationsnamn</Label>
+              <Label htmlFor="org-name">Organization name</Label>
               <Input
                 id="org-name"
                 value={newOrgName}
@@ -129,33 +129,33 @@ export function OrganizationSelector({ selectedOrgId, onSelectOrg }: Organizatio
                     setNewOrgSlug(generateSlug(e.target.value));
                   }
                 }}
-                placeholder="Mitt Företag AB"
+                placeholder="My Company Ltd"
               />
             </div>
             
             <div className="space-y-2">
-              <Label htmlFor="org-slug">URL-slug</Label>
+              <Label htmlFor="org-slug">URL slug</Label>
               <Input
                 id="org-slug"
                 value={newOrgSlug}
                 onChange={(e) => setNewOrgSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, '-'))}
-                placeholder="mitt-foretag"
+                placeholder="my-company"
               />
               <p className="text-xs text-muted-foreground">
-                Används i URL:er, t.ex. cortiq.app/org/{newOrgSlug || 'mitt-foretag'}
+                Used in URLs, e.g. cortiq.app/org/{newOrgSlug || 'my-company'}
               </p>
             </div>
           </div>
           
           <DialogFooter>
             <Button variant="outline" onClick={() => setShowCreateDialog(false)}>
-              Avbryt
+              Cancel
             </Button>
-            <Button 
+            <Button
               onClick={handleCreateOrg}
               disabled={!newOrgName || !newOrgSlug || createOrg.isPending}
             >
-              {createOrg.isPending ? 'Skapar...' : 'Skapa organisation'}
+              {createOrg.isPending ? 'Creating...' : 'Create organization'}
             </Button>
           </DialogFooter>
         </DialogContent>

@@ -51,10 +51,7 @@ serve(async (req) => {
       
       let event: TrackingEvent;
       try {
-        const requestText = await req.text();
-        console.log('Request body:', requestText);
-        event = JSON.parse(requestText);
-        console.log('Event parsed:', JSON.stringify(event, null, 2));
+        event = await req.json();
       } catch (error) {
         console.error('JSON parse error:', error);
         return new Response(JSON.stringify({ error: 'Invalid JSON' }), {

@@ -75,10 +75,10 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
         .eq('id', selectedSite.id);
       
       setServerSideConfig(newConfig);
-      toast.success('Server-side tracking konfiguration uppdaterad');
+      toast.success('Server-side tracking configuration updated');
     } catch (error) {
       console.error('Error updating server-side config:', error);
-      toast.error('Fel vid uppdatering av konfiguration');
+      toast.error('Error updating configuration');
     }
   };
 
@@ -96,13 +96,13 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
       });
 
       if (result.error) {
-        toast.error('Test misslyckades: ' + result.error.message);
+        toast.error('Test failed: ' + result.error.message);
       } else {
-        toast.success('Consent-flöde fungerar korrekt');
+        toast.success('Consent flow is working correctly');
         loadRecentValidations();
       }
     } catch (error) {
-      toast.error('Test misslyckades');
+      toast.error('Test failed');
     }
   };
 
@@ -112,17 +112,17 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
         <div>
           <h1 className="text-2xl font-bold">CMP Dashboard</h1>
           <p className="text-muted-foreground">
-            GDPR-kompatibel server-side tracking för {selectedSite.site_name}
+            GDPR-compliant server-side tracking for {selectedSite.site_name}
           </p>
         </div>
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
         <TabsList className="grid w-full grid-cols-4">
-          <TabsTrigger value="overview">Översikt</TabsTrigger>
-          <TabsTrigger value="configuration">Konfiguration</TabsTrigger>
-          <TabsTrigger value="monitoring">Övervakning</TabsTrigger>
-          <TabsTrigger value="testing">Testning</TabsTrigger>
+          <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="configuration">Configuration</TabsTrigger>
+          <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
+          <TabsTrigger value="testing">Testing</TabsTrigger>
         </TabsList>
 
         <TabsContent value="overview" className="space-y-6">
@@ -138,37 +138,37 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
                   {serverSideConfig?.block_analytics_without_consent || serverSideConfig?.block_marketing_without_consent ? (
                     <>
                       <CheckCircle className="h-5 w-5 text-green-500" />
-                      <span className="text-sm font-medium">Aktivt</span>
+                      <span className="text-sm font-medium">Active</span>
                     </>
                   ) : (
                     <>
                       <XCircle className="h-5 w-5 text-red-500" />
-                      <span className="text-sm font-medium">Inaktivt</span>
+                      <span className="text-sm font-medium">Inactive</span>
                     </>
                   )}
                 </div>
                 <p className="text-xs text-muted-foreground mt-2">
-                  Server-side blockering {serverSideConfig?.block_analytics_without_consent ? 'aktiverad' : 'inaktiverad'}
+                  Server-side blocking {serverSideConfig?.block_analytics_without_consent ? 'enabled' : 'disabled'}
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Samtycken (24h)</CardTitle>
+                <CardTitle className="text-sm font-medium">Consents (24h)</CardTitle>
                 <BarChart className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
                 <div className="text-2xl font-bold">{consentStats?.recent_24h || 0}</div>
                 <p className="text-xs text-muted-foreground">
-                  {consentStats?.total || 0} totalt
+                  {consentStats?.total || 0} total
                 </p>
               </CardContent>
             </Card>
 
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-                <CardTitle className="text-sm font-medium">Blockerade Anrop</CardTitle>
+                <CardTitle className="text-sm font-medium">Blocked Calls</CardTitle>
                 <Activity className="h-4 w-4 text-muted-foreground" />
               </CardHeader>
               <CardContent>
@@ -176,7 +176,7 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
                   {recentValidations.filter(v => v.blocked_calls?.length > 0).length}
                 </div>
                 <p className="text-xs text-muted-foreground">
-                  Senaste 20 valideringarna
+                  Last 20 validations
                 </p>
               </CardContent>
             </Card>
@@ -186,8 +186,8 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
           {consentStats && (
             <Card>
               <CardHeader>
-                <CardTitle>Samtyckes-statistik</CardTitle>
-                <CardDescription>Översikt över användarnas samtycken</CardDescription>
+                <CardTitle>Consent statistics</CardTitle>
+                <CardDescription>Overview of user consents</CardDescription>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
@@ -195,23 +195,23 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
                     <div className="text-2xl font-bold text-green-600">
                       {Math.round((consentStats.analytics_granted / consentStats.total) * 100) || 0}%
                     </div>
-                    <p className="text-sm text-muted-foreground">Analytics samtycke</p>
+                    <p className="text-sm text-muted-foreground">Analytics consent</p>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-blue-600">
                       {Math.round((consentStats.marketing_granted / consentStats.total) * 100) || 0}%
                     </div>
-                    <p className="text-sm text-muted-foreground">Marknadsföring samtycke</p>
+                    <p className="text-sm text-muted-foreground">Marketing consent</p>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold text-red-600">
                       {Math.round((consentStats.all_rejected / consentStats.total) * 100) || 0}%
                     </div>
-                    <p className="text-sm text-muted-foreground">Avvisade alla</p>
+                    <p className="text-sm text-muted-foreground">All rejected</p>
                   </div>
                   <div className="text-center">
                     <div className="text-2xl font-bold">{consentStats.total}</div>
-                    <p className="text-sm text-muted-foreground">Totala samtycken</p>
+                    <p className="text-sm text-muted-foreground">Total consents</p>
                   </div>
                 </div>
               </CardContent>
@@ -222,18 +222,18 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
         <TabsContent value="configuration" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Server-Side Tracking Konfiguration</CardTitle>
+              <CardTitle>Server-Side Tracking Configuration</CardTitle>
               <CardDescription>
-                Konfigurera hur server-side tracking ska blockeras baserat på användarsamtycke
+                Configure how server-side tracking is blocked based on user consent
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Blockera Analytics utan samtycke</Label>
+                    <Label>Block Analytics without consent</Label>
                     <p className="text-sm text-muted-foreground">
-                      Blockera Google Analytics, Hotjar etc. utan analytics-samtycke
+                      Block Google Analytics, Hotjar etc. without analytics consent
                     </p>
                   </div>
                   <Switch
@@ -249,9 +249,9 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Blockera Marknadsföring utan samtycke</Label>
+                    <Label>Block Marketing without consent</Label>
                     <p className="text-sm text-muted-foreground">
-                      Blockera Meta Pixel, Google Ads etc. utan marknadsförings-samtycke
+                      Block Meta Pixel, Google Ads etc. without marketing consent
                     </p>
                   </div>
                   <Switch
@@ -267,9 +267,9 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
 
                 <div className="flex items-center justify-between">
                   <div className="space-y-0.5">
-                    <Label>Kräv explicit samtycke</Label>
+                    <Label>Require explicit consent</Label>
                     <p className="text-sm text-muted-foreground">
-                      Blockera allt tills användaren har gett explicit samtycke
+                      Block everything until the user has given explicit consent
                     </p>
                   </div>
                   <Switch
@@ -286,13 +286,13 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
 
               {/* Integration Status */}
               <div className="border-t pt-6">
-                <h3 className="text-lg font-medium mb-4">Aktiva Integrationer</h3>
+                <h3 className="text-lg font-medium mb-4">Active Integrations</h3>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   {selectedSite.ga_integration_enabled && (
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <span>Google Analytics</span>
                       <Badge variant={serverSideConfig?.block_analytics_without_consent ? "default" : "secondary"}>
-                        {serverSideConfig?.block_analytics_without_consent ? 'Skyddad' : 'Oskyddad'}
+                        {serverSideConfig?.block_analytics_without_consent ? 'Protected' : 'Unprotected'}
                       </Badge>
                     </div>
                   )}
@@ -300,7 +300,7 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <span>Meta Pixel</span>
                       <Badge variant={serverSideConfig?.block_marketing_without_consent ? "default" : "secondary"}>
-                        {serverSideConfig?.block_marketing_without_consent ? 'Skyddad' : 'Oskyddad'}
+                        {serverSideConfig?.block_marketing_without_consent ? 'Protected' : 'Unprotected'}
                       </Badge>
                     </div>
                   )}
@@ -308,7 +308,7 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
                     <div className="flex items-center justify-between p-3 border rounded-lg">
                       <span>Google Ads</span>
                       <Badge variant={serverSideConfig?.block_marketing_without_consent ? "default" : "secondary"}>
-                        {serverSideConfig?.block_marketing_without_consent ? 'Skyddad' : 'Oskyddad'}
+                        {serverSideConfig?.block_marketing_without_consent ? 'Protected' : 'Unprotected'}
                       </Badge>
                     </div>
                   )}
@@ -321,16 +321,16 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
         <TabsContent value="monitoring" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Senaste Samtyckes-valideringar</CardTitle>
+              <CardTitle>Recent Consent Validations</CardTitle>
               <CardDescription>
-                Realtidsövervakning av consent-checks och blockerade anrop
+                Real-time monitoring of consent checks and blocked calls
               </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
                 {recentValidations.length === 0 ? (
                   <p className="text-muted-foreground text-center py-8">
-                    Inga valideringar hittades ännu
+                    No validations found yet
                   </p>
                 ) : (
                   recentValidations.map((validation) => (
@@ -378,21 +378,21 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
         <TabsContent value="testing" className="space-y-6">
           <Card>
             <CardHeader>
-              <CardTitle>Testa Consent-flöde</CardTitle>
+              <CardTitle>Test Consent Flow</CardTitle>
               <CardDescription>
-                Testa att consent-checks fungerar korrekt
+                Verify that consent checks are working correctly
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <Button onClick={testConsentFlow} className="w-full">
-                Kör Consent Test
+                Run Consent Test
               </Button>
-              
+
               <Alert>
                 <AlertTriangle className="h-4 w-4" />
                 <AlertDescription>
-                  Detta kommer att köra en test-validering och visa resultatet.
-                  Kontrollera fliken "Övervakning" för att se testresultatet.
+                  This will run a test validation and show the result.
+                  Check the "Monitoring" tab to see the test result.
                 </AlertDescription>
               </Alert>
             </CardContent>

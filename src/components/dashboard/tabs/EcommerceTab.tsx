@@ -88,8 +88,8 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
     return (
       <Card>
         <CardHeader>
-          <CardTitle>E-handel Analys</CardTitle>
-          <CardDescription>Välj en sajt för att se e-handelsdata</CardDescription>
+          <CardTitle>E-commerce Analytics</CardTitle>
+          <CardDescription>Select a site to view e-commerce data</CardDescription>
         </CardHeader>
       </Card>
     );
@@ -108,8 +108,8 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
     <div className="space-y-6">
       <div className="flex justify-between items-center">
         <div>
-          <h2 className="text-2xl font-bold">E-handel Analys</h2>
-          <p className="text-muted-foreground">GDPR-kompatibel e-handelsspårning</p>
+          <h2 className="text-2xl font-bold">E-commerce Analytics</h2>
+          <p className="text-muted-foreground">GDPR-compatible e-commerce tracking</p>
         </div>
         <DateRangePicker dateRange={dateRange} onDateRangeChange={(range) => range && setDateRange({ from: range.from!, to: range.to! })} />
       </div>
@@ -118,7 +118,7 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
       <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Total Omsättning</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Revenue</CardTitle>
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -130,7 +130,7 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Antal Köp</CardTitle>
+            <CardTitle className="text-sm font-medium">Number of Purchases</CardTitle>
             <ShoppingCart className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -140,7 +140,7 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Genomsnittligt Ordervärde</CardTitle>
+            <CardTitle className="text-sm font-medium">Average Order Value</CardTitle>
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -152,7 +152,7 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
 
         <Card>
           <CardHeader className="flex flex-row items-center justify-between pb-2">
-            <CardTitle className="text-sm font-medium">Konverteringsgrad</CardTitle>
+            <CardTitle className="text-sm font-medium">Conversion Rate</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -164,8 +164,8 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
       {/* Top Products */}
       <Card>
         <CardHeader>
-          <CardTitle>Topprodukter</CardTitle>
-          <CardDescription>Baserat på omsättning</CardDescription>
+          <CardTitle>Top Products</CardTitle>
+          <CardDescription>Ranked by revenue</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -181,7 +181,7 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
                 <div className="text-right">
                   <p className="font-bold">{product.revenue.toLocaleString('sv-SE')} kr</p>
                   <p className="text-sm text-muted-foreground">
-                    {product.purchases} köp • {product.views} visningar
+                    {product.purchases} purchases • {product.views} views
                   </p>
                 </div>
               </div>
@@ -194,12 +194,12 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
       <Card>
         <CardHeader>
           <CardTitle>Shopping Funnel</CardTitle>
-          <CardDescription>Hur användare rör sig genom köpprocessen</CardDescription>
+          <CardDescription>How users move through the purchase process</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-3">
             <div className="flex items-center justify-between">
-              <span className="font-medium">Produktvisningar</span>
+              <span className="font-medium">Product views</span>
               <span className="font-bold">{ecommerceData?.metrics.productViews}</span>
             </div>
             <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
@@ -207,7 +207,7 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="font-medium">Tillagt i varukorg</span>
+              <span className="font-medium">Added to cart</span>
               <span className="font-bold">{ecommerceData?.metrics.addToCarts}</span>
             </div>
             <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">
@@ -220,7 +220,7 @@ export const EcommerceTab = ({ selectedSiteId }: EcommerceTabProps) => {
             </div>
 
             <div className="flex items-center justify-between">
-              <span className="font-medium">Genomförda köp</span>
+              <span className="font-medium">Completed purchases</span>
               <span className="font-bold">{ecommerceData?.metrics.totalPurchases}</span>
             </div>
             <div className="w-full bg-secondary h-2 rounded-full overflow-hidden">

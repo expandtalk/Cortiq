@@ -34,7 +34,7 @@ export function DateRangePicker({ dateRange, onDateRangeChange, className }: Dat
                 format(dateRange.from, "dd MMM y", { locale: sv })
               )
             ) : (
-              <span>Välj datumintervall</span>
+              <span>Select date range</span>
             )}
           </Button>
         </PopoverTrigger>
@@ -59,7 +59,7 @@ export function DateRangePicker({ dateRange, onDateRangeChange, className }: Dat
                   onDateRangeChange({ from: sevenDaysAgo, to: today });
                 }}
               >
-                Senaste 7 dagarna
+                Last 7 days
               </Button>
               <Button
                 variant="outline"
@@ -70,7 +70,7 @@ export function DateRangePicker({ dateRange, onDateRangeChange, className }: Dat
                   onDateRangeChange({ from: thirtyDaysAgo, to: today });
                 }}
               >
-                Senaste 30 dagarna
+                Last 30 days
               </Button>
               <Button
                 variant="outline"
@@ -81,7 +81,7 @@ export function DateRangePicker({ dateRange, onDateRangeChange, className }: Dat
                   onDateRangeChange({ from: ninetyDaysAgo, to: today });
                 }}
               >
-                Senaste 90 dagarna
+                Last 90 days
               </Button>
             </div>
           </div>

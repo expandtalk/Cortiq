@@ -58,16 +58,16 @@ export function GoogleAnalyticsIntegration({ selectedSite }: GoogleAnalyticsInte
   const handleConnect = async () => {
     if (!measurementId.startsWith('G-')) {
       toast({
-        title: "❌ Ogiltigt Measurement ID",
-        description: "Google Analytics Measurement ID måste börja med 'G-'"
+        title: "❌ Invalid Measurement ID",
+        description: "Google Analytics Measurement ID must start with 'G-'"
       });
       return;
     }
 
     if (!propertyId || isNaN(Number(propertyId))) {
       toast({
-        title: "❌ Ogiltigt Property ID",
-        description: "Google Analytics Property ID måste vara numeriskt (t.ex. 123456789)"
+        title: "❌ Invalid Property ID",
+        description: "Google Analytics Property ID must be numeric (e.g. 123456789)"
       });
       return;
     }
@@ -94,13 +94,13 @@ export function GoogleAnalyticsIntegration({ selectedSite }: GoogleAnalyticsInte
       setIsConnected(true);
 
       toast({
-        title: "🔗 GA Konfigurerad!",
-        description: `Measurement ID ${measurementId} sparad. Heatmap-data skickas nu till Google Analytics när tracking-script laddas på din webbplats.`
+        title: "🔗 GA Configured!",
+        description: `Measurement ID ${measurementId} saved. Heatmap data will now be sent to Google Analytics when the tracking script loads on your website.`
       });
     } catch (error) {
       toast({
-        title: "❌ Fel",
-        description: "Kunde inte spara GA-konfiguration. Försök igen."
+        title: "❌ Error",
+        description: "Could not save GA configuration. Please try again."
       });
     } finally {
       setIsSaving(false);
@@ -133,40 +133,40 @@ export function GoogleAnalyticsIntegration({ selectedSite }: GoogleAnalyticsInte
 
       if (error) {
         console.error('GA4 test error:', error);
-        let errorMessage = error.message || 'Okänt fel';
-        
+        let errorMessage = error.message || 'Unknown error';
+
         // Provide specific guidance for permission errors
         if (errorMessage.includes('permission') || errorMessage.includes('403')) {
-          errorMessage = `❌ Saknar åtkomst till GA4 Property ${propertyId || measurementId}. 
+          errorMessage = `❌ Missing access to GA4 Property ${propertyId || measurementId}.
 
-🔧 Lösning:
-1. Gå till Google Analytics → Admin → Property Access Management
-2. Lägg till Service Account (finns i Supabase settings)
-3. Ge "Viewer" rättigheter
+🔧 Solution:
+1. Go to Google Analytics → Admin → Property Access Management
+2. Add the Service Account (found in Supabase settings)
+3. Grant "Viewer" rights
 
-Detta är anledningen till att samma data visas för båda sajterna.`;
+This is why the same data appears for both sites.`;
         }
-        
+
         toast({
-          variant: "destructive", 
-          title: "❌ Test misslyckades",
+          variant: "destructive",
+          title: "❌ Test failed",
           description: errorMessage
         });
         return;
       }
 
       console.log('GA4 test result:', data);
-      
+
       if (data.success) {
         toast({
-          title: "✅ Test genomfört!",
-          description: `GA4 data hämtad: ${data.data.sessions} sessions, ${data.data.events} events, ${data.data.conversions} conversions`
+          title: "✅ Test complete!",
+          description: `GA4 data fetched: ${data.data.sessions} sessions, ${data.data.events} events, ${data.data.conversions} conversions`
         });
       } else {
         toast({
           variant: "destructive",
-          title: "❌ Test misslyckades",
-          description: data.error || 'Okänt fel från GA4 API'
+          title: "❌ Test failed",
+          description: data.error || 'Unknown error from GA4 API'
         });
       }
 
@@ -174,8 +174,8 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
       console.error('GA4 test error:', error);
       toast({
         variant: "destructive",
-        title: "❌ Test misslyckades",
-        description: error.message || 'Kunde inte anropa GA4-import funktionen'
+        title: "❌ Test failed",
+        description: error.message || 'Could not call GA4 import function'
       });
     } finally {
       setIsSaving(false);
@@ -191,7 +191,7 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
           Google Analytics Integration
         </CardTitle>
         <CardDescription>
-          Kombinera traditionell analytics med detaljerad heatmap-data
+          Combine traditional analytics with detailed heatmap data
         </CardDescription>
       </CardHeader>
       <CardContent className="space-y-6">
@@ -199,9 +199,9 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
         <div className="space-y-4">
           <div className="flex items-center justify-between">
             <div>
-              <Label htmlFor="ga-enabled">Aktivera GA Integration</Label>
+              <Label htmlFor="ga-enabled">Enable GA Integration</Label>
               <p className="text-sm text-muted-foreground">
-                Synkronisera heatmap-data med Google Analytics
+                Sync heatmap data with Google Analytics
               </p>
             </div>
             <Switch
@@ -215,7 +215,7 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
             <div className="space-y-3">
               <div>
                 <Label htmlFor="measurement-id">GA4 Measurement ID</Label>
-                <p className="text-xs text-muted-foreground mb-1">För tracking på din webbplats (börjar med G-)</p>
+                <p className="text-xs text-muted-foreground mb-1">For tracking on your website (starts with G-)</p>
                 <Input
                   id="measurement-id"
                   placeholder="G-XXXXXXXXXX"
@@ -226,7 +226,7 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
 
               <div>
                 <Label htmlFor="property-id">GA4 Property ID</Label>
-                <p className="text-xs text-muted-foreground mb-1">Numeriskt ID för Analytics Data API</p>
+                <p className="text-xs text-muted-foreground mb-1">Numeric ID for the Analytics Data API</p>
                 <Input
                   id="property-id"
                   placeholder="123456789"
@@ -240,14 +240,14 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
                 disabled={!measurementId || !propertyId || isSaving}
                 className="w-full"
               >
-                {isSaving ? 'Sparar...' : isConnected ? 'Uppdatera' : 'Anslut'}
+                {isSaving ? 'Saving...' : isConnected ? 'Update' : 'Connect'}
               </Button>
 
               {isConnected && (
                 <div className="flex items-center gap-2 p-3 bg-green-50 rounded-md">
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <span className="text-sm text-green-700">
-                    Ansluten till Google Analytics
+                    Connected to Google Analytics
                   </span>
                   <Badge variant="secondary">Live</Badge>
                 </div>
@@ -268,21 +268,21 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
               </h3>
               
               <div className="p-4 bg-green-50 rounded-lg">
-                <h4 className="font-semibold text-green-900 mb-2">✅ Integration aktiv</h4>
+                <h4 className="font-semibold text-green-900 mb-2">✅ Integration active</h4>
                 <div className="text-sm text-green-800 space-y-2">
                   <p><strong>Measurement ID:</strong> {measurementId}</p>
-                  <p><strong>Status:</strong> Tracking-script fungerar - Data samlas in och synkroniseras</p>
-                  <p><strong>Events som synkas:</strong> Klick, scrollning, sessioner</p>
+                  <p><strong>Status:</strong> Tracking script working — data is being collected and synced</p>
+                  <p><strong>Events synced:</strong> Clicks, scrolling, sessions</p>
                 </div>
               </div>
 
               <div className="mt-4 p-4 bg-amber-50 rounded-lg">
-                <h4 className="font-semibold text-amber-900 mb-2">📋 Nästa steg</h4>
+                <h4 className="font-semibold text-amber-900 mb-2">📋 Next steps</h4>
                 <div className="text-sm text-amber-800 space-y-1">
-                  <p>1. Installera WordPress-pluginet på din webbplats</p>
-                  <p>2. Aktivera GA-integration i plugin-inställningarna</p>
-                  <p>3. Vänta på att data börjar komma in till Google Analytics</p>
-                  <p>4. Kontrollera "Realtid" i GA för att se direkta events</p>
+                  <p>1. Install the WordPress plugin on your website</p>
+                  <p>2. Enable GA integration in the plugin settings</p>
+                  <p>3. Wait for data to start appearing in Google Analytics</p>
+                  <p>4. Check "Real-time" in GA to see live events</p>
                 </div>
               </div>
             </div>
@@ -309,9 +309,9 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
                   )}
                 >
                   <ExternalLink className="h-4 w-4 mb-1" />
-                  <div className="font-medium">Öppna Google Analytics</div>
+                  <div className="font-medium">Open Google Analytics</div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    Gå till Realtid för att se heatmap events
+                    Go to Real-time to see heatmap events
                   </div>
                 </Button>
 
@@ -326,9 +326,9 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
                   )}
                 >
                   <BarChart3 className="h-4 w-4 mb-1" />
-                  <div className="font-medium">Realtidsrapport</div>
+                  <div className="font-medium">Real-time report</div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    Se direkta heatmap events live
+                    View heatmap events live
                   </div>
                 </Button>
 
@@ -340,10 +340,10 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
                 >
                   <TestTube className="h-4 w-4 mb-1" />
                   <div className="font-medium">
-                    {isSaving ? 'Testar...' : 'Testa Konfiguration'}
+                    {isSaving ? 'Testing...' : 'Test Configuration'}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    Verifiera GA4-inställningar
+                    Verify GA4 settings
                   </div>
                 </Button>
               </div>
@@ -356,79 +356,79 @@ Detta är anledningen till att samma data visas för båda sajterna.`;
           <div className="p-4 bg-blue-50 rounded-md">
             <h4 className="font-semibold text-blue-900 mb-2">🔧 Setup Guide</h4>
             <ul className="text-sm text-blue-800 space-y-1">
-              <li>1. <strong>Skapa GA4-konto:</strong> Gå till <a href="https://analytics.google.com" target="_blank" rel="noopener" className="underline">analytics.google.com</a></li>
-              <li>2. <strong>Hitta Measurement ID:</strong> Dataström → Webbdataström → G-XXXXXXXXXX</li>
-              <li>3. <strong>Hitta Property ID:</strong> Inställningar → Egenskaps-ID (numeriskt)</li>
-              <li>4. <strong>Ange ID:n:</strong> Fyll i formuläret ovan</li>
-              <li>5. <strong>Installera plugin:</strong> Ladda ner och installera WordPress-pluginet</li>
+              <li>1. <strong>Create GA4 account:</strong> Go to <a href="https://analytics.google.com" target="_blank" rel="noopener" className="underline">analytics.google.com</a></li>
+              <li>2. <strong>Find Measurement ID:</strong> Data stream → Web data stream → G-XXXXXXXXXX</li>
+              <li>3. <strong>Find Property ID:</strong> Settings → Property ID (numeric)</li>
+              <li>4. <strong>Enter IDs:</strong> Fill in the form above</li>
+              <li>5. <strong>Install plugin:</strong> Download and install the WordPress plugin</li>
             </ul>
           </div>
 
           <div className="p-4 bg-amber-50 rounded-md">
-            <h4 className="font-semibold text-amber-900 mb-3">⚠️ Viktiga GDPR-dokument att granska</h4>
+            <h4 className="font-semibold text-amber-900 mb-3">⚠️ Important GDPR documents to review</h4>
             <p className="text-sm text-amber-800 mb-3">
-              När du skapar ditt GA4-konto måste du godkänna flera dokument. Här är våra rekommendationer för GDPR-compliance:
+              When creating your GA4 account you must agree to several documents. Here are our GDPR compliance recommendations:
             </p>
-            
+
             <div className="space-y-3 text-sm">
               <div className="bg-green-100 p-3 rounded border-l-4 border-green-500">
-                <h5 className="font-semibold text-green-900 mb-1">✅ Rekommenderas att godkänna:</h5>
+                <h5 className="font-semibold text-green-900 mb-1">✅ Recommended to accept:</h5>
                 <ul className="text-green-800 space-y-1">
-                  <li>• <strong>Teknisk support</strong> - Nödvändigt för felsökning</li>
-                  <li>• <strong>Google Ads Data Processing Terms</strong> - GDPR-kompatibelt avtal</li>
+                  <li>• <strong>Technical support</strong> - Required for troubleshooting</li>
+                  <li>• <strong>Google Ads Data Processing Terms</strong> - GDPR-compliant agreement</li>
                 </ul>
               </div>
 
               <div className="bg-red-100 p-3 rounded border-l-4 border-red-500">
-                <h5 className="font-semibold text-red-900 mb-1">🚫 Rekommenderas INTE:</h5>
+                <h5 className="font-semibold text-red-900 mb-1">🚫 Not recommended:</h5>
                 <ul className="text-red-800 space-y-1">
-                  <li>• <strong>Rekommendationer för ditt företag</strong> - Bred dataanvändning</li>
-                  <li>• <strong>Bidrag till modellering</strong> - Data används för Googles algoritmer</li>
+                  <li>• <strong>Recommendations for your business</strong> - Broad data usage</li>
+                  <li>• <strong>Modeling contributions</strong> - Data used for Google's algorithms</li>
                 </ul>
                 <p className="text-xs text-red-700 mt-2">
-                  Dessa kan aktiveras senare om verkligen behövs.
+                  These can be enabled later if truly needed.
                 </p>
               </div>
 
               <div className="bg-blue-100 p-3 rounded border-l-4 border-blue-500">
-                <h5 className="font-semibold text-blue-900 mb-1">🤔 Överväg noga:</h5>
+                <h5 className="font-semibold text-blue-900 mb-1">🤔 Consider carefully:</h5>
                 <ul className="text-blue-800 space-y-1">
-                  <li>• <strong>Produkter och tjänster från Google</strong> - Bra om du använder flera Google-tjänster</li>
+                  <li>• <strong>Google products and services</strong> - Useful if you use multiple Google services</li>
                 </ul>
               </div>
             </div>
           </div>
 
           <div className="p-4 bg-purple-50 rounded-md">
-            <h4 className="font-semibold text-purple-900 mb-2">📋 Nästa steg efter GA4-setup</h4>
+            <h4 className="font-semibold text-purple-900 mb-2">📋 Next steps after GA4 setup</h4>
             <ul className="text-sm text-purple-800 space-y-1">
-              <li>1. <strong>Aktivera IP-anonymisering</strong> i GA4-inställningar</li>
-              <li>2. <strong>Uppdatera integritetspolicy</strong> att inkludera Google Analytics</li>
-              <li>3. <strong>Konfigurera cookie-banner</strong> för samtycke (vårt system hanterar detta)</li>
-              <li>4. <strong>Testa integrationen</strong> med knappen "Testa Konfiguration" ovan</li>
-              <li>5. <strong>Kontrollera Realtid</strong> i GA4 för att se heatmap-events</li>
+              <li>1. <strong>Enable IP anonymization</strong> in GA4 settings</li>
+              <li>2. <strong>Update privacy policy</strong> to include Google Analytics</li>
+              <li>3. <strong>Configure cookie banner</strong> for consent (our system handles this)</li>
+              <li>4. <strong>Test the integration</strong> with the "Test Configuration" button above</li>
+              <li>5. <strong>Check Real-time</strong> in GA4 to see heatmap events</li>
             </ul>
           </div>
 
           <div className="p-4 bg-gray-50 rounded-md">
-            <h4 className="font-semibold text-gray-900 mb-2">🎯 Vad skickas till Google Analytics?</h4>
+            <h4 className="font-semibold text-gray-900 mb-2">🎯 What is sent to Google Analytics?</h4>
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
               <div>
                 <h5 className="font-medium text-gray-900 mb-1">Heatmap Events:</h5>
                 <ul className="text-gray-700 space-y-1">
-                  <li>• Klick-positioner och intensitet</li>
-                  <li>• Scroll-djup och beteende</li>
-                  <li>• Mouse-tracking data</li>
-                  <li>• Session-längd och engagement</li>
+                  <li>• Click positions and intensity</li>
+                  <li>• Scroll depth and behavior</li>
+                  <li>• Mouse tracking data</li>
+                  <li>• Session length and engagement</li>
                 </ul>
               </div>
               <div>
                 <h5 className="font-medium text-gray-900 mb-1">Custom Parameters:</h5>
                 <ul className="text-gray-700 space-y-1">
-                  <li>• <code>heatmap_zone</code> - Sidområde</li>
-                  <li>• <code>click_intensity</code> - Klick-data</li>
-                  <li>• <code>scroll_depth</code> - Scroll-procent</li>
-                  <li>• <code>session_id</code> - Session-koppling</li>
+                  <li>• <code>heatmap_zone</code> - Page area</li>
+                  <li>• <code>click_intensity</code> - Click data</li>
+                  <li>• <code>scroll_depth</code> - Scroll percentage</li>
+                  <li>• <code>session_id</code> - Session link</li>
                 </ul>
               </div>
             </div>

@@ -168,10 +168,10 @@ export function useCreateOrganization() {
     },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
-      toast.success('Organisation skapad');
+      toast.success('Organization created');
     },
     onError: (error) => {
-      toast.error('Kunde inte skapa organisation: ' + error.message);
+      toast.error('Could not create organization: ' + error.message);
     },
   });
 }
@@ -194,10 +194,10 @@ export function useUpdateOrganization() {
     onSuccess: (data) => {
       queryClient.invalidateQueries({ queryKey: ['organizations'] });
       queryClient.invalidateQueries({ queryKey: ['organization', data.id] });
-      toast.success('Organisation uppdaterad');
+      toast.success('Organization updated');
     },
     onError: (error) => {
-      toast.error('Kunde inte uppdatera organisation: ' + error.message);
+      toast.error('Could not update organization: ' + error.message);
     },
   });
 }
@@ -229,10 +229,10 @@ export function useInviteMember() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['organization-members', variables.organizationId] });
-      toast.success('Medlem tillagd');
+      toast.success('Member added');
     },
     onError: (error) => {
-      toast.error('Kunde inte lägga till medlem: ' + error.message);
+      toast.error('Could not add member: ' + error.message);
     },
   });
 }
@@ -259,10 +259,10 @@ export function useUpdateMemberRole() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['organization-members', variables.organizationId] });
-      toast.success('Roll uppdaterad');
+      toast.success('Role updated');
     },
     onError: (error) => {
-      toast.error('Kunde inte uppdatera roll: ' + error.message);
+      toast.error('Could not update role: ' + error.message);
     },
   });
 }
@@ -281,10 +281,10 @@ export function useRemoveMember() {
     },
     onSuccess: (_, variables) => {
       queryClient.invalidateQueries({ queryKey: ['organization-members', variables.organizationId] });
-      toast.success('Medlem borttagen');
+      toast.success('Member removed');
     },
     onError: (error) => {
-      toast.error('Kunde inte ta bort medlem: ' + error.message);
+      toast.error('Could not remove member: ' + error.message);
     },
   });
 }

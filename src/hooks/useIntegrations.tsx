@@ -99,14 +99,14 @@ export function useUpdateIntegrations() {
       queryClient.invalidateQueries({ queryKey: ['integrations', data.id] });
       queryClient.invalidateQueries({ queryKey: ['sites'] });
       toast({
-        title: "Integration uppdaterad",
-        description: "Inställningarna har sparats."
+        title: "Integration updated",
+        description: "Settings have been saved."
       });
     },
     onError: () => {
       toast({
-        title: "Fel",
-        description: "Kunde inte uppdatera integration.",
+        title: "Error",
+        description: "Could not update integration.",
         variant: "destructive"
       });
     }
@@ -125,7 +125,7 @@ export interface IntegrationItem {
   secondaryConfigField?: keyof IntegrationConfig;
   secondaryPlaceholder?: string;
   description?: string;
-  isActive?: boolean; // För befintliga system som redan är aktiva
-  isWordPress?: boolean; // För WordPress-specifika integrationer
-  highRisk?: boolean; // För högrisk-integrationer som TikTok
+  isActive?: boolean;
+  isWordPress?: boolean;
+  highRisk?: boolean;
 }

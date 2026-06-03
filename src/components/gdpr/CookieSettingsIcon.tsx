@@ -37,8 +37,8 @@ export function CookieSettingsIcon({ siteId, onOpenSettings, className = '' }: C
             ? 'bg-gray-500 hover:bg-gray-600' 
             : 'bg-primary hover:bg-primary/90'
       } ${className}`}
-      title="Cookie-inställningar"
-      aria-label="Öppna cookie-inställningar"
+      title="Cookie settings"
+      aria-label="Open cookie settings"
     >
       {needsAttention ? (
         <Cookie className="h-5 w-5 text-white" />

@@ -18,11 +18,7 @@ serve(async (req) => {
     const supabaseKey = Deno.env.get('SUPABASE_SERVICE_ROLE_KEY')!;
     const supabase = createClient(supabaseUrl, supabaseKey);
 
-    // Check if GA4 service account key is available
     const serviceAccountKey = Deno.env.get('GA4_SERVICE_ACCOUNT_KEY');
-    console.log('Available environment variables:', Object.keys(Deno.env.toObject()));
-    console.log('GA4_SERVICE_ACCOUNT_KEY available:', !!serviceAccountKey);
-    console.log('GA4_SERVICE_ACCOUNT_KEY length:', serviceAccountKey?.length || 0);
 
     const { siteId, startDate, endDate } = await req.json();
 

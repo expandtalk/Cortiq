@@ -48,19 +48,19 @@ interface AgentRegistryProps {
 const AGENT_TYPE_CONFIG = {
   custom_bot: {
     label: 'Custom Bot Pattern',
-    description: 'Spåra inkommande AI-botar med user-agent mönster',
+    description: 'Track incoming AI bots with user-agent patterns',
     icon: Bot,
     color: 'bg-blue-500/10 text-blue-500',
   },
   outbound_agent: {
-    label: 'Utgående Agent',
-    description: 'Övervaka era egna AI-agenter',
+    label: 'Outbound Agent',
+    description: 'Monitor your own AI agents',
     icon: Server,
     color: 'bg-green-500/10 text-green-500',
   },
   third_party: {
-    label: 'Tredjepartsintegration',
-    description: 'Spåra externa AI-tjänster ni använder',
+    label: 'Third-party Integration',
+    description: 'Track external AI services you use',
     icon: Globe,
     color: 'bg-purple-500/10 text-purple-500',
   },
@@ -140,7 +140,7 @@ export function AgentRegistry({ siteId }: AgentRegistryProps) {
   };
 
   const handleDelete = async (agent: RegisteredAgent) => {
-    if (confirm(`Är du säker på att du vill ta bort "${agent.agent_name}"?`)) {
+    if (confirm(`Are you sure you want to delete "${agent.agent_name}"?`)) {
       await deleteAgent.mutateAsync({ id: agent.id, siteId });
     }
   };
@@ -160,7 +160,7 @@ export function AgentRegistry({ siteId }: AgentRegistryProps) {
         <div>
           <h3 className="text-lg font-semibold">Agent Registry</h3>
           <p className="text-sm text-muted-foreground">
-            Registrera och övervaka AI-agenter som besöker eller integrerar med er sajt
+            Register and monitor AI agents that visit or integrate with your site
           </p>
         </div>
         
@@ -168,20 +168,20 @@ export function AgentRegistry({ siteId }: AgentRegistryProps) {
           <DialogTrigger asChild>
             <Button>
               <Plus className="h-4 w-4 mr-2" />
-              Lägg till agent
+              Add agent
             </Button>
           </DialogTrigger>
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
-              <DialogTitle>Registrera ny agent</DialogTitle>
+              <DialogTitle>Register new agent</DialogTitle>
               <DialogDescription>
-                Lägg till en AI-agent för spårning och övervakning
+                Add an AI agent for tracking and monitoring
               </DialogDescription>
             </DialogHeader>
             
             <form onSubmit={handleSubmit} className="space-y-4">
               <div className="space-y-2">
-                <Label>Agenttyp</Label>
+                <Label>Agent type</Label>
                 <Select
                   value={formData.agent_type}
                   onValueChange={(value: 'custom_bot' | 'outbound_agent' | 'third_party') => 
@@ -206,10 +206,10 @@ export function AgentRegistry({ siteId }: AgentRegistryProps) {
 
               {formData.agent_type === 'custom_bot' && (
                 <div className="space-y-2">
-                  <Label>Snabbval</Label>
+                  <Label>Quick select</Label>
                   <Select value={selectedPreset} onValueChange={handlePresetChange}>
                     <SelectTrigger>
-                      <SelectValue placeholder="Välj fördefinierad bot..." />
+                      <SelectValue placeholder="Select predefined bot..." />
                     </SelectTrigger>
                     <SelectContent>
                       {PRESET_PATTERNS.map(preset => (
@@ -223,38 +223,38 @@ export function AgentRegistry({ siteId }: AgentRegistryProps) {
               )}
 
               <div className="space-y-2">
-                <Label htmlFor="agent_name">Agentnamn</Label>
+                <Label htmlFor="agent_name">Agent name</Label>
                 <Input
                   id="agent_name"
                   value={formData.agent_name}
                   onChange={e => setFormData(prev => ({ ...prev, agent_name: e.target.value }))}
-                  placeholder="t.ex. Microsoft Copilot"
+                  placeholder="e.g. Microsoft Copilot"
                   required
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="description">Beskrivning (valfritt)</Label>
+                <Label htmlFor="description">Description (optional)</Label>
                 <Input
                   id="description"
                   value={formData.description}
                   onChange={e => setFormData(prev => ({ ...prev, description: e.target.value }))}
-                  placeholder="t.ex. Spårar Copilot-besök för SEO-analys"
+                  placeholder="e.g. Track Copilot visits for SEO analysis"
                 />
               </div>
 
               {formData.agent_type === 'custom_bot' && (
                 <div className="space-y-2">
-                  <Label htmlFor="user_agent_pattern">User-Agent mönster (regex)</Label>
+                  <Label htmlFor="user_agent_pattern">User-Agent pattern (regex)</Label>
                   <Input
                     id="user_agent_pattern"
                     value={formData.user_agent_pattern}
                     onChange={e => setFormData(prev => ({ ...prev, user_agent_pattern: e.target.value }))}
-                    placeholder="t.ex. Copilot|BingBot"
+                    placeholder="e.g. Copilot|BingBot"
                     className="font-mono text-sm"
                   />
                   <p className="text-xs text-muted-foreground">
-                    Använd | för att matcha flera mönster
+                    Use | to match multiple patterns
                   </p>
                 </div>
               )}
@@ -274,10 +274,10 @@ export function AgentRegistry({ siteId }: AgentRegistryProps) {
 
               <div className="flex justify-end gap-2 pt-4">
                 <Button type="button" variant="outline" onClick={() => setIsDialogOpen(false)}>
-                  Avbryt
+                  Cancel
                 </Button>
                 <Button type="submit" disabled={createAgent.isPending}>
-                  {createAgent.isPending ? 'Sparar...' : 'Registrera'}
+                  {createAgent.isPending ? 'Saving...' : 'Register'}
                 </Button>
               </div>
             </form>
@@ -289,9 +289,9 @@ export function AgentRegistry({ siteId }: AgentRegistryProps) {
         <Card>
           <CardContent className="flex flex-col items-center justify-center py-12">
             <Bot className="h-12 w-12 text-muted-foreground mb-4" />
-            <h4 className="font-medium mb-1">Inga agenter registrerade</h4>
+            <h4 className="font-medium mb-1">No agents registered</h4>
             <p className="text-sm text-muted-foreground text-center max-w-sm">
-              Registrera AI-agenter för att spåra Copilot, Google AI Studio, egna agenter och mer.
+              Register AI agents to track Copilot, Google AI Studio, your own agents, and more.
             </p>
           </CardContent>
         </Card>
@@ -357,16 +357,16 @@ export function AgentRegistry({ siteId }: AgentRegistryProps) {
                     
                     <div className="flex items-center gap-1.5">
                       <Activity className="h-4 w-4 text-muted-foreground" />
-                      <span>{agent.total_requests} förfrågningar</span>
+                      <span>{agent.total_requests} requests</span>
                     </div>
                     
                     {agent.last_seen_at && (
                       <div className="flex items-center gap-1.5">
                         <Clock className="h-4 w-4 text-muted-foreground" />
                         <span>
-                          Senast sedd {formatDistanceToNow(new Date(agent.last_seen_at), { 
-                            addSuffix: true, 
-                            locale: sv 
+                          Last seen {formatDistanceToNow(new Date(agent.last_seen_at), {
+                            addSuffix: true,
+                            locale: sv
                           })}
                         </span>
                       </div>

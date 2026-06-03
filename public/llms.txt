@@ -2,7 +2,7 @@
 
 > First-to-market web analytics platform with dedicated AI agent tracking — ChatGPT Browser, Perplexity Comet, Claude Browser. Built for the Agentic Web.
 
-CortIQ combines cookie-free server-side analytics, GDPR-compliant consent management, and behavioral analytics. Developed by Expandtalk Corporation, Sweden.
+CortIQ combines cookie-free server-side analytics, GDPR-compliant consent management, and behavioral analytics. Developed by Expandtalk Corporation AB Sweden.
 
 ## Product capabilities
 
@@ -34,4 +34,4 @@ https://cortiq.se/spa-tracking.js — drop-in JavaScript for any site (heatmaps,
 
 ## Company
 
-Expandtalk Corporation — Sweden. GDPR-compliant, EU-hosted.
+Expandtalk Corporation AB— Sweden. GDPR-compliant, EU-hosted.

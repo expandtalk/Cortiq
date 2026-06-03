@@ -25,19 +25,19 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
       if (error) throw error;
 
       setAnalysis(data);
-      toast.success('AI-analys klar! Säkerhetshot identifierade.');
+      toast.success('AI analysis complete! Security threats identified.');
     } catch (error) {
       console.error('Analysis error:', error);
-      toast.error('Kunde inte köra AI-analys');
+      toast.error('Could not run AI analysis');
     } finally {
       setAnalyzing(false);
     }
   };
 
   const getThreatLevel = (score: number) => {
-    if (score < 30) return { label: 'Låg', color: 'bg-green-500', textColor: 'text-green-700' };
-    if (score < 60) return { label: 'Medel', color: 'bg-yellow-500', textColor: 'text-yellow-700' };
-    return { label: 'Hög', color: 'bg-red-500', textColor: 'text-red-700' };
+    if (score < 30) return { label: 'Low', color: 'bg-green-500', textColor: 'text-green-700' };
+    if (score < 60) return { label: 'Medium', color: 'bg-yellow-500', textColor: 'text-yellow-700' };
+    return { label: 'High', color: 'bg-red-500', textColor: 'text-red-700' };
   };
 
   return (
@@ -63,12 +63,12 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
             {analyzing ? (
               <>
                 <Activity className="mr-2 h-4 w-4 animate-spin" />
-                Analyserar...
+                Analyzing...
               </>
             ) : (
               <>
                 <Bot className="mr-2 h-4 w-4" />
-                Kör AI-Analys
+                Run AI Analysis
               </>
             )}
           </Button>
@@ -80,13 +80,13 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
           <div className="text-center py-12">
             <Bot className="h-16 w-16 mx-auto text-muted-foreground mb-4" />
             <p className="text-muted-foreground mb-4">
-              Klicka på "Kör AI-Analys" för att få en djupgående säkerhetsanalys av AI-bot trafik
+              Click "Run AI Analysis" to get an in-depth security analysis of AI bot traffic
             </p>
             <ul className="text-sm text-muted-foreground space-y-2 max-w-md mx-auto">
-              <li>✓ Identifiera hot vs legitim trafik</li>
-              <li>✓ Upptäck DDoS & scraping-attacker</li>
-              <li>✓ AI-genererade rekommendationer</li>
-              <li>✓ Automatisk threat scoring</li>
+              <li>✓ Identify threats vs legitimate traffic</li>
+              <li>✓ Detect DDoS & scraping attacks</li>
+              <li>✓ AI-generated recommendations</li>
+              <li>✓ Automatic threat scoring</li>
             </ul>
           </div>
         ) : (
@@ -95,9 +95,9 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
             <div className="p-6 rounded-lg bg-gradient-to-br from-primary/5 to-accent/5 border-2 border-primary/20">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h3 className="text-lg font-bold">Hotnivå</h3>
+                  <h3 className="text-lg font-bold">Threat Level</h3>
                   <p className="text-sm text-muted-foreground">
-                    Baserat på {analysis.summary.totalVisits} bot-besök
+                    Based on {analysis.summary.totalVisits} bot visits
                   </p>
                 </div>
                 <Badge className={`${getThreatLevel(analysis.threatScore).color} text-white text-lg px-4 py-2`}>
@@ -119,18 +119,18 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
                     <AlertTriangle className={`h-4 w-4 ${analysis.threatIndicators.rapidFireRequests > 50 ? 'text-red-500' : 'text-yellow-500'}`} />
                   </div>
                   <div className="text-2xl font-bold">{analysis.threatIndicators.rapidFireRequests.toFixed(1)}</div>
-                  <p className="text-xs text-muted-foreground">Requests/minut mönster</p>
+                  <p className="text-xs text-muted-foreground">Requests/minute pattern</p>
                 </CardContent>
               </Card>
 
               <Card className="bg-muted/50">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">IP Koncentration</span>
+                    <span className="text-sm font-medium">IP Concentration</span>
                     <AlertTriangle className={`h-4 w-4 ${analysis.threatIndicators.ipConcentration > 70 ? 'text-red-500' : 'text-green-500'}`} />
                   </div>
                   <div className="text-2xl font-bold">{analysis.threatIndicators.ipConcentration.toFixed(1)}%</div>
-                  <p className="text-xs text-muted-foreground">Från samma IP-range</p>
+                  <p className="text-xs text-muted-foreground">From same IP range</p>
                 </CardContent>
               </Card>
 
@@ -141,7 +141,7 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
                     <AlertTriangle className={`h-4 w-4 ${analysis.threatIndicators.urlScanningPattern > 60 ? 'text-red-500' : 'text-yellow-500'}`} />
                   </div>
                   <div className="text-2xl font-bold">{analysis.threatIndicators.urlScanningPattern.toFixed(1)}</div>
-                  <p className="text-xs text-muted-foreground">Systematisk skanning</p>
+                  <p className="text-xs text-muted-foreground">Systematic scanning</p>
                 </CardContent>
               </Card>
 
@@ -170,11 +170,11 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
               <Card className="bg-muted/50">
                 <CardContent className="p-4">
                   <div className="flex items-center justify-between mb-2">
-                    <span className="text-sm font-medium">Unika Botar</span>
+                    <span className="text-sm font-medium">Unique Bots</span>
                     <CheckCircle className="h-4 w-4 text-green-500" />
                   </div>
                   <div className="text-2xl font-bold">{analysis.summary.uniqueBots}</div>
-                  <p className="text-xs text-muted-foreground">Bot-typer identifierade</p>
+                  <p className="text-xs text-muted-foreground">Bot types identified</p>
                 </CardContent>
               </Card>
             </div>
@@ -184,7 +184,7 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
                   <TrendingUp className="h-5 w-5 text-primary" />
-                  <span>AI-Genererad Säkerhetsanalys</span>
+                  <span>AI-Generated Security Analysis</span>
                 </CardTitle>
               </CardHeader>
               <CardContent>
@@ -200,15 +200,15 @@ export function AIBotSecurityWidget({ siteId }: AIBotSecurityWidgetProps) {
             <div className="flex gap-3">
               <Button variant="outline" className="flex-1">
                 <Shield className="mr-2 h-4 w-4" />
-                Blockera Hot-IP
+                Block Threat IP
               </Button>
               <Button variant="outline" className="flex-1">
                 <Bot className="mr-2 h-4 w-4" />
-                Uppdatera Robots.txt
+                Update Robots.txt
               </Button>
               <Button variant="outline" className="flex-1">
                 <Activity className="mr-2 h-4 w-4" />
-                Aktivera Rate Limiting
+                Enable Rate Limiting
               </Button>
             </div>
           </div>

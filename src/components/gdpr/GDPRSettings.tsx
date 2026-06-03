@@ -159,7 +159,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
         .single();
 
       if (!site) {
-        toast.error('Kunde inte hitta webbplats');
+        toast.error('Could not find website');
         return;
       }
 
@@ -174,19 +174,19 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
 
       if (error) {
         console.error('Supabase function error:', error);
-        toast.error('Fel vid skanning: ' + error.message);
+        toast.error('Scan error: ' + error.message);
         return;
       }
 
       if (!data) {
         console.error('No data returned from edge function');
-        toast.error('Ingen data returnerad från skanning');
+        toast.error('No data returned from scan');
         return;
       }
 
       console.log('Scan results:', data);
       setScanResults(data);
-      toast.success(`Skanning klar! Hittade ${data.cookies_found || 0} cookies och ${data.scripts_found || 0} scripts`);
+      toast.success(`Scan complete! Found ${data.cookies_found || 0} cookies and ${data.scripts_found || 0} scripts`);
 
       // Reload saved data to show updated results
       await loadSavedData();
@@ -199,7 +199,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
 
     } catch (error) {
       console.error('Cookie scan error:', error);
-      toast.error('Fel vid skanning av cookies');
+      toast.error('Error scanning cookies');
     } finally {
       setIsScanning(false);
     }
@@ -207,17 +207,17 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
 
   const importExternalCookies = async () => {
     if (!bannerType || bannerType === 'internal') {
-      toast.error('Välj en extern cookie banner först');
+      toast.error('Select an external cookie banner first');
       return;
     }
 
     if (bannerType === 'cookiebot' && !cookiebotId) {
-      toast.error('Ange Cookiebot ID');
+      toast.error('Enter Cookiebot ID');
       return;
     }
 
     if (bannerType === 'onetrust' && !onetrustId) {
-      toast.error('Ange OneTrust Script ID');
+      toast.error('Enter OneTrust Script ID');
       return;
     }
 
@@ -233,15 +233,15 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
       });
 
       if (error) {
-        toast.error('Fel vid import: ' + error.message);
+        toast.error('Import error: ' + error.message);
         return;
       }
 
-      toast.success(`Import klar! Importerade ${data.imported_count} cookies från ${bannerType}`);
+      toast.success(`Import complete! Imported ${data.imported_count} cookies from ${bannerType}`);
       
     } catch (error) {
       console.error('Cookie import error:', error);
-      toast.error('Fel vid import av cookies');
+      toast.error('Error importing cookies');
     } finally {
       setIsImporting(false);
     }
@@ -249,7 +249,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
 
   const exportAllData = async () => {
     try {
-      toast.info('Förbereder dataexport...');
+      toast.info('Preparing data export...');
       
       // Fetch all data for the site
       const [sessionsData, heatmapData, pageViewsData, interactionsData, cookiesData] = await Promise.all([
@@ -281,16 +281,16 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast.success('Dataexport klar! Fil nedladdad.');
+      toast.success('Data export complete! File downloaded.');
     } catch (error) {
       console.error('Export error:', error);
-      toast.error('Fel vid dataexport');
+      toast.error('Error during data export');
     }
   };
 
   const generateGDPRReport = async () => {
     try {
-      toast.info('Genererar GDPR-rapport...');
+      toast.info('Generating GDPR report...');
       
       // Get site info
       const { data: site } = await supabase.from('sites').select('*').eq('id', siteId).single();
@@ -304,8 +304,8 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
       ]);
 
       const report = {
-        site_name: site?.site_name || 'Okänd webbplats',
-        domain: site?.domain || 'Okänd domän',
+        site_name: site?.site_name || 'Unknown website',
+        domain: site?.domain || 'Unknown domain',
         report_date: new Date().toISOString(),
         gdpr_settings: settings,
         data_summary: {
@@ -335,10 +335,10 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
       document.body.removeChild(a);
       URL.revokeObjectURL(url);
 
-      toast.success('GDPR-rapport genererad och nedladdad!');
+      toast.success('GDPR report generated and downloaded!');
     } catch (error) {
       console.error('Report generation error:', error);
-      toast.error('Fel vid generering av GDPR-rapport');
+      toast.error('Error generating GDPR report');
     }
   };
 
@@ -348,7 +348,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
       const cutoffDate = new Date();
       cutoffDate.setDate(cutoffDate.getDate() - retentionDays);
       
-      toast.info('Rensar gammal data...');
+      toast.info('Cleaning old data...');
       
       // Delete old data based on retention policy
       const cutoffDateString = cutoffDate.toISOString();
@@ -360,15 +360,15 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
       
       // Delete user_interactions separately (they cascade from page_views deletion)
 
-      toast.success(`Gammal data (äldre än ${retentionDays} dagar) har rensats`);
+      toast.success(`Old data (older than ${retentionDays} days) has been cleaned`);
     } catch (error) {
       console.error('Data cleanup error:', error);
-      toast.error('Fel vid rensning av gammal data');
+      toast.error('Error cleaning old data');
     }
   };
 
   if (isLoading) {
-    return <div>Laddar GDPR-inställningar...</div>;
+    return <div>Loading GDPR settings...</div>;
   }
 
   return (
@@ -378,10 +378,10 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            GDPR-inställningar
+            GDPR settings
           </CardTitle>
           <CardDescription>
-            Konfigurera dataskydd och integritetsinställningar för din webbplats.
+            Configure data protection and privacy settings for your website.
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -390,9 +390,9 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
             <div className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="cookie_consent">Cookie-samtycke</Label>
+                  <Label htmlFor="cookie_consent">Cookie consent</Label>
                   <p className="text-sm text-muted-foreground">
-                    Visa cookie-banner för besökare
+                    Show cookie banner to visitors
                   </p>
                 </div>
                 <Switch
@@ -406,10 +406,10 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                 <div className="space-y-0.5">
                   <Label htmlFor="cookiefree_mode" className="font-semibold flex items-center gap-2">
                     <Cookie className="h-4 w-4" />
-                    Cookiefree-läge
+                    Cookie-free mode
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Dölj cookie-bannern och kör 100% cookiefree tracking (säkerhets-fingerprinting för bot-detektion + aggregerad server-side analytics)
+                    Hide the cookie banner and run 100% cookie-free tracking (security fingerprinting for bot detection + aggregated server-side analytics)
                   </p>
                 </div>
                 <Switch
@@ -424,11 +424,11 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                   <Label htmlFor="heatmap_tracking">
                     <div className="flex items-center gap-2">
                       <MousePointer className="h-4 w-4" />
-                      Heatmap-spårning
+                      Heatmap tracking
                     </div>
                   </Label>
                   <p className="text-sm text-muted-foreground">
-                    Aktivera eller inaktivera heatmap-spårning för denna webbplats
+                    Enable or disable heatmap tracking for this website
                   </p>
                 </div>
                 <Switch
@@ -442,23 +442,23 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="banner_type">Cookie Banner Typ</Label>
-                <Select 
-                  value={bannerType} 
+                <Label htmlFor="banner_type">Cookie banner type</Label>
+                <Select
+                  value={bannerType}
                   onValueChange={setBannerType}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Välj banner typ" />
+                    <SelectValue placeholder="Select banner type" />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="internal">Inbyggd Banner</SelectItem>
+                    <SelectItem value="internal">Built-in banner</SelectItem>
                     <SelectItem value="cookiebot">Cookiebot</SelectItem>
                     <SelectItem value="onetrust">OneTrust</SelectItem>
-                    <SelectItem value="custom">Anpassad Integration</SelectItem>
+                    <SelectItem value="custom">Custom integration</SelectItem>
                   </SelectContent>
                 </Select>
                 <p className="text-sm text-muted-foreground">
-                  Välj vilken cookie banner du vill använda
+                  Select which cookie banner you want to use
                 </p>
               </div>
 
@@ -472,7 +472,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                     onChange={(e) => setCookiebotId(e.target.value)}
                   />
                   <p className="text-sm text-muted-foreground">
-                    Din Cookiebot domain group ID
+                    Your Cookiebot domain group ID
                   </p>
                 </div>
               )}
@@ -487,7 +487,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                     onChange={(e) => setOnetrustId(e.target.value)}
                   />
                   <p className="text-sm text-muted-foreground">
-                    Din OneTrust script ID
+                    Your OneTrust script ID
                   </p>
                 </div>
               )}
@@ -502,16 +502,16 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                     onChange={(e) => setCustomFunction(e.target.value)}
                   />
                   <p className="text-sm text-muted-foreground">
-                    JavaScript funktion som returnerar true om analytics consent är givet
+                    JavaScript function that returns true if analytics consent is given
                   </p>
                 </div>
               )}
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label htmlFor="anonymize_ip">Anonymisera IP-adresser</Label>
+                  <Label htmlFor="anonymize_ip">Anonymize IP addresses</Label>
                   <p className="text-sm text-muted-foreground">
-                    Maskera de sista siffrorna i IP-adresser
+                    Mask the last digits of IP addresses
                   </p>
                 </div>
                 <Switch
@@ -524,41 +524,41 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
 
             {/* Data Retention */}
             <div className="space-y-2">
-              <Label htmlFor="retention">Datalagring (dagar)</Label>
-              <Select 
-                value={watch('data_retention_days')?.toString()} 
+              <Label htmlFor="retention">Data retention (days)</Label>
+              <Select
+                value={watch('data_retention_days')?.toString()}
                 onValueChange={(value) => setValue('data_retention_days', parseInt(value))}
               >
                 <SelectTrigger>
-                  <SelectValue placeholder="Välj lagringstid" />
+                  <SelectValue placeholder="Select retention period" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="30">30 dagar</SelectItem>
-                  <SelectItem value="90">90 dagar</SelectItem>
-                  <SelectItem value="180">180 dagar</SelectItem>
-                  <SelectItem value="365">1 år</SelectItem>
-                  <SelectItem value="730">2 år</SelectItem>
+                  <SelectItem value="30">30 days</SelectItem>
+                  <SelectItem value="90">90 days</SelectItem>
+                  <SelectItem value="180">180 days</SelectItem>
+                  <SelectItem value="365">1 year</SelectItem>
+                  <SelectItem value="730">2 years</SelectItem>
                 </SelectContent>
               </Select>
               <p className="text-sm text-muted-foreground">
-                Automatisk radering av äldre tracking-data
+                Automatic deletion of older tracking data
               </p>
             </div>
 
             {/* Contact Information */}
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="contact_email">Kontakt-email</Label>
+                <Label htmlFor="contact_email">Contact email</Label>
                 <Input
                   id="contact_email"
                   type="email"
-                  placeholder="kontakt@example.com"
+                  placeholder="contact@example.com"
                   {...register('contact_email')}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="dpo_email">Dataskyddsombud (DPO)</Label>
+                <Label htmlFor="dpo_email">Data Protection Officer (DPO)</Label>
                 <Input
                   id="dpo_email"
                   type="email"
@@ -570,7 +570,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
 
             {/* Privacy Policy URL */}
             <div className="space-y-2">
-              <Label htmlFor="privacy_policy">URL till integritetspolicy</Label>
+              <Label htmlFor="privacy_policy">Privacy policy URL</Label>
               <Input
                 id="privacy_policy"
                 type="url"
@@ -584,7 +584,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
               disabled={!isDirty || updateSettings.isPending}
               className="w-full md:w-auto"
             >
-              {updateSettings.isPending ? 'Sparar...' : 'Spara inställningar'}
+              {updateSettings.isPending ? 'Saving...' : 'Save settings'}
             </Button>
           </form>
         </CardContent>
@@ -595,10 +595,10 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Users className="h-5 w-5" />
-            Cookie Consent Statistik
+            Cookie Consent Statistics
           </CardTitle>
           <CardDescription>
-            Översikt över användarnas cookie-samtycken och geografisk fördelning.
+            Overview of user cookie consents and geographic distribution.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -607,19 +607,19 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-green-600">{consentStats.total_consents}</div>
-                  <div className="text-sm text-muted-foreground">Totalt samtycken</div>
+                  <div className="text-sm text-muted-foreground">Total consents</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-blue-600">{consentStats.accepted_all}</div>
-                  <div className="text-sm text-muted-foreground">Accepterat alla</div>
+                  <div className="text-sm text-muted-foreground">Accepted all</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-red-600">{consentStats.rejected_all}</div>
-                  <div className="text-sm text-muted-foreground">Avvisat alla</div>
+                  <div className="text-sm text-muted-foreground">Rejected all</div>
                 </div>
                 <div className="text-center p-4 border rounded-lg">
                   <div className="text-2xl font-bold text-orange-600">{consentStats.partial_consent}</div>
-                  <div className="text-sm text-muted-foreground">Delvis samtycke</div>
+                  <div className="text-sm text-muted-foreground">Partial consent</div>
                 </div>
               </div>
 
@@ -627,7 +627,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                 <div className="space-y-3">
                   <h4 className="font-medium flex items-center gap-2">
                     <Globe className="h-4 w-4" />
-                    Geografisk fördelning
+                    Geographic distribution
                   </h4>
                   <div className="grid grid-cols-2 md:grid-cols-4 gap-2">
                     {Object.entries(consentStats.countries)
@@ -635,7 +635,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                       .slice(0, 8)
                       .map(([country, count]) => (
                         <div key={country} className="flex justify-between items-center p-2 bg-muted/50 rounded text-sm">
-                          <span>{country || 'Okänt'}</span>
+                          <span>{country || 'Unknown'}</span>
                           <span className="font-medium">{count as number}</span>
                         </div>
                       ))}
@@ -647,7 +647,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                 <div className="space-y-3">
                   <h4 className="font-medium flex items-center gap-2">
                     <MousePointer className="h-4 w-4" />
-                    Senaste samtycken
+                    Recent consents
                   </h4>
                   <div className="max-h-64 overflow-y-auto space-y-2">
                     {recentConsents.map((consent: any, index: number) => (
@@ -655,7 +655,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                         <div className="flex justify-between items-start mb-2">
                           <div className="flex items-center gap-2">
                             <span className="font-medium">
-                              {consent.consent_given ? '✅ Samtycke givet' : '❌ Samtycke nekat'}
+                              {consent.consent_given ? '✅ Consent given' : '❌ Consent denied'}
                             </span>
                             <span className="text-xs bg-primary/10 text-primary px-2 py-1 rounded">
                               {consent.source || 'banner'}
@@ -682,9 +682,9 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                         </div>
                         
                         <div className="flex items-center justify-between text-xs text-muted-foreground">
-                          <span>{consent.geo_country || 'Okänt land'}</span>
+                          <span>{consent.geo_country || 'Unknown country'}</span>
                           <span className="truncate max-w-32 ml-2">
-                            {consent.user_agent ? consent.user_agent.split(' ')[0] : 'Okänd browser'}
+                            {consent.user_agent ? consent.user_agent.split(' ')[0] : 'Unknown browser'}
                           </span>
                         </div>
                       </div>
@@ -698,8 +698,8 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
           {!consentStats && (
             <div className="text-center py-8 text-muted-foreground">
               <Users className="h-12 w-12 mx-auto mb-4 opacity-50" />
-              <p>Ingen consent-data tillgänglig ännu.</p>
-              <p className="text-sm">Statistik visas när användare börjar ge samtycken.</p>
+              <p>No consent data available yet.</p>
+              <p className="text-sm">Statistics will appear when users start giving consent.</p>
             </div>
           )}
         </CardContent>
@@ -710,10 +710,10 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FileText className="h-5 w-5" />
-            Databegäranden
+            Data requests
           </CardTitle>
           <CardDescription>
-            Hantera användarnas begäranden om dataexport eller radering.
+            Manage user requests for data export or deletion.
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-6">
@@ -730,7 +730,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
             Cookie Scanner
           </CardTitle>
           <CardDescription>
-            Skanna din webbplats för cookies och tracking-scripts
+            Scan your website for cookies and tracking scripts
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -738,7 +738,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
             <div className="flex items-center gap-2">
               <Calendar className="h-4 w-4 text-muted-foreground" />
               <span className="text-sm text-muted-foreground">
-                Senaste skanning: {lastScanDate ? new Date(lastScanDate).toLocaleString('sv-SE') : 'Aldrig'}
+                Last scan: {lastScanDate ? new Date(lastScanDate).toLocaleString() : 'Never'}
               </span>
             </div>
             <div className="flex items-center gap-2">
@@ -749,7 +749,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                 className="flex items-center gap-2"
               >
                 {showSavedData ? <ToggleRight className="h-4 w-4" /> : <ToggleLeft className="h-4 w-4" />}
-                {showSavedData ? 'Visa live-skanning' : 'Visa sparade data'}
+                {showSavedData ? 'Show live scan' : 'Show saved data'}
               </Button>
             </div>
           </div>
@@ -760,17 +760,17 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
             className="flex items-center gap-2"
           >
             <Search className="h-4 w-4" />
-            {isScanning ? 'Skannar...' : 'Skanna cookies'}
+            {isScanning ? 'Scanning...' : 'Scan cookies'}
           </Button>
 
           {/* Saved Data View */}
           {showSavedData && (
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-              <h4 className="font-medium">Sparade cookie-data för denna webbplats:</h4>
+              <h4 className="font-medium">Saved cookie data for this website:</h4>
               
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
                 <div>
-                  <h5 className="text-sm font-medium text-muted-foreground">Aktuella cookies</h5>
+                  <h5 className="text-sm font-medium text-muted-foreground">Current cookies</h5>
                   <div className="text-2xl font-bold">
                     {scanResults?.cookies_found || savedCookies.filter(c => {
                       // Show only cookies from last 24 hours as "current"
@@ -779,11 +779,11 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                     }).length}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    {savedCookies.length} totalt historiskt
+                    {savedCookies.length} total historical
                   </div>
                 </div>
                 <div>
-                  <h5 className="text-sm font-medium text-muted-foreground">Kända cookies</h5>
+                  <h5 className="text-sm font-medium text-muted-foreground">Known cookies</h5>
                   <div className="text-2xl font-bold text-green-600">
                     {savedCookies.filter(cookie => 
                       enrichCookieWithDefinition(cookie.cookie_name, cookieDefinitions)
@@ -793,18 +793,18 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                     {savedCookies.length > 0 ? 
                       Math.round((savedCookies.filter(cookie => 
                         enrichCookieWithDefinition(cookie.cookie_name, cookieDefinitions)
-                      ).length / savedCookies.length) * 100) : 0}% identifierade
+                      ).length / savedCookies.length) * 100) : 0}% identified
                   </div>
                 </div>
                 <div>
-                  <h5 className="text-sm font-medium text-muted-foreground">Okända cookies</h5>
+                  <h5 className="text-sm font-medium text-muted-foreground">Unknown cookies</h5>
                   <div className="text-2xl font-bold text-orange-600">
                     {savedCookies.filter(cookie => 
                       !enrichCookieWithDefinition(cookie.cookie_name, cookieDefinitions)
                     ).length}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    Behöver kategorisering
+                    Needs categorization
                   </div>
                 </div>
                 <div>
@@ -817,14 +817,14 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                     }).length}
                   </div>
                   <div className="text-xs text-muted-foreground mt-1">
-                    {savedScripts.length} totalt historiskt
+                    {savedScripts.length} total historical
                   </div>
                 </div>
               </div>
 
               {savedCookies.length > 0 && (
                 <div className="space-y-2">
-                  <h5 className="text-sm font-medium">Sparade cookies ({savedCookies.length}):</h5>
+                  <h5 className="text-sm font-medium">Saved cookies ({savedCookies.length}):</h5>
                   <div className="max-h-48 overflow-y-auto space-y-1">
                     {savedCookies
                       .map((cookie: any) => {
@@ -848,33 +848,33 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                                   {cookie_name}
                                   {enriched && (
                                     <span className="text-xs bg-green-100 text-green-800 px-2 py-0.5 rounded">
-                                      Känd cookie
+                                      Known cookie
                                     </span>
                                   )}
                                 </div>
                                 <div className="text-muted-foreground">
-                                  {getCategoryDisplayName(enriched?.category_key || cookie_category)} • {enriched?.provider_name || cookie_provider || 'Okänd leverantör'}
+                                  {getCategoryDisplayName(enriched?.category_key || cookie_category)} • {enriched?.provider_name || cookie_provider || 'Unknown provider'}
                                 </div>
                                 {(enriched?.description || enriched?.purpose || cookie_purpose) && (
                                   <div className="text-xs text-muted-foreground mt-1">
-                                    <strong>Syfte:</strong> {enriched?.description || enriched?.purpose || cookie_purpose}
+                                    <strong>Purpose:</strong> {enriched?.description || enriched?.purpose || cookie_purpose}
                                   </div>
                                 )}
                                 {enriched && (
                                   <div className="text-xs text-muted-foreground mt-1 grid grid-cols-2 gap-2">
                                     {enriched.expiry && (
-                                      <div><strong>Upphör:</strong> {enriched.expiry}</div>
+                                      <div><strong>Expires:</strong> {enriched.expiry}</div>
                                     )}
                                     {enriched.security_level && (
-                                      <div><strong>Säkerhet:</strong> {enriched.security_level}</div>
+                                      <div><strong>Security:</strong> {enriched.security_level}</div>
                                     )}
                                   </div>
                                 )}
                               </div>
                               <div className="text-xs text-muted-foreground text-right">
-                                <div>{enriched?.detection_confidence || detection_method || 'automatisk'}</div>
+                                <div>{enriched?.detection_confidence || detection_method || 'automatic'}</div>
                                 {enriched && (
-                                  <div className="text-xs text-green-600 mt-1">Definierad</div>
+                                  <div className="text-xs text-green-600 mt-1">Defined</div>
                                 )}
                               </div>
                             </div>
@@ -887,7 +887,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
 
               {savedScripts.length > 0 && (
                 <div className="space-y-2">
-                  <h5 className="text-sm font-medium">Sparade scripts ({savedScripts.length}):</h5>
+                  <h5 className="text-sm font-medium">Saved scripts ({savedScripts.length}):</h5>
                   <div className="max-h-48 overflow-y-auto space-y-1">
                     {savedScripts.map((script: any, index: number) => (
                       <div key={index} className="text-sm p-2 bg-background rounded border">
@@ -895,7 +895,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                           <div>
                             <div className="font-medium">{script.script_name}</div>
                             <div className="text-muted-foreground">
-                              {script.category} • {script.provider || 'Okänd leverantör'}
+                              {script.category} • {script.provider || 'Unknown provider'}
                             </div>
                             {script.purpose && (
                               <div className="text-xs text-muted-foreground mt-1">
@@ -904,7 +904,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                             )}
                           </div>
                           <div className="text-xs text-muted-foreground">
-                            {new Date(script.last_seen || script.created_at).toLocaleDateString('sv-SE')}
+                            {new Date(script.last_seen || script.created_at).toLocaleDateString()}
                           </div>
                         </div>
                       </div>
@@ -916,8 +916,8 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
               {savedCookies.length === 0 && savedScripts.length === 0 && (
                 <div className="text-center py-8 text-muted-foreground">
                   <Cookie className="h-12 w-12 mx-auto mb-4 opacity-50" />
-                  <p>Inga cookies eller scripts sparade ännu.</p>
-                  <p className="text-sm">Kör en cookie-skanning för att komma igång!</p>
+                  <p>No cookies or scripts saved yet.</p>
+                  <p className="text-sm">Run a cookie scan to get started!</p>
                 </div>
               )}
             </div>
@@ -926,28 +926,28 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
           {/* Live Scan Results */}
           {!showSavedData && scanResults && (
             <div className="space-y-4 p-4 border rounded-lg bg-muted/50">
-              <h4 className="font-medium">Live skanningsresultat:</h4>
+              <h4 className="font-medium">Live scan results:</h4>
               
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <h5 className="text-sm font-medium text-muted-foreground">Cookies hittade</h5>
+                  <h5 className="text-sm font-medium text-muted-foreground">Cookies found</h5>
                   <div className="text-2xl font-bold">{scanResults.cookies_found}</div>
                 </div>
                 <div>
-                  <h5 className="text-sm font-medium text-muted-foreground">Scripts hittade</h5>
+                  <h5 className="text-sm font-medium text-muted-foreground">Scripts found</h5>
                   <div className="text-2xl font-bold">{scanResults.scripts_found}</div>
                 </div>
               </div>
 
               {scanResults.cookies && scanResults.cookies.length > 0 && (
                 <div className="space-y-2">
-                  <h5 className="text-sm font-medium">Identifierade cookies:</h5>
+                  <h5 className="text-sm font-medium">Identified cookies:</h5>
                   <div className="space-y-1">
                     {scanResults.cookies.map((cookie: any, index: number) => (
                       <div key={index} className="text-sm p-2 bg-background rounded border">
                         <div className="font-medium">{cookie.name}</div>
                         <div className="text-muted-foreground">
-                          {cookie.category} • {cookie.provider || 'Okänd leverantör'}
+                          {cookie.category} • {cookie.provider || 'Unknown provider'}
                         </div>
                       </div>
                     ))}
@@ -957,13 +957,13 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
 
               {scanResults.scripts && scanResults.scripts.length > 0 && (
                 <div className="space-y-2">
-                  <h5 className="text-sm font-medium">Identifierade scripts:</h5>
+                  <h5 className="text-sm font-medium">Identified scripts:</h5>
                   <div className="space-y-1">
                     {scanResults.scripts.map((script: any, index: number) => (
                       <div key={index} className="text-sm p-2 bg-background rounded border">
                         <div className="font-medium">{script.name}</div>
                         <div className="text-muted-foreground">
-                          {script.category} • {script.provider || 'Okänd leverantör'}
+                          {script.category} • {script.provider || 'Unknown provider'}
                         </div>
                       </div>
                     ))}
@@ -980,22 +980,22 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Upload className="h-5 w-5" />
-            Importera cookies från extern leverantör
+            Import cookies from external provider
           </CardTitle>
           <CardDescription>
-            Importera cookie-data från Cookiebot, OneTrust eller annan leverantör
+            Import cookie data from Cookiebot, OneTrust, or another provider
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-4">
             <div className="space-y-2">
-              <Label>Banner Typ</Label>
+              <Label>Banner type</Label>
               <Select value={bannerType} onValueChange={setBannerType}>
                 <SelectTrigger>
-                  <SelectValue placeholder="Välj extern leverantör" />
+                  <SelectValue placeholder="Select external provider" />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="internal">Inbyggd Banner</SelectItem>
+                  <SelectItem value="internal">Built-in banner</SelectItem>
                   <SelectItem value="cookiebot">Cookiebot</SelectItem>
                   <SelectItem value="onetrust">OneTrust</SelectItem>
                 </SelectContent>
@@ -1011,7 +1011,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                   onChange={(e) => setCookiebotId(e.target.value)}
                 />
                 <p className="text-sm text-muted-foreground">
-                  Hittas under Settings &gt; Your scripts i Cookiebot
+                  Found under Settings &gt; Your scripts in Cookiebot
                 </p>
               </div>
             )}
@@ -1025,7 +1025,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
                   onChange={(e) => setOnetrustId(e.target.value)}
                 />
                 <p className="text-sm text-muted-foreground">
-                  Hittas i OneTrust Admin Console under Account Management
+                  Found in the OneTrust Admin Console under Account Management
                 </p>
               </div>
             )}
@@ -1036,17 +1036,17 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
               className="flex items-center gap-2"
             >
               <Upload className="h-4 w-4" />
-              {isImporting ? 'Importerar...' : 'Importera cookies'}
+              {isImporting ? 'Importing...' : 'Import cookies'}
             </Button>
           </div>
 
           <div className="p-4 border rounded-lg bg-blue-50 dark:bg-blue-950/20">
-            <h5 className="font-medium text-blue-900 dark:text-blue-100 mb-2">Vad händer vid import?</h5>
+            <h5 className="font-medium text-blue-900 dark:text-blue-100 mb-2">What happens during import?</h5>
             <ul className="text-sm text-blue-800 dark:text-blue-200 space-y-1">
-              <li>• Hämtar cookie-kategoriseringar från extern leverantör</li>
-              <li>• Uppdaterar vår databas med korrekt cookie-information</li>
-              <li>• Synkroniserar consent-inställningar</li>
-              <li>• Behåller befintliga tracking-data</li>
+              <li>• Fetches cookie categorizations from the external provider</li>
+              <li>• Updates our database with correct cookie information</li>
+              <li>• Synchronizes consent settings</li>
+              <li>• Preserves existing tracking data</li>
             </ul>
           </div>
         </CardContent>
@@ -1057,10 +1057,10 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Clock className="h-5 w-5" />
-            Snabbåtgärder
+            Quick actions
           </CardTitle>
           <CardDescription>
-            Hantera data och GDPR-compliance
+            Manage data and GDPR compliance
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -1071,7 +1071,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
               className="flex items-center gap-2"
             >
               <Download className="h-4 w-4" />
-              Exportera all data
+              Export all data
             </Button>
             
             <Button 
@@ -1080,7 +1080,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
               className="flex items-center gap-2"
             >
               <Trash2 className="h-4 w-4" />
-              Rensa gammal data
+              Clean old data
             </Button>
             
             <Button 
@@ -1089,7 +1089,7 @@ export function GDPRSettings({ siteId }: GDPRSettingsProps) {
               className="flex items-center gap-2"
             >
               <Shield className="h-4 w-4" />
-              GDPR-rapport
+              GDPR report
             </Button>
           </div>
         </CardContent>

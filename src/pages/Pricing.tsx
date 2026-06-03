@@ -385,7 +385,7 @@ export default function Pricing() {
               </CardHeader>
               <CardContent>
                 <CardDescription>
-                  Professional support from Expandtalk.se with deep knowledge of EU regulations.
+                  Professional support from Expandtalk Corporation AB with deep knowledge of EU regulations.
                 </CardDescription>
               </CardContent>
             </Card>
@@ -419,7 +419,7 @@ export default function Pricing() {
             </div>
             <div className="flex items-center gap-2">
               <Building2 className="h-4 w-4 text-primary" />
-              <span>Expandtalk AB</span>
+              <span>Expandtalk Corporation AB</span>
             </div>
           </div>
         </div>

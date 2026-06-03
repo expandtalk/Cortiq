@@ -24,8 +24,8 @@ export function useSites() {
     } catch (error) {
       console.error('Error loading sites:', error);
       toast({
-        title: "❌ Fel",
-        description: "Kunde inte ladda dina webbsidor",
+        title: "❌ Error",
+        description: "Could not load your websites",
         variant: "destructive"
       });
     }

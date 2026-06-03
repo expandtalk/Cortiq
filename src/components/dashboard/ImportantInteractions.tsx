@@ -264,10 +264,10 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
 
   const getCategoryDisplayName = (category: string) => {
     switch (category) {
-      case 'cookie': return 'Cookie-banner';
-      case 'conversion': return 'Konvertering & Sök';
-      case 'form': return 'Formulär';
-      case 'general': return 'Allmänt';
+      case 'cookie': return 'Cookie banner';
+      case 'conversion': return 'Conversion & Search';
+      case 'form': return 'Forms';
+      case 'general': return 'General';
       default: return category.charAt(0).toUpperCase() + category.slice(1);
     }
   };
@@ -300,7 +300,7 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
       ) || classes[0];
       return `Element: .${meaningfulClass}`;
     }
-    return 'Identifierat element';
+    return 'Identified element';
   };
 
   const getUrlPath = (url: string) => {
@@ -315,8 +315,8 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Viktiga Interaktioner</CardTitle>
-          <CardDescription>Laddar interaktionsdata...</CardDescription>
+          <CardTitle>Key Interactions</CardTitle>
+          <CardDescription>Loading interaction data...</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-2">
@@ -333,21 +333,21 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Viktiga Interaktioner</CardTitle>
-          <CardDescription>Inga meningsfulla interaktioner att visa för denna period</CardDescription>
+          <CardTitle>Key Interactions</CardTitle>
+          <CardDescription>No meaningful interactions to display for this period</CardDescription>
         </CardHeader>
         <CardContent>
           <p className="text-muted-foreground text-sm">
-            Detta kan bero på:
+            This may be because:
           </p>
           <ul className="text-muted-foreground text-sm mt-2 space-y-1 list-disc list-inside">
-            <li>Att spårningskoden behöver förbättras för din webbplats</li>
-            <li>Att det inte finns tillräckligt med besökare ännu</li>
-            <li>Att elementen på webbplatsen saknar identifierbar information</li>
+            <li>The tracking code may need improvement for your website</li>
+            <li>There may not be enough visitors yet</li>
+            <li>The elements on the website lack identifiable information</li>
           </ul>
           <div className="mt-4 p-3 bg-blue-50 rounded-lg border border-blue-200">
             <p className="text-sm text-blue-800">
-              💡 <strong>Tips:</strong> För navigationsanalys, gå till Heatmap-fliken → Navigationsanalys
+              💡 <strong>Tip:</strong> For navigation analysis, go to the Heatmap tab → Navigation Analysis
             </p>
           </div>
         </CardContent>
@@ -371,11 +371,11 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
       <CardHeader>
         <CardTitle>Viktiga Interaktioner</CardTitle>
         <CardDescription>
-          Mest betydelsefulla klick och interaktioner för ditt B2B-företag
-          {totalCount > 0 && ` (${totalCount} totalt)`}
+          Most significant clicks and interactions for your business
+          {totalCount > 0 && ` (${totalCount} total)`}
           <br />
           <span className="text-xs text-muted-foreground">
-            För navigationsanalys, se Heatmap → Navigationsanalys
+            For navigation analysis, see Heatmap → Navigation Analysis
           </span>
         </CardDescription>
       </CardHeader>
@@ -400,12 +400,12 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
                         </Badge>
                         {group.importance >= 9 && (
                           <Badge variant="outline" className="text-xs">
-                            🔥 Kritisk
+                            🔥 Critical
                           </Badge>
                         )}
                         {group.importance === 8 && (
                           <Badge variant="outline" className="text-xs">
-                            ⭐ Hög prioritet
+                            ⭐ High priority
                           </Badge>
                         )}
                       </div>
@@ -419,7 +419,7 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
                       {group.totalCount}
                     </div>
                     <div className="text-xs text-muted-foreground">
-                      totalt klick
+                      total clicks
                     </div>
                   </div>
                 </div>
@@ -444,7 +444,7 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
                           {interaction.count}
                         </div>
                         <div className="text-xs text-muted-foreground">
-                          klick
+                          clicks
                         </div>
                       </div>
                     </div>
@@ -460,27 +460,27 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
           <div className="mt-6 pt-4 border-t">
             <div className="flex flex-col sm:flex-row items-center justify-between gap-4">
               <div className="text-sm text-muted-foreground">
-                Visar {Math.min(visibleCount, categoryGroups.length)} av {categoryGroups.length} kategorier
+                Showing {Math.min(visibleCount, categoryGroups.length)} of {categoryGroups.length} categories
               </div>
               
               <div className="flex gap-2">
                 {hasMore && (
                   <>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={handleLoadMore}
                       className="text-xs"
                     >
-                      Visa mer
+                      Show more
                     </Button>
-                    <Button 
-                      variant="outline" 
+                    <Button
+                      variant="outline"
                       size="sm"
                       onClick={handleShowAll}
                       className="text-xs"
                     >
-                      Visa alla ({categoryGroups.length})
+                      Show all ({categoryGroups.length})
                     </Button>
                   </>
                 )}
@@ -491,7 +491,7 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
                     onClick={() => setVisibleCount(3)}
                     className="text-xs"
                   >
-                    Visa mindre
+                    Show less
                   </Button>
                 )}
               </div>
@@ -502,14 +502,14 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
         {categoryGroups.length > 0 && (
           <div className="mt-4 pt-4 border-t">
               <div className="text-xs text-muted-foreground">
-                <p className="mb-2">Fokuserade kategorier (Navigation flyttad till Heatmap → NavigationAnalytics):</p>
+                <p className="mb-2">Focused categories (Navigation moved to Heatmap → Navigation Analytics):</p>
                 <div className="flex flex-wrap gap-2 mb-2">
-                  <Badge variant="destructive" className="text-xs">🍪 Cookie-banner</Badge>
-                  <Badge variant="default" className="text-xs">🎯 Konvertering & Sök</Badge>
-                  <Badge variant="secondary" className="text-xs">📝 Formulär</Badge>
+                  <Badge variant="destructive" className="text-xs">🍪 Cookie banner</Badge>
+                  <Badge variant="default" className="text-xs">🎯 Conversion & Search</Badge>
+                  <Badge variant="secondary" className="text-xs">📝 Forms</Badge>
                 </div>
                 <p className="mt-2 text-xs">
-                  💡 <strong>Navigation:</strong> All navigationsdata finns nu under Heatmap → NavigationAnalytics
+                  💡 <strong>Navigation:</strong> All navigation data is now under Heatmap → Navigation Analytics
                 </p>
               </div>
           </div>

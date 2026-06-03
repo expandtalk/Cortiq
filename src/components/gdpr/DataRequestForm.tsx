@@ -38,13 +38,13 @@ export function DataRequestForm({ siteId }: DataRequestFormProps) {
   const getRequestDescription = (type: string) => {
     switch (type) {
       case 'export':
-        return 'Exportera all data som är kopplad till denna email-adress i ett maskinläsbart format.';
+        return 'Export all data associated with this email address in a machine-readable format.';
       case 'deletion':
-        return 'Radera all data som är kopplad till denna email-adress permanent från systemet.';
+        return 'Permanently delete all data associated with this email address from the system.';
       case 'portability':
-        return 'Få en kopia av all data i ett strukturerat, maskinläsbart format för överföring.';
+        return 'Receive a copy of all data in a structured, machine-readable format for transfer.';
       default:
-        return 'Välj typ av begäran för mer information.';
+        return 'Select a request type for more information.';
     }
   };
 
@@ -64,24 +64,24 @@ export function DataRequestForm({ siteId }: DataRequestFormProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Skapa ny databegäran</CardTitle>
+        <CardTitle>Create new data request</CardTitle>
         <CardDescription>
-          Hantera användarnas rättigheter enligt GDPR
+          Manage user rights under GDPR
         </CardDescription>
       </CardHeader>
       <CardContent>
         <form onSubmit={handleSubmit(onSubmit)} className="space-y-4">
           <div className="space-y-2">
-            <Label htmlFor="email">Email-adress</Label>
+            <Label htmlFor="email">Email address</Label>
             <Input
               id="email"
               type="email"
-              placeholder="användare@example.com"
+              placeholder="user@example.com"
               {...register('email', {
-                required: 'Email-adress krävs',
+                required: 'Email address is required',
                 pattern: {
                   value: /^[A-Z0-9._%+-]+@[A-Z0-9.-]+\.[A-Z]{2,}$/i,
-                  message: 'Ogiltig email-adress'
+                  message: 'Invalid email address'
                 }
               })}
             />
@@ -91,28 +91,28 @@ export function DataRequestForm({ siteId }: DataRequestFormProps) {
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="request_type">Typ av begäran</Label>
+            <Label htmlFor="request_type">Request type</Label>
             <Select value={requestType} onValueChange={(value: any) => setValue('request_type', value)}>
               <SelectTrigger>
-                <SelectValue placeholder="Välj typ av begäran" />
+                <SelectValue placeholder="Select request type" />
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="export">
                   <div className="flex items-center gap-2">
                     <Download className="h-4 w-4" />
-                    Dataexport
+                    Data export
                   </div>
                 </SelectItem>
                 <SelectItem value="deletion">
                   <div className="flex items-center gap-2">
                     <Trash2 className="h-4 w-4" />
-                    Dataradering
+                    Data deletion
                   </div>
                 </SelectItem>
                 <SelectItem value="portability">
                   <div className="flex items-center gap-2">
                     <FileText className="h-4 w-4" />
-                    Dataportabilitet
+                    Data portability
                   </div>
                 </SelectItem>
               </SelectContent>
@@ -125,9 +125,9 @@ export function DataRequestForm({ siteId }: DataRequestFormProps) {
                 {getRequestIcon(requestType)}
                 <div>
                   <p className="text-sm font-medium mb-1">
-                    {requestType === 'export' && 'Dataexport'}
-                    {requestType === 'deletion' && 'Dataradering'}
-                    {requestType === 'portability' && 'Dataportabilitet'}
+                    {requestType === 'export' && 'Data export'}
+                    {requestType === 'deletion' && 'Data deletion'}
+                    {requestType === 'portability' && 'Data portability'}
                   </p>
                   <p className="text-sm text-muted-foreground">
                     {getRequestDescription(requestType)}
@@ -142,7 +142,7 @@ export function DataRequestForm({ siteId }: DataRequestFormProps) {
             disabled={createRequest.isPending}
             className="w-full"
           >
-            {createRequest.isPending ? 'Skickar...' : 'Skicka begäran'}
+            {createRequest.isPending ? 'Submitting...' : 'Submit request'}
           </Button>
         </form>
       </CardContent>

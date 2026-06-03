@@ -133,7 +133,7 @@ export function CampaignDashboard({ siteId, dateRange }: CampaignDashboardProps)
             </CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="text-3xl font-bold">{new Set(campaigns.map(c => c.utm_campaign)).size}</div>
+            <div className="text-3xl font-bold">{new Set((campaigns ?? []).map(c => c.utm_campaign)).size}</div>
           </CardContent>
         </Card>
 

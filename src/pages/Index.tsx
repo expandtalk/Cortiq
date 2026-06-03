@@ -1258,7 +1258,7 @@ const Index = () => {
               Ready to get started?
             </h2>
             <p className="text-xl text-muted-foreground max-w-2xl mx-auto">
-              Get in touch with us at Expandtalk for information about invite-only access.
+              Get in touch with us at Expandtalk Corporation AB for information about invite-only access.
             </p>
           </div>
 
@@ -1266,14 +1266,14 @@ const Index = () => {
             <CardHeader className="text-center">
               <CardTitle className="text-3xl text-gradient-primary">Contact Information</CardTitle>
               <CardDescription className="text-base">
-                CortIQ is developed by Expandtalk
+                CortIQ is developed by Expandtalk Corporation AB
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-6">
               <div className="text-center space-y-4">
                 <div className="space-y-2">
                   <p className="text-lg font-semibold text-foreground">Daniel Larsson</p>
-                  <p className="text-muted-foreground">Expandtalk</p>
+                  <p className="text-muted-foreground">Expandtalk Corporation AB</p>
                 </div>
 
                 <div className="pt-6">
@@ -1285,7 +1285,7 @@ const Index = () => {
                   >
                     <Button className="bg-gradient-primary hover-scale hover-glow text-lg px-8 py-6 h-auto">
                       <Mail className="mr-2 h-5 w-5" />
-                      Visit Expandtalk Contact Page
+                      Visit Expandtalk Corporation AB
                       <ArrowRight className="ml-2 h-5 w-5" />
                     </Button>
                   </a>

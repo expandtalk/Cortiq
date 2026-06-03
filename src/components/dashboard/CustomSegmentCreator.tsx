@@ -34,8 +34,8 @@ interface SegmentCondition {
 const PREDEFINED_SEGMENTS = [
   {
     id: 'high-value-mobile',
-    name: 'Högvärde Mobila Användare',
-    description: 'Mobila användare med hög engagement',
+    name: 'High-Value Mobile Users',
+    description: 'Mobile users with high engagement',
     icon: <Smartphone className="h-4 w-4" />,
     conditions: [
       { dimension: 'deviceCategory', operator: 'equals', value: 'mobile' },
@@ -44,8 +44,8 @@ const PREDEFINED_SEGMENTS = [
   },
   {
     id: 'new-desktop-users',
-    name: 'Nya Desktop Användare',
-    description: 'Förstagångsbesökare på desktop',
+    name: 'New Desktop Users',
+    description: 'First-time visitors on desktop',
     icon: <Monitor className="h-4 w-4" />,
     conditions: [
       { dimension: 'deviceCategory', operator: 'equals', value: 'desktop' },
@@ -54,8 +54,8 @@ const PREDEFINED_SEGMENTS = [
   },
   {
     id: 'organic-converters',
-    name: 'Organiska Konverterare',
-    description: 'Användare från organisk sökning som konverterat',
+    name: 'Organic Converters',
+    description: 'Users from organic search who converted',
     icon: <Globe className="h-4 w-4" />,
     conditions: [
       { dimension: 'source', operator: 'equals', value: 'google' },
@@ -65,8 +65,8 @@ const PREDEFINED_SEGMENTS = [
   },
   {
     id: 'repeat-purchasers',
-    name: 'Återkommande Köpare',
-    description: 'Kunder som handlat flera gånger',
+    name: 'Repeat Purchasers',
+    description: 'Customers who have purchased multiple times',
     icon: <ShoppingCart className="h-4 w-4" />,
     conditions: [
       { dimension: 'newVsReturning', operator: 'equals', value: 'returning' },
@@ -75,8 +75,8 @@ const PREDEFINED_SEGMENTS = [
   },
   {
     id: 'long-session-users',
-    name: 'Långsessionsanvändare',
-    description: 'Användare med långa sessioner',
+    name: 'Long-Session Users',
+    description: 'Users with long sessions',
     icon: <Clock className="h-4 w-4" />,
     conditions: [
       { dimension: 'sessionDuration', operator: 'greaterThan', value: '300' }
@@ -84,8 +84,8 @@ const PREDEFINED_SEGMENTS = [
   },
   {
     id: 'stockholm-users',
-    name: 'Stockholm Användare',
-    description: 'Besökare från Stockholm',
+    name: 'Stockholm Users',
+    description: 'Visitors from Stockholm',
     icon: <MapPin className="h-4 w-4" />,
     conditions: [
       { dimension: 'city', operator: 'equals', value: 'Stockholm' }
@@ -158,9 +158,9 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
     <Dialog open={open} onOpenChange={onOpenChange}>
       <DialogContent className="max-w-4xl max-h-[80vh] overflow-y-auto">
         <DialogHeader>
-          <DialogTitle>Skapa Anpassat Segment</DialogTitle>
+          <DialogTitle>Create Custom Segment</DialogTitle>
           <DialogDescription>
-            Välj färdiga segment eller skapa egna villkor för att analysera specifika användargrupper
+            Choose predefined segments or create custom conditions to analyze specific user groups
           </DialogDescription>
         </DialogHeader>
 
@@ -173,7 +173,7 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
               className="flex-1"
               onClick={() => setActiveTab('predefined')}
             >
-              Fördefinierade Segment
+              Predefined Segments
             </Button>
             <Button
               variant={activeTab === 'custom' ? 'default' : 'ghost'}
@@ -181,7 +181,7 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
               className="flex-1"
               onClick={() => setActiveTab('custom')}
             >
-              Anpassade Villkor
+              Custom Conditions
             </Button>
           </div>
 
@@ -229,7 +229,7 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
               
               {selectedPredefined.length > 0 && (
                 <div className="bg-blue-50 p-4 rounded-lg">
-                  <h4 className="font-medium mb-2">Valda segment ({selectedPredefined.length})</h4>
+                  <h4 className="font-medium mb-2">Selected segments ({selectedPredefined.length})</h4>
                   <div className="flex flex-wrap gap-2">
                     {selectedPredefined.map(id => {
                       const segment = PREDEFINED_SEGMENTS.find(s => s.id === id);
@@ -249,19 +249,19 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
           {activeTab === 'custom' && (
             <div className="space-y-4">
               <div>
-                <Label htmlFor="segment-name">Segmentnamn</Label>
+                <Label htmlFor="segment-name">Segment name</Label>
                 <Input
                   id="segment-name"
                   value={segmentName}
                   onChange={(e) => setSegmentName(e.target.value)}
-                  placeholder="t.ex. Högengagerade mobila användare"
+                  placeholder="e.g. Highly engaged mobile users"
                 />
               </div>
 
               <Separator />
 
               <div className="space-y-4">
-                <h4 className="font-medium">Villkor</h4>
+                <h4 className="font-medium">Conditions</h4>
                 {customConditions.map((condition, index) => (
                   <div key={index} className="flex items-center gap-2 p-3 border rounded-lg">
                     <select
@@ -269,15 +269,15 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
                       onChange={(e) => updateCustomCondition(index, 'dimension', e.target.value)}
                       className="flex-1 p-2 border rounded"
                     >
-                      <option value="">Välj dimension</option>
-                      <option value="deviceCategory">Enhetstyp</option>
-                      <option value="source">Trafikkälla</option>
+                      <option value="">Select dimension</option>
+                      <option value="deviceCategory">Device type</option>
+                      <option value="source">Traffic source</option>
                       <option value="medium">Medium</option>
-                      <option value="country">Land</option>
-                      <option value="city">Stad</option>
-                      <option value="newVsReturning">Ny vs Återkommande</option>
-                      <option value="sessionDuration">Sessionsvaraktighet</option>
-                      <option value="conversions">Konverteringar</option>
+                      <option value="country">Country</option>
+                      <option value="city">City</option>
+                      <option value="newVsReturning">New vs Returning</option>
+                      <option value="sessionDuration">Session duration</option>
+                      <option value="conversions">Conversions</option>
                     </select>
 
                     <select
@@ -285,16 +285,16 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
                       onChange={(e) => updateCustomCondition(index, 'operator', e.target.value)}
                       className="p-2 border rounded"
                     >
-                      <option value="equals">Lika med</option>
-                      <option value="contains">Innehåller</option>
-                      <option value="greaterThan">Större än</option>
-                      <option value="lessThan">Mindre än</option>
+                      <option value="equals">Equals</option>
+                      <option value="contains">Contains</option>
+                      <option value="greaterThan">Greater than</option>
+                      <option value="lessThan">Less than</option>
                     </select>
 
                     <Input
                       value={condition.value}
                       onChange={(e) => updateCustomCondition(index, 'value', e.target.value)}
-                      placeholder="Värde"
+                      placeholder="Value"
                       className="flex-1"
                     />
 
@@ -304,14 +304,14 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
                         size="sm"
                         onClick={() => removeCustomCondition(index)}
                       >
-                        Ta bort
+                        Remove
                       </Button>
                     )}
                   </div>
                 ))}
 
                 <Button variant="outline" onClick={addCustomCondition} className="w-full">
-                  + Lägg till villkor
+                  + Add condition
                 </Button>
               </div>
             </div>
@@ -320,17 +320,17 @@ export function CustomSegmentCreator({ open, onOpenChange, onCreateSegment }: Cu
           {/* Actions */}
           <div className="flex justify-end gap-2 pt-4 border-t">
             <Button variant="outline" onClick={() => onOpenChange(false)}>
-              Avbryt
+              Cancel
             </Button>
-            <Button 
+            <Button
               onClick={handleCreate}
               disabled={
-                activeTab === 'predefined' 
+                activeTab === 'predefined'
                   ? selectedPredefined.length === 0
                   : !segmentName || customConditions.every(c => !c.dimension || !c.value)
               }
             >
-              Skapa Segment
+              Create Segment
             </Button>
           </div>
         </div>

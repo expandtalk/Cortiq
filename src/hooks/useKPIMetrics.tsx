@@ -4,9 +4,9 @@ import { KPIMetric } from '@/types/kpi';
 const defaultKPIMetrics: KPIMetric[] = [
   {
     id: 'ai-bot-traffic',
-    title: 'AI Bot Trafik',
-    description: 'Mäter besök från AI-botar som GPTBot, CCBot, Perplexity och andra LLM crawlers som indexerar ditt innehåll.',
-    businessValue: 'Visar vilka AI-system som aktivt crawlar din webbplats. Högre trafik från AI-botar indikerar att ditt innehåll upptäcks och indexeras för AI-svar.',
+    title: 'AI Bot Traffic',
+    description: 'Measures visits from AI bots such as GPTBot, CCBot, Perplexity, and other LLM crawlers indexing your content.',
+    businessValue: 'Shows which AI systems are actively crawling your website. Higher traffic from AI bots indicates your content is being discovered and indexed for AI answers.',
     status: 'activated',
     category: 'critical',
     priority: 'critical',
@@ -19,8 +19,8 @@ const defaultKPIMetrics: KPIMetric[] = [
   {
     id: 'ai-citations',
     title: 'AI Citations',
-    description: 'Spårar när ditt innehåll citeras eller refereras av AI-system i deras svar till användare.',
-    businessValue: 'Direkt mått på hur ofta AI-plattformar rekommenderar ditt innehåll. Högre citations = större synlighet och trovärdighet.',
+    description: 'Tracks when your content is cited or referenced by AI systems in their responses to users.',
+    businessValue: 'Direct measure of how often AI platforms recommend your content. More citations = greater visibility and credibility.',
     status: 'activated',
     category: 'critical',
     priority: 'critical',
@@ -33,8 +33,8 @@ const defaultKPIMetrics: KPIMetric[] = [
   {
     id: 'ai-traffic-sources',
     title: 'Top AI Traffic Sources',
-    description: 'Identifierar vilka AI-plattformar (ChatGPT, Perplexity, Gemini, etc.) som skickar mest trafik till din webbplats.',
-    businessValue: 'Hjälper dig prioritera optimering för de AI-plattformar som ger mest affärsvärde.',
+    description: 'Identifies which AI platforms (ChatGPT, Perplexity, Gemini, etc.) send the most traffic to your website.',
+    businessValue: 'Helps you prioritize optimization for the AI platforms that deliver the most business value.',
     status: 'activated',
     category: 'live-data',
     priority: 'high',
@@ -47,8 +47,8 @@ const defaultKPIMetrics: KPIMetric[] = [
   {
     id: 'ai-bot-detection',
     title: 'AI Bot Detection & Monitoring',
-    description: 'Realtidsövervakning och säkerhetskontroll av AI-bot aktivitet på din webbplats.',
-    businessValue: 'Säkerställer att AI-botar beter sig korrekt och identifierar potentiella skadliga crawlers.',
+    description: 'Real-time monitoring and security review of AI bot activity on your website.',
+    businessValue: 'Ensures AI bots are behaving correctly and identifies potentially harmful crawlers.',
     status: 'activated',
     category: 'live-data',
     priority: 'high',
@@ -61,8 +61,8 @@ const defaultKPIMetrics: KPIMetric[] = [
   {
     id: 'google-search-console',
     title: 'Google Search Console Performance',
-    description: 'Visar vilka sökord du rankar för och hur mycket trafik du får från Google. Starkt samband mellan Google-ranking och AI-citations.',
-    businessValue: 'Ger konkreta data om vilka topics och keywords du är stark inom, vilket hjälper förstå var du bör förvänta AI-citations.',
+    description: 'Shows which keywords you rank for and how much traffic you receive from Google. Strong correlation between Google rankings and AI citations.',
+    businessValue: 'Provides concrete data on the topics and keywords you are strong in, helping you understand where to expect AI citations.',
     status: 'partial',
     category: 'live-data',
     priority: 'high',
@@ -75,8 +75,8 @@ const defaultKPIMetrics: KPIMetric[] = [
   {
     id: 'bing-webmaster',
     title: 'Bing Webmaster Tools Performance',
-    description: 'Bing ägs av Microsoft som utvecklar ChatGPT. Innehåll som rankar bra i Bing har högre chans att citeras i ChatGPT.',
-    businessValue: 'Kritiskt för ChatGPT-optimering eftersom ChatGPT använder Bing som datakälla. Bing rapporterar även IndexNow adoption.',
+    description: 'Bing is owned by Microsoft, which develops ChatGPT. Content that ranks well in Bing has a higher chance of being cited in ChatGPT.',
+    businessValue: 'Critical for ChatGPT optimization because ChatGPT uses Bing as a data source. Bing also reports IndexNow adoption.',
     status: 'partial',
     category: 'live-data',
     priority: 'high',

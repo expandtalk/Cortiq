@@ -49,7 +49,7 @@ const FunnelStepNode = ({ data }: { data: any }) => {
       <div className="flex items-center justify-between mb-2">
         <div className="flex items-center gap-2">
           <span className="text-lg">{getFieldTypeIcon(field.field_type)}</span>
-          <span className="font-medium text-sm">Steg {index + 1}</span>
+          <span className="font-medium text-sm">Step {index + 1}</span>
         </div>
         <Badge variant={step.completionRate >= 70 ? 'default' : 'destructive'}>
           {step.completionRate.toFixed(1)}%
@@ -65,7 +65,7 @@ const FunnelStepNode = ({ data }: { data: any }) => {
         <div className="flex justify-between text-sm">
           <span className="flex items-center gap-1">
             <Users className="h-3 w-3" />
-            Användare
+            Users
           </span>
           <span className="font-medium">{step.users.toLocaleString()}</span>
         </div>
@@ -74,19 +74,19 @@ const FunnelStepNode = ({ data }: { data: any }) => {
         
         <div className="grid grid-cols-2 gap-2 text-xs">
           <div>
-            <span className="text-muted-foreground">Interaktioner:</span>
+            <span className="text-muted-foreground">Interactions:</span>
             <span className="font-medium ml-1">{field.total_interactions}</span>
           </div>
           <div>
-            <span className="text-muted-foreground">Fel:</span>
+            <span className="text-muted-foreground">Errors:</span>
             <span className="font-medium ml-1 text-red-600">{field.total_errors}</span>
           </div>
           <div>
-            <span className="text-muted-foreground">Hoppar över:</span>
+            <span className="text-muted-foreground">Skips:</span>
             <span className="font-medium ml-1 text-yellow-600">{field.total_skips}</span>
           </div>
           <div>
-            <span className="text-muted-foreground">Fokustid:</span>
+            <span className="text-muted-foreground">Focus time:</span>
             <span className="font-medium ml-1">{(field.avg_focus_time / 1000).toFixed(1)}s</span>
           </div>
         </div>
@@ -94,14 +94,14 @@ const FunnelStepNode = ({ data }: { data: any }) => {
         {step.dropOffRate > 20 && (
           <div className="flex items-center gap-1 text-xs text-red-600 mt-2">
             <TrendingDown className="h-3 w-3" />
-            Hög avhoppsfrekvens: {step.dropOffRate.toFixed(1)}%
+            High drop-off rate: {step.dropOffRate.toFixed(1)}%
           </div>
         )}
         
         {field.error_rate > 10 && (
           <div className="flex items-center gap-1 text-xs text-yellow-600 mt-1">
             <AlertTriangle className="h-3 w-3" />
-            Många fel: {field.error_rate.toFixed(1)}%
+            Many errors: {field.error_rate.toFixed(1)}%
           </div>
         )}
       </div>
@@ -159,7 +159,7 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
           stroke: step.dropOffRate > 20 ? '#ef4444' : '#22c55e',
           strokeWidth: 3,
         },
-        label: `${(100 - step.dropOffRate).toFixed(1)}% fortsätter`,
+        label: `${(100 - step.dropOffRate).toFixed(1)}% continue`,
         labelStyle: { 
           fontSize: 11, 
           fontWeight: 'bold',
@@ -182,9 +182,9 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
     return (
       <Card>
         <CardHeader>
-          <CardTitle>Formulärtratt</CardTitle>
+          <CardTitle>Form Funnel</CardTitle>
           <CardDescription>
-            Ingen data tillgänglig för detta formulär än.
+            No data available for this form yet.
           </CardDescription>
         </CardHeader>
       </Card>
@@ -199,13 +199,13 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
           <div className="p-4 rounded-lg border-2 border-green-500 bg-green-50 min-w-[280px]">
             <div className="text-center">
               <div className="text-2xl mb-2">🎉</div>
-              <h4 className="font-bold text-green-700">Formulär slutfört!</h4>
+              <h4 className="font-bold text-green-700">Form completed!</h4>
               <div className="mt-2">
                 <div className="text-2xl font-bold text-green-600">
                   {data.completionRate.toFixed(1)}%
                 </div>
                 <p className="text-sm text-muted-foreground">
-                  {data.completions} användare slutförde formuläret
+                  {data.completions} users completed the form
                 </p>
               </div>
             </div>
@@ -222,7 +222,7 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
       <div className="grid gap-4 md:grid-cols-4">
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Totala starter</CardTitle>
+            <CardTitle className="text-sm font-medium">Total starts</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{funnelData.form.total_starts.toLocaleString()}</div>
@@ -231,7 +231,7 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Slutföranden</CardTitle>
+            <CardTitle className="text-sm font-medium">Completions</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
@@ -242,7 +242,7 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Konverteringsgrad</CardTitle>
+            <CardTitle className="text-sm font-medium">Conversion rate</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{funnelData.overallConversionRate.toFixed(1)}%</div>
@@ -251,7 +251,7 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
         
         <Card>
           <CardHeader className="pb-2">
-            <CardTitle className="text-sm font-medium">Genomsnittlig tid</CardTitle>
+            <CardTitle className="text-sm font-medium">Average time</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
@@ -267,9 +267,9 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
       {/* Funnel Visualization */}
       <Card>
         <CardHeader>
-          <CardTitle>Formulärtratt: {formName || formId}</CardTitle>
+          <CardTitle>Form Funnel: {formName || formId}</CardTitle>
           <CardDescription>
-            Visualisering av användarflödet genom formuläret
+            Visualization of user flow through the form
           </CardDescription>
         </CardHeader>
         <CardContent>
@@ -296,7 +296,7 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <AlertTriangle className="h-5 w-5" />
-            Optimeringsförslag
+            Optimization suggestions
           </CardTitle>
         </CardHeader>
         <CardContent>
@@ -310,13 +310,13 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
                   </h4>
                   <ul className="text-sm text-yellow-700 mt-1 space-y-1">
                     {step.dropOffRate > 20 && (
-                      <li>• Hög avhoppsfrekvens ({step.dropOffRate.toFixed(1)}%) - överväg att förenkla eller flytta fältet</li>
+                      <li>• High drop-off rate ({step.dropOffRate.toFixed(1)}%) — consider simplifying or moving the field</li>
                     )}
                     {step.error_rate > 10 && (
-                      <li>• Många valideringsfel ({step.error_rate.toFixed(1)}%) - förbättra instruktioner eller validering</li>
+                      <li>• Many validation errors ({step.error_rate.toFixed(1)}%) — improve instructions or validation</li>
                     )}
                     {step.avg_focus_time > 30000 && (
-                      <li>• Lång fokustid - fältet kan vara förvirrande eller komplext</li>
+                      <li>• Long focus time — the field may be confusing or complex</li>
                     )}
                   </ul>
                 </div>
@@ -325,7 +325,7 @@ export function FormFunnelVisualization({ siteId, formId, formName }: FormFunnel
             {funnelData.steps.filter(step => step.dropOffRate > 20 || step.error_rate > 10).length === 0 && (
               <div className="p-3 border-l-4 border-green-500 bg-green-50">
                 <p className="text-green-700">
-                  🎉 Bra jobbat! Detta formulär presterar bra utan större problem.
+                  🎉 Good job! This form is performing well without major issues.
                 </p>
               </div>
             )}

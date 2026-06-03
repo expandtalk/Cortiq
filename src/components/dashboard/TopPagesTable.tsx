@@ -32,15 +32,15 @@ export function TopPagesTable({ topPages }: TopPagesTableProps) {
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Populäraste sidor</CardTitle>
+        <CardTitle>Top pages</CardTitle>
       </CardHeader>
       <CardContent>
         <Table>
           <TableHeader>
             <TableRow>
               <TableHead>URL</TableHead>
-              <TableHead>Sidrubrik</TableHead>
-              <TableHead>Visningar</TableHead>
+              <TableHead>Page title</TableHead>
+              <TableHead>Views</TableHead>
             </TableRow>
           </TableHeader>
           <TableBody>
@@ -60,7 +60,7 @@ export function TopPagesTable({ topPages }: TopPagesTableProps) {
                     </a>
                   </TableCell>
                   <TableCell className="text-sm text-muted-foreground">
-                    {page.title || 'Ingen titel'}
+                    {page.title || 'No title'}
                   </TableCell>
                   <TableCell>
                     <Badge variant="secondary">{page.views}</Badge>

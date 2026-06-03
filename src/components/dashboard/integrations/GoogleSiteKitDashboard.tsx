@@ -86,7 +86,7 @@ export function GoogleSiteKitDashboard({ selectedSite, apiKey }: GoogleSiteKitDa
         });
       } catch (err) {
         console.error('Google APIs error:', err);
-        setError(err instanceof Error ? err.message : 'Okänt fel vid hämtning av Google APIs data');
+        setError(err instanceof Error ? err.message : 'Unknown error fetching Google APIs data');
       } finally {
         setLoading(false);
       }
@@ -99,7 +99,7 @@ export function GoogleSiteKitDashboard({ selectedSite, apiKey }: GoogleSiteKitDa
     return (
       <div className="flex items-center justify-center p-8">
         <Loader2 className="h-8 w-8 animate-spin" />
-        <span className="ml-2">Hämtar data från Google Site Kit...</span>
+        <span className="ml-2">Fetching data from Google Site Kit...</span>
       </div>
     );
   }
@@ -115,7 +115,7 @@ export function GoogleSiteKitDashboard({ selectedSite, apiKey }: GoogleSiteKitDa
   if (!data) {
     return (
       <Alert>
-        <AlertDescription>Ingen data tillgänglig från Google APIs. Kontrollera att API-nyckeln är korrekt och att webbplatsen är verifierad i Search Console.</AlertDescription>
+        <AlertDescription>No data available from Google APIs. Check that the API key is correct and the website is verified in Search Console.</AlertDescription>
       </Alert>
     );
   }
@@ -137,21 +137,21 @@ export function GoogleSiteKitDashboard({ selectedSite, apiKey }: GoogleSiteKitDa
       {/* Search Console */}
       <Card>
         <CardHeader>
-          <CardTitle>Search Console (Senaste 30 dagarna)</CardTitle>
+          <CardTitle>Search Console (Last 30 days)</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="grid gap-4 md:grid-cols-4">
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <MousePointer className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Klick</span>
+                <span className="text-sm text-muted-foreground">Clicks</span>
               </div>
               <div className="text-2xl font-bold">{data.searchConsole.totalClicks.toLocaleString()}</div>
             </div>
             <div className="space-y-2">
               <div className="flex items-center gap-2">
                 <Eye className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Visningar</span>
+                <span className="text-sm text-muted-foreground">Impressions</span>
               </div>
               <div className="text-2xl font-bold">{data.searchConsole.totalImpressions.toLocaleString()}</div>
             </div>
@@ -160,20 +160,20 @@ export function GoogleSiteKitDashboard({ selectedSite, apiKey }: GoogleSiteKitDa
               <div className="text-2xl font-bold">{data.searchConsole.averageCTR}%</div>
             </div>
             <div className="space-y-2">
-              <span className="text-sm text-muted-foreground">Genomsnittlig position</span>
+              <span className="text-sm text-muted-foreground">Average position</span>
               <div className="text-2xl font-bold">{data.searchConsole.averagePosition}</div>
             </div>
           </div>
 
           <div className="mt-6">
-            <h4 className="font-semibold mb-3">Toppfrågor</h4>
+            <h4 className="font-semibold mb-3">Top queries</h4>
             <div className="space-y-2">
               {data.searchConsole.topQueries.map((query, index) => (
                 <div key={index} className="flex justify-between items-center p-2 rounded-lg bg-muted/50">
                   <span className="font-medium">{query.query}</span>
                   <div className="flex gap-4 text-sm text-muted-foreground">
-                    <span>{query.clicks} klick</span>
-                    <span>{query.impressions} visningar</span>
+                    <span>{query.clicks} clicks</span>
+                    <span>{query.impressions} impressions</span>
                   </div>
                 </div>
               ))}
@@ -193,27 +193,27 @@ export function GoogleSiteKitDashboard({ selectedSite, apiKey }: GoogleSiteKitDa
               <div className="space-y-2">
                 <div className="flex items-center gap-2">
                   <Users className="h-4 w-4 text-muted-foreground" />
-                  <span className="text-sm text-muted-foreground">Sessioner</span>
+                  <span className="text-sm text-muted-foreground">Sessions</span>
                 </div>
                 <div className="text-xl font-bold">{data.analytics.sessions.toLocaleString()}</div>
               </div>
               <div className="space-y-2">
-                <span className="text-sm text-muted-foreground">Användare</span>
+                <span className="text-sm text-muted-foreground">Users</span>
                 <div className="text-xl font-bold">{data.analytics.users.toLocaleString()}</div>
               </div>
               <div className="space-y-2">
-                <span className="text-sm text-muted-foreground">Sidvisningar</span>
+                <span className="text-sm text-muted-foreground">Page views</span>
                 <div className="text-xl font-bold">{data.analytics.pageviews.toLocaleString()}</div>
               </div>
               <div className="space-y-2">
-                <span className="text-sm text-muted-foreground">Studsfrekvens</span>
+                <span className="text-sm text-muted-foreground">Bounce rate</span>
                 <div className="text-xl font-bold">{data.analytics.bounceRate}%</div>
               </div>
             </div>
             <div className="mt-4 space-y-2">
               <div className="flex items-center gap-2">
                 <Clock className="h-4 w-4 text-muted-foreground" />
-                <span className="text-sm text-muted-foreground">Genomsnittlig sessionslängd</span>
+                <span className="text-sm text-muted-foreground">Average session duration</span>
               </div>
               <div className="text-xl font-bold">
                 {Math.floor(data.analytics.sessionDuration / 60)}m {data.analytics.sessionDuration % 60}s
@@ -229,7 +229,7 @@ export function GoogleSiteKitDashboard({ selectedSite, apiKey }: GoogleSiteKitDa
           <CardContent>
             <div className="space-y-4">
               <div className="flex justify-between items-center">
-                <span className="text-sm text-muted-foreground">Mobil</span>
+                <span className="text-sm text-muted-foreground">Mobile</span>
                 <Badge variant={getSpeedBadgeVariant(data.pagespeed.mobileScore)}>
                   {data.pagespeed.mobileScore}/100
                 </Badge>
@@ -262,21 +262,21 @@ export function GoogleSiteKitDashboard({ selectedSite, apiKey }: GoogleSiteKitDa
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <DollarSign className="h-5 w-5" />
-              AdSense Intäkter
+              AdSense Revenue
             </CardTitle>
           </CardHeader>
           <CardContent>
             <div className="grid gap-4 md:grid-cols-4">
               <div className="space-y-2">
-                <span className="text-sm text-muted-foreground">Intäkter</span>
+                <span className="text-sm text-muted-foreground">Revenue</span>
                 <div className="text-2xl font-bold">${data.adsense.revenue}</div>
               </div>
               <div className="space-y-2">
-                <span className="text-sm text-muted-foreground">Visningar</span>
+                <span className="text-sm text-muted-foreground">Impressions</span>
                 <div className="text-2xl font-bold">{data.adsense.impressions.toLocaleString()}</div>
               </div>
               <div className="space-y-2">
-                <span className="text-sm text-muted-foreground">Klick</span>
+                <span className="text-sm text-muted-foreground">Clicks</span>
                 <div className="text-2xl font-bold">{data.adsense.clicks}</div>
               </div>
               <div className="space-y-2">

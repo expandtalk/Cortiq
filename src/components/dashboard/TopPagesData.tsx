@@ -85,8 +85,8 @@ export function TopPagesData({ siteId, startDate, endDate }: TopPagesDataProps) 
     } catch (error) {
       console.error('Error loading top pages:', error);
       toast({
-        title: "❌ Fel",
-        description: "Kunde inte ladda populära sidor"
+        title: "❌ Error",
+        description: "Could not load top pages"
       });
     } finally {
       setIsLoading(false);
@@ -113,15 +113,15 @@ export function TopPagesData({ siteId, startDate, endDate }: TopPagesDataProps) 
       <CardHeader>
         <CardTitle className="flex items-center gap-2">
           <FileText className="h-5 w-5" />
-          Populäraste sidor
+          Top pages
         </CardTitle>
         <div className="flex items-center justify-between">
           <p className="text-sm text-muted-foreground">
-            Period: Senaste 30 dagarna • Totalt {totalViews.toLocaleString()} visningar
+            Period: Last 30 days • Total {totalViews.toLocaleString()} views
           </p>
           {lastUpdated && (
             <Badge variant="secondary" className="text-xs">
-              Uppdaterad: {lastUpdated.toLocaleTimeString()}
+              Updated: {lastUpdated.toLocaleTimeString()}
             </Badge>
           )}
         </div>
@@ -136,8 +136,8 @@ export function TopPagesData({ siteId, startDate, endDate }: TopPagesDataProps) 
         ) : topPages.length === 0 ? (
           <div className="text-center py-8 text-muted-foreground">
             <FileText className="h-12 w-12 mx-auto mb-4 opacity-50" />
-            <p className="mb-4">Inga sidvisningar hittades</p>
-            <p className="text-sm">Installera tracking-script för att börja samla data</p>
+            <p className="mb-4">No page views found</p>
+            <p className="text-sm">Install the tracking script to start collecting data</p>
           </div>
         ) : (
           <>
@@ -183,10 +183,10 @@ export function TopPagesData({ siteId, startDate, endDate }: TopPagesDataProps) 
 
             <div className="flex justify-between items-center pt-4 border-t">
               <Button variant="outline" size="sm" onClick={loadTopPages} disabled={isLoading}>
-                {isLoading ? 'Laddar...' : 'Uppdatera data'}
+                {isLoading ? 'Loading...' : 'Refresh data'}
               </Button>
               <div className="text-sm text-muted-foreground">
-                Visar topp {topPages.length} av alla sidor
+                Showing top {topPages.length} of all pages
               </div>
             </div>
           </>

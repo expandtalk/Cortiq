@@ -32,31 +32,31 @@ const formTypes: FormType[] = [
     id: 'contact_form_7',
     name: 'Contact Form 7',
     icon: <FileText className="h-5 w-5" />,
-    description: 'WordPress kontaktformulär plugin',
+    description: 'WordPress contact form plugin',
     color: 'bg-blue-100 text-blue-700',
-    examples: ['Kontaktformulär', 'Offertförfrågan', 'Feedback']
+    examples: ['Contact forms', 'Quote requests', 'Feedback']
   },
   {
     id: 'gravity_forms',
     name: 'Gravity Forms',
     icon: <Settings className="h-5 w-5" />,
-    description: 'Avancerat formulärhantering',
+    description: 'Advanced form management',
     color: 'bg-purple-100 text-purple-700',
-    examples: ['Registrering', 'Enkäter', 'Betalningar']
+    examples: ['Registration', 'Surveys', 'Payments']
   },
   {
     id: 'woocommerce',
     name: 'WooCommerce',
     icon: <ShoppingCart className="h-5 w-5" />,
-    description: 'E-handelsformulär',
+    description: 'E-commerce forms',
     color: 'bg-green-100 text-green-700',
-    examples: ['Checkout', 'Kundregistrering', 'Produktrecensioner']
+    examples: ['Checkout', 'Customer registration', 'Product reviews']
   },
   {
     id: 'traffikboost',
     name: 'Traffikboost',
     icon: <Users className="h-5 w-5" />,
-    description: 'Leadgenerering och konvertering',
+    description: 'Lead generation and conversion',
     color: 'bg-orange-100 text-orange-700',
     examples: ['Lead capture', 'Newsletter signup', 'Demo booking']
   },
@@ -64,7 +64,7 @@ const formTypes: FormType[] = [
     id: 'salesforce',
     name: 'Salesforce',
     icon: <ExternalLink className="h-5 w-5" />,
-    description: 'CRM-integrerade formulär',
+    description: 'CRM-integrated forms',
     color: 'bg-blue-100 text-blue-700',
     examples: ['Lead forms', 'Case creation', 'Contact updates']
   },
@@ -86,9 +86,9 @@ const formTypes: FormType[] = [
   },
   {
     id: 'custom',
-    name: 'Anpassat formulär',
+    name: 'Custom form',
     icon: <Plus className="h-5 w-5" />,
-    description: 'Egenutvecklade formulär',
+    description: 'Custom-built forms',
     color: 'bg-gray-100 text-gray-700',
     examples: ['HTML forms', 'React forms', 'JavaScript forms']
   }
@@ -98,9 +98,9 @@ export function FormTypeSelector({ onTypeSelect, selectedType }: FormTypeSelecto
   return (
     <div className="space-y-6">
       <div className="text-center">
-        <h2 className="text-2xl font-bold mb-2">Välj formulärtyp</h2>
+        <h2 className="text-2xl font-bold mb-2">Select form type</h2>
         <p className="text-muted-foreground">
-          Välj vilken typ av formulärlösning du använder för att få rätt analyskonfiguration
+          Select which type of form solution you use to get the correct analytics configuration
         </p>
       </div>
 
@@ -119,7 +119,7 @@ export function FormTypeSelector({ onTypeSelect, selectedType }: FormTypeSelecto
                   {type.icon}
                 </div>
                 {selectedType === type.id && (
-                  <Badge variant="default">Vald</Badge>
+                  <Badge variant="default">Selected</Badge>
                 )}
               </div>
               <CardTitle className="text-lg">{type.name}</CardTitle>
@@ -129,7 +129,7 @@ export function FormTypeSelector({ onTypeSelect, selectedType }: FormTypeSelecto
             </CardHeader>
             <CardContent>
               <div className="space-y-2">
-                <h4 className="text-sm font-medium">Vanliga användningsområden:</h4>
+                <h4 className="text-sm font-medium">Common use cases:</h4>
                 <ul className="text-xs text-muted-foreground space-y-1">
                   {type.examples.map((example, index) => (
                     <li key={index} className="flex items-center gap-1">
@@ -147,7 +147,7 @@ export function FormTypeSelector({ onTypeSelect, selectedType }: FormTypeSelecto
       {selectedType && (
         <div className="text-center">
           <Button onClick={() => onTypeSelect(selectedType)}>
-            Fortsätt med {formTypes.find(t => t.id === selectedType)?.name}
+            Continue with {formTypes.find(t => t.id === selectedType)?.name}
           </Button>
         </div>
       )}
