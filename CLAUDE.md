@@ -77,6 +77,12 @@ Frontend vars are prefixed `VITE_`. Only the anon/publishable key goes in the br
 
 CortIQ classifies AI traffic into three categories — this is the core differentiator:
 
+### Heatmaps
+- **Click heatmaps** — tracked via `interaction_type: 'click'` events in `heatmap_data` table
+- **Scroll depth heatmaps** — tracked via `interaction_type: 'scroll'` at 25/50/75/100% milestones. `ScrollDepthChart.tsx` renders the funnel visualization.
+
+### AI bot classification
+
 | Category | Examples | Interpretation |
 |----------|----------|---------------|
 | Training Crawlers | GPTBot, ClaudeBot, BLEXBot | Infrastructure cost, no referral value |

@@ -30,8 +30,8 @@ const features = [
   {
     icon: <MousePointer className="h-7 w-7" />,
     title: "Heatmaps",
-    description: "Visualize exactly where users click — on desktop, tablet, and mobile.",
-    items: ["Click heatmaps", "Device-specific views", "Mobile insights", "Page selector"],
+    description: "Visualize where users click and how far they scroll — on desktop, tablet, and mobile.",
+    items: ["Click heatmaps", "Scroll depth heatmaps", "Device-specific views", "Mobile insights"],
   },
   {
     icon: <TestTube className="h-7 w-7" />,

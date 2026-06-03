@@ -65,8 +65,8 @@ const Index = () => {
     },
     {
       icon: MousePointer,
-      title: "Visual Analytics (Click Maps)",
-      description: "Visualize where users click on every page — for both human visitors and AI agents. Desktop, tablet and mobile views."
+      title: "Visual Analytics (Heatmaps)",
+      description: "Click heatmaps and scroll depth tracking on every page — for both human visitors and AI agents. Desktop, tablet and mobile views."
     },
     {
       icon: TestTube,
