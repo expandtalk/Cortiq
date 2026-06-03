@@ -44,6 +44,7 @@ Activated when a visitor accepts the "Statistics" category in the cookie banner.
 In addition to cookie-free data:
 - **Session ID** — links page views within a single visit (expires on browser close)
 - **Click positions** — x/y coordinates for heatmap generation
+- **Scroll depth** — how far the visitor scrolled (25%, 50%, 75%, 100% milestones)
 - **Form interactions** — which fields were filled, when the form was abandoned (not the content of the fields)
 - **Session recording** — a replay of the user's interaction with the page
 
@@ -78,6 +79,26 @@ CortIQ detects AI browsers (ChatGPT Browser, Perplexity Comet, Claude Browser, G
 | Google (optional) | GA4 if configured | EU/US | [DPA](https://business.safety.google/adsprocessorterms/) |
 
 CortIQ does not sell or share visitor data with third parties for advertising.
+
+---
+
+## Data Processing Agreement (DPA) for CortIQ customers
+
+CortIQ acts as a **data processor** on behalf of site owners (data controllers) who embed the tracking script. Under GDPR Art. 28, a written Data Processing Agreement is required between CortIQ and each customer.
+
+**What this means for you as a CortIQ customer:**
+- CortIQ processes visitor data on your behalf and under your instructions
+- You remain the data controller — you decide what is collected and for what purpose
+- A DPA must be in place before you go live in production
+
+**Standard contractual commitments CortIQ makes:**
+- Process data only for the purposes specified by the customer
+- Implement appropriate technical and organisational security measures
+- Delete data on customer request within 30 days
+- Not engage sub-processors without informing the customer
+- Assist with Subject Access Requests where technically possible
+
+> **Note:** A formal DPA template for customers is in preparation. Contact [daniel@expandtalk.se](mailto:daniel@expandtalk.se) to request one ahead of public availability.
 
 ---
 

@@ -284,8 +284,31 @@
     });
   }
 
+  // Check if visitor has given analytics consent
+  function hasAnalyticsConsent() {
+    try {
+      const stored = localStorage.getItem('site_cookie_consent');
+      if (stored && JSON.parse(stored).analytics === true) return true;
+    } catch (_) {}
+    try {
+      if (window.Cookiebot?.consent?.statistics === true) return true;
+    } catch (_) {}
+    return false;
+  }
+
   // Track scroll depth milestones (25%, 50%, 75%, 100%)
   function setupScrollTracking() {
+    // Scroll depth is session-linked data — requires analytics consent (GDPR Art. 6.1.a)
+    if (!hasAnalyticsConsent()) {
+      window.addEventListener('siteConsentUpdated', function handler(e) {
+        if (e.detail?.analytics) {
+          window.removeEventListener('siteConsentUpdated', handler);
+          setupScrollTracking();
+        }
+      });
+      return;
+    }
+
     const milestones = [25, 50, 75, 100];
     const reached = new Set();
 
