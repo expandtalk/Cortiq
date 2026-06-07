@@ -21,65 +21,39 @@ export function AuthProvider({ children }: AuthProviderProps) {
   const [user, setUser] = useState<User | null>(null);
   const [session, setSession] = useState<Session | null>(null);
   const [loading, setLoading] = useState(true);
-  const [initialized, setInitialized] = useState(false);
 
   useEffect(() => {
     let mounted = true;
 
-    const getSession = async () => {
-      try {
-        const { data: { session }, error } = await supabase.auth.getSession();
-        
-        if (error) {
-          console.error('Error getting session:', error);
-          if (mounted) {
-            setSession(null);
-            setUser(null);
-            setLoading(false);
-            setInitialized(true);
-          }
-          return;
-        }
-
+    // Subscribe first so we don't miss events that fire during getSession
+    const { data: { subscription } } = supabase.auth.onAuthStateChange(
+      (_event, session) => {
         if (mounted) {
           setSession(session);
           setUser(session?.user ?? null);
           setLoading(false);
-          setInitialized(true);
-        }
-      } catch (error) {
-        console.error('Session initialization error:', error);
-        if (mounted) {
-          setSession(null);
-          setUser(null);
-          setLoading(false);
-          setInitialized(true);
-        }
-      }
-    };
-
-    getSession();
-
-    const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      (event, session) => {
-        if (mounted && initialized) {
-          // Rate limit auth state changes to prevent race conditions
-          setTimeout(() => {
-            if (mounted) {
-              setSession(session);
-              setUser(session?.user ?? null);
-              setLoading(false);
-            }
-          }, 100);
         }
       }
     );
+
+    supabase.auth.getSession().then(({ data: { session }, error }) => {
+      if (!mounted) return;
+      if (error) {
+        console.error('Error getting session:', error);
+        setSession(null);
+        setUser(null);
+      } else {
+        setSession(session);
+        setUser(session?.user ?? null);
+      }
+      setLoading(false);
+    });
 
     return () => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [initialized]);
+  }, []);
 
   const signIn = async (email: string, password: string) => {
     // Input validation

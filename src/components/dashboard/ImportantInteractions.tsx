@@ -369,7 +369,7 @@ export function ImportantInteractions({ siteId, dateRange }: ImportantInteractio
   return (
     <Card>
       <CardHeader>
-        <CardTitle>Viktiga Interaktioner</CardTitle>
+        <CardTitle>Key Interactions</CardTitle>
         <CardDescription>
           Most significant clicks and interactions for your business
           {totalCount > 0 && ` (${totalCount} total)`}
