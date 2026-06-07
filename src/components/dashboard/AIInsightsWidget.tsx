@@ -1,29 +1,58 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
 import { Alert, AlertDescription } from '@/components/ui/alert';
 import { useDashboardInsights } from '@/hooks/useDashboardInsights';
-import { Brain, Sparkles, X, RefreshCw } from 'lucide-react';
+import { Brain, Sparkles, X, RefreshCw, Database } from 'lucide-react';
 import { toast } from 'sonner';
+import { supabase } from '@/integrations/supabase/client';
+
+interface AgentRun {
+  id: string;
+  function_name: string;
+  model: string | null;
+  queries_run: Array<{ table?: string; source?: string; row_count?: number; time_range_days?: number }> | null;
+  data_snapshot: Record<string, unknown> | null;
+  input_tokens: number | null;
+  output_tokens: number | null;
+  duration_ms: number | null;
+  completed_at: string | null;
+}
 
 interface AIInsightsWidgetProps {
   siteId: string;
 }
 
 export function AIInsightsWidget({ siteId }: AIInsightsWidgetProps) {
-  const { 
-    insights, 
-    loading, 
-    error, 
-    generating, 
-    generateInsights, 
+  const {
+    insights,
+    loading,
+    error,
+    generating,
+    generateInsights,
     dismissInsight,
     getPriorityColor,
     getTypeIcon,
     hasInsights,
     highPriorityCount
   } = useDashboardInsights(siteId);
+
+  const [expandedIds, setExpandedIds] = useState<Set<string>>(new Set());
+  const [fetchedRuns, setFetchedRuns] = useState<Record<string, AgentRun | null>>({});
+
+  const toggleSources = async (insightId: string, runId: string | null | undefined) => {
+    if (!runId) return;
+    setExpandedIds(prev => {
+      const next = new Set(prev);
+      next.has(insightId) ? next.delete(insightId) : next.add(insightId);
+      return next;
+    });
+    if (!(runId in fetchedRuns)) {
+      const { data } = await (supabase as any).from('agent_runs').select('*').eq('id', runId).single();
+      setFetchedRuns(prev => ({ ...prev, [runId]: data }));
+    }
+  };
 
   const handleGenerateInsights = async () => {
     try {
@@ -161,10 +190,52 @@ export function AIInsightsWidget({ siteId }: AIInsightsWidgetProps) {
                   <span className="text-xs text-muted-foreground">
                     Confidence: {insight.confidence_score}%
                   </span>
-                  <span className="text-xs text-muted-foreground">
-                    {new Date(insight.created_at).toLocaleDateString('sv-SE')}
-                  </span>
+                  <div className="flex items-center gap-3">
+                    {insight.run_id && (
+                      <button
+                        onClick={() => toggleSources(insight.id, insight.run_id)}
+                        className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition-colors"
+                      >
+                        <Database className="h-3 w-3" />
+                        {expandedIds.has(insight.id) ? 'Hide sources' : 'Sources'}
+                      </button>
+                    )}
+                    <span className="text-xs text-muted-foreground">
+                      {new Date(insight.created_at).toLocaleDateString('sv-SE')}
+                    </span>
+                  </div>
                 </div>
+
+                {expandedIds.has(insight.id) && insight.run_id && (
+                  <div className="mt-2 rounded bg-muted/40 px-3 py-2 text-xs space-y-1">
+                    {!(insight.run_id in fetchedRuns) && (
+                      <span className="text-muted-foreground">Loading...</span>
+                    )}
+                    {insight.run_id in fetchedRuns && fetchedRuns[insight.run_id] && (() => {
+                      const run = fetchedRuns[insight.run_id]!;
+                      const totalTokens = (run.input_tokens ?? 0) + (run.output_tokens ?? 0);
+                      return (
+                        <>
+                          {run.queries_run && run.queries_run.length > 0 && (
+                            <div>
+                              <span className="font-medium text-foreground">Data: </span>
+                              <span className="text-muted-foreground">
+                                {run.queries_run.map((q, i) => (
+                                  `${q.table ?? q.source}${q.row_count !== undefined ? ` (${q.row_count})` : ''}${i < run.queries_run!.length - 1 ? ', ' : ''}`
+                                )).join('')}
+                              </span>
+                            </div>
+                          )}
+                          <div className="text-muted-foreground">
+                            {run.model && <span>{run.model}</span>}
+                            {totalTokens > 0 && <span> · {totalTokens.toLocaleString()} tokens</span>}
+                            {run.duration_ms && <span> · {run.duration_ms}ms</span>}
+                          </div>
+                        </>
+                      );
+                    })()}
+                  </div>
+                )}
               </div>
             ))}
             

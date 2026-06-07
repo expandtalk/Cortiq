@@ -18,25 +18,36 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let runId: string | null = null;
+  const startTime = Date.now();
+
   try {
     console.log('🚀 Generate dashboard insights function started');
-    
+
     const requestData = await req.json();
     console.log('Request data:', requestData);
-    
+
     const { siteId } = requestData;
     const openAIApiKey = Deno.env.get('OPENAI_API_KEY');
 
     if (!openAIApiKey) {
       console.error('❌ OpenAI API key not configured');
-      return new Response(JSON.stringify({ 
+      return new Response(JSON.stringify({
         error: 'OpenAI API key not configured',
-        success: false 
+        success: false
       }), {
         status: 500,
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
+
+    // Create agent run record for provenance tracking
+    const { data: runData } = await supabase
+      .from('agent_runs')
+      .insert({ site_id: siteId, function_name: 'generate-dashboard-insights', model: 'gpt-4o-mini' })
+      .select('id')
+      .single();
+    runId = runData?.id ?? null;
 
     console.log('Generating insights for site:', siteId);
 
@@ -74,6 +85,25 @@ serve(async (req) => {
         .limit(50)
     ]);
 
+    // Update run with query provenance
+    if (runId) {
+      await supabase.from('agent_runs').update({
+        queries_run: [
+          { table: 'page_views', filter: 'last 7 days', row_count: analyticsData.data?.length ?? 0 },
+          { table: 'heatmap_data', filter: 'last 7 days', row_count: heatmapData.data?.length ?? 0 },
+          { table: 'form_analytics', filter: 'all', row_count: formData.data?.length ?? 0 },
+          { table: 'tracking_sessions', filter: 'last 7 days', row_count: trafficData.data?.length ?? 0 },
+        ],
+        data_snapshot: {
+          total_page_views: analyticsData.data?.length ?? 0,
+          heatmap_interactions: heatmapData.data?.length ?? 0,
+          forms_tracked: formData.data?.length ?? 0,
+          sessions: trafficData.data?.length ?? 0,
+          date_range_days: 7,
+        },
+      }).eq('id', runId);
+    }
+
     // Prepare data summary for AI
     const dataSummary = {
       totalPageViews: analyticsData.data?.length || 0,
@@ -104,7 +134,7 @@ Data Summary:
 - Form performance: ${JSON.stringify(dataSummary.formPerformance)}
 - Heatmap interactions: ${dataSummary.heatmapInteractions}
 
-Generate 3-5 specific, actionable insights in Swedish. Each insight should include:
+Generate 3-5 specific, actionable insights in English. Each insight should include:
 1. A clear title (max 50 characters)
 2. A description explaining the finding
 3. Specific action items to improve performance
@@ -136,7 +166,7 @@ Return JSON format:
       body: JSON.stringify({
         model: 'gpt-4o-mini',
         messages: [
-          { role: 'system', content: 'Du är en expert på webbanalys som ger praktiska råd på svenska.' },
+          { role: 'system', content: 'You are a web analytics expert providing practical advice in English.' },
           { role: 'user', content: prompt }
         ],
         temperature: 0.7,
@@ -178,8 +208,17 @@ Return JSON format:
               action_items: insight.actionItems,
               priority: insight.priority,
               confidence_score: insight.confidence,
-              expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString()
+              expires_at: new Date(Date.now() + 24 * 60 * 60 * 1000).toISOString(),
+              run_id: runId,
             });
+        }
+        if (runId) {
+          await supabase.from('agent_runs').update({
+            status: 'completed',
+            output: { insights_count: fallbackInsights.insights.length, fallback: true },
+            duration_ms: Date.now() - startTime,
+            completed_at: new Date().toISOString(),
+          }).eq('id', runId);
         }
         
         return new Response(JSON.stringify({ 
@@ -212,7 +251,7 @@ Return JSON format:
 
     // Store insights in database
     const expiresAt = new Date(Date.now() + 24 * 60 * 60 * 1000); // 24 hours
-    
+
     for (const insight of insights.insights) {
       await supabase
         .from('dashboard_insights')
@@ -224,8 +263,20 @@ Return JSON format:
           action_items: insight.actionItems,
           priority: insight.priority,
           confidence_score: insight.confidence,
-          expires_at: expiresAt.toISOString()
+          expires_at: expiresAt.toISOString(),
+          run_id: runId,
         });
+    }
+
+    if (runId) {
+      await supabase.from('agent_runs').update({
+        status: 'completed',
+        output: { insights_count: insights.insights.length },
+        input_tokens: aiResponse.usage?.prompt_tokens ?? null,
+        output_tokens: aiResponse.usage?.completion_tokens ?? null,
+        duration_ms: Date.now() - startTime,
+        completed_at: new Date().toISOString(),
+      }).eq('id', runId);
     }
 
     console.log('Generated and stored insights:', insights.insights.length);
@@ -244,9 +295,17 @@ Return JSON format:
 
   } catch (error) {
     console.error('Error generating insights:', error);
-    return new Response(JSON.stringify({ 
+    if (runId) {
+      await supabase.from('agent_runs').update({
+        status: 'failed',
+        error_message: error.message,
+        duration_ms: Date.now() - startTime,
+        completed_at: new Date().toISOString(),
+      }).eq('id', runId);
+    }
+    return new Response(JSON.stringify({
       error: error.message,
-      success: false 
+      success: false
     }), {
       status: 500,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },

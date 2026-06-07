@@ -72,12 +72,15 @@ Deno.serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
+  let runId: string | null = null;
+  const startTime = Date.now();
+  const supabase = createClient(
+    Deno.env.get('SUPABASE_URL') ?? '',
+    Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
+  );
+
   try {
     const authHeader = req.headers.get('Authorization') ?? '';
-    const supabase = createClient(
-      Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
-    );
 
     // Verify user is authenticated
     const { data: { user }, error: authError } = await supabase.auth.getUser(
@@ -118,12 +121,22 @@ Deno.serve(async (req) => {
     // AITLP T10: validate siteId is a UUID — never pass unsanitized user input into prompt
     const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
     if (!siteId || !UUID_RE.test(siteId) || !year || !monthlyData?.length) {
+      // intentionally before runId creation — invalid request, nothing to log
       return new Response(JSON.stringify({ error: 'Invalid or missing siteId, year, or monthlyData' }), {
         status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
       });
     }
     // Clamp year to reasonable range to prevent prompt injection via year field
     const safeYear = Math.max(2020, Math.min(2100, Number(year)));
+    const model = Deno.env.get('CLAUDE_MODEL') ?? 'claude-sonnet-4-6';
+
+    // Create agent run record for provenance tracking
+    const { data: runData } = await supabase
+      .from('agent_runs')
+      .insert({ site_id: siteId, function_name: 'generate-kpi-insights', model })
+      .select('id')
+      .single();
+    runId = runData?.id ?? null;
 
     // Summarise the data for the prompt — keep tokens low
     const activeMonths = monthlyData.filter(m => m.sessions > 0 || (m.prevSessions ?? 0) > 0);
@@ -148,22 +161,37 @@ Deno.serve(async (req) => {
     // Hard cap: if summary > 2000 chars something is wrong with the data
     const monthSummary = monthSummaryRaw.slice(0, 2000);
 
-    const prompt = `Du är en senior digital analytiker. Analysera följande KPI-data för år ${safeYear} och ge strategiska insikter på svenska.
+    // Update run with data provenance before calling AI
+    if (runId) {
+      await supabase.from('agent_runs').update({
+        queries_run: [{ source: 'client', description: 'Monthly KPI data', months_count: monthlyData.length, active_months: activeMonths.length }],
+        data_snapshot: {
+          year: safeYear,
+          total_sessions: totalSessions,
+          total_prev_sessions: totalPrevSessions,
+          active_months: activeMonths.length,
+          anomalies_count: anomalies.length,
+          has_channel_data: (channelData ?? []).length > 0,
+        },
+      }).eq('id', runId);
+    }
 
-MÅNADSDATA:
+    const prompt = `You are a senior digital analyst. Analyse the following KPI data for ${safeYear} and provide strategic insights in English.
+
+MONTHLY DATA:
 ${monthSummary}
 
-TOTALT: ${totalSessions} sessioner ${safeYear}${totalPrevSessions > 0 ? ` vs ${totalPrevSessions} sessioner ${safeYear - 1}` : ''}
-${anomalies.length > 0 ? `AVVIKELSER (>20% YoY): ${anomalies.join(', ')}` : ''}
-${topChannels ? `TOPPKANALER: ${topChannels}` : ''}
+TOTAL: ${totalSessions} sessions ${safeYear}${totalPrevSessions > 0 ? ` vs ${totalPrevSessions} sessions ${safeYear - 1}` : ''}
+${anomalies.length > 0 ? `ANOMALIES (>20% YoY): ${anomalies.join(', ')}` : ''}
+${topChannels ? `TOP CHANNELS: ${topChannels}` : ''}
 
-Ge 4–6 insikter. Varje insikt MÅSTE ha:
-- type: en av "Varning", "Möjlighet", "Trend" eller "Säsong"
-- title: kort titel (max 60 tecken)
-- insight: analys (2–3 meningar, faktabaserad, hänvisa till specifika månader/siffror)
-- action: konkret åtgärd (1–2 meningar)
+Provide 4–6 insights. Each insight MUST have:
+- type: one of "Warning", "Opportunity", "Trend" or "Seasonal"
+- title: short title (max 60 characters)
+- insight: analysis (2–3 sentences, fact-based, reference specific months/numbers)
+- action: concrete action (1–2 sentences)
 
-Returnera ENBART giltig JSON utan förklaring:
+Return ONLY valid JSON without explanation:
 {"insights": [{"type":"...","title":"...","insight":"...","action":"..."}]}`;
 
     const claudeRes = await callClaudeWithRetry('https://api.anthropic.com/v1/messages', {
@@ -174,7 +202,7 @@ Returnera ENBART giltig JSON utan förklaring:
         'content-type': 'application/json',
       },
       body: JSON.stringify({
-        model: Deno.env.get('CLAUDE_MODEL') ?? 'claude-sonnet-4-6',
+        model,
         max_tokens: 1500,
         messages: [{ role: 'user', content: prompt }],
       }),
@@ -203,11 +231,22 @@ Returnera ENBART giltig JSON utan förklaring:
       }
     }
 
+    if (runId) {
+      await supabase.from('agent_runs').update({
+        status: 'completed',
+        output: { insights_count: insights.length },
+        input_tokens: claudeData.usage?.input_tokens ?? null,
+        output_tokens: claudeData.usage?.output_tokens ?? null,
+        duration_ms: Date.now() - startTime,
+        completed_at: new Date().toISOString(),
+      }).eq('id', runId);
+    }
+
     // Upsert into kpi_ai_insights (one row per site+year)
     const { error: upsertError } = await supabase
       .from('kpi_ai_insights')
       .upsert(
-        { site_id: siteId, year, insights_json: insights, generated_at: new Date().toISOString() },
+        { site_id: siteId, year, insights_json: insights, generated_at: new Date().toISOString(), run_id: runId },
         { onConflict: 'site_id,year' }
       );
 
@@ -224,6 +263,14 @@ Returnera ENBART giltig JSON utan förklaring:
 
   } catch (err) {
     console.error('Unexpected error in generate-kpi-insights:', err);
+    if (runId) {
+      await supabase.from('agent_runs').update({
+        status: 'failed',
+        error_message: err instanceof Error ? err.message : String(err),
+        duration_ms: Date.now() - startTime,
+        completed_at: new Date().toISOString(),
+      }).eq('id', runId);
+    }
     return new Response(JSON.stringify({ error: 'Internal server error' }), {
       status: 500, headers: { ...corsHeaders, 'Content-Type': 'application/json' }
     });

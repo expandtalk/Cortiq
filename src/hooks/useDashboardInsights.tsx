@@ -11,6 +11,7 @@ export interface DashboardInsight {
   confidence_score: number;
   created_at: string;
   expires_at: string;
+  run_id?: string | null;
 }
 
 export function useDashboardInsights(siteId: string | null) {
