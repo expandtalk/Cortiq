@@ -5,7 +5,7 @@
 [![React](https://img.shields.io/badge/React-18.3.1-61DAFB?logo=react&logoColor=white)](https://reactjs.org/)
 [![TypeScript](https://img.shields.io/badge/TypeScript-5.5-3178C6?logo=typescript&logoColor=white)](https://www.typescriptlang.org/)
 [![Supabase](https://img.shields.io/badge/Supabase-Backend-3ECF8E?logo=supabase&logoColor=white)](https://supabase.com/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![License: AGPL-3.0](https://img.shields.io/badge/License-AGPL%20v3-blue.svg)](LICENSE)
 [![Deploy](https://img.shields.io/badge/Live-cortiq.se-blue?logo=vercel)](https://cortiq.se)
 
 **Bot blockers tell you what to stop. CortIQ tells you what matters.**
@@ -77,6 +77,11 @@ npm install && npm run dev  # → http://localhost:8080
 - Two-layer model: cookiefree baseline + optional opt-in enhanced tracking
 - EU data residency (Supabase, AWS eu-north-1)
 
+### 🔍 Transparent AI Insights
+- Every AI recommendation shows its source: tables queried, row counts, model, token usage, duration
+- Full execution log for every agent job — no black box
+- Insight provenance stored per run and browsable in the dashboard
+
 ### ⚙️ Integrations & Advanced
 - Google Analytics 4 (server-side, cookiefree)
 - Google Search Console
@@ -138,20 +143,22 @@ VITE_SUPABASE_PROJECT_ID=your-project-id
 
 ### 2. Replace the hardcoded project reference
 
+Search for the placeholder project ID in the codebase and replace it with your own:
+
 ```bash
 # macOS / Linux
 find src/ supabase/ public/ -type f \( -name "*.ts" -o -name "*.tsx" -o -name "*.js" -o -name "*.toml" \) \
-  -exec sed -i '' 's/cxmkdtgfocgbfizawlwa/YOUR_PROJECT_ID/g' {} +
+  -exec sed -i '' 's/PLACEHOLDER_PROJECT_ID/YOUR_PROJECT_ID/g' {} +
 
 # Windows PowerShell
 Get-ChildItem -Recurse -Include "*.ts","*.tsx","*.js","*.toml" src,supabase,public |
-  ForEach-Object { (Get-Content $_.FullName) -replace 'cxmkdtgfocgbfizawlwa','YOUR_PROJECT_ID' | Set-Content $_.FullName }
+  ForEach-Object { (Get-Content $_.FullName) -replace 'PLACEHOLDER_PROJECT_ID','YOUR_PROJECT_ID' | Set-Content $_.FullName }
 ```
 
 ### 3. Push the database schema
 
 ```bash
-supabase link --project-ref YOUR_PROJECT_ID
+supabase link --project-ref YOUR_PROJECT_ID  # find this in Supabase Dashboard → Settings → General
 supabase db push --include-all
 ```
 
@@ -219,10 +226,8 @@ Required secrets in your repository settings:
 | `VITE_SUPABASE_URL` | Your Supabase URL |
 | `VITE_SUPABASE_PUBLISHABLE_KEY` | Your anon key |
 | `VITE_SUPABASE_PROJECT_ID` | Your project ID |
-| `FTP_SERVER` | FTP host |
-| `FTP_USERNAME` | FTP username |
-| `FTP_PASSWORD` | FTP password |
-| `FTP_SERVER_DIR` | Remote path (e.g. `/public_html/`) |
+
+Add deployment-specific secrets depending on your host (FTP, Vercel, Cloudflare Pages, etc.).
 
 ---
 
@@ -292,4 +297,6 @@ Built by [Expandtalk](https://expandtalk.se) · Sweden
 
 ## License
 
-MIT — see [LICENSE](./LICENSE)
+AGPL-3.0 — see [LICENSE](./LICENSE)
+
+If you run a modified version as a network service, you must release your changes under the same license. Self-hosting for internal use is unrestricted.

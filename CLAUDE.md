@@ -1,14 +1,6 @@
 # CLAUDE.md — CortIQ
 
-CortIQ is an open-source web analytics platform focused on AI bot intelligence and cookie-free tracking. It is one of three products built by Expandtalk Corporation AB:
-
-| Product | Purpose |
-|---------|---------|
-| **CortIQ** | Web analytics — AI bot classification, heatmaps, A/B testing, GDPR-compliant tracking |
-| **SentriSK** | SEO SaaS — GSC intelligence, 26 SEO analysis tools, built on the same Supabase stack |
-| **Agentflow** | MCP platform — Swedish public APIs (SCB, Riksdagen, Bolagsverket, Kolada, Trafikverket) |
-
-CortIQ can ingest data from SentriSK's GSC pipeline and share the Supabase backend with Agentflow's `mcp_executions` logging. They are separate deployments but share infrastructure patterns.
+CortIQ is an open-source web analytics platform focused on AI bot intelligence and cookie-free tracking, built by Expandtalk Corporation AB.
 
 ---
 
@@ -96,15 +88,11 @@ Classification logic lives in `src/components/dashboard/BotTrafficClassification
 ## Deployment
 
 ```bash
-npm run build           # outputs to dist/
-# Upload dist/ to web host via FTP, or:
-npx vercel --prod
-
-# Edge Functions:
-supabase functions deploy --all
+npm run build                          # outputs to dist/
+supabase functions deploy --all        # deploy edge functions
 ```
 
-CI/CD: `.github/workflows/deploy-production.yml` builds and FTP-deploys on push to `main`. Requires GitHub secrets: `VITE_SUPABASE_URL`, `VITE_SUPABASE_PUBLISHABLE_KEY`, `VITE_SUPABASE_PROJECT_ID`, `FTP_SERVER`, `FTP_USERNAME`, `FTP_PASSWORD`, `FTP_SERVER_DIR`.
+CI/CD is configured in `.github/workflows/` — see the workflow files for required secrets.
 
 ---
 

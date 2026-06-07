@@ -11,6 +11,7 @@ import {
   Search,
   Eye,
   Cpu,
+  Database,
   CheckCircle,
   ArrowRight,
   Sparkles,
@@ -74,6 +75,17 @@ const features = [
       "Training crawler detection",
       "AI search traffic",
       "Content indexing signals",
+    ],
+  },
+  {
+    icon: <Database className="h-7 w-7" />,
+    title: "Transparent AI Insights",
+    description: "Every AI recommendation shows its work — see the exact tables, row counts, and model behind each insight. No black box.",
+    items: [
+      "Source trace per insight (tables + row counts)",
+      "Model and token usage logged",
+      "Full execution log for every agent job",
+      "Timestamp and duration on each run",
     ],
   },
   {
