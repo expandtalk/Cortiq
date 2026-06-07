@@ -100,20 +100,18 @@ export function ExportButton({
     return JSON.stringify(data, null, 2);
   }
 
-  /**
-   * Convert data to Excel format (XLSX)
-   * Uses SheetJS library
-   */
   async function convertToExcel(data: any[]): Promise<Blob> {
-    // Import SheetJS dynamically
-    const XLSX = await import('xlsx');
+    const ExcelJS = await import('exceljs');
+    const workbook = new ExcelJS.Workbook();
+    const worksheet = workbook.addWorksheet('Data');
 
-    const worksheet = XLSX.utils.json_to_sheet(data);
-    const workbook = XLSX.utils.book_new();
-    XLSX.utils.book_append_sheet(workbook, worksheet, 'Data');
+    if (data.length > 0) {
+      worksheet.columns = Object.keys(data[0]).map(key => ({ header: key, key }));
+      data.forEach(row => worksheet.addRow(row));
+    }
 
-    const excelBuffer = XLSX.write(workbook, { bookType: 'xlsx', type: 'array' });
-    return new Blob([excelBuffer], {
+    const buffer = await workbook.xlsx.writeBuffer();
+    return new Blob([buffer], {
       type: 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet'
     });
   }
