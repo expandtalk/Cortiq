@@ -1,4 +1,5 @@
-import React, { lazy, Suspense, useState } from 'react';
+import React, { lazy, Suspense } from 'react';
+import { useSearchParams } from 'react-router-dom';
 import { TabErrorBoundary } from './TabErrorBoundary';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuSeparator, DropdownMenuTrigger } from '@/components/ui/dropdown-menu';
@@ -143,7 +144,17 @@ const SETTINGS_OPTIONS: NavOption[] = [
 ];
 
 function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTabsProps) {
-  const [activeTab, setActiveTab] = useState('overview');
+  // Active tab lives in the URL (?tab=) so it deep-links, survives refresh, and works
+  // with the browser back button. Falls back to 'overview' when absent.
+  const [searchParams, setSearchParams] = useSearchParams();
+  const activeTab = searchParams.get('tab') || 'overview';
+  const setActiveTab = (value: string) => {
+    setSearchParams(prev => {
+      const next = new URLSearchParams(prev);
+      next.set('tab', value);
+      return next;
+    });
+  };
 
   function NavGroupDropdown({ group }: { group: NavGroup }) {
     const activeOption = group.options.find(o => o.value === activeTab);

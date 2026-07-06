@@ -191,7 +191,6 @@ export const AIBotTab = ({ selectedSite }: AIBotTabProps) => {
             <BotTrafficClassification
               botBreakdown={data.botBreakdown}
               totalTraffic={data.totalTraffic}
-              trainingCrawlers={data.trainingCrawlers}
             />
           )}
 

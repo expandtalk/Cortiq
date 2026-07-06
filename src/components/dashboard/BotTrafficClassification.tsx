@@ -2,35 +2,14 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, Zap, Eye } from "lucide-react";
 
-// Known bot name patterns → category.
-// MUST stay in sync with the AI_BOT_REGISTRY in
-// supabase/functions/ai-bot-tracker/index.ts (which now persists canonical UA
-// tokens as bot_name). P1 follow-up: extract a single shared registry so these
-// two lists can't drift.
-const TRAINING_PATTERNS = [
-  "gptbot", "claudebot", "google-extended", "meta-externalagent",
-  "applebot-extended", "bytespider", "ccbot", "diffbot", "cohere-ai",
-  "deepseek", "mistralai", "blexbot", "petalbot", "dataforseobot", "training",
-];
-const AGENTIC_PATTERNS = [
-  "chatgpt-user", "claude-user", "perplexity-user", "grok",
-  "chatgpt browser", "claude browser", "perplexity comet", "copilot",
-  "claude-ai", "agentic",
-];
-
+// Classification is done ONCE at ingest by ai-bot-tracker (stored on
+// ai_bot_traffic.request_type and surfaced here as bot.category), so this component no
+// longer keeps its own bot-name lists — that duplication was the P2-9 drift source.
 type BotCategory = "training" | "agentic" | "citation";
 
-function classifyBot(name: string): BotCategory {
-  const lower = name.toLowerCase();
-  if (TRAINING_PATTERNS.some((p) => lower.includes(p))) return "training";
-  if (AGENTIC_PATTERNS.some((p) => lower.includes(p))) return "agentic";
-  return "citation";
-}
-
 interface Props {
-  botBreakdown: { name: string; count: number; percentage: number }[];
+  botBreakdown: { name: string; count: number; percentage: number; category: string }[];
   totalTraffic: number;
-  trainingCrawlers: number;
 }
 
 const CATEGORIES = [
@@ -69,19 +48,13 @@ const CATEGORIES = [
   },
 ];
 
-export function BotTrafficClassification({ botBreakdown, totalTraffic, trainingCrawlers }: Props) {
-  // Aggregate counts per category from botBreakdown names
+export function BotTrafficClassification({ botBreakdown, totalTraffic }: Props) {
+  // Aggregate counts per category using the category stored at ingest. Anything not
+  // training/agentic (including 'unknown') falls into the citation/visibility bucket.
   const counts: Record<BotCategory, number> = { training: 0, agentic: 0, citation: 0 };
   for (const bot of botBreakdown) {
-    counts[classifyBot(bot.name)] += bot.count;
-  }
-
-  // Prefer the hook's pre-calculated trainingCrawlers count if higher (more accurate, uses request_type)
-  if (trainingCrawlers > counts.training) {
-    const diff = trainingCrawlers - counts.training;
-    counts.training = trainingCrawlers;
-    // Move overflow from citation bucket (most unclassified bots are crawlers)
-    counts.citation = Math.max(0, counts.citation - diff);
+    const cat: BotCategory = bot.category === 'training' || bot.category === 'agentic' ? bot.category : 'citation';
+    counts[cat] += bot.count;
   }
 
   return (

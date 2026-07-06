@@ -7,7 +7,7 @@ interface AIBotTrafficData {
   citationRequests: number;
   trainingCrawlers: number;
   citationCtr: number;
-  botBreakdown: { name: string; count: number; percentage: number }[];
+  botBreakdown: { name: string; count: number; percentage: number; category: string }[];
   dailyTrend: { date: string; traffic: number }[];
   topUrls: { url: string; visits: number }[];
 }
@@ -48,16 +48,20 @@ export const useAIBotTracking = (siteId: string | null, days: number = 7) => {
       const citationClicks = citations?.filter(c => c.clicked).length || 0;
       const citationCtr = citationRequests > 0 ? (citationClicks / citationRequests) * 100 : 0;
 
-      // Bot breakdown
-      const botCounts: Record<string, number> = {};
+      // Bot breakdown. Carry the category stored at ingest (request_type) so the UI
+      // classifies from the single source of truth instead of re-deriving from names.
+      const botAgg: Record<string, { count: number; category: string }> = {};
       traffic?.forEach(t => {
-        botCounts[t.bot_name || t.bot_type] = (botCounts[t.bot_name || t.bot_type] || 0) + 1;
+        const name = t.bot_name || t.bot_type;
+        if (!botAgg[name]) botAgg[name] = { count: 0, category: t.request_type || 'citation' };
+        botAgg[name].count += 1;
       });
 
-      const botBreakdown = Object.entries(botCounts)
-        .map(([name, count]) => ({
+      const botBreakdown = Object.entries(botAgg)
+        .map(([name, { count, category }]) => ({
           name,
           count,
+          category,
           percentage: totalTraffic > 0 ? (count / totalTraffic) * 100 : 0,
         }))
         .sort((a, b) => b.count - a.count);
