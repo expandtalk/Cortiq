@@ -29,6 +29,31 @@ export default function Installation() {
           </Button>
         </div>
 
+        {/* What you're installing — layer + privacy explainer */}
+        <div className="grid gap-3 sm:grid-cols-3">
+          <div className="rounded-lg border bg-muted/30 p-4">
+            <p className="text-sm font-medium mb-1">🗄️ Data layer</p>
+            <p className="text-xs text-muted-foreground">
+              The ~8&nbsp;kB snippet sends page views, clicks and (with consent) heatmaps to your
+              CortIQ project. It also detects AI bots. Cookie-free by default.
+            </p>
+          </div>
+          <div className="rounded-lg border bg-muted/30 p-4">
+            <p className="text-sm font-medium mb-1">🔒 Privacy built in</p>
+            <p className="text-xs text-muted-foreground">
+              No consent banner needed for the base layer. Click IDs, fingerprinting and session
+              replay only run after explicit consent, verified server-side. IPs anonymised at ingest.
+            </p>
+          </div>
+          <div className="rounded-lg border bg-muted/30 p-4">
+            <p className="text-sm font-medium mb-1">🧠 AI layer (optional)</p>
+            <p className="text-xs text-muted-foreground">
+              The AI assistant and agent (MCP) API are a separate opt-in layer. They only ever read
+              your own data — installing the tracker does not enable any AI access.
+            </p>
+          </div>
+        </div>
+
         <AddSiteForm onSiteAdded={loadSites} />
 
         {sites.length > 0 && (

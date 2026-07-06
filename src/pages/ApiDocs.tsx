@@ -26,6 +26,7 @@ import {
   CheckCircle,
   ArrowRight,
   Bot,
+  Database,
 } from 'lucide-react';
 
 export default function ApiDocs() {
@@ -107,6 +108,68 @@ export default function ApiDocs() {
                 Get API Key
               </Button>
             </Link>
+          </div>
+        </div>
+      </section>
+
+      {/* Two API layers */}
+      <section className="py-16 px-4">
+        <div className="container mx-auto max-w-6xl">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl md:text-4xl font-bold mb-4">Two ways to access CortIQ</h2>
+            <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
+              CortIQ separates the <strong>Data Layer</strong> (your analytics) from the
+              <strong> Agentic Layer</strong> (AI access). Each has its own API and its own key —
+              so you can give an AI agent read access without exposing anything else.
+            </p>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {/* Data Layer API */}
+            <Card className="glass border-primary/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Database className="h-5 w-5 text-primary" /> Data Layer — REST API
+                </CardTitle>
+                <CardDescription>Read your analytics programmatically (dashboards, reports, exports)</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-muted-foreground">
+                <p>Query pageviews, sessions, bot traffic, conversions and more. JSON or CSV.</p>
+                <code className="block p-3 bg-muted rounded font-mono text-xs overflow-x-auto">
+                  GET /functions/v1/public-api/analytics?site_id=…
+                  <br />Authorization: Bearer ck_live_…
+                </code>
+                <p className="text-xs">Auth: CortIQ API key · scoped to your sites · rate-limited.</p>
+              </CardContent>
+            </Card>
+
+            {/* Agentic Layer API */}
+            <Card className="glass border-accent/30">
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <Zap className="h-5 w-5 text-accent" /> Agentic Layer — MCP Server
+                </CardTitle>
+                <CardDescription>Let AI agents query your analytics with tool-use</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-3 text-sm text-muted-foreground">
+                <p>A Model Context Protocol server exposing 23 read tools, so Claude, ChatGPT or
+                your own agent can answer questions grounded in your real data.</p>
+                <code className="block p-3 bg-muted rounded font-mono text-xs overflow-x-auto">
+                  POST /functions/v1/mcp-server
+                  <br />Authorization: Bearer ck_live_…
+                </code>
+                <p className="text-xs">Auth: same API-key model · read-only tools · per-key rate limits &amp; permissions. AI never sees another tenant's data.</p>
+              </CardContent>
+            </Card>
+          </div>
+
+          <div className="mt-8 flex items-start gap-3 rounded-lg border border-primary/20 bg-primary/5 p-4">
+            <Shield className="h-5 w-5 text-primary flex-shrink-0 mt-0.5" />
+            <p className="text-sm text-muted-foreground">
+              <strong className="text-foreground">Security model:</strong> both APIs authenticate with a
+              hashed CortIQ API key (never stored in plaintext), enforce Row-Level Security at the database
+              layer, are rate-limited per key, and validate every input. Keys can be scoped and revoked from
+              the dashboard.
+            </p>
           </div>
         </div>
       </section>
