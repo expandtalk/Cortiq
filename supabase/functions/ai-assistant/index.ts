@@ -384,15 +384,11 @@ async function executeTool(
     }
 
     case 'cortiq_web_vitals': {
-      const { data } = await supabase.from('page_views').select('url, lcp, cls').eq('site_id', siteId).not('lcp', 'is', null).gte('viewed_at', since).lt('viewed_at', until).limit(100000);
-      const urlMap = new Map<string, { lcps: number[]; clss: number[] }>();
-      for (const pv of data ?? []) {
-        const e = urlMap.get(String(pv.url)) ?? { lcps: [], clss: [] };
-        if (pv.lcp) e.lcps.push(Number(pv.lcp));
-        if (pv.cls != null) e.clss.push(Number(pv.cls));
-        urlMap.set(String(pv.url), e);
-      }
-      return { vitals: [...urlMap.entries()].filter(([, v]) => v.lcps.length >= 3).sort((a, b) => b[1].lcps.length - a[1].lcps.length).slice(0, limit).map(([url, v]) => { const sorted = [...v.lcps].sort((a, b) => a - b); const p75 = sorted[Math.floor(sorted.length * 0.75)]; return { url, avg_lcp_ms: Math.round(avg(v.lcps)), p75_lcp_ms: p75 ?? null, lcp_status: p75 < 2500 ? 'good' : p75 < 4000 ? 'needs_improvement' : 'poor' }; }), window: { since, until } };
+      // Fixed: vitals live in web_vitals (page_views has no lcp/cls). Aggregated in SQL.
+      const { data } = await supabase.rpc('assistant_web_vitals', {
+        p_site_id: siteId, p_since: since, p_until: until, p_limit: limit,
+      });
+      return { vitals: data ?? [], window: { since, until } };
     }
 
     case 'cortiq_form_analytics': {
