@@ -3,12 +3,13 @@ import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
 import { Badge } from '@/components/ui/badge';
+import { Switch } from '@/components/ui/switch';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Plus, Trash2, Target, FormInput, Phone, Eye } from 'lucide-react';
+import { Plus, Trash2, Target, FormInput, Phone, Eye, AlertTriangle, CheckCircle, VolumeX } from 'lucide-react';
 import { supabase } from '@/integrations/supabase/client';
 import { useToast } from '@/hooks/use-toast';
+import { useConversionGoalHealth } from '@/hooks/useConversionGoalHealth';
 import type { Site } from '@/types/dashboard';
 
 interface ConversionGoal {
@@ -17,6 +18,7 @@ interface ConversionGoal {
   type: 'form_submission' | 'element_click' | 'page_visit' | 'phone_click';
   selector: string;
   value?: number;
+  is_primary?: boolean;
 }
 
 interface ConversionGoalsConfigProps {
@@ -27,10 +29,12 @@ interface ConversionGoalsConfigProps {
 export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoalsConfigProps) {
   const [goals, setGoals] = useState<ConversionGoal[]>([]);
   const [newGoal, setNewGoal] = useState<Partial<ConversionGoal>>({
-    type: 'form_submission'
+    type: 'form_submission',
+    is_primary: false,
   });
   const [isLoading, setIsLoading] = useState(false);
   const { toast } = useToast();
+  const { data: healthData } = useConversionGoalHealth(selectedSite.id);
 
   useEffect(() => {
     if (selectedSite) {
@@ -98,7 +102,8 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
       name: newGoal.name!,
       type: newGoal.type!,
       selector: newGoal.selector!,
-      value: newGoal.value || 0
+      value: newGoal.value || 0,
+      is_primary: newGoal.is_primary || false,
     };
 
     setGoals([...goals, goal]);
@@ -176,27 +181,59 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
             </p>
           ) : (
             <div className="space-y-2">
-              {goals.map((goal) => (
-                <div key={goal.id} className="flex items-center justify-between p-3 border rounded-lg">
-                  <div className="flex items-center gap-3">
-                    {getGoalIcon(goal.type)}
-                    <div>
-                      <div className="font-medium">{goal.name}</div>
-                      <div className="text-sm text-muted-foreground">
-                        {getGoalTypeLabel(goal.type)} • {goal.selector}
+              {goals.map((goal) => {
+                const health = healthData?.find(h => h.goalId === goal.id);
+                return (
+                  <div key={goal.id} className="p-3 border rounded-lg space-y-2">
+                    <div className="flex items-center justify-between">
+                      <div className="flex items-center gap-3">
+                        {getGoalIcon(goal.type)}
+                        <div>
+                          <div className="font-medium flex items-center gap-2">
+                            {goal.name}
+                            {goal.is_primary && <Badge variant="default" className="text-xs">Primary</Badge>}
+                            {!goal.is_primary && <Badge variant="outline" className="text-xs">Observation</Badge>}
+                          </div>
+                          <div className="text-sm text-muted-foreground">
+                            {getGoalTypeLabel(goal.type)} • {goal.selector}
+                          </div>
+                        </div>
+                        <Badge variant="outline">{goal.value || 0} pts</Badge>
                       </div>
+                      <Button
+                        variant="ghost"
+                        size="sm"
+                        onClick={() => removeGoal(goal.id)}
+                      >
+                        <Trash2 className="h-4 w-4" />
+                      </Button>
                     </div>
-                    <Badge variant="outline">{goal.value || 0} points</Badge>
+                    <div className="flex items-center justify-between pl-7">
+                      <div className="flex items-center gap-2 text-sm">
+                        <Switch
+                          checked={goal.is_primary || false}
+                          onCheckedChange={(v) =>
+                            setGoals(goals.map(g => g.id === goal.id ? { ...g, is_primary: v } : g))
+                          }
+                        />
+                        <span className="text-muted-foreground">Primary goal (affects Smart Bidding)</span>
+                      </div>
+                      {health && health.status !== 'healthy' && (
+                        <div className="flex items-center gap-1 text-xs text-yellow-500">
+                          {health.status === 'silent' ? <VolumeX className="h-3 w-3" /> : <AlertTriangle className="h-3 w-3" />}
+                          {health.warning}
+                        </div>
+                      )}
+                      {health && health.status === 'healthy' && (
+                        <div className="flex items-center gap-1 text-xs text-green-500">
+                          <CheckCircle className="h-3 w-3" />
+                          Healthy ({Math.round(health.firingRate * 100)}% of sessions)
+                        </div>
+                      )}
+                    </div>
                   </div>
-                  <Button
-                    variant="ghost"
-                    size="sm"
-                    onClick={() => removeGoal(goal.id)}
-                  >
-                    <Trash2 className="h-4 w-4" />
-                  </Button>
-                </div>
-              ))}
+                );
+              })}
             </div>
           )}
         </div>
@@ -281,6 +318,15 @@ export function ConversionGoalsConfig({ selectedSite, onUpdate }: ConversionGoal
                 value={newGoal.value || ''}
                 onChange={(e) => setNewGoal({ ...newGoal, value: parseInt(e.target.value) || 0 })}
               />
+            </div>
+
+            <div className="flex items-center gap-2">
+              <Switch
+                id="goal-primary"
+                checked={newGoal.is_primary || false}
+                onCheckedChange={(v) => setNewGoal({ ...newGoal, is_primary: v })}
+              />
+              <Label htmlFor="goal-primary">Primary goal (affects Smart Bidding)</Label>
             </div>
 
             <Button onClick={addGoal} size="sm">

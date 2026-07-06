@@ -5,11 +5,11 @@ import { Link } from "react-router-dom";
 import PublicNavigation from "@/components/PublicNavigation";
 import { useSEO } from "@/hooks/useSEO";
 import { 
-  MousePointer, 
-  BarChart3, 
-  FormInput, 
-  TestTube, 
-  Shield, 
+  MousePointer,
+  BarChart3,
+  FormInput,
+  TestTube,
+  Shield,
   Cookie,
   Users,
   Globe,
@@ -27,7 +27,10 @@ import {
   Search,
   Layers,
   CheckCircle,
-  AlertTriangle
+  AlertTriangle,
+  Link2,
+  ArrowUpDown,
+  Upload
 } from "lucide-react";
 
 export default function Features() {
@@ -622,6 +625,98 @@ export default function Features() {
                       <CardDescription className="text-base">
                         {feature.description}
                       </CardDescription>
+                    </div>
+                  </div>
+                </CardHeader>
+                <CardContent>
+                  <ul className="space-y-2">
+                    {feature.features.map((item, idx) => (
+                      <li key={idx} className="flex items-center gap-2">
+                        <CheckCircle className="h-4 w-4 text-primary flex-shrink-0" />
+                        <span className="text-sm">{item}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </CardContent>
+              </Card>
+            ))}
+          </div>
+        </section>
+
+        {/* Conversion & Attribution */}
+        <section className="mb-20">
+          <div className="text-center mb-12">
+            <h2 className="text-3xl font-bold mb-4">🔗 Conversion & Attribution</h2>
+            <p className="text-lg text-muted-foreground">
+              Close the loop between ad spend, form submissions, and CRM pipeline quality
+            </p>
+          </div>
+          <div className="grid lg:grid-cols-2 gap-8">
+            {[
+              {
+                icon: <AlertTriangle className="h-8 w-8" />,
+                title: "Goal Health Monitor",
+                description: "Automatically flags misconfigured conversion goals before they corrupt Smart Bidding. No more YouTube Views set as Primary alongside demo requests.",
+                features: [
+                  "Fires-too-often alert (>30% of sessions = not a commercial signal)",
+                  "Silent goal detection — zero conversions in 7 days",
+                  "Duplicate Primary goal warning",
+                  "Primary / Observation toggle per goal",
+                ],
+              },
+              {
+                icon: <Search className="h-8 w-8" />,
+                title: "Form Auto-Discovery",
+                description: "CortIQ scans your pages and identifies every form by provider GUID — HubSpot, Gravity Forms, Contact Form 7, and custom HTML forms.",
+                features: [
+                  "HubSpot form GUID detection (hs_context + data-form-id)",
+                  "Gravity Forms and Contact Form 7 auto-detection",
+                  "\"9 forms found, 7 unidentified\" dashboard view",
+                  "Assign conversion goals directly from the form list",
+                ],
+              },
+              {
+                icon: <Link2 className="h-8 w-8" />,
+                title: "First-Party Click ID Capture",
+                description: "Capture gclid, fbclid, msclkid and more from ad click URLs and store them server-side — so CortIQ owns the attribution data, not the ad platform.",
+                features: [
+                  "Google Ads (gclid), Meta (fbclid), Microsoft (msclkid), TikTok, LinkedIn",
+                  "Only captured with explicit marketing consent (GDPR-safe)",
+                  "Persisted per session, attached to all conversion events",
+                  "Foundation for Enhanced Conversions upload",
+                ],
+              },
+              {
+                icon: <Upload className="h-8 w-8" />,
+                title: "HubSpot → Google Ads Quality Loop",
+                description: "When your SDR classifies a lead in HubSpot, CortIQ automatically uploads the quality signal to Google Ads as a conversion value — so Smart Bidding learns to find Priority leads, not just any form submissions.",
+                features: [
+                  "HubSpot webhook with HMAC signature validation",
+                  "SHA-256 email hashing — raw email never stored in CortIQ",
+                  "Conversion values: Priority = 300, Qualified = 100, Challenge = 0",
+                  "Daily batch upload to Google Ads Conversion Adjustments API",
+                  "GDPR-gated: only uploads sessions with marketing consent",
+                ],
+              },
+              {
+                icon: <ArrowUpDown className="h-8 w-8" />,
+                title: "Attribution Gap Dashboard",
+                description: "See the gap between what CortIQ tracks, what Google Ads claims, and what HubSpot classifies as quality leads — in a single view.",
+                features: [
+                  "CortIQ conversions vs. HubSpot MQLs comparison",
+                  "Gap % with actionable diagnosis",
+                  "Enhanced Conversions upload status (pending / uploaded / skipped)",
+                  "30-day rolling window, no PII in the view",
+                ],
+              },
+            ].map((feature, index) => (
+              <Card key={index} className="hover:shadow-lg transition-shadow">
+                <CardHeader>
+                  <div className="flex items-start gap-4">
+                    <div className="text-primary">{feature.icon}</div>
+                    <div>
+                      <CardTitle className="text-xl mb-2">{feature.title}</CardTitle>
+                      <CardDescription className="text-base">{feature.description}</CardDescription>
                     </div>
                   </div>
                 </CardHeader>

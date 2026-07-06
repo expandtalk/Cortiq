@@ -17,6 +17,8 @@ dist-ssr
 .env.local
 .env.production
 .env.*.local
+.env.production.minimal
+.env.production.example
 supabase/.env.local
 
 # Supabase CLI temp files (contain project ref, pooler URL, org ID)
@@ -38,3 +40,4 @@ docs/itsakerhet-app-developer-brief.md
 *.njsproj
 *.sln
 *.sw?
+.gstack/

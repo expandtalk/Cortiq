@@ -11,6 +11,24 @@ const supabase = createClient(
   Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
 );
 
+// SSRF guard for the caller-supplied audit URL.
+const PRIVATE_HOST = /^(localhost$|127\.|10\.|192\.168\.|169\.254\.|::1$|fe80:|fc|fd|0\.0\.0\.0$)/i;
+const PRIVATE_172 = /^172\.(1[6-9]|2\d|3[01])\./;
+async function assertSafeUrl(raw: string): Promise<string> {
+  let u: URL;
+  try { u = new URL(raw); } catch { throw new Error('Invalid URL'); }
+  if (u.protocol !== 'https:' && u.protocol !== 'http:') throw new Error('Only http(s) URLs allowed');
+  const host = u.hostname.toLowerCase();
+  if (PRIVATE_HOST.test(host) || PRIVATE_172.test(host) || host.endsWith('.internal') || host.endsWith('.local')) {
+    throw new Error('Blocked host');
+  }
+  try {
+    const ips = await Deno.resolveDns(host, 'A');
+    for (const ip of ips) if (PRIVATE_HOST.test(ip) || PRIVATE_172.test(ip)) throw new Error('Blocked host');
+  } catch (_) { /* resolver unavailable — literal checks above still apply */ }
+  return u.toString();
+}
+
 // AI crawlers to check in robots.txt
 const AI_CRAWLERS = [
   'GPTBot',
@@ -78,6 +96,62 @@ function approximateWordCount(html: string): number {
     .replace(/\s+/g, ' ')
     .trim();
   return text.split(' ').filter(w => w.length > 2).length;
+}
+
+function extractDates(html: string, httpLastModified: string | null): { published: string | null; modified: string | null } {
+  let published: string | null =
+    extractMeta(html, 'article:published_time') ||
+    extractMeta(html, 'og:article:published_time') ||
+    extractMeta(html, 'date') ||
+    null;
+
+  let modified: string | null =
+    extractMeta(html, 'article:modified_time') ||
+    extractMeta(html, 'og:article:modified_time') ||
+    extractMeta(html, 'og:updated_time') ||
+    null;
+
+  // JSON-LD datePublished / dateModified
+  const scripts = [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  for (const s of scripts) {
+    try {
+      const obj = JSON.parse(s[1]);
+      const items = Array.isArray(obj) ? obj : [obj];
+      for (const item of items) {
+        if (!published && item.datePublished) published = item.datePublished;
+        if (!modified && item.dateModified) modified = item.dateModified;
+      }
+    } catch { /* malformed JSON-LD */ }
+  }
+
+  // Fall back to HTTP Last-Modified
+  if (!modified && httpLastModified) modified = httpLastModified;
+
+  return { published, modified };
+}
+
+function extractLocalBusinessData(html: string): {
+  hasAddress: boolean; hasTelephone: boolean; hasOpeningHours: boolean; hasPriceRange: boolean;
+} | null {
+  const scripts = [...html.matchAll(/<script[^>]+type=["']application\/ld\+json["'][^>]*>([\s\S]*?)<\/script>/gi)];
+  for (const s of scripts) {
+    try {
+      const obj = JSON.parse(s[1]);
+      const items = Array.isArray(obj) ? obj : [obj];
+      for (const item of items) {
+        const localBusinessTypes = ['LocalBusiness', 'Restaurant', 'Store', 'Hotel', 'MedicalBusiness', 'AutomotiveBusiness'];
+        if (localBusinessTypes.includes(item['@type'])) {
+          return {
+            hasAddress: !!(item.address || item.streetAddress),
+            hasTelephone: !!(item.telephone || item.phone),
+            hasOpeningHours: !!(item.openingHours || item.openingHoursSpecification),
+            hasPriceRange: !!item.priceRange,
+          };
+        }
+      }
+    } catch { /* malformed JSON-LD */ }
+  }
+  return null;
 }
 
 // ── Robots.txt parser ─────────────────────────────────────────────────────────
@@ -148,13 +222,23 @@ function scoreTechnical(f: Record<string, unknown>): number {
   return Math.min(score, 100);
 }
 
-function scoreSchema(types: string[]): number {
+function scoreSchema(
+  types: string[],
+  localBusiness: { hasAddress: boolean; hasTelephone: boolean; hasOpeningHours: boolean; hasPriceRange: boolean } | null
+): number {
   if (types.length === 0) return 0;
-  let score = 30; // has any schema
+  let score = 30;
   const highValue = ['Article', 'NewsArticle', 'BlogPosting', 'FAQPage', 'HowTo', 'Product', 'Review', 'SoftwareApplication', 'Service', 'Event'];
   const orgTypes = ['Organization', 'Person', 'LocalBusiness', 'WebSite'];
   if (types.some(t => highValue.includes(t))) score += 35;
   if (types.some(t => orgTypes.includes(t))) score += 20;
+  // LocalBusiness completeness bonus: agents need address/phone/hours to act on data
+  if (localBusiness) {
+    if (localBusiness.hasAddress) score += 3;
+    if (localBusiness.hasTelephone) score += 3;
+    if (localBusiness.hasOpeningHours) score += 3;
+    if (localBusiness.hasPriceRange) score += 1;
+  }
   if (types.includes('speakable') || types.includes('Speakable')) score += 15;
   return Math.min(score, 100);
 }
@@ -165,8 +249,22 @@ function scoreCrawlers(access: Record<string, string>): number {
   return Math.round((allowed / priority.length) * 100);
 }
 
-function overallScore(c: number, t: number, s: number, cr: number): number {
-  return Math.round(c * 0.35 + t * 0.25 + s * 0.25 + cr * 0.15);
+function scoreFreshness(modified: string | null, published: string | null): number {
+  const dateStr = modified ?? published;
+  if (!dateStr) return 0;
+  const date = new Date(dateStr);
+  if (isNaN(date.getTime())) return 0;
+  const daysSince = (Date.now() - date.getTime()) / (1000 * 60 * 60 * 24);
+  if (daysSince <= 30)  return 100;
+  if (daysSince <= 90)  return 80;
+  if (daysSince <= 180) return 60;
+  if (daysSince <= 365) return 40;
+  if (daysSince <= 730) return 20;
+  return 10; // has a date but very old
+}
+
+function overallScore(c: number, t: number, s: number, cr: number, fr: number): number {
+  return Math.round(c * 0.28 + t * 0.22 + s * 0.22 + cr * 0.13 + fr * 0.15);
 }
 
 // ── Recommendations ───────────────────────────────────────────────────────────
@@ -176,6 +274,9 @@ function buildRecommendations(
   schemaTypes: string[],
   crawlerAccess: Record<string, string>,
   hasLlmsTxt: boolean,
+  localBusiness: { hasAddress: boolean; hasTelephone: boolean; hasOpeningHours: boolean; hasPriceRange: boolean } | null,
+  freshnessScore: number,
+  pageModified: string | null,
 ): Array<{ priority: string; category: string; issue: string; fix: string }> {
   const recs = [];
 
@@ -211,6 +312,26 @@ function buildRecommendations(
     .map(([k]) => k);
   if (blockedCrawlers.length > 0) {
     recs.push({ priority: 'high', category: 'Crawlers', issue: `${blockedCrawlers.join(', ')} blocked in robots.txt`, fix: 'Remove or adjust Disallow rules for AI crawlers to allow indexing.' });
+  }
+
+  // Freshness
+  if (freshnessScore === 0) {
+    recs.push({ priority: 'medium', category: 'Freshness', issue: 'No date signal found', fix: 'Add datePublished and dateModified to your JSON-LD schema so AI systems can assess content recency.' });
+  } else if (freshnessScore <= 20) {
+    const date = pageModified ? new Date(pageModified).toLocaleDateString('en-GB') : 'unknown';
+    recs.push({ priority: 'medium', category: 'Freshness', issue: `Content not updated since ${date}`, fix: 'AI systems favour recently updated content. Review and update key pages, then update dateModified in your JSON-LD.' });
+  }
+
+  // LocalBusiness completeness
+  if (localBusiness) {
+    const missing = [];
+    if (!localBusiness.hasAddress) missing.push('address');
+    if (!localBusiness.hasTelephone) missing.push('telephone');
+    if (!localBusiness.hasOpeningHours) missing.push('openingHours');
+    if (!localBusiness.hasPriceRange) missing.push('priceRange');
+    if (missing.length > 0) {
+      recs.push({ priority: 'high', category: 'Schema', issue: `LocalBusiness schema missing: ${missing.join(', ')}`, fix: `AI agents need complete contact and hours data to act on your listing. Add the missing fields to your LocalBusiness JSON-LD: ${missing.map(f => `"${f}"`).join(', ')}.` });
+    }
   }
 
   return recs;
@@ -275,6 +396,26 @@ serve(async (req) => {
     const { siteId, url: rawUrl } = await req.json();
     if (!siteId) throw new Error('siteId is required');
 
+    // SECURITY: verify the caller owns this site — this function runs with the
+    // service-role key, so without this check any authenticated user could run paid
+    // Claude audits against any siteId.
+    const authHeader = req.headers.get('Authorization') ?? '';
+    const userClient = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+      { global: { headers: { Authorization: authHeader } } },
+    );
+    const { data: { user } } = await userClient.auth.getUser();
+    if (!user) {
+      return new Response(JSON.stringify({ error: 'Unauthorized' }),
+        { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    const { data: owned } = await supabase.from('sites').select('id').eq('id', siteId).eq('user_id', user.id).maybeSingle();
+    if (!owned) {
+      return new Response(JSON.stringify({ error: 'Forbidden' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
     // Resolve URL: use provided URL or fall back to site domain
     let targetUrl = rawUrl?.trim();
     if (!targetUrl) {
@@ -283,6 +424,9 @@ serve(async (req) => {
       targetUrl = site.url.startsWith('http') ? site.url : `https://${site.url}`;
     }
     if (!targetUrl.startsWith('http')) targetUrl = `https://${targetUrl}`;
+
+    // SSRF: block private/loopback/metadata targets before any server-side fetch.
+    targetUrl = await assertSafeUrl(targetUrl);
 
     // Resolve origin for robots.txt and llms.txt lookups
     const origin = new URL(targetUrl).origin;
@@ -296,6 +440,7 @@ serve(async (req) => {
 
     if (pageRes.status === 'rejected') throw new Error(`Could not fetch ${targetUrl}: ${pageRes.reason}`);
 
+    const httpLastModified = pageRes.value.ok ? (pageRes.value.headers.get('last-modified') ?? null) : null;
     const html = pageRes.value.ok ? await pageRes.value.text() : '';
     const robotsTxt = (robotsRes.status === 'fulfilled' && robotsRes.value.ok) ? await robotsRes.value.text() : '';
     const hasLlmsTxt = llmsRes.status === 'fulfilled' && llmsRes.value.ok;
@@ -310,6 +455,8 @@ serve(async (req) => {
     const canonical = extractCanonical(html);
     const wordCount = approximateWordCount(html);
     const schemaTypes = extractSchemaTypes(html);
+    const { published: pagePublished, modified: pageModified } = extractDates(html, httpLastModified);
+    const localBusiness = extractLocalBusinessData(html);
 
     const findings = {
       title,
@@ -325,24 +472,28 @@ serve(async (req) => {
       isHttps: targetUrl.startsWith('https'),
       wordCount,
       hasAuthorSignal: /author|byline|written by/i.test(html),
+      pagePublished,
+      pageModified,
+      localBusiness,
     };
 
     const crawlerAccess = robotsTxt ? parseCrawlerAccess(robotsTxt, AI_CRAWLERS) : Object.fromEntries(AI_CRAWLERS.map(c => [c, 'unknown']));
 
     // Compute scores
-    const contentScore  = scoreContent(findings);
+    const contentScore   = scoreContent(findings);
     const technicalScore = scoreTechnical(findings);
-    const schemaScore   = scoreSchema(schemaTypes);
-    const crawlerScore  = scoreCrawlers(crawlerAccess);
-    const overall       = overallScore(contentScore, technicalScore, schemaScore, crawlerScore);
+    const schemaScore    = scoreSchema(schemaTypes, localBusiness);
+    const crawlerScore   = scoreCrawlers(crawlerAccess);
+    const freshnessScore = scoreFreshness(pageModified, pagePublished);
+    const overall        = overallScore(contentScore, technicalScore, schemaScore, crawlerScore, freshnessScore);
 
-    const recommendations = buildRecommendations(findings, schemaTypes, crawlerAccess, hasLlmsTxt);
+    const recommendations = buildRecommendations(findings, schemaTypes, crawlerAccess, hasLlmsTxt, localBusiness, freshnessScore, pageModified);
 
     // Anthropic key (BYOK → platform fallback)
     let anthropicKey: string | null = null;
     const { data: siteRow } = await supabase.from('sites').select('company_id').eq('id', siteId).maybeSingle();
     if (siteRow?.company_id) {
-      const { data: co } = await supabase.from('companies').select('anthropic_api_key').eq('id', siteRow.company_id).maybeSingle();
+      const { data: co } = await supabase.from('company_secrets').select('anthropic_api_key').eq('company_id', siteRow.company_id).maybeSingle();
       anthropicKey = co?.anthropic_api_key ?? null;
     }
     if (!anthropicKey) anthropicKey = Deno.env.get('ANTHROPIC_API_KEY') ?? null;
@@ -362,6 +513,8 @@ serve(async (req) => {
         technical_score: technicalScore,
         schema_score: schemaScore,
         crawler_score: crawlerScore,
+        freshness_score: freshnessScore,
+        page_last_modified: pageModified ?? null,
         findings,
         recommendations,
         schema_types: schemaTypes,

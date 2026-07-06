@@ -12,6 +12,29 @@ interface FormDetectorRequest {
   htmlContent?: string;
 }
 
+// SSRF guard: block non-http(s) schemes and requests aimed at private / loopback /
+// link-local / cloud-metadata addresses before any server-side fetch.
+const PRIVATE_HOST = /^(localhost$|127\.|10\.|192\.168\.|169\.254\.|::1$|fe80:|fc|fd|0\.0\.0\.0$)/i;
+const PRIVATE_172 = /^172\.(1[6-9]|2\d|3[01])\./;
+
+async function assertSafeUrl(raw: string): Promise<URL> {
+  let u: URL;
+  try { u = new URL(raw); } catch { throw new Error('Invalid URL'); }
+  if (u.protocol !== 'https:' && u.protocol !== 'http:') throw new Error('Only http(s) URLs allowed');
+  const host = u.hostname.toLowerCase();
+  if (PRIVATE_HOST.test(host) || PRIVATE_172.test(host) || host.endsWith('.internal') || host.endsWith('.local')) {
+    throw new Error('Blocked host');
+  }
+  // Best-effort DNS check to catch names that resolve to private space (DNS rebinding).
+  try {
+    const ips = await Deno.resolveDns(host, 'A');
+    for (const ip of ips) {
+      if (PRIVATE_HOST.test(ip) || PRIVATE_172.test(ip)) throw new Error('Blocked host (resolved to private IP)');
+    }
+  } catch (_) { /* resolver unavailable — rely on the literal checks above */ }
+  return u;
+}
+
 serve(async (req) => {
   if (req.method === 'OPTIONS') {
     return new Response(null, { headers: corsHeaders });
@@ -38,16 +61,24 @@ serve(async (req) => {
     console.log(`Detecting forms for site: ${siteId} on URL: ${url}`);
 
     let html = htmlContent;
-    
-    // Om ingen HTML content skickades, försök hämta den
+
+    // If no HTML was supplied, fetch it — but only after SSRF validation, with a
+    // timeout and a response-size cap to prevent memory exhaustion.
     if (!html && url) {
       try {
-        const response = await fetch(url);
-        html = await response.text();
+        const safeUrl = await assertSafeUrl(url);
+        const response = await fetch(safeUrl.toString(), {
+          redirect: 'error', // don't follow redirects into private space
+          signal: AbortSignal.timeout(5000),
+          headers: { 'User-Agent': 'CortIQ-FormDetector/1.0' },
+        });
+        const MAX_BYTES = 2_000_000; // 2 MB
+        const buf = new Uint8Array(await response.arrayBuffer());
+        html = new TextDecoder().decode(buf.slice(0, MAX_BYTES));
       } catch (error) {
-        console.error('Error fetching HTML:', error);
+        console.error('Error fetching HTML:', error?.message ?? error);
         return new Response(
-          JSON.stringify({ error: 'Could not fetch page HTML' }), 
+          JSON.stringify({ error: 'Could not fetch page HTML' }),
           { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
         );
       }
@@ -61,6 +92,79 @@ serve(async (req) => {
     }
 
     const detectedForms: any[] = [];
+
+    // Detect HubSpot forms — look for hs_context hidden input containing formGuid
+    const hsContextMatches = html.match(/name=["']hs_context["'][^>]*value=["']([^"']+)["']/gi);
+    if (hsContextMatches) {
+      for (const match of hsContextMatches) {
+        try {
+          const valueMatch = match.match(/value=["']([^"']+)["']/i);
+          if (valueMatch) {
+            const ctx = JSON.parse(decodeURIComponent(valueMatch[1]));
+            if (ctx.formGuid) {
+              detectedForms.push({
+                form_id: ctx.formGuid,
+                form_guid: ctx.formGuid,
+                form_name: `HubSpot Form (${ctx.formGuid.slice(0, 8)}...)`,
+                form_type: 'hubspot',
+                form_url: url,
+                site_id: siteId,
+                detection_method: 'hs_context_scan',
+                last_detected: new Date().toISOString()
+              });
+            }
+          }
+        } catch (_) {}
+      }
+    }
+
+    // Also detect HubSpot via data-form-id attributes
+    const hsDataFormMatches = html.match(/data-form-id=["']([0-9a-f-]{36})["']/gi);
+    if (hsDataFormMatches) {
+      for (const match of hsDataFormMatches) {
+        const guidMatch = match.match(/["']([0-9a-f-]{36})["']/i);
+        if (guidMatch) {
+          const guid = guidMatch[1];
+          const alreadyFound = detectedForms.some(f => f.form_guid === guid);
+          if (!alreadyFound) {
+            detectedForms.push({
+              form_id: guid,
+              form_guid: guid,
+              form_name: `HubSpot Form (${guid.slice(0, 8)}...)`,
+              form_type: 'hubspot',
+              form_url: url,
+              site_id: siteId,
+              detection_method: 'data-form-id_scan',
+              last_detected: new Date().toISOString()
+            });
+          }
+        }
+      }
+    }
+
+    // Detect Gravity Forms by gform_wrapper class
+    const gfMatches = html.match(/class=["'][^"']*gform_wrapper[^"']*["'][^>]*id=["'][^"']*gform_wrapper_(\d+)/gi);
+    if (gfMatches) {
+      for (const match of gfMatches) {
+        const idMatch = match.match(/gform_wrapper_(\d+)/i);
+        if (idMatch) {
+          const formId = `gf_${idMatch[1]}`;
+          const alreadyFound = detectedForms.some(f => f.form_id === formId);
+          if (!alreadyFound) {
+            detectedForms.push({
+              form_id: formId,
+              form_guid: formId,
+              form_name: `Gravity Form ${idMatch[1]}`,
+              form_type: 'gravity',
+              form_url: url,
+              site_id: siteId,
+              detection_method: 'gravity_class_scan',
+              last_detected: new Date().toISOString()
+            });
+          }
+        }
+      }
+    }
 
     // Detektera Contact Form 7
     const cf7Matches = html.match(/\[contact-form-7[^\]]*id="([^"]*)"[^\]]*title="([^"]*)"/g);
@@ -215,6 +319,25 @@ serve(async (req) => {
             console.log(`Updated existing form: ${form.form_name}`);
           }
         }
+      }
+    }
+
+    // Also upsert discovered forms into form_registry for the dashboard widget
+    for (const form of detectedForms) {
+      const guid = form.form_guid || form.form_id;
+      if (!guid) continue;
+      const { error: registryError } = await supabaseClient
+        .from('form_registry')
+        .upsert({
+          site_id: siteId,
+          form_guid: guid,
+          form_type: form.form_type,
+          form_label: form.form_name,
+          detected_url: form.form_url,
+          last_seen_at: new Date().toISOString(),
+        }, { onConflict: 'site_id,form_guid', ignoreDuplicates: false });
+      if (registryError) {
+        console.warn('form_registry upsert failed (non-fatal):', registryError.message);
       }
     }
 

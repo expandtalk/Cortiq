@@ -84,10 +84,12 @@
     
     <!-- SPA Tracking Script -->
     <script>
+      // Injected at build time from VITE_CORTIQ_* env vars (see .env.example).
+      // The old key committed here has been rotated out — never hardcode credentials.
       window.wfaConfig = {
-        apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/track-event',
-        companyId: '1174dce9-ca03-4660-b6b2-41c3d3632954',
-        apiKey: '7wUAo/uexTyQBjK82GtlUC4NfiqqC2pYfEjzAuOpkHo=',
+        apiUrl: '%VITE_CORTIQ_TRACK_URL%',
+        companyId: '%VITE_CORTIQ_COMPANY_ID%',
+        apiKey: '%VITE_CORTIQ_API_KEY%',
         contentType: 'marketing_site',
         platform: 'cortiq'
       };

@@ -48,6 +48,14 @@ interface VisitorIdentificationRequest {
   utmMedium?: string;
   utmCampaign?: string;
 
+  // Ad click IDs (only present when visitor gave marketing consent)
+  gclid?: string;
+  fbclid?: string;
+  msclkid?: string;
+  ttclid?: string;
+  li_fat_id?: string;
+  clickIdConsentGiven?: boolean;
+
   // Canvas fingerprint (optional, for enhanced accuracy)
   canvasFingerprint?: string;
 
@@ -380,6 +388,47 @@ serve(async (req) => {
     if (upsertError) {
       console.error('Error upserting visitor:', upsertError);
       throw upsertError;
+    }
+
+    // Store click IDs only when marketing consent is verified SERVER-SIDE.
+    // The client flag (clickIdConsentGiven) is advisory and forgeable; the
+    // authoritative proof is a cookie_consents row with marketing = true for this
+    // session (ePrivacy Art. 5(3) / GDPR Art. 6.1.a).
+    let serverMarketingConsent = false;
+    {
+      const { data: consentRow } = await supabase
+        .from('cookie_consents')
+        .select('consent_types')
+        .eq('site_id', requestData.siteId)
+        .eq('session_id', requestData.sessionId)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      const ct = consentRow?.consent_types as { marketing?: boolean } | null;
+      serverMarketingConsent = ct?.marketing === true;
+    }
+
+    const hasClickIds = serverMarketingConsent && requestData.clickIdConsentGiven && (
+      requestData.gclid || requestData.fbclid || requestData.msclkid ||
+      requestData.ttclid || requestData.li_fat_id
+    );
+    if (hasClickIds && visitorId) {
+      const clickIdUpdate: Record<string, string | boolean | null> = {
+        click_id_consent_given: true,
+      };
+      if (requestData.gclid) clickIdUpdate.gclid = sanitizeString(requestData.gclid, 255) ?? null;
+      if (requestData.fbclid) clickIdUpdate.fbclid = sanitizeString(requestData.fbclid, 255) ?? null;
+      if (requestData.msclkid) clickIdUpdate.msclkid = sanitizeString(requestData.msclkid, 255) ?? null;
+      if (requestData.ttclid) clickIdUpdate.ttclid = sanitizeString(requestData.ttclid, 255) ?? null;
+      if (requestData.li_fat_id) clickIdUpdate.li_fat_id = sanitizeString(requestData.li_fat_id, 255) ?? null;
+
+      const { error: clickIdError } = await supabase
+        .from('unified_visitors')
+        .update(clickIdUpdate)
+        .eq('id', visitorId);
+      if (clickIdError) {
+        console.warn('Failed to store click IDs (non-fatal):', clickIdError.message);
+      }
     }
 
     // Get visitor profile

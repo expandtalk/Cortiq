@@ -1,0 +1,131 @@
+// First-party conversion ingest (P0 #2/#3).
+// Creates a conversion_events row for a first-party conversion (e.g. a form
+// submit), bridging the visitor's paid-click context so Enhanced Conversions can
+// work — WITHOUT ever receiving a raw email.
+//
+// GDPR:
+//  - The email is SHA-256 hashed IN THE BROWSER; only the hash reaches this
+//    function. Raw email never touches CortIQ.
+//  - gclid + click_id_consent_given are copied from the visitor's unified_visitors
+//    row. upload_status is set so the Google Ads upload only ever sends rows where
+//    consent was actually given at capture time.
+
+import { createClient } from 'https://esm.sh/@supabase/supabase-js@2';
+
+const corsHeaders = {
+  'Access-Control-Allow-Origin': '*',
+  'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
+};
+
+const HEX64 = /^[a-f0-9]{64}$/i; // SHA-256 hex
+
+Deno.serve(async (req) => {
+  if (req.method === 'OPTIONS') return new Response(null, { headers: corsHeaders });
+
+  const json = (b: unknown, s = 200) =>
+    new Response(JSON.stringify(b), { status: s, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+
+  try {
+    const supabase = createClient(
+      Deno.env.get('SUPABASE_URL') ?? '',
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? '',
+    );
+
+    const { siteId, sessionId, visitorId, hashedEmail, eventName, eventValue, contentId } = await req.json() as {
+      siteId?: string; sessionId?: string; visitorId?: string; hashedEmail?: string;
+      eventName?: string; eventValue?: number; contentId?: string;
+    };
+
+    if (!siteId || !sessionId) return json({ error: 'siteId and sessionId are required' }, 400);
+    // Reject anything that isn't a bare SHA-256 hash — never accept a raw email.
+    if (hashedEmail && !HEX64.test(hashedEmail)) return json({ error: 'hashedEmail must be a SHA-256 hex digest' }, 400);
+
+    // Verify the site exists and is active.
+    const { data: site } = await supabase.from('sites').select('id, is_active').eq('id', siteId).single();
+    if (!site || !site.is_active) return json({ error: 'Invalid or inactive site' }, 403);
+
+    // SECURITY: per-site rate limit to blunt anonymous conversion-injection / dashboard pollution.
+    const { data: underLimit, error: rlErr } = await supabase.rpc('check_rate_limit', {
+      p_key: `conv:${siteId}`,
+      p_max_count: 120,
+      p_window_sec: 60,
+    });
+    if (!rlErr && underLimit === false) return json({ error: 'Rate limit exceeded' }, 429);
+
+    // Look up the visitor's paid-click context. unified_visitors is keyed by the
+    // unified visitor UUID (visitorId, returned by visitor-identification). There is
+    // NO session_id column on unified_visitors — the browser session string is stored
+    // as first_session_id, which we fall back to if visitorId is unavailable.
+    let visitor: { gclid: string | null; click_id_consent_given: boolean | null } | null = null;
+    if (visitorId) {
+      const { data } = await supabase
+        .from('unified_visitors')
+        .select('gclid, click_id_consent_given')
+        .eq('site_id', siteId)
+        .eq('id', visitorId)
+        .maybeSingle();
+      visitor = data;
+    }
+    if (!visitor) {
+      const { data } = await supabase
+        .from('unified_visitors')
+        .select('gclid, click_id_consent_given, updated_at')
+        .eq('site_id', siteId)
+        .eq('first_session_id', sessionId)
+        .order('updated_at', { ascending: false })
+        .limit(1)
+        .maybeSingle();
+      visitor = data;
+    }
+
+    const gclid: string | null = visitor?.gclid ?? null;
+    const consent = visitor?.click_id_consent_given === true;
+
+    // State machine: only rows with BOTH a gclid AND consent become uploadable.
+    let uploadStatus: string;
+    if (!gclid) uploadStatus = 'skipped_no_gclid';
+    else if (!consent) uploadStatus = 'skipped_no_consent';
+    else uploadStatus = 'pending';
+
+    // Resolve the tracking_sessions UUID from the browser session string so campaign
+    // attribution (aggregate_campaign_stats joins conversion_events.session_id =
+    // tracking_sessions.id) actually finds this conversion. Best-effort: stays null if
+    // no session row exists yet, which is no worse than before.
+    let trackingSessionUuid: string | null = null;
+    const { data: ts } = await supabase
+      .from('tracking_sessions')
+      .select('id')
+      .eq('site_id', siteId)
+      .eq('session_id', sessionId)
+      .order('started_at', { ascending: false })
+      .limit(1)
+      .maybeSingle();
+    trackingSessionUuid = ts?.id ?? null;
+
+    const { data: inserted, error } = await supabase
+      .from('conversion_events')
+      .insert({
+        site_id: siteId,
+        session_id: trackingSessionUuid,
+        event_type: 'form_submission',
+        event_name: eventName || 'Conversion',
+        event_value: typeof eventValue === 'number' ? eventValue : null,
+        hashed_email: hashedEmail ?? null,
+        gclid,
+        click_id_consent_given: consent,
+        upload_status: uploadStatus,
+        form_data: { tracking_session_id: sessionId, ...(contentId ? { content_id: contentId } : {}) },
+      })
+      .select('id')
+      .single();
+
+    if (error) {
+      console.error('record-conversion insert failed:', error.message);
+      return json({ error: 'Failed to record conversion' }, 500);
+    }
+
+    return json({ success: true, conversion_id: inserted.id, upload_status: uploadStatus });
+  } catch (_err) {
+    return json({ error: 'Internal server error' }, 500);
+  }
+});

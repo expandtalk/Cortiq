@@ -46,7 +46,51 @@
     company   : (_script && _script.getAttribute('data-company'))     || 'CortIQ',
     policyUrl : (_script && _script.getAttribute('data-policy-url'))  || null,
     lang      : (_script && _script.getAttribute('data-lang'))        || (navigator.language || '').slice(0, 2) || 'en',
+    siteId    : (_script && _script.getAttribute('data-site-id'))     || null,
+    apiUrl    : (_script && _script.getAttribute('data-api-url'))     || 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
   };
+
+  // Reuse the same session id the tracking script uses, so the server-side consent
+  // record can be joined to the visitor/conversion for this session.
+  function getSessionId() {
+    try {
+      var existing = sessionStorage.getItem('cortiq_session_id');
+      if (existing) return existing;
+    } catch (e) {}
+    var id;
+    try { id = 'sess_' + crypto.randomUUID(); }
+    catch (e) { id = 'sess_' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
+    try { sessionStorage.setItem('cortiq_session_id', id); } catch (e) {}
+    return id;
+  }
+
+  // Persist demonstrable proof of consent server-side (GDPR Art. 7(1)). localStorage
+  // alone is not proof — the store-consent row is the authoritative ledger.
+  function postConsent(types) {
+    if (!cfg.siteId) return;
+    try {
+      var body = {
+        session_id: getSessionId(),
+        consent_types: {
+          necessary: true,
+          analytics: !!types.analytics,
+          marketing: !!types.marketing,
+          preferences: !!types.preferences
+        },
+        gpc_signal: (navigator.globalPrivacyControl === true),
+        source: 'consent_banner',
+        policy_version: '1.0'
+      };
+      if (/^tk_/.test(cfg.siteId)) body.tracking_id = cfg.siteId;
+      else body.site_id = cfg.siteId;
+      fetch(cfg.apiUrl + '/store-consent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+        keepalive: true
+      }).catch(function () {});
+    } catch (e) {}
+  }
 
   var T = {
     sv: {
@@ -133,6 +177,7 @@
       document.cookie = 'site_consent=' + JSON.stringify(payload) +
         '; expires=' + exp.toUTCString() + '; path=/; samesite=strict';
     } catch (e) {}
+    postConsent(types);
     dispatchConsent(types);
     removeBanner();
   }

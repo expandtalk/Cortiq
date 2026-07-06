@@ -33,16 +33,14 @@ export function AnthropicKeySettings({ selectedSite }: AnthropicKeySettingsProps
       if (!site?.company_id) { setLoading(false); return; }
       setCompanyId(site.company_id);
 
-      const { data: company } = await supabase
-        .from('companies')
-        .select('anthropic_api_key')
-        .eq('id', site.company_id)
-        .maybeSingle();
-
-      if (company?.anthropic_api_key) {
-        // Show masked version — only last 4 chars
+      // The key is never returned to the browser — we only learn whether one
+      // exists and its last 4 chars, via the service-role edge function.
+      const { data, error } = await supabase.functions.invoke('anthropic-key', {
+        body: { action: 'status', companyId: site.company_id },
+      });
+      if (!error && data?.hasKey) {
         setSaved(true);
-        setKey('sk-ant-••••••••••••••••' + company.anthropic_api_key.slice(-4));
+        setKey('sk-ant-••••••••••••••••' + (data.last4 ?? ''));
       }
       setLoading(false);
     };
@@ -60,16 +58,16 @@ export function AnthropicKeySettings({ selectedSite }: AnthropicKeySettingsProps
       return;
     }
     setSaving(true);
-    const { error } = await supabase
-      .from('companies')
-      .update({ anthropic_api_key: trimmed })
-      .eq('id', companyId);
+    const { data, error } = await supabase.functions.invoke('anthropic-key', {
+      body: { action: 'save', companyId, key: trimmed },
+    });
 
     setSaving(false);
-    if (error) {
-      toast.error('Could not save key: ' + error.message);
+    if (error || data?.error) {
+      toast.error('Could not save key: ' + (data?.error ?? error?.message ?? 'unknown error'));
     } else {
       setSaved(true);
+      setKey('sk-ant-••••••••••••••••' + (data?.last4 ?? ''));
       toast.success('Anthropic API key saved.');
     }
   };
@@ -77,13 +75,12 @@ export function AnthropicKeySettings({ selectedSite }: AnthropicKeySettingsProps
   const handleRemove = async () => {
     if (!companyId) return;
     setSaving(true);
-    const { error } = await supabase
-      .from('companies')
-      .update({ anthropic_api_key: null })
-      .eq('id', companyId);
+    const { data, error } = await supabase.functions.invoke('anthropic-key', {
+      body: { action: 'remove', companyId },
+    });
 
     setSaving(false);
-    if (error) {
+    if (error || data?.error) {
       toast.error('Could not remove key.');
     } else {
       setKey('');
@@ -156,8 +153,8 @@ export function AnthropicKeySettings({ selectedSite }: AnthropicKeySettingsProps
               </div>
             </div>
             <p className="text-xs text-muted-foreground">
-              The key is stored encrypted in your account and never shared with other tenants.
-              It's only used for AI features within CortIQ.
+              The key is stored server-side, never sent back to your browser, and never shared with
+              other tenants. It's only used for AI features within CortIQ.
             </p>
           </>
         )}

@@ -33,36 +33,23 @@
   let VISITOR_PROFILE = null;
   let IDENTIFICATION_COMPLETE = false;
 
-  // Generate enhanced browser fingerprint
-  function generateFingerprint() {
-    const canvas = document.createElement('canvas');
-    const ctx = canvas.getContext('2d');
-    ctx.textBaseline = 'top';
-    ctx.font = '14px Arial';
-    ctx.fillStyle = '#f60';
-    ctx.fillRect(125, 1, 62, 20);
-    ctx.fillStyle = '#069';
-    ctx.fillText('CortIQ Fingerprint', 2, 15);
-
-    const fingerprint = [
-      navigator.userAgent,
-      navigator.language,
-      screen.colorDepth,
-      screen.width + 'x' + screen.height,
-      new Date().getTimezoneOffset(),
-      navigator.hardwareConcurrency || 'unknown',
-      navigator.deviceMemory || 'unknown',
-      canvas.toDataURL()
-    ].join('|');
-
-    // Simple hash function
-    let hash = 0;
-    for (let i = 0; i < fingerprint.length; i++) {
-      const char = fingerprint.charCodeAt(i);
-      hash = ((hash << 5) - hash) + char;
-      hash = hash & hash;
+  // Stable per-session identifier. Deliberately NOT a device fingerprint — a
+  // random UUID persisted for the tab session. This runs before any consent, so
+  // it must not fingerprint. The canvas/WebGL fingerprint is computed only later,
+  // and only with explicit consent (see identifyVisitor).
+  function getOrCreateSessionId() {
+    try {
+      const existing = sessionStorage.getItem('cortiq_session_id');
+      if (existing) return existing;
+    } catch (_) {}
+    let id;
+    try {
+      id = 'sess_' + crypto.randomUUID();
+    } catch (_) {
+      id = 'sess_' + Math.random().toString(36).slice(2) + Date.now().toString(36);
     }
-    return 'fp_' + Math.abs(hash).toString(36);
+    try { sessionStorage.setItem('cortiq_session_id', id); } catch (_) {}
+    return id;
   }
 
   // Get canvas fingerprint
@@ -111,7 +98,49 @@
     };
   }
 
-  const SESSION_ID = generateFingerprint();
+  // Check if visitor has given marketing/advertising consent
+  function hasMarketingConsent() {
+    try {
+      const stored = localStorage.getItem('site_cookie_consent');
+      if (stored && JSON.parse(stored).marketing === true) return true;
+    } catch (_) {}
+    try {
+      if (window.Cookiebot?.consent?.marketing === true) return true;
+    } catch (_) {}
+    return false;
+  }
+
+  // Extract ad click IDs — only called when marketing consent is given
+  // GDPR: click IDs are pseudonymous identifiers tied to paid ad sessions.
+  // They require marketing consent under ePrivacy / GDPR Art. 6.1.a.
+  function getClickIds() {
+    if (!hasMarketingConsent()) return null;
+    const p = new URLSearchParams(window.location.search);
+    const ids = {
+      gclid: p.get('gclid'),
+      fbclid: p.get('fbclid'),
+      msclkid: p.get('msclkid'),
+      ttclid: p.get('ttclid'),
+      li_fat_id: p.get('li_fat_id')
+    };
+    // Only return object if at least one click ID is present
+    const hasAny = Object.values(ids).some(Boolean);
+    if (!hasAny) return null;
+    // Persist in sessionStorage for use in conversion events later
+    try { sessionStorage.setItem('cortiq_click_ids', JSON.stringify(ids)); } catch (_) {}
+    return ids;
+  }
+
+  // Retrieve previously stored click IDs (for conversion events on later pages)
+  function getStoredClickIds() {
+    if (!hasMarketingConsent()) return null;
+    try {
+      const stored = sessionStorage.getItem('cortiq_click_ids');
+      return stored ? JSON.parse(stored) : null;
+    } catch (_) { return null; }
+  }
+
+  const SESSION_ID = getOrCreateSessionId();
 
   // Get device type
   function getDeviceType() {
@@ -127,6 +156,7 @@
       const utm = getUTMParams();
       const webgl = getWebGLFingerprint();
 
+      const clickIds = getClickIds();
       const payload = {
         siteId: SITE_ID,
         sessionId: SESSION_ID,
@@ -141,9 +171,19 @@
         utmSource: utm.utmSource,
         utmMedium: utm.utmMedium,
         utmCampaign: utm.utmCampaign,
-        // Canvas/WebGL fingerprinting requires explicit consent under GDPR
-        canvasFingerprint: config.fingerprintConsent === true ? getCanvasFingerprint() : null,
-        webglFingerprint: config.fingerprintConsent === true && webgl ? JSON.stringify(webgl) : null
+        // Ad click IDs — only included when marketing consent is given
+        ...(clickIds && {
+          gclid: clickIds.gclid,
+          fbclid: clickIds.fbclid,
+          msclkid: clickIds.msclkid,
+          ttclid: clickIds.ttclid,
+          li_fat_id: clickIds.li_fat_id,
+          clickIdConsentGiven: true
+        }),
+        // Canvas/WebGL fingerprinting requires BOTH operator opt-in (config flag)
+        // AND the visitor's explicit marketing consent under GDPR / ePrivacy.
+        canvasFingerprint: (config.fingerprintConsent === true && hasMarketingConsent()) ? getCanvasFingerprint() : null,
+        webglFingerprint: (config.fingerprintConsent === true && hasMarketingConsent() && webgl) ? JSON.stringify(webgl) : null
       };
 
       const response = await fetch(`${API_URL}/visitor-identification`, {
@@ -205,6 +245,7 @@
       // Wait for visitor identification
       await waitForIdentification();
 
+      const storedClickIds = getStoredClickIds();
       const metadata = {
         user_agent: navigator.userAgent,
         referrer: document.referrer,
@@ -212,6 +253,8 @@
         url: window.location.href,
         visitor_id: VISITOR_ID,
         visitor_type: VISITOR_PROFILE?.visitorType,
+        // Include click IDs in all events so conversion events carry attribution context
+        ...(storedClickIds && { click_ids: storedClickIds }),
         ...additionalMetadata
       };
 
@@ -271,15 +314,57 @@
     });
   }
 
+  // SHA-256 hex digest, computed in the browser. Used to hash a submitted email
+  // before it ever leaves the page — the raw email is never sent to CortIQ.
+  async function sha256Hex(value) {
+    const data = new TextEncoder().encode(value.toLowerCase().trim());
+    const buf = await crypto.subtle.digest('SHA-256', data);
+    return Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  }
+
+  // Record a first-party conversion: writes a conversion_events row (via the site
+  // model) with the visitor's paid-click context. Sends only a hashed email.
+  async function recordConversion(form, contentId) {
+    try {
+      let hashedEmail = null;
+      const emailInput = form.querySelector('input[type="email"], input[name*="email" i]');
+      if (emailInput && emailInput.value) {
+        hashedEmail = await sha256Hex(emailInput.value);
+      }
+      const valueAttr = form.getAttribute('data-wfa-value');
+      await fetch(`${API_URL}/record-conversion`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          siteId: SITE_ID,
+          sessionId: SESSION_ID,
+          // The unified visitor UUID is the reliable key for looking up captured
+          // click IDs (gclid) — pass it so the conversion can be attributed.
+          visitorId: VISITOR_ID,
+          hashedEmail,
+          eventName: form.getAttribute('data-wfa-conversion') || 'Conversion',
+          eventValue: valueAttr ? Number(valueAttr) : undefined,
+          contentId,
+        }),
+        keepalive: true,
+      });
+    } catch (err) {
+      console.error('CortIQ conversion recording failed:', err);
+    }
+  }
+
   // Track conversions
   function setupConversionTracking() {
     document.addEventListener('submit', function(e) {
       const form = e.target;
       if (form.hasAttribute('data-wfa-conversion')) {
         const contentId = form.getAttribute('data-wfa-content-id') || window.location.pathname;
+        // Behavioral event (tracking_events)…
         trackEvent('conversion', contentId, {
           form_id: form.id || 'unknown'
         });
+        // …and the attributable conversion row (conversion_events + Enhanced Conversions).
+        recordConversion(form, contentId);
       }
     });
   }
@@ -409,22 +494,32 @@
     identify: identifyVisitor
   };
 
-  // Initialize
-  async function initialize() {
-    console.log('CortIQ Tracking initialized');
-    console.log('Site ID:', SITE_ID);
-    console.log('Session ID:', SESSION_ID);
-
-    // Identify visitor first
+  // Run the analytics pipeline (visitor identification, pageview, interaction
+  // tracking). Only called once analytics consent is present.
+  async function startAnalytics() {
     await identifyVisitor();
-
-    // Track initial page view
     trackPageView();
-
-    // Setup automatic tracking
     setupClickTracking();
     setupConversionTracking();
     setupScrollTracking();
+  }
+
+  // Initialize. GDPR: visitor identification + pageview tracking require analytics
+  // consent, so nothing runs until it's granted. Operators with a lawful basis for
+  // consent-free first-party analytics can opt out with config.requireConsent=false.
+  async function initialize() {
+    const consentNotRequired = config.requireConsent === false;
+    if (consentNotRequired || hasAnalyticsConsent()) {
+      startAnalytics();
+      return;
+    }
+    // Defer until the visitor grants analytics consent.
+    window.addEventListener('siteConsentUpdated', function handler(e) {
+      if (e.detail?.analytics) {
+        window.removeEventListener('siteConsentUpdated', handler);
+        startAnalytics();
+      }
+    });
   }
 
   // Start initialization

@@ -6,6 +6,7 @@ import { FormFunnelVisualization } from '../FormFunnelVisualization';
 import { FormTypeSelector } from '../FormTypeSelector';
 import { SystemSpecificConfig } from '../SystemSpecificConfig';
 import { ConversionGoalsConfig } from '../ConversionGoalsConfig';
+import { FormDiscoveryWidget } from '../FormDiscoveryWidget';
 import { useFormAnalytics } from '@/hooks/useFormAnalytics';
 import type { Site } from '@/types/dashboard';
 import type { DateRange } from 'react-day-picker';
@@ -159,6 +160,7 @@ export function FormAnalyticsTab({ selectedSite, dateRange }: FormAnalyticsTabPr
         </TabsContent>
 
         <TabsContent value="goals" className="space-y-6">
+          <FormDiscoveryWidget selectedSite={selectedSite} />
           <ConversionGoalsConfig selectedSite={selectedSite} />
         </TabsContent>
 

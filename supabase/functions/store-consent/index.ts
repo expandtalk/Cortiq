@@ -1,6 +1,7 @@
 import "https://deno.land/x/xhr@0.1.0/mod.ts";
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from 'https://esm.sh/@supabase/supabase-js@2.50.3';
+import { anonymizeIP } from "../_shared/jurisdiction.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
@@ -90,13 +91,34 @@ serve(async (req) => {
       throw new Error(`Invalid site_id format: ${site_id}. Must be a valid UUID.`);
     }
 
-    // Prepare consent data with sanitized inputs
+    // SECURITY: the consent ledger is compliance evidence — never write a record for a
+    // site that doesn't exist. Rejects fabricated/overwritten consent for arbitrary sites.
+    const { data: siteExists } = await supabase.from('sites').select('id').eq('id', site_id).maybeSingle();
+    if (!siteExists) {
+      return new Response(JSON.stringify({ success: false, error: 'Unknown site' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    // Per-site rate limit to blunt bulk consent forgery.
+    const { data: underLimit, error: rlErr } = await supabase.rpc('check_rate_limit', {
+      p_key: `consent:${site_id}`,
+      p_max_count: 120,
+      p_window_sec: 60,
+    });
+    if (!rlErr && underLimit === false) {
+      return new Response(JSON.stringify({ success: false, error: 'Rate limit exceeded' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } });
+    }
+
+    // Prepare consent data with sanitized inputs.
+    // consent_given reflects the actual decision (opt-in to analytics/marketing), not a
+    // hardcoded true — a reject-all banner must be recorded as consent_given = false.
     const consentData = {
       site_id,
       session_id: session_id.substring(0, 255), // Limit length to prevent overflow
-      consent_given: true,
+      consent_given: !!(requestData.consent_types.analytics || requestData.consent_types.marketing),
       consent_types: requestData.consent_types,
-      ip_address: requestData.ip_address ? requestData.ip_address.substring(0, 45) : null, // IPv6 max length
+      ip_address: anonymizeIP(requestData.ip_address ?? null), // host portion zeroed — matches "IP anonymized" claim
       user_agent: requestData.user_agent ? requestData.user_agent.substring(0, 500) : null, // Reasonable limit
       source: requestData.source ? requestData.source.substring(0, 50) : 'cookie_banner',
       locale: requestData.locale ? requestData.locale.substring(0, 10) : 'sv',
@@ -188,12 +210,12 @@ serve(async (req) => {
 
   } catch (error) {
     console.error('Error in store-consent function:', error);
-    
+
+    // Do not leak error.stack / internals to the caller.
     return new Response(
       JSON.stringify({
         success: false,
-        error: error.message,
-        details: error.stack,
+        error: 'Could not store consent',
       }),
       {
         status: 500,

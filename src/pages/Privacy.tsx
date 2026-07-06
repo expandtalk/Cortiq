@@ -56,8 +56,17 @@ const Privacy = () => {
             </CardHeader>
             <CardContent>
               <div className="space-y-2 text-muted-foreground">
-                <p><strong>Company Name:</strong> CortIQ</p>
+                <p><strong>Legal entity:</strong> Expandtalk Corporation AB</p>
+                <p><strong>Product:</strong> CortIQ</p>
+                <p><strong>Company registration number:</strong> 559358-8824</p>
+                <p><strong>Registered address:</strong> Parmmätaregatan 4B, 417 04 Göteborg, Sweden</p>
                 <p><strong>Email:</strong> privacy@cortiq.se</p>
+                <p className="text-sm mt-3">
+                  For analytics data collected on our customers' websites, CortIQ acts as a
+                  <strong> processor</strong> on behalf of the site operator (the controller). For our own
+                  account, billing and platform data, CortIQ (Expandtalk Corporation AB) is the
+                  <strong> controller</strong>.
+                </p>
               </div>
             </CardContent>
           </Card>
@@ -167,12 +176,12 @@ const Privacy = () => {
                   <strong className="text-foreground">Important - no personal tracking:</strong>
                 </p>
                 <ul className="text-sm text-muted-foreground space-y-2 ml-4">
-                  <li>✓ No cookies are placed on your device</li>
+                  <li>✓ No cookies are placed on your device in this banner-free mode</li>
                   <li>✓ IP addresses are anonymized immediately (→ country → IP deleted)</li>
-                  <li>✓ No fingerprinting for tracking (only security fingerprinting for bot detection)</li>
-                  <li>✓ No user ID or session tracking between visits</li>
+                  <li>✓ No device fingerprinting for tracking in banner-free mode (only security fingerprinting for bot detection)</li>
+                  <li>✓ No cross-visit visitor identification in banner-free mode</li>
                   <li>✓ Only aggregated, anonymous statistics (NO individual profiling)</li>
-                  <li>✓ Data is NOT shared with third parties</li>
+                  <li>✓ This banner-free, server-log data is not shared with advertising third parties. Consent-based features (see sections 5A–5C) do involve processors and, where applicable, international transfers — disclosed there.</li>
                 </ul>
                 <p className="text-sm text-muted-foreground mt-3">
                   <strong className="text-foreground">Legal Basis:</strong> Legitimate interest (GDPR Art. 6.1.f) for technical operation & security monitoring + 
@@ -266,25 +275,108 @@ const Privacy = () => {
             </CardContent>
           </Card>
 
+          {/* Session Replay */}
+          <Card className="glass shadow-elegant border-accent/20">
+            <CardHeader>
+              <div className="flex items-center space-x-3 mb-2">
+                <Lock className="h-6 w-6 text-accent" />
+                <CardTitle>5A. Session Replay (Requires consent)</CardTitle>
+              </div>
+              <Badge className="w-fit bg-gradient-primary text-white">With your approval</Badge>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground leading-relaxed">
+                If the site operator enables session replay and you give consent, we record a
+                reconstruction of your session (page structure, navigation, clicks and scrolling)
+                using the rrweb library, so operators can understand usability issues.
+              </p>
+              <ul className="space-y-2 text-muted-foreground text-sm ml-4">
+                <li>• Text input into form fields is masked by default.</li>
+                <li>• On-screen text masking is enabled by default; operators may unmask non-sensitive pages.</li>
+                <li>• Elements marked <code>.sensitive</code> or <code>[data-private]</code> are excluded from capture.</li>
+                <li>• Recordings are retained according to the operator's configured period and then deleted.</li>
+              </ul>
+              <div className="bg-accent/5 p-4 rounded-lg mt-4">
+                <p className="text-sm text-muted-foreground">
+                  <strong className="text-foreground">Legal Basis:</strong> Consent (Art. 6.1.a GDPR / ePrivacy Art. 5.3). Session replay is never active without it.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* Third-Party Recipients */}
+          <Card className="glass shadow-elegant border-accent/20">
+            <CardHeader>
+              <div className="flex items-center space-x-3 mb-2">
+                <Users className="h-6 w-6 text-accent" />
+                <CardTitle>5B. Third-Party Recipients & Processors</CardTitle>
+              </div>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <p className="text-muted-foreground leading-relaxed">
+                We use the following processors and, for consent-based advertising features, share
+                data with the following recipients:
+              </p>
+              <ul className="space-y-3 text-muted-foreground text-sm ml-4">
+                <li>• <strong>Supabase</strong> (infrastructure / database hosting, EU region) — processor for all analytics data.</li>
+                <li>• <strong>Anthropic</strong> (AI assistant &amp; GEO analysis, USA) — when you use AI features, relevant analytics results are sent to the Claude API to generate answers.</li>
+                <li>• <strong>Google Ads</strong> (Enhanced Conversions for Leads, USA) — when the operator enables conversion feedback and marketing consent was given, a SHA-256 hash of the email plus the ad click ID (gclid) and conversion value are uploaded. The raw email never leaves the browser.</li>
+                <li>• <strong>HubSpot</strong> (CRM lead-quality feedback, USA/EU) — when the operator connects HubSpot, lead-quality signals are exchanged to enrich conversion measurement.</li>
+              </ul>
+              <div className="bg-accent/5 p-4 rounded-lg mt-4">
+                <p className="text-sm text-muted-foreground">
+                  Note: a SHA-256 hash of an email address is still considered personal data
+                  (pseudonymised) under GDPR. Advertising uploads occur only where marketing consent
+                  was given at capture time.
+                </p>
+              </div>
+            </CardContent>
+          </Card>
+
+          {/* International Transfers */}
+          <Card className="glass shadow-elegant">
+            <CardHeader>
+              <CardTitle>5C. International Data Transfers</CardTitle>
+            </CardHeader>
+            <CardContent className="space-y-3 text-muted-foreground">
+              <p className="leading-relaxed">
+                Some recipients above (Anthropic, Google, HubSpot) process data in the United States.
+                Where personal data is transferred outside the EU/EEA, we rely on the European
+                Commission's Standard Contractual Clauses (Art. 46 GDPR) and, where applicable, the
+                recipient's certification under the EU–US Data Privacy Framework, together with
+                supplementary measures such as pseudonymisation (hashing) and data minimisation.
+              </p>
+              <p className="text-sm">
+                Analytics infrastructure (Supabase) is hosted in the EU. AI and advertising features
+                that involve US transfers are optional and consent- or operator-gated.
+              </p>
+            </CardContent>
+          </Card>
+
           {/* Cookies */}
           <Card className="glass shadow-elegant">
             <CardHeader>
-              <CardTitle>6. Cookies We Use</CardTitle>
+              <CardTitle>6. Cookies &amp; Local Storage We Use</CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <div>
-                <h4 className="font-semibold mb-2">Necessary Cookies (Always active)</h4>
+                <h4 className="font-semibold mb-2">Necessary (Always active)</h4>
                 <ul className="text-muted-foreground space-y-1 ml-4">
-                  <li>• <code>cortiq_consent</code> - Saves your cookie preferences (Lifetime: 1 year)</li>
+                  <li>• <code>site_cookie_consent</code> (localStorage) - Saves your cookie preferences (Lifetime: persistent)</li>
+                  <li>• <code>site_consent</code> (cookie) - Mirror of your consent choices (Lifetime: 1 year)</li>
                 </ul>
               </div>
               <div>
-                <h4 className="font-semibold mb-2">Analytical Cookies (Requires consent)</h4>
+                <h4 className="font-semibold mb-2">Analytical (Requires consent)</h4>
                 <ul className="text-muted-foreground space-y-1 ml-4">
-                  <li>• <code>cortiq_session</code> - Session ID (Lifetime: Session)</li>
-                  <li>• <code>cortiq_consent</code> - Detailed consent preferences (Lifetime: Session)</li>
+                  <li>• <code>cortiq_session_id</code> (sessionStorage) - Per-session identifier (Lifetime: tab session)</li>
+                  <li>• <code>cortiq_click_ids</code> (sessionStorage) - Ad click IDs, only with marketing consent (Lifetime: tab session)</li>
                 </ul>
               </div>
+              <p className="text-sm text-muted-foreground">
+                CortIQ is cookie-free by default; the items above are the only client-side storage used,
+                and analytical storage is written only after consent.
+              </p>
             </CardContent>
           </Card>
 
@@ -381,7 +473,8 @@ const Privacy = () => {
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground leading-relaxed">
-                We do <strong>NOT</strong> use the following techniques that would require a cookie banner:
+                In <strong>banner-free mode</strong>, we do <strong>NOT</strong> use the following techniques
+                that would require a cookie banner:
               </p>
               <ul className="space-y-2 text-muted-foreground">
                 <li>❌ <strong>Google Analytics cookies</strong> (_ga, _gid, _gat)</li>
@@ -392,8 +485,17 @@ const Privacy = () => {
               </ul>
               <div className="bg-destructive/5 p-4 rounded-lg mt-4">
                 <p className="text-sm text-muted-foreground">
-                  <strong className="text-foreground">Important:</strong> All these methods require prior consent under 
+                  <strong className="text-foreground">Important:</strong> All these methods require prior consent under
                   the ePrivacy Directive, even if they run server-side or use your own domain.
+                </p>
+              </div>
+              <div className="bg-primary/5 p-4 rounded-lg mt-4">
+                <p className="text-sm text-muted-foreground">
+                  <strong className="text-foreground">Consent-based mode:</strong> if the site operator enables the
+                  optional consent-based analytics script and you give explicit consent, additional techniques may be
+                  used — canvas/WebGL fingerprinting, cross-visit visitor identification, and ad click-ID capture
+                  (gclid, fbclid, etc.). These run only after your consent, which is exactly why they require it.
+                  Without consent, none of them are used.
                 </p>
               </div>
             </CardContent>

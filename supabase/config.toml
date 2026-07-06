@@ -48,5 +48,25 @@ verify_jwt = false
 [functions.analytics-content]
 verify_jwt = false
 
-[functions.setup-companies]
+[functions.ai-assistant]
+verify_jwt = true
+
+[functions.anthropic-key]
+verify_jwt = true
+
+[functions.record-conversion]
+verify_jwt = false
+
+[functions.hubspot-lead-webhook]
+verify_jwt = false
+
+[functions.google-ads-quality-upload]
+verify_jwt = true
+
+# Agent-facing APIs authenticate with their own CortIQ API key (SHA-256 -> validate_api_key),
+# so the Supabase JWT gate must be off or the gateway rejects valid API-key callers first.
+[functions.mcp-server]
+verify_jwt = false
+
+[functions.public-api]
 verify_jwt = false

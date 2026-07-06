@@ -19,6 +19,7 @@ import Privacy from "./pages/Privacy";
 import Contact from "./pages/Contact";
 import ApiDocs from "./pages/ApiDocs";
 import Dashboard from "./pages/Dashboard";
+import Installation from "./pages/Installation";
 import Auth from "./pages/Auth";
 import Navigation from "./pages/Navigation";
 import NotFound from "./pages/NotFound";
@@ -57,6 +58,11 @@ const App = () => (
               <Route path="/navigation" element={
                 <ProtectedRoute>
                   <Navigation />
+                </ProtectedRoute>
+              } />
+              <Route path="/installation" element={
+                <ProtectedRoute>
+                  <Installation />
                 </ProtectedRoute>
               } />
               {/* ADD ALL CUSTOM ROUTES ABOVE THE CATCH-ALL "*" ROUTE */}

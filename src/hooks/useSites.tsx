@@ -6,6 +6,7 @@ import type { Site } from '@/types/dashboard';
 export function useSites() {
   const [sites, setSites] = useState<Site[]>([]);
   const [selectedSite, setSelectedSite] = useState<Site | null>(null);
+  const [loading, setLoading] = useState(true);
   const { toast } = useToast();
 
   const loadSites = async () => {
@@ -17,7 +18,7 @@ export function useSites() {
 
       if (error) throw error;
       setSites(data || []);
-      
+
       if (data && data.length > 0 && !selectedSite) {
         setSelectedSite(data[0]);
       }
@@ -28,6 +29,8 @@ export function useSites() {
         description: "Could not load your websites",
         variant: "destructive"
       });
+    } finally {
+      setLoading(false);
     }
   };
 
@@ -39,6 +42,7 @@ export function useSites() {
     sites,
     selectedSite,
     setSelectedSite,
-    loadSites
+    loadSites,
+    loading
   };
 }

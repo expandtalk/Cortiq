@@ -10,9 +10,11 @@ import { Button } from '@/components/ui/button';
 import { Search, Globe, BarChart3, Info, TrendingUp, Target, Tag, Settings, CheckCircle } from 'lucide-react';
 import { GoogleAnalyticsIntegration } from '@/components/dashboard/GoogleAnalyticsIntegration';
 import { GoogleSearchConsoleSetup } from '@/components/dashboard/GoogleSearchConsoleSetup';
+import { BrandKeywordsSettings } from '@/components/dashboard/BrandKeywordsSettings';
 import { BingWebmasterSetup } from '@/components/dashboard/BingWebmasterSetup';
 import { GoogleSiteKitIntegration } from '@/components/dashboard/GoogleSiteKitIntegration';
 import { TikTokIntegration } from '@/components/dashboard/integrations/TikTokIntegration';
+import { HubSpotIntegrationWizard } from '@/components/dashboard/HubSpotIntegrationWizard';
 import { useIntegrations, useUpdateIntegrations, type IntegrationItem } from '@/hooks/useIntegrations';
 import type { Site } from '@/types/dashboard';
 
@@ -103,6 +105,45 @@ function IntegrationSection({ title, icon: Icon, items, siteData, onUpdate, sele
                   isEnabled={isEnabled}
                   onToggle={(enabled) => handleToggle(item, enabled)}
                 />
+              </div>
+            );
+          }
+
+          // Special handling for HubSpot — shows lead quality wizard when enabled
+          if (item.key === 'hubspot' && selectedSite) {
+            return (
+              <div key={item.key} className="p-4 border rounded-lg space-y-3">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-3">
+                    <Switch
+                      checked={isEnabled}
+                      onCheckedChange={(checked) => handleToggle(item, checked)}
+                    />
+                    <div>
+                      <Label className="font-medium">HubSpot</Label>
+                      <p className="text-sm text-muted-foreground">
+                        Lead quality feedback loop — CRM → Google Ads Enhanced Conversions
+                      </p>
+                    </div>
+                  </div>
+                  {item.configField && isEnabled && (
+                    <div className="w-36">
+                      <Input
+                        placeholder={item.placeholder}
+                        value={configValue}
+                        onChange={(e) => handleConfigChange(item, e.target.value)}
+                      />
+                    </div>
+                  )}
+                </div>
+                {isEnabled && (
+                  <div className="pl-11">
+                    <HubSpotIntegrationWizard
+                      selectedSite={selectedSite}
+                      isConfigured={!!(siteData as any)?.hubspot_lead_webhook_enabled}
+                    />
+                  </div>
+                )}
               </div>
             );
           }
@@ -303,8 +344,9 @@ export function ExternalIntegrationsTab({ selectedSite }: ExternalIntegrationsTa
               </TabsTrigger>
             </TabsList>
 
-            <TabsContent value="google-search-console" className="mt-6">
+            <TabsContent value="google-search-console" className="mt-6 space-y-4">
               <GoogleSearchConsoleSetup selectedSite={selectedSite} />
+              <BrandKeywordsSettings selectedSite={selectedSite} />
             </TabsContent>
 
             <TabsContent value="bing-webmaster" className="mt-6">

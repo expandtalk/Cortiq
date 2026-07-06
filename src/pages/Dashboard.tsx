@@ -1,28 +1,37 @@
 import React, { useState } from 'react';
 import { DashboardHeader } from '@/components/dashboard/DashboardHeader';
 import { DashboardTabs } from '@/components/dashboard/DashboardTabs';
-import { Button } from '@/components/ui/button';
+import { OnboardingWizard } from '@/components/dashboard/OnboardingWizard';
 import { useSites } from '@/hooks/useSites';
 import { useAnalytics } from '@/hooks/useAnalytics';
-import { useNavigate } from 'react-router-dom';
 import { DateRange } from 'react-day-picker';
 
 export default function Dashboard() {
-  const { sites, selectedSite, setSelectedSite } = useSites();
+  const { sites, selectedSite, setSelectedSite, loadSites, loading } = useSites();
   const [dateRange, setDateRange] = useState<DateRange | undefined>(() => {
     const today = new Date();
     const thirtyDaysAgo = new Date(today.getTime() - 30 * 24 * 60 * 60 * 1000);
     return { from: thirtyDaysAgo, to: today };
   });
   const { analytics } = useAnalytics(selectedSite?.id || null, dateRange && dateRange.from && dateRange.to ? { from: dateRange.from, to: dateRange.to } : undefined);
-  const navigate = useNavigate();
-  
-  console.log('Dashboard render:', { sites, selectedSite, dateRange });
+
+  // First-run: no sites yet → guided onboarding (add site + install snippet).
+  // Wait for the initial load so the wizard doesn't flash before sites arrive.
+  if (!loading && sites.length === 0) {
+    return (
+      <div className="min-h-screen bg-background p-6">
+        <div className="max-w-7xl mx-auto">
+          <OnboardingWizard onComplete={loadSites} />
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="min-h-screen bg-background p-6">
       <div className="max-w-7xl mx-auto space-y-6">
         {/* Header with Site Selector and Global Date Picker */}
-        <DashboardHeader 
+        <DashboardHeader
           selectedSite={selectedSite}
           sites={sites}
           onSiteSelect={setSelectedSite}
@@ -40,12 +49,9 @@ export default function Dashboard() {
         ) : (
           <div className="text-center py-12">
             <h2 className="text-xl font-semibold mb-4">Select a website to view analytics</h2>
-            <p className="text-muted-foreground mb-6">
-              You need to add a website first to start analyzing data
+            <p className="text-muted-foreground">
+              Choose a website from the selector above to start analyzing data.
             </p>
-            <Button onClick={() => navigate('/installation')}>
-              Add Website
-            </Button>
           </div>
         )}
       </div>

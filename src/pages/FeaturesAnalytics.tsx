@@ -99,6 +99,18 @@ const features = [
     description: "Full analytics without cookies — 100% GDPR-safe, no consent needed.",
     items: ["Privacy-first tracking", "Cookie-free sessions", "Unique visitor estimation", "Zero data loss"],
   },
+  {
+    icon: <AlertTriangle className="h-7 w-7" />,
+    title: "Goal Health Monitor",
+    description: "Automatically flags misconfigured conversion goals — fires-too-often, silent tags, and duplicate Primary goals that corrupt Smart Bidding.",
+    items: ["Firing rate alerts (>30% = misconfigured)", "Silent goal detection", "Primary / Observation toggle", "Inline fix suggestions"],
+  },
+  {
+    icon: <Target className="h-7 w-7" />,
+    title: "Attribution Gap Dashboard",
+    description: "Compare what CortIQ tracks, what Google Ads claims, and what your CRM classifies as quality — side by side.",
+    items: ["CortIQ vs. HubSpot MQL comparison", "Gap % with diagnosis", "Enhanced Conversions upload status", "30-day rolling view, no PII"],
+  },
 ];
 
 const integrations = [
@@ -121,6 +133,11 @@ const integrations = [
     icon: <TrendingUp className="h-7 w-7" />,
     title: "Google Search Console",
     items: ["Keyword analysis", "Click-through rates", "Indexing status"],
+  },
+  {
+    icon: <Zap className="h-7 w-7" />,
+    title: "HubSpot",
+    items: ["Lead quality webhook", "SHA-256 email matching", "Google Ads quality upload"],
   },
 ];
 

@@ -3,13 +3,15 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from '@/com
 import { Badge } from '@/components/ui/badge';
 import { Skeleton } from '@/components/ui/skeleton';
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
-import { Sparkles, Globe, FileText, TrendingUp, Info } from 'lucide-react';
+import { Sparkles, Globe, FileText, TrendingUp, Info, Settings } from 'lucide-react';
+import { Button } from '@/components/ui/button';
 
 interface Props {
   siteId: string;
+  onNavigateToIntegrations?: () => void;
 }
 
-export function GSCAIPerformanceSection({ siteId }: Props) {
+export function GSCAIPerformanceSection({ siteId, onNavigateToIntegrations }: Props) {
   const { data, isLoading } = useGSCAIData(siteId);
 
   if (isLoading) {
@@ -48,6 +50,17 @@ export function GSCAIPerformanceSection({ siteId }: Props) {
               in H2 2026. As soon as your GSC property gets access, CortIQ fetches data automatically on the next sync.
             </div>
           </div>
+          {onNavigateToIntegrations && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={onNavigateToIntegrations}
+              className="w-full sm:w-auto border-purple-500/30 text-purple-400 hover:bg-purple-500/10"
+            >
+              <Settings className="h-4 w-4 mr-2" />
+              Configure GSC integration
+            </Button>
+          )}
 
           {/* Preview of what will be shown */}
           <div className="grid grid-cols-1 sm:grid-cols-3 gap-3 opacity-40 pointer-events-none select-none">

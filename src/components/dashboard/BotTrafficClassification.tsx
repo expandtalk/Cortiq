@@ -2,14 +2,20 @@ import { Card, CardContent } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { AlertTriangle, Zap, Eye } from "lucide-react";
 
-// Known bot name patterns → category
+// Known bot name patterns → category.
+// MUST stay in sync with the AI_BOT_REGISTRY in
+// supabase/functions/ai-bot-tracker/index.ts (which now persists canonical UA
+// tokens as bot_name). P1 follow-up: extract a single shared registry so these
+// two lists can't drift.
 const TRAINING_PATTERNS = [
-  "gptbot", "claudebot", "google-extended", "amazonbot", "diffbot",
-  "blexbot", "ccbot", "petalbot", "dataforseobot", "training",
+  "gptbot", "claudebot", "google-extended", "meta-externalagent",
+  "applebot-extended", "bytespider", "ccbot", "diffbot", "cohere-ai",
+  "deepseek", "mistralai", "blexbot", "petalbot", "dataforseobot", "training",
 ];
 const AGENTIC_PATTERNS = [
-  "chatgpt-user", "chatgpt browser", "claude browser", "claude-ai",
-  "perplexity comet", "copilot", "gemini", "agentic",
+  "chatgpt-user", "claude-user", "perplexity-user", "grok",
+  "chatgpt browser", "claude browser", "perplexity comet", "copilot",
+  "claude-ai", "agentic",
 ];
 
 type BotCategory = "training" | "agentic" | "citation";

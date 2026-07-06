@@ -1,7 +1,7 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
-import { LogOut, Settings, ChevronDown, Check } from 'lucide-react';
+import { LogOut, Settings, ChevronDown, Check, Sparkles } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { useNavigate } from 'react-router-dom';
 import { ThemeToggle } from '@/components/ThemeToggle';
@@ -13,6 +13,7 @@ import {
   DropdownMenuItem,
   DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
+import { AIAssistantPanel } from '@/components/dashboard/AIAssistantPanel';
 
 interface Site {
   id: string;
@@ -34,8 +35,10 @@ interface DashboardHeaderProps {
 export function DashboardHeader({ selectedSite, sites, onSiteSelect, dateRange, onDateRangeChange }: DashboardHeaderProps) {
   const { user, signOut } = useAuth();
   const navigate = useNavigate();
+  const [aiPanelOpen, setAiPanelOpen] = useState(false);
 
   return (
+    <>
     <div className="flex justify-between items-center py-4">
       <div className="flex items-center gap-6">
         <div>
@@ -93,6 +96,17 @@ export function DashboardHeader({ selectedSite, sites, onSiteSelect, dateRange, 
       </div>
       
       <div className="flex items-center gap-4">
+        {selectedSite && (
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => setAiPanelOpen(true)}
+            className="font-mono text-sm gap-2 border-primary/40 hover:border-primary hover:bg-primary/10"
+          >
+            <Sparkles className="w-4 h-4 text-primary" />
+            Ask AI
+          </Button>
+        )}
         <ThemeToggle />
         <div className="flex items-center gap-3 px-3 py-2 glass rounded-lg">
           <div className="status-dot status-online"></div>
@@ -114,5 +128,13 @@ export function DashboardHeader({ selectedSite, sites, onSiteSelect, dateRange, 
         </Button>
       </div>
     </div>
+    {selectedSite && (
+      <AIAssistantPanel
+        selectedSite={selectedSite}
+        open={aiPanelOpen}
+        onClose={() => setAiPanelOpen(false)}
+      />
+    )}
+    </>
   );
 }

@@ -11,7 +11,7 @@ import { Input } from '@/components/ui/input';
 import { toast } from 'sonner';
 import {
   RefreshCw, Globe, FileText, Code2, Bot, AlertTriangle,
-  CheckCircle2, XCircle, Clock, ChevronDown, ChevronUp, Sparkles,
+  CheckCircle2, XCircle, Clock, ChevronDown, ChevronUp, Sparkles, CalendarClock, ExternalLink,
 } from 'lucide-react';
 
 interface GeoAudit {
@@ -22,6 +22,8 @@ interface GeoAudit {
   technical_score: number;
   schema_score: number;
   crawler_score: number;
+  freshness_score: number;
+  page_last_modified: string | null;
   findings: Record<string, unknown>;
   recommendations: Array<{ priority: string; category: string; issue: string; fix: string }>;
   schema_types: string[];
@@ -32,8 +34,17 @@ interface GeoAudit {
   created_at: string;
 }
 
+interface PageSummary {
+  url: string;
+  overall_score: number;
+  freshness_score: number;
+  page_last_modified: string | null;
+  created_at: string;
+}
+
 interface AIVisibilityTabProps {
   siteId: string;
+  onNavigateToIntegrations?: () => void;
 }
 
 const SCORE_COLOR = (score: number) =>
@@ -57,13 +68,14 @@ const CRAWLER_ICON = (status: string) =>
 
 const KEY_CRAWLERS = ['GPTBot', 'ClaudeBot', 'PerplexityBot', 'Google-Extended'];
 
-export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
+export function AIVisibilityTab({ siteId, onNavigateToIntegrations }: AIVisibilityTabProps) {
   const { selectedSite } = useSites();
   const defaultUrl = selectedSite?.domain
     ? (selectedSite.domain.startsWith('http') ? selectedSite.domain : `https://${selectedSite.domain}`)
     : '';
 
   const [audit, setAudit] = useState<GeoAudit | null>(null);
+  const [pages, setPages] = useState<PageSummary[]>([]);
   const [loading, setLoading] = useState(true);
   const [running, setRunning] = useState(false);
   const [expanded, setExpanded] = useState<string | null>(null);
@@ -71,14 +83,31 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
 
   const fetchLatest = useCallback(async () => {
     setLoading(true);
-    const { data } = await supabase
-      .from('geo_audits')
-      .select('*')
-      .eq('site_id', siteId)
-      .order('created_at', { ascending: false })
-      .limit(1)
-      .maybeSingle();
-    setAudit(data ?? null);
+    const [{ data: latestAudit }, { data: allAudits }] = await Promise.all([
+      supabase
+        .from('geo_audits')
+        .select('*')
+        .eq('site_id', siteId)
+        .order('created_at', { ascending: false })
+        .limit(1)
+        .maybeSingle(),
+      supabase
+        .from('geo_audits')
+        .select('url, overall_score, freshness_score, page_last_modified, created_at')
+        .eq('site_id', siteId)
+        .order('created_at', { ascending: false }),
+    ]);
+    setAudit(latestAudit ?? null);
+    // Deduplicate: keep latest audit per URL
+    const seen = new Set<string>();
+    const deduped: PageSummary[] = [];
+    for (const row of allAudits ?? []) {
+      if (!seen.has(row.url)) {
+        seen.add(row.url);
+        deduped.push(row as PageSummary);
+      }
+    }
+    setPages(deduped);
     setLoading(false);
   }, [siteId]);
 
@@ -102,6 +131,11 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
         throw new Error(msg);
       }
       setAudit(data.audit);
+      // Refresh pages list with new entry
+      setPages(prev => {
+        const updated = prev.filter(p => p.url !== data.audit.url);
+        return [{ url: data.audit.url, overall_score: data.audit.overall_score, freshness_score: data.audit.freshness_score, page_last_modified: data.audit.page_last_modified, created_at: data.audit.created_at }, ...updated];
+      });
       toast.success('AI Visibility audit complete');
     } catch (err) {
       toast.error((err as Error).message);
@@ -158,8 +192,8 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
       ) : (
         <>
           {/* Score cards */}
-          <div className="grid grid-cols-2 lg:grid-cols-5 gap-4">
-            <Card className="lg:col-span-1 bg-card border-border">
+          <div className="grid grid-cols-2 lg:grid-cols-6 gap-4">
+            <Card className="col-span-2 lg:col-span-1 bg-card border-border">
               <CardContent className="pt-6 text-center">
                 <div className={`text-5xl font-bold ${SCORE_COLOR(audit.overall_score)}`}>
                   {audit.overall_score}
@@ -174,6 +208,7 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
               { label: 'Technical', score: audit.technical_score, icon: Code2, desc: 'Meta, canonical, HTTPS' },
               { label: 'Schema', score: audit.schema_score, icon: Globe, desc: 'JSON-LD structured data' },
               { label: 'Crawlers', score: audit.crawler_score, icon: Bot, desc: 'Robots.txt AI access' },
+              { label: 'Freshness', score: audit.freshness_score, icon: CalendarClock, desc: audit.page_last_modified ? `Updated ${new Date(audit.page_last_modified).toLocaleDateString('en-GB')}` : 'No date signal found' },
             ].map(({ label, score, icon: Icon, desc }) => (
               <Card key={label} className="bg-card border-border">
                 <CardContent className="pt-5">
@@ -328,13 +363,71 @@ export function AIVisibilityTab({ siteId }: AIVisibilityTabProps) {
         </>
       )}
 
+      {/* Audited pages */}
+      {pages.length > 0 && (
+        <Card>
+          <CardHeader className="pb-3">
+            <CardTitle className="text-base flex items-center gap-2">
+              <CalendarClock className="h-4 w-4" /> Audited pages
+            </CardTitle>
+            <CardDescription>Last-modified date extracted from each page — freshness at a glance</CardDescription>
+          </CardHeader>
+          <CardContent className="p-0">
+            <div className="overflow-x-auto">
+              <table className="w-full text-sm">
+                <thead>
+                  <tr className="border-b text-muted-foreground text-xs">
+                    <th className="text-left px-4 py-2 font-medium">Page</th>
+                    <th className="text-center px-4 py-2 font-medium w-24">GEO</th>
+                    <th className="text-center px-4 py-2 font-medium w-24">Freshness</th>
+                    <th className="text-left px-4 py-2 font-medium w-36">Last modified</th>
+                    <th className="text-left px-4 py-2 font-medium w-36">Audited</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {pages.map(page => (
+                    <tr key={page.url} className="border-b last:border-0 hover:bg-muted/20 transition-colors">
+                      <td className="px-4 py-2.5">
+                        <a
+                          href={page.url}
+                          target="_blank"
+                          rel="noopener noreferrer"
+                          className="text-blue-400 hover:underline flex items-center gap-1 max-w-xs truncate"
+                        >
+                          <span className="truncate">{page.url.replace(/^https?:\/\//, '')}</span>
+                          <ExternalLink className="h-3 w-3 shrink-0 opacity-60" />
+                        </a>
+                      </td>
+                      <td className="px-4 py-2.5 text-center">
+                        <span className={`font-semibold ${SCORE_COLOR(page.overall_score)}`}>{page.overall_score}</span>
+                      </td>
+                      <td className="px-4 py-2.5 text-center">
+                        <span className={`font-semibold ${SCORE_COLOR(page.freshness_score)}`}>{page.freshness_score}</span>
+                      </td>
+                      <td className="px-4 py-2.5 text-muted-foreground">
+                        {page.page_last_modified
+                          ? new Date(page.page_last_modified).toLocaleDateString('en-GB')
+                          : <span className="text-xs opacity-50">not found</span>}
+                      </td>
+                      <td className="px-4 py-2.5 text-muted-foreground text-xs">
+                        {new Date(page.created_at).toLocaleDateString('en-GB')}
+                      </td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
+            </div>
+          </CardContent>
+        </Card>
+      )}
+
       {/* Google Search Console – Generative AI Performance */}
       <div className="space-y-2">
         <h3 className="text-lg font-semibold">Google AI Search Performance</h3>
         <p className="text-sm text-muted-foreground">
           Impressions from AI Overviews, AI Mode, and Discover AI — fetched from your GSC connection.
         </p>
-        <GSCAIPerformanceSection siteId={siteId} />
+        <GSCAIPerformanceSection siteId={siteId} onNavigateToIntegrations={onNavigateToIntegrations} />
       </div>
     </div>
   );

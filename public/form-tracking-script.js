@@ -415,11 +415,36 @@ class FormTracker {
   }
 }
 
-// Initialize form tracking when DOM is ready
+// Form field interactions are session-linked personal data under ePrivacy Art. 5(3)
+// / GDPR Art. 6.1.a — require analytics consent before tracking, mirroring spa-tracking.js.
+function cortiqHasAnalyticsConsent() {
+  try {
+    const stored = localStorage.getItem('site_cookie_consent');
+    if (stored && JSON.parse(stored).analytics === true) return true;
+  } catch (_) {}
+  try {
+    if (window.Cookiebot?.consent?.statistics === true) return true;
+  } catch (_) {}
+  return false;
+}
+
+function cortiqStartFormTracking() {
+  if (!window.heatmapTracking || !window.heatmapTracking.siteId || !window.heatmapTracking.sessionId) return;
+  new FormTracker(window.heatmapTracking.siteId, window.heatmapTracking.sessionId);
+}
+
+// Initialize form tracking when DOM is ready — but only after analytics consent.
 if (typeof window.heatmapTracking !== 'undefined') {
   document.addEventListener('DOMContentLoaded', () => {
-    if (window.heatmapTracking.siteId && window.heatmapTracking.sessionId) {
-      new FormTracker(window.heatmapTracking.siteId, window.heatmapTracking.sessionId);
+    if (cortiqHasAnalyticsConsent()) {
+      cortiqStartFormTracking();
+    } else {
+      window.addEventListener('siteConsentUpdated', function handler(e) {
+        if (e.detail?.analytics) {
+          window.removeEventListener('siteConsentUpdated', handler);
+          cortiqStartFormTracking();
+        }
+      });
     }
   });
 }

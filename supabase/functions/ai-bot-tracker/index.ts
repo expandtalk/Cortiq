@@ -1,22 +1,74 @@
 import { serve } from "https://deno.land/std@0.168.0/http/server.ts";
 import { createClient } from "https://esm.sh/@supabase/supabase-js@2.50.3";
+import { anonymizeIP } from "../_shared/jurisdiction.ts";
 
 const corsHeaders = {
   'Access-Control-Allow-Origin': '*',
   'Access-Control-Allow-Headers': 'authorization, x-client-info, apikey, content-type',
 };
 
-// AI bot detection patterns
-const AI_BOT_PATTERNS = {
-  chatgpt: /ChatGPT|GPTBot|OpenAI/i,
-  perplexity: /PerplexityBot|Perplexity/i,
-  claude: /ClaudeBot|Anthropic/i,
-  gemini: /GoogleOther|Googlebot|Bard/i,
-  grok: /Grok|TwitterBot/i,
-  bingbot: /bingbot|BingPreview/i,
-  meta: /facebookexternalhit|Meta/i,
-  other: /bot|crawler|spider|scraper/i
-};
+// AI bot detection registry.
+// Ordered MOST-SPECIFIC-FIRST: the first pattern that matches wins, so agentic
+// user-agents (e.g. ChatGPT-User) are matched before the training crawler that
+// shares a vendor prefix (GPTBot). `name` is the canonical UA token persisted to
+// bot_name; `category` is the single source of truth for classification.
+//   training = crawls to build/refresh a model corpus (infrastructure cost)
+//   agentic  = a real user's AI browser acting on their behalf (treat like a human)
+//   citation = indexes content for AI-powered search results (visibility signal)
+type BotCategory = 'training' | 'agentic' | 'citation';
+interface BotSignature { pattern: RegExp; type: string; name: string; category: BotCategory; }
+
+const AI_BOT_REGISTRY: BotSignature[] = [
+  // OpenAI
+  { pattern: /ChatGPT-User/i,      type: 'chatgpt',    name: 'ChatGPT-User',       category: 'agentic' },
+  { pattern: /OAI-SearchBot/i,     type: 'chatgpt',    name: 'OAI-SearchBot',      category: 'citation' },
+  { pattern: /GPTBot/i,            type: 'chatgpt',    name: 'GPTBot',             category: 'training' },
+  // Anthropic
+  { pattern: /Claude-User/i,       type: 'claude',     name: 'Claude-User',        category: 'agentic' },
+  { pattern: /Claude-SearchBot/i,  type: 'claude',     name: 'Claude-SearchBot',   category: 'citation' },
+  { pattern: /ClaudeBot|anthropic-ai/i, type: 'claude', name: 'ClaudeBot',         category: 'training' },
+  // Perplexity
+  { pattern: /Perplexity-User/i,   type: 'perplexity', name: 'Perplexity-User',    category: 'agentic' },
+  { pattern: /PerplexityBot/i,     type: 'perplexity', name: 'PerplexityBot',      category: 'citation' },
+  // Google
+  { pattern: /Google-Extended/i,   type: 'gemini',     name: 'Google-Extended',    category: 'training' },
+  { pattern: /GoogleOther/i,       type: 'gemini',     name: 'GoogleOther',        category: 'citation' },
+  { pattern: /Googlebot/i,         type: 'gemini',     name: 'Googlebot',          category: 'citation' },
+  // Microsoft / Bing
+  { pattern: /bingbot|BingPreview/i, type: 'bingbot',  name: 'Bingbot',            category: 'citation' },
+  // Meta
+  { pattern: /Meta-ExternalAgent/i, type: 'meta',      name: 'Meta-ExternalAgent', category: 'training' },
+  { pattern: /FacebookBot|facebookexternalhit/i, type: 'meta', name: 'FacebookBot', category: 'citation' },
+  // Apple
+  { pattern: /Applebot-Extended/i, type: 'apple',      name: 'Applebot-Extended',  category: 'training' },
+  { pattern: /Applebot/i,          type: 'apple',      name: 'Applebot',           category: 'citation' },
+  // xAI
+  { pattern: /Grok/i,              type: 'grok',       name: 'Grok',               category: 'agentic' },
+  // Other training crawlers
+  { pattern: /Amazonbot/i,         type: 'amazon',     name: 'Amazonbot',          category: 'citation' },
+  { pattern: /Bytespider/i,        type: 'bytedance',  name: 'Bytespider',         category: 'training' },
+  { pattern: /CCBot/i,             type: 'commoncrawl',name: 'CCBot',              category: 'training' },
+  { pattern: /Diffbot/i,           type: 'diffbot',    name: 'Diffbot',            category: 'training' },
+  { pattern: /cohere-ai/i,         type: 'cohere',     name: 'cohere-ai',          category: 'training' },
+  { pattern: /DeepSeek/i,          type: 'deepseek',   name: 'DeepSeek',           category: 'training' },
+  { pattern: /MistralAI/i,         type: 'mistral',    name: 'MistralAI',          category: 'training' },
+];
+
+// Generic (non-AI) bot fallback.
+const GENERIC_BOT_PATTERN = /bot|crawler|spider|scraper/i;
+
+const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
+
+// DB-backed rate limiter, shared across function instances.
+async function checkRateLimit(supabase: ReturnType<typeof createClient>, siteId: string): Promise<boolean> {
+  const { data, error } = await supabase.rpc('check_rate_limit', {
+    p_key: `aibot:${siteId}`,
+    p_max_count: 600,
+    p_window_sec: 60,
+  });
+  if (error) return true; // fail open rather than drop legitimate traffic
+  return data === true;
+}
 
 // Asset file patterns
 const ASSET_PATTERNS = {
@@ -78,18 +130,42 @@ serve(async (req) => {
       assetsLoaded // New: indicates if CSS/JS were loaded
     } = await req.json();
 
-    console.log('AI bot tracker received:', { siteId, url, userAgent, assetsLoaded });
+    console.log('AI bot tracker received:', { siteId, url, assetsLoaded });
 
-    // Detect bot type from user agent
+    // SECURITY: validate site before any service-role write (prevents anonymous
+    // cross-tenant injection of fabricated bot traffic into arbitrary dashboards).
+    if (!siteId || !UUID_RE.test(siteId)) {
+      return new Response(JSON.stringify({ error: 'Valid siteId is required' }),
+        { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+    if (!await checkRateLimit(supabase, siteId)) {
+      return new Response(JSON.stringify({ error: 'Rate limit exceeded' }),
+        { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } });
+    }
+    const { data: site } = await supabase.from('sites').select('id, is_active').eq('id', siteId).single();
+    if (!site || !site.is_active) {
+      return new Response(JSON.stringify({ error: 'Invalid or inactive site' }),
+        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+    }
+
+    // Detect bot from user agent using the canonical registry (first match wins).
     let botType = 'other';
     let botName = 'Unknown Bot';
-    
-    for (const [type, pattern] of Object.entries(AI_BOT_PATTERNS)) {
-      if (pattern.test(userAgent || '')) {
-        botType = type;
-        botName = type.charAt(0).toUpperCase() + type.slice(1);
-        break;
-      }
+    let botCategory: BotCategory | null = null;
+
+    // Prefer the real request User-Agent header over the client-supplied body value:
+    // the body is trivially forgeable (POST {userAgent:"GPTBot"}), the request header
+    // is not settable from browser fetch. Fall back to the body only if absent.
+    const ua = req.headers.get('user-agent') || userAgent || '';
+    const matched = AI_BOT_REGISTRY.find(sig => sig.pattern.test(ua));
+    if (matched) {
+      botType = matched.type;
+      botName = matched.name;       // persist the real UA token, not a capitalized key
+      botCategory = matched.category;
+    } else if (GENERIC_BOT_PATTERN.test(ua)) {
+      botType = 'other';
+      botName = 'Other Bot';
+      botCategory = 'citation';     // unknown crawler — treat as visibility signal, not training
     }
 
     // Detect asset type
@@ -98,14 +174,15 @@ serve(async (req) => {
     // Detect browser type (visual vs headless vs text-based)
     const { isVisual, browserType } = detectBrowserType(probeData, assetsLoaded);
 
-    // Determine request type
-    let requestType = 'unknown';
-    if (probeData?.jsExecuted) {
-      requestType = 'training'; // Bot executed JS, likely training
-    } else if (citationData) {
-      requestType = 'citation'; // Citation request
-    } else if (botType !== 'other') {
-      requestType = 'scraping'; // Known bot, likely scraping
+    // request_type carries the authoritative 3-way category so the dashboard KPIs
+    // (which count request_type === 'training') are correct. JS execution does NOT
+    // imply "training" — an agentic browser executes JS precisely because it is a
+    // real user. Category comes from the registry; only fall back to signals when
+    // the UA is unrecognized.
+    let requestType: string = botCategory ?? 'unknown';
+    if (!botCategory) {
+      if (citationData) requestType = 'citation';
+      else if (probeData?.jsExecuted && isVisual) requestType = 'agentic';
     }
 
     // Use the new upsert function for agent session tracking
@@ -134,11 +211,11 @@ serve(async (req) => {
         site_id: siteId,
         bot_type: botType,
         bot_name: botName,
-        user_agent: userAgent,
+        user_agent: ua,
         url,
         referrer,
         session_id: sessionId,
-        ip_address: req.headers.get('x-forwarded-for') || 'unknown',
+        ip_address: anonymizeIP(req.headers.get('x-forwarded-for')) || 'unknown',
         js_executed: probeData?.jsExecuted || false,
         probe_triggered: !!probeData,
         request_type: requestType,

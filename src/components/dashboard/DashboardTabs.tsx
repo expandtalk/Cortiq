@@ -37,6 +37,7 @@ const FinalFas3Features        = lazy(() => import('./FinalFas3Features').then(m
 const IPSegmentsTab                = lazy(() => import('./tabs/IPSegmentsTab').then(m => ({ default: m.IPSegmentsTab })));
 const AgentOpsTab                  = lazy(() => import('./tabs/AgentOpsTab').then(m => ({ default: m.AgentOpsTab })));
 const ZeroClickRiskIndex           = lazy(() => import('./ZeroClickRiskIndex').then(m => ({ default: m.ZeroClickRiskIndex })));
+const HighImpressionLowCTR        = lazy(() => import('./HighImpressionLowCTR').then(m => ({ default: m.HighImpressionLowCTR })));
 const AIVisibilityTab              = lazy(() => import('./tabs/AIVisibilityTab').then(m => ({ default: m.AIVisibilityTab })));
 const NotificationChannelsConfig   = lazy(() => import('./NotificationChannelsConfig').then(m => ({ default: m.NotificationChannelsConfig })));
 const SocialMediaTab               = lazy(() => import('./tabs/SocialMediaTab').then(m => ({ default: m.SocialMediaTab })));
@@ -48,6 +49,7 @@ const CampaignDashboard            = lazy(() => import('./CampaignDashboard').th
 const ContentPerformance           = lazy(() => import('./ContentPerformance').then(m => ({ default: m.ContentPerformance })));
 const ContentTrackingAdvanced      = lazy(() => import('./ContentTrackingAdvanced').then(m => ({ default: m.ContentTrackingAdvanced })));
 const ConversionGoalsConfig        = lazy(() => import('./ConversionGoalsConfig').then(m => ({ default: m.ConversionGoalsConfig })));
+const AttributionTab               = lazy(() => import('./tabs/AttributionTab').then(m => ({ default: m.AttributionTab })));
 const ReportBuilder                = lazy(() => import('./ReportBuilder').then(m => ({ default: m.ReportBuilder })));
 const ServerLogAnalytics           = lazy(() => import('./ServerLogAnalytics').then(m => ({ default: m.ServerLogAnalytics })));
 const RealTimeWidget               = lazy(() => import('./RealTimeWidget').then(m => ({ default: m.RealTimeWidget })));
@@ -104,6 +106,7 @@ const NAV_GROUPS: NavGroup[] = [
       { value: 'paid-ads',        label: 'Ads (GA4)',        icon: Megaphone },
       { value: 'paid-ads-server', label: 'Ads (Server-Side)', icon: Database },
       { value: 'click-fraud',     label: 'Click Fraud',      icon: ShieldAlert },
+      { value: 'attribution',     label: 'Attribution Gap',  icon: Target },
     ],
   },
   {
@@ -309,11 +312,14 @@ function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTab
         <TabErrorBoundary tabName="Zero-Click Risk">
           <ZeroClickRiskIndex siteId={selectedSite.id} />
         </TabErrorBoundary>
+        <TabErrorBoundary tabName="High Impression Low CTR">
+          <HighImpressionLowCTR siteId={selectedSite.id} />
+        </TabErrorBoundary>
       </TabsContent>
 
       <TabsContent value="ai-visibility" className="space-y-6">
         <TabErrorBoundary tabName="AI Visibility">
-          <AIVisibilityTab siteId={selectedSite.id} />
+          <AIVisibilityTab siteId={selectedSite.id} onNavigateToIntegrations={() => setActiveTab('integrations')} />
         </TabErrorBoundary>
       </TabsContent>
 
@@ -356,6 +362,12 @@ function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTab
       <TabsContent value="paid-ads" className="space-y-6">
         <TabErrorBoundary tabName="Ads (GA4)">
           <PaidAdsTab selectedSite={selectedSite.id} kpiData={null} />
+        </TabErrorBoundary>
+      </TabsContent>
+
+      <TabsContent value="attribution" className="space-y-6">
+        <TabErrorBoundary tabName="Attribution Gap">
+          <AttributionTab selectedSite={selectedSite} />
         </TabErrorBoundary>
       </TabsContent>
 
