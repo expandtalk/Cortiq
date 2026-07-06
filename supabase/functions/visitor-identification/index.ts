@@ -183,7 +183,7 @@ function sanitizeString(str: string | undefined, maxLength: number = 1000): stri
 // DEVICE FINGERPRINTING
 // =====================================================
 
-function generateDeviceFingerprint(data: VisitorIdentificationRequest): string {
+async function generateDeviceFingerprint(data: VisitorIdentificationRequest, salt: string): Promise<string> {
   // Combine multiple signals for device fingerprint
   const components = [
     data.userAgent,
@@ -195,18 +195,13 @@ function generateDeviceFingerprint(data: VisitorIdentificationRequest): string {
     data.webglFingerprint || ''
   ];
 
-  // Create hash-like fingerprint (simple version)
-  const fingerprint = components.join('|');
-
-  // Simple hash function (in production, use crypto.subtle.digest)
-  let hash = 0;
-  for (let i = 0; i < fingerprint.length; i++) {
-    const char = fingerprint.charCodeAt(i);
-    hash = ((hash << 5) - hash) + char;
-    hash = hash & hash; // Convert to 32-bit integer
-  }
-
-  return `fp_${Math.abs(hash).toString(36)}`;
+  // SHA-256 over a per-site-salted input. Replaces the previous 32-bit non-crypto hash,
+  // whose small space collided distinct visitors into one profile (and was trivially
+  // reversible — weak pseudonymisation under GDPR Art. 32). The salt is server-side only.
+  const input = `${salt}|${components.join('|')}`;
+  const buf = await crypto.subtle.digest('SHA-256', new TextEncoder().encode(input));
+  const hex = Array.from(new Uint8Array(buf)).map(b => b.toString(16).padStart(2, '0')).join('');
+  return `fp_${hex.slice(0, 32)}`; // 128 bits — collision-safe, keeps the fp_ prefix
 }
 
 // =====================================================
@@ -331,7 +326,7 @@ serve(async (req) => {
     // SECURITY: Verify site_id exists and is active
     const { data: site, error: siteError } = await supabase
       .from('sites')
-      .select('id, is_active')
+      .select('id, is_active, fingerprint_salt')
       .eq('id', requestData.siteId)
       .single();
 
@@ -348,8 +343,8 @@ serve(async (req) => {
       );
     }
 
-    // Generate device fingerprint
-    const fingerprint = generateDeviceFingerprint(requestData);
+    // Generate device fingerprint (SHA-256, per-site salt)
+    const fingerprint = await generateDeviceFingerprint(requestData, (site as { fingerprint_salt?: string }).fingerprint_salt ?? '');
 
     // Detect AI agent
     const aiDetection = detectAIAgent(requestData.userAgent);
