@@ -313,17 +313,11 @@ async function executeTool(
     }
 
     case 'cortiq_top_pages': {
-      let query = supabase.from('page_views').select('url, session_id').eq('site_id', siteId).gte('viewed_at', since).lt('viewed_at', until).limit(100000);
-      if (input.url_prefix) query = query.like('url', `${input.url_prefix}%`);
-      const { data } = await query;
-      const urlMap = new Map<string, { pv: number; sessions: Set<string> }>();
-      for (const pv of data ?? []) {
-        const e = urlMap.get(pv.url) ?? { pv: 0, sessions: new Set() };
-        e.pv++;
-        if (pv.session_id) e.sessions.add(String(pv.session_id));
-        urlMap.set(pv.url, e);
-      }
-      return { pages: [...urlMap.entries()].sort((a, b) => b[1].pv - a[1].pv).slice(0, limit).map(([url, v]) => ({ url, pageviews: v.pv, unique_sessions: v.sessions.size })), window: { since, until } };
+      // Aggregated in SQL (assistant_top_pages) — page_views is the highest-volume table.
+      const { data } = await supabase.rpc('assistant_top_pages', {
+        p_site_id: siteId, p_since: since, p_until: until, p_limit: limit, p_url_prefix: input.url_prefix ?? null,
+      });
+      return { pages: data ?? [], window: { since, until } };
     }
 
     case 'cortiq_top_sources': {
@@ -363,10 +357,10 @@ async function executeTool(
     }
 
     case 'cortiq_top_exit_pages': {
-      const { data } = await supabase.from('page_views').select('url').eq('site_id', siteId).eq('exit_page', true).gte('viewed_at', since).lt('viewed_at', until).limit(100000);
-      const exitMap = new Map<string, number>();
-      for (const pv of data ?? []) exitMap.set(String(pv.url), (exitMap.get(String(pv.url)) ?? 0) + 1);
-      return { exit_pages: [...exitMap.entries()].sort((a, b) => b[1] - a[1]).slice(0, limit).map(([url, c]) => ({ url, exit_sessions: c })), window: { since, until } };
+      const { data } = await supabase.rpc('assistant_top_exit_pages', {
+        p_site_id: siteId, p_since: since, p_until: until, p_limit: limit,
+      });
+      return { exit_pages: data ?? [], window: { since, until } };
     }
 
     case 'cortiq_pageviews_by_device': {
@@ -378,17 +372,10 @@ async function executeTool(
     }
 
     case 'cortiq_avg_engagement_time': {
-      let query = supabase.from('page_views').select('url, time_on_page, scroll_depth').eq('site_id', siteId).gte('viewed_at', since).lt('viewed_at', until).not('time_on_page', 'is', null).limit(100000);
-      if (input.url_prefix) query = query.like('url', `${input.url_prefix}%`);
-      const { data } = await query;
-      const urlMap = new Map<string, { times: number[]; scrolls: number[] }>();
-      for (const pv of data ?? []) {
-        const e = urlMap.get(String(pv.url)) ?? { times: [], scrolls: [] };
-        if (pv.time_on_page) e.times.push(Number(pv.time_on_page));
-        if (pv.scroll_depth != null) e.scrolls.push(Number(pv.scroll_depth));
-        urlMap.set(String(pv.url), e);
-      }
-      return { engagement: [...urlMap.entries()].filter(([, v]) => v.times.length > 0).sort((a, b) => b[1].times.length - a[1].times.length).slice(0, limit).map(([url, v]) => ({ url, pageviews: v.times.length, avg_time_on_page_ms: Math.round(avg(v.times)), avg_scroll_depth_pct: v.scrolls.length > 0 ? Math.round(avg(v.scrolls)) : null })), window: { since, until } };
+      const { data } = await supabase.rpc('assistant_avg_engagement', {
+        p_site_id: siteId, p_since: since, p_until: until, p_limit: limit, p_url_prefix: input.url_prefix ?? null,
+      });
+      return { engagement: data ?? [], window: { since, until } };
     }
 
     case 'cortiq_top_rage_clicks': {
