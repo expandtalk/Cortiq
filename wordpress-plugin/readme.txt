@@ -3,7 +3,7 @@ Contributors: cortiq
 Tags: analytics, ai-tracking, heatmap, cookie-free, gdpr, chatgpt, session-recording
 Requires at least: 5.6
 Tested up to: 6.8
-Stable tag: 5.1.0
+Stable tag: 5.2.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -38,7 +38,7 @@ CortIQ Analytics gives you a complete picture of who visits your site: human vis
 * UTM campaign tracking
 
 **Technical**
-* Core Web Vitals (LCP, FID/INP, CLS)
+* Core Web Vitals (LCP, INP, CLS)
 * Device, browser and geographic breakdown
 * Data Warehouse export (BigQuery, Snowflake, Redshift, PostgreSQL)
 
@@ -96,6 +96,22 @@ The tracking script is loaded with `defer` so it does not block rendering. Cooki
 Yes. Add `data-cortiq-mask` to any input or element. The field content is replaced with asterisks in the recording. See the [GDPR guide](https://github.com/expandtalk/cortiq/blob/main/GDPR.md) for details.
 
 == Changelog ==
+
+= 5.2.3 =
+* Cookie banner: configurable accent colour — pick a preset, use the colour picker, or enter a custom hex value
+* Smaller, subtler "reopen cookie settings" button; banner is slightly narrower
+* Settings → CortIQ Analytics → "Banner color"
+
+= 5.2.2 =
+* Cookie banner button order: Accept all / Only necessary / Save selection
+
+= 5.2.1 =
+* Fix: page views, heatmaps and sessions now fire reliably (tracking script configuration)
+
+= 5.2.0 =
+* GDPR: consent decisions are recorded server-side as compliance proof (Art. 7), not just in the browser
+* Cookie banner posts to the CortIQ consent ledger with policy-version tracking
+* Enter the Site ID and Tracking ID exactly as shown in the CortIQ dashboard — both now work directly
 
 = 5.1.0 =
 * Unified single-file plugin — no class dependencies

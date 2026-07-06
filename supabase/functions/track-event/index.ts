@@ -54,15 +54,52 @@ Deno.serve(async (req) => {
       event_type: body.event_type
     });
 
-    // Validate company API key
-    const { data: company, error: companyError } = await supabase
+    // Resolve the caller. Two accepted credentials:
+    //  1. Account key: a companies.api_key (Bearer) + body.company_id === company.id.
+    //  2. Site key: a site's own tk_ tracking_id (Bearer) + body.company_id === that
+    //     site's id (or its owner id). This makes the Site ID + Tracking ID shown in
+    //     the dashboard work directly in the snippet. The owning company
+    //     (companies.id == sites.user_id in this data model) is resolved server-side;
+    //     the page view is still attributed to the right site by domain in ingest_pageview.
+    let company: { id: string; is_active: boolean; consent_settings: any } | null = null;
+
+    const { data: companyByKey } = await supabase
       .from('companies')
       .select('id, name, is_active, consent_settings')
       .eq('api_key', apiKey)
-      .single();
+      .maybeSingle();
 
-    if (companyError || !company) {
-      console.error('Invalid API key:', companyError);
+    if (companyByKey) {
+      if (body.company_id !== companyByKey.id) {
+        console.error('Company ID mismatch. Expected:', companyByKey.id, 'Got:', body.company_id);
+        return new Response(
+          JSON.stringify({ error: 'Company ID does not match API key' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
+        );
+      }
+      company = companyByKey;
+    } else if (apiKey.startsWith('tk_')) {
+      const { data: site } = await supabase
+        .from('sites')
+        .select('id, user_id, is_active')
+        .eq('tracking_id', apiKey)
+        .maybeSingle();
+
+      if (site && site.is_active && (body.company_id === site.id || body.company_id === site.user_id)) {
+        const { data: ownerCompany } = await supabase
+          .from('companies')
+          .select('id, name, is_active, consent_settings')
+          .eq('id', site.user_id)
+          .maybeSingle();
+        if (ownerCompany) {
+          company = ownerCompany;
+          body.company_id = ownerCompany.id; // normalize to the real company id for storage + rate limit
+        }
+      }
+    }
+
+    if (!company) {
+      console.error('Invalid API key');
       return new Response(
         JSON.stringify({ error: 'Invalid API key' }),
         { status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
@@ -73,15 +110,6 @@ Deno.serve(async (req) => {
       console.error('Company is inactive:', company.id);
       return new Response(
         JSON.stringify({ error: 'Company account is inactive' }),
-        { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
-      );
-    }
-
-    // Verify company_id matches API key
-    if (body.company_id !== company.id) {
-      console.error('Company ID mismatch. Expected:', company.id, 'Got:', body.company_id);
-      return new Response(
-        JSON.stringify({ error: 'Company ID does not match API key' }),
         { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
       );
     }
