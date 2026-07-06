@@ -186,17 +186,103 @@ export default function Features() {
         {/* Header */}
         <div className="text-center mb-16">
           <Badge variant="secondary" className="text-sm font-medium mb-4">
-            <BarChart3 className="h-4 w-4 mr-2" />
-            Complete Feature Overview
+            <Zap className="h-4 w-4 mr-2" />
+            AI Bot Intelligence · Cookie-Free · EU-Built
           </Badge>
           <h1 className="text-4xl font-bold mb-4 bg-gradient-to-r from-primary to-primary/60 bg-clip-text text-transparent">
-            Powerful Features for Modern Web Analytics
+            The first analytics platform that turns AI traffic into signal
           </h1>
           <p className="text-xl text-muted-foreground max-w-3xl mx-auto">
-            A complete platform that combines heatmap analysis, GDPR compliance, and 
-            third-party integrations in a single solution.
+            CortIQ classifies every AI visit — training crawler, agentic browser, or citation
+            crawler — and pairs it with full cookie-free human analytics and a paid-conversion
+            attribution loop. Built in the EU, GDPR-first.
           </p>
         </div>
+
+        {/* AI Bot Intelligence — the differentiator */}
+        <section className="mb-20">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4">🤖 AI Bot Intelligence</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              1 in 31 web visits is now an AI bot. Every other tool filters them out. CortIQ tells
+              you which ones matter — and which are just cost.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <Card className="border-red-500/30">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">🔴 Training Crawlers</CardTitle>
+                <CardDescription>GPTBot, ClaudeBot, CCBot</CardDescription>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                Pure infrastructure cost — they consume your content to train models, with no
+                referral value. Know how much they cost you.
+              </CardContent>
+            </Card>
+            <Card className="border-green-500/40">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">🟢 Agentic Browsers</CardTitle>
+                <CardDescription>ChatGPT Browser, Perplexity Comet, Claude Browser</CardDescription>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                Real users acting through an AI. Track their journeys page-by-page and convert
+                them like any high-intent visitor.
+              </CardContent>
+            </Card>
+            <Card className="border-blue-500/30">
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2">🔵 Citation Crawlers</CardTitle>
+                <CardDescription>PerplexityBot, Google-Extended, OAI-SearchBot</CardDescription>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                AI search indexing your content — your visibility signal for the era of answer
+                engines. Know when LLMs cite you.
+              </CardContent>
+            </Card>
+          </div>
+        </section>
+
+        {/* Architecture: three layers */}
+        <section className="mb-20">
+          <div className="text-center mb-8">
+            <h2 className="text-3xl font-bold mb-4">🧱 Three clean layers</h2>
+            <p className="text-lg text-muted-foreground max-w-3xl mx-auto">
+              A deliberate separation: the data layer never depends on AI, and AI never sees
+              another tenant's data or writes raw analytics.
+            </p>
+          </div>
+          <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2"><Database className="h-5 w-5 text-primary" /> Data Layer</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                Validated, rate-limited ingest → PostgreSQL with Row-Level Security per tenant.
+                Unified visitor profiles, sessions, heatmaps, conversions. Runs with zero AI
+                dependency.
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2"><Zap className="h-5 w-5 text-primary" /> Agentic Layer</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                AI assistant with grounded tool-use over your data, an MCP server so external
+                agents can query analytics, bot classification, and GEO audits — each insight
+                traceable to its source.
+              </CardContent>
+            </Card>
+            <Card>
+              <CardHeader>
+                <CardTitle className="text-lg flex items-center gap-2"><Lock className="h-5 w-5 text-primary" /> Privacy Layer</CardTitle>
+              </CardHeader>
+              <CardContent className="text-sm text-muted-foreground">
+                Cross-cutting, EU-first: cookie-free baseline, consent gating, IP anonymisation,
+                a server-side consent ledger, retention automation and EU data residency.
+              </CardContent>
+            </Card>
+          </div>
+        </section>
 
         {/* Core Analytics Features */}
         <section className="mb-20">
