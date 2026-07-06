@@ -3,7 +3,7 @@
  * Plugin Name: CortIQ Analytics
  * Plugin URI: https://cortiq.se
  * Description: Analytics for the agentic web. Track AI agents (ChatGPT Browser, Perplexity, Claude, Gemini) and human visitors — cookie-free, GDPR-compliant, with heatmaps, session recording and A/B testing.
- * Version: 5.2.0
+ * Version: 5.2.3
  * Author: CortIQ
  * Author URI: https://cortiq.se
  * Requires at least: 5.6
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( defined( 'CORTIQ_LOADED' ) ) return;
 define( 'CORTIQ_LOADED', true );
 
-define( 'CORTIQ_VERSION',    '5.2.0' );
+define( 'CORTIQ_VERSION',    '5.2.3' );
 define( 'CORTIQ_OPTION_KEY', 'cortiq_options' );
 define( 'CORTIQ_CDN',        'https://cortiq.se' );
 // Supabase Edge Functions base — used for the GDPR consent ledger (store-consent).
@@ -39,6 +39,7 @@ function cortiq_defaults() {
         'gdpr_enabled'          => true,
         'anonymize_ip'          => true,
         'excluded_roles'        => array( 'administrator' ),
+        'accent_color'          => '#6366f1',
     );
 }
 
@@ -102,20 +103,27 @@ function cortiq_enqueue() {
         CORTIQ_VERSION,
         false // load in <head>, defer added via filter below
     );
+
+    // spa-tracking.js reads window.cortiqConfig (NOT data-* attributes) — inject it
+    // BEFORE the script tag so siteId/apiKey are available when the script runs.
+    // siteId/apiKey are the CortIQ account credentials; the visited site is resolved
+    // server-side by domain, so one account key serves all of the account's sites.
+    $config = wp_json_encode( array(
+        'apiUrl'      => CORTIQ_API,
+        'siteId'      => $opts['site_id'],
+        'apiKey'      => $opts['tracking_id'],
+        'contentType' => 'page',
+        'platform'    => 'web',
+    ) );
+    wp_add_inline_script( 'cortiq-tracking', 'window.cortiqConfig = ' . $config . ';', 'before' );
+
     add_filter( 'script_loader_tag', 'cortiq_add_script_attrs', 10, 2 );
 }
 
 function cortiq_add_script_attrs( $tag, $handle ) {
     if ( 'cortiq-tracking' !== $handle ) return $tag;
-    $opts        = cortiq_options();
-    $site_id     = esc_attr( $opts['site_id'] );
-    $tracking_id = esc_attr( $opts['tracking_id'] );
-    $attrs = ' data-site-id="' . $site_id . '"';
-    if ( $tracking_id ) {
-        $attrs .= ' data-api-key="' . $tracking_id . '"';
-    }
-    $tag = str_replace( ' src=', $attrs . ' defer src=', $tag );
-    return $tag;
+    // Config travels via window.cortiqConfig (injected above); just defer the load.
+    return str_replace( ' src=', ' defer src=', $tag );
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -126,11 +134,13 @@ add_action( 'wp_footer', 'cortiq_cookie_banner', 100 );
 function cortiq_cookie_banner() {
     $opts = cortiq_options();
     if ( empty( $opts['gdpr_enabled'] ) ) return;
+    $accent = $opts['accent_color'] ? esc_attr( $opts['accent_color'] ) : '#6366f1';
     ?>
 <style>
+#cq-overlay,#cq-reopen{--cq-accent:<?php echo $accent; ?>}
 #cq-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99998;align-items:flex-end;justify-content:center;padding:0}
-#cq-box{background:#1e1e2e;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;width:100%;max-width:680px;border-radius:12px 12px 0 0;border-top:1px solid #6366f1;box-shadow:0 -8px 40px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto}
-#cq-box h2{margin:0;font-size:16px;font-weight:700;color:#a5b4fc}
+#cq-box{background:#1e1e2e;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;width:100%;max-width:640px;border-radius:12px 12px 0 0;border-top:1px solid var(--cq-accent);box-shadow:0 -8px 40px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto}
+#cq-box h2{margin:0;font-size:16px;font-weight:700;color:#e2e8f0}
 #cq-box p{margin:8px 0 0;font-size:13px;color:#94a3b8;line-height:1.5}
 .cq-head{padding:20px 20px 12px}
 .cq-cats{padding:0 20px}
@@ -142,21 +152,22 @@ function cortiq_cookie_banner() {
 .cq-toggle input{opacity:0;width:0;height:0;position:absolute}
 .cq-slider{position:absolute;inset:0;border-radius:22px;background:#374151;cursor:pointer;transition:.2s}
 .cq-slider:before{content:'';position:absolute;width:16px;height:16px;left:3px;top:3px;border-radius:50%;background:#fff;transition:.2s}
-.cq-toggle input:checked+.cq-slider{background:#6366f1}
+.cq-toggle input:checked+.cq-slider{background:var(--cq-accent)}
 .cq-toggle input:checked+.cq-slider:before{transform:translateX(18px)}
 .cq-toggle input:disabled+.cq-slider{opacity:.5;cursor:not-allowed}
-.cq-details-toggle{display:flex;align-items:center;gap:6px;background:none;border:none;color:#6366f1;font-size:12px;cursor:pointer;padding:10px 20px 4px;font-family:inherit}
+.cq-details-toggle{display:flex;align-items:center;gap:6px;background:none;border:none;color:var(--cq-accent);font-size:12px;cursor:pointer;padding:10px 20px 4px;font-family:inherit}
 .cq-details{display:none;margin:0 20px 12px;padding:12px;background:#161625;border-radius:8px;font-size:12px;color:#64748b;border:1px solid #2d2d45}
 .cq-details dt{color:#94a3b8;font-weight:600;margin-top:8px}
 .cq-details dt:first-child{margin-top:0}
 .cq-details dd{margin:2px 0 0;word-break:break-all;color:#6b7280}
 .cq-btns{display:flex;flex-wrap:wrap;gap:8px;padding:16px 20px 20px;border-top:1px solid #2d2d45}
 .cq-btn{flex:1;min-width:120px;padding:10px 16px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;font-family:inherit}
-.cq-btn-primary{background:#6366f1;color:#fff}
-.cq-btn-primary:hover{background:#5558e8}
+.cq-btn-primary{background:var(--cq-accent);color:#fff}
+.cq-btn-primary:hover{filter:brightness(.92)}
 .cq-btn-secondary{background:#1e293b;color:#94a3b8;border:1px solid #374151}
-.cq-btn-secondary:hover{color:#e2e8f0;border-color:#6366f1}
-#cq-reopen{display:none;position:fixed;bottom:20px;left:20px;z-index:99997;width:44px;height:44px;border-radius:50%;border:none;background:#6366f1;color:#fff;cursor:pointer;font-size:20px;box-shadow:0 4px 12px rgba(99,102,241,.5);font-family:inherit}
+.cq-btn-secondary:hover{color:#e2e8f0;border-color:var(--cq-accent)}
+#cq-reopen{display:none;position:fixed;bottom:20px;left:20px;z-index:99997;width:26px;height:26px;border-radius:50%;border:none;background:var(--cq-accent);color:#fff;cursor:pointer;font-size:16px;line-height:26px;text-align:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.3);opacity:.92;font-family:inherit}
+#cq-reopen:hover{opacity:1}
 </style>
 
 <div id="cq-overlay">
@@ -203,9 +214,9 @@ function cortiq_cookie_banner() {
     <dl class="cq-details" id="cq-details"></dl>
 
     <div class="cq-btns">
-      <button class="cq-btn cq-btn-primary" id="cq-reject">Only necessary</button>
-      <button class="cq-btn cq-btn-secondary" id="cq-save">Save selection</button>
       <button class="cq-btn cq-btn-primary" id="cq-accept-all">Accept all</button>
+      <button class="cq-btn cq-btn-secondary" id="cq-reject">Only necessary</button>
+      <button class="cq-btn cq-btn-secondary" id="cq-save">Save selection</button>
     </div>
   </div>
 </div>
@@ -393,6 +404,9 @@ function cortiq_sanitize_options( $input ) {
     $clean['gdpr_enabled']     = ! empty( $input['gdpr_enabled'] );
     $clean['anonymize_ip']     = ! empty( $input['anonymize_ip'] );
     $clean['excluded_roles']   = array( 'administrator' );
+    // Validate the banner accent colour; sanitize_hex_color() returns '' if invalid.
+    $ac = isset( $input['accent_color'] ) ? sanitize_hex_color( trim( (string) $input['accent_color'] ) ) : '';
+    $clean['accent_color']     = $ac ? $ac : '#6366f1';
     return $clean;
 }
 
@@ -498,6 +512,43 @@ function cortiq_settings_page() {
                                    <?php checked( ! empty( $opts['anonymize_ip'] ) ); ?> />
                             Anonymize IP addresses
                         </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="cortiq_accent_color">Banner color</label></th>
+                    <td>
+                        <input id="cortiq_accent_color"
+                               name="<?php echo CORTIQ_OPTION_KEY; ?>[accent_color]"
+                               type="text"
+                               value="<?php echo esc_attr( $opts['accent_color'] ); ?>"
+                               style="max-width:110px;vertical-align:middle"
+                               placeholder="#6366f1" />
+                        <input type="color" id="cortiq_accent_picker"
+                               value="<?php echo esc_attr( $opts['accent_color'] ); ?>"
+                               style="vertical-align:middle;width:40px;height:30px;padding:0;border:1px solid #ccc;border-radius:4px;cursor:pointer" />
+                        <span style="display:inline-flex;gap:6px;margin-left:12px;vertical-align:middle">
+                            <?php foreach ( array( '#6366f1', '#0ea5e9', '#10b981', '#f59e0b', '#ef4444', '#8b5cf6', '#111827' ) as $c ) : ?>
+                                <button type="button" class="cortiq-swatch" data-color="<?php echo esc_attr( $c ); ?>"
+                                        title="<?php echo esc_attr( $c ); ?>"
+                                        style="width:22px;height:22px;border-radius:50%;border:1px solid rgba(0,0,0,.2);background:<?php echo esc_attr( $c ); ?>;cursor:pointer;padding:0"></button>
+                            <?php endforeach; ?>
+                        </span>
+                        <p class="description">Accent colour for the cookie banner and the reopen button. Pick a preset, use the colour picker, or type any hex value.</p>
+                        <script>
+                        (function(){
+                            var txt  = document.getElementById('cortiq_accent_color');
+                            var pick = document.getElementById('cortiq_accent_picker');
+                            if ( pick ) pick.addEventListener('input', function(){ txt.value = pick.value; });
+                            document.querySelectorAll('.cortiq-swatch').forEach(function(b){
+                                b.addEventListener('click', function(){
+                                    var v = b.getAttribute('data-color');
+                                    txt.value = v;
+                                    try { pick.value = v; } catch(e){}
+                                });
+                            });
+                        })();
+                        </script>
                     </td>
                 </tr>
 

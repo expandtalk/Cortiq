@@ -35,9 +35,12 @@ serve(async (req) => {
   }
 
   try {
+    // Service role: this public endpoint must read `sites` (RLS-restricted to owners)
+    // to validate the target and write the consent ledger. It does its own validation
+    // (domain resolution + site-exists check + per-site rate limit) before writing.
     const supabase = createClient(
       Deno.env.get('SUPABASE_URL') ?? '',
-      Deno.env.get('SUPABASE_ANON_KEY') ?? ''
+      Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
     const requestData: ConsentRequest = await req.json();
@@ -51,9 +54,11 @@ serve(async (req) => {
       throw new Error('Missing required fields: session_id (or uuid) and consent_types are required');
     }
 
-    // Validate tracking_id format if provided
+    // tracking_id is an OPTIONAL legacy site hint. If it isn't a tk_ key (e.g. an
+    // account/API key was pasted into the tracking field), ignore it rather than
+    // failing the request — site resolution falls back to page_url domain / site_id.
     if (requestData.tracking_id && !requestData.tracking_id.startsWith('tk_')) {
-      throw new Error('Invalid tracking_id format. Must start with "tk_"');
+      requestData.tracking_id = undefined;
     }
 
     let site_id = requestData.site_id;
@@ -63,7 +68,12 @@ serve(async (req) => {
     // misconfigured tag (e.g. a company id in the site_id field) still logs consent
     // under the correct site.
     if (requestData.page_url) {
-      const { data: domainSite } = await supabase.rpc('resolve_site_by_domain', { p_url: requestData.page_url });
+      // Normalize the URL through the WHATWG parser first: it converts IDN hosts to
+      // punycode (browsers send location.href with the Unicode host, e.g.
+      // "båtguide.nu"), so this matches sites.domain, stored as "xn--btguide-exa.nu".
+      let purl = requestData.page_url;
+      try { purl = new URL(requestData.page_url).href; } catch { /* keep raw */ }
+      const { data: domainSite } = await supabase.rpc('resolve_site_by_domain', { p_url: purl });
       if (domainSite) site_id = domainSite as string;
     }
 

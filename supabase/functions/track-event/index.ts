@@ -192,9 +192,14 @@ Deno.serve(async (req) => {
     // ingest_pageview resolves from the URL's domain. Best-effort: never fail the
     // event if the bridge errors.
     if (body.content_type === 'page' && body.event_type === 'view') {
+      // Normalize IDN/host form to punycode so domain resolution matches sites.domain.
+      // Browsers send location.href with the Unicode host (e.g. "båtguide.nu"); the
+      // WHATWG URL parser rewrites it to "xn--btguide-exa.nu" as stored.
+      let pageUrl: string | null = metadata.url ?? null;
+      if (pageUrl) { try { pageUrl = new URL(pageUrl).href; } catch { /* keep raw */ } }
       try {
         await supabase.rpc('ingest_pageview', {
-          p_url: metadata.url ?? null,
+          p_url: pageUrl,
           p_session: body.session_id ?? null,
           p_device: metadata.device_type ?? null,
           p_referrer: metadata.referrer ?? null,
