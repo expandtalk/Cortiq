@@ -29,6 +29,7 @@ interface ContentBlock {
 interface ClaudeResponse {
   content: ContentBlock[];
   stop_reason: string;
+  usage?: { input_tokens?: number; output_tokens?: number };
 }
 
 interface ToolInput {
@@ -481,6 +482,7 @@ async function executeTool(
 async function callClaude(
   messages: Message[],
   anthropicKey: string,
+  model: string,
 ): Promise<ClaudeResponse> {
   const res = await fetch('https://api.anthropic.com/v1/messages', {
     method: 'POST',
@@ -490,7 +492,7 @@ async function callClaude(
       'anthropic-version': '2023-06-01',
     },
     body: JSON.stringify({
-      model: 'claude-sonnet-5',
+      model,
       max_tokens: 4096,
       system: `You are an analytics assistant for CortIQ, an AI-native web analytics platform.
 You have access to real-time data about the user's website. Always fetch data before answering questions about metrics.
@@ -513,14 +515,19 @@ Today's date context: use the last 7 days as default window unless asked otherwi
 async function runConversation(
   messages: Message[],
   anthropicKey: string,
+  model: string,
   siteId: string,
   supabase: ReturnType<typeof createClient>,
-): Promise<{ response: string; toolsUsed: string[] }> {
+): Promise<{ response: string; toolsUsed: string[]; inputTokens: number; outputTokens: number }> {
   const toolsUsed: string[] = [];
   const MAX_ITERATIONS = 5;
+  let inputTokens = 0;
+  let outputTokens = 0;
 
   for (let i = 0; i < MAX_ITERATIONS; i++) {
-    const claudeRes = await callClaude(messages, anthropicKey);
+    const claudeRes = await callClaude(messages, anthropicKey, model);
+    inputTokens += claudeRes.usage?.input_tokens ?? 0;
+    outputTokens += claudeRes.usage?.output_tokens ?? 0;
 
     const toolBlocks = claudeRes.content.filter(b => b.type === 'tool_use');
 
@@ -529,7 +536,7 @@ async function runConversation(
         .filter(b => b.type === 'text')
         .map(b => b.text ?? '')
         .join('');
-      return { response: text, toolsUsed };
+      return { response: text, toolsUsed, inputTokens, outputTokens };
     }
 
     // Add assistant message with tool use blocks
@@ -565,7 +572,7 @@ async function runConversation(
     messages.push({ role: 'user', content: toolResults });
   }
 
-  return { response: 'Too many tool calls. Please try a more specific question.', toolsUsed };
+  return { response: 'Too many tool calls. Please try a more specific question.', toolsUsed, inputTokens, outputTokens };
 }
 
 // ============================================================================
@@ -629,7 +636,7 @@ Deno.serve(async (req: Request) => {
 
     const { data: secret } = await serviceClient
       .from('company_secrets')
-      .select('anthropic_api_key')
+      .select('anthropic_api_key, ai_model')
       .eq('company_id', site.company_id)
       .maybeSingle();
 
@@ -640,18 +647,40 @@ Deno.serve(async (req: Request) => {
       );
     }
 
+    // Enforce the company's monthly cost cap before spending on paid calls.
+    const { data: underBudget } = await serviceClient.rpc('check_ai_budget', { p_company_id: site.company_id });
+    if (underBudget === false) {
+      return new Response(
+        JSON.stringify({ error: 'Monthly AI budget reached for this account. Raise the cap in Settings or try again next month.' }),
+        { status: 429, headers: { 'Content-Type': 'application/json', ...corsHeaders } },
+      );
+    }
+
     // Build conversation and run
     const messages: Message[] = [
       ...history.slice(-10), // Keep last 10 messages for context
       { role: 'user', content: message },
     ];
 
-    const { response, toolsUsed } = await runConversation(
+    const model = secret.ai_model ?? 'claude-sonnet-5';
+    const { response, toolsUsed, inputTokens, outputTokens } = await runConversation(
       messages,
       secret.anthropic_api_key,
+      model,
       siteId,
       serviceClient,
     );
+
+    if (inputTokens || outputTokens) {
+      await serviceClient.rpc('record_ai_usage', {
+        p_company_id: site.company_id,
+        p_site_id: siteId,
+        p_function: 'ai-assistant',
+        p_model: model,
+        p_input_tokens: inputTokens,
+        p_output_tokens: outputTokens,
+      });
+    }
 
     return new Response(
       JSON.stringify({ response, toolsUsed }),

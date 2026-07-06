@@ -348,7 +348,8 @@ async function analyzeCitability(
   wordCount: number,
   schemaTypes: string[],
   anthropicKey: string,
-): Promise<string> {
+  model: string,
+): Promise<{ text: string; inputTokens: number; outputTokens: number }> {
   const prompt = `You are an expert in Generative Engine Optimization (GEO). Analyze this web page's AI citability.
 
 URL: ${url}
@@ -374,15 +375,19 @@ Be specific and actionable. No generic advice.`;
       'content-type': 'application/json',
     },
     body: JSON.stringify({
-      model: 'claude-haiku-4-5-20251001',
+      model,
       max_tokens: 300,
       messages: [{ role: 'user', content: prompt }],
     }),
   });
 
-  if (!res.ok) return '';
+  if (!res.ok) return { text: '', inputTokens: 0, outputTokens: 0 };
   const json = await res.json();
-  return json.content?.[0]?.text?.trim() ?? '';
+  return {
+    text: json.content?.[0]?.text?.trim() ?? '',
+    inputTokens: json.usage?.input_tokens ?? 0,
+    outputTokens: json.usage?.output_tokens ?? 0,
+  };
 }
 
 // ── Main handler ──────────────────────────────────────────────────────────────
@@ -489,18 +494,45 @@ serve(async (req) => {
 
     const recommendations = buildRecommendations(findings, schemaTypes, crawlerAccess, hasLlmsTxt, localBusiness, freshnessScore, pageModified);
 
-    // Anthropic key (BYOK → platform fallback)
+    // AI citability is BYOK-only — no platform ANTHROPIC_API_KEY fallback (consistent
+    // with ai-assistant). A site without a company key still gets the full non-AI audit;
+    // citabilityAnalysis just stays null. The rest of the pipeline never depends on it.
     let anthropicKey: string | null = null;
+    let aiModel = 'claude-haiku-4-5-20251001';
     const { data: siteRow } = await supabase.from('sites').select('company_id').eq('id', siteId).maybeSingle();
-    if (siteRow?.company_id) {
-      const { data: co } = await supabase.from('company_secrets').select('anthropic_api_key').eq('company_id', siteRow.company_id).maybeSingle();
+    const companyId = siteRow?.company_id ?? null;
+    if (companyId) {
+      const { data: co } = await supabase
+        .from('company_secrets')
+        .select('anthropic_api_key, ai_model')
+        .eq('company_id', companyId)
+        .maybeSingle();
       anthropicKey = co?.anthropic_api_key ?? null;
+      if (co?.ai_model) aiModel = co.ai_model;
     }
-    if (!anthropicKey) anthropicKey = Deno.env.get('ANTHROPIC_API_KEY') ?? null;
 
-    const citabilityAnalysis = anthropicKey
-      ? await analyzeCitability(targetUrl, title, h1s, h2s, metaDescription, wordCount, schemaTypes, anthropicKey)
-      : null;
+    // Enforce the company's monthly cost cap before spending on the paid call.
+    let underBudget = true;
+    if (anthropicKey && companyId) {
+      const { data: ok } = await supabase.rpc('check_ai_budget', { p_company_id: companyId });
+      underBudget = ok !== false; // fail open on RPC error
+    }
+
+    let citabilityAnalysis: string | null = null;
+    if (anthropicKey && underBudget) {
+      const ai = await analyzeCitability(targetUrl, title, h1s, h2s, metaDescription, wordCount, schemaTypes, anthropicKey, aiModel);
+      citabilityAnalysis = ai.text || null;
+      if (companyId && (ai.inputTokens || ai.outputTokens)) {
+        await supabase.rpc('record_ai_usage', {
+          p_company_id: companyId,
+          p_site_id: siteId,
+          p_function: 'geo-analyze',
+          p_model: aiModel,
+          p_input_tokens: ai.inputTokens,
+          p_output_tokens: ai.outputTokens,
+        });
+      }
+    }
 
     // Persist audit
     const { data: audit, error: insertError } = await supabase

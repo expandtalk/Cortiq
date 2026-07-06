@@ -60,14 +60,21 @@ const GENERIC_BOT_PATTERN = /bot|crawler|spider|scraper/i;
 const UUID_RE = /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i;
 
 // DB-backed rate limiter, shared across function instances.
-async function checkRateLimit(supabase: ReturnType<typeof createClient>, siteId: string): Promise<boolean> {
+async function checkRateLimit(supabase: ReturnType<typeof createClient>, key: string, maxCount: number): Promise<boolean> {
   const { data, error } = await supabase.rpc('check_rate_limit', {
-    p_key: `aibot:${siteId}`,
-    p_max_count: 600,
+    p_key: key,
+    p_max_count: maxCount,
     p_window_sec: 60,
   });
   if (error) return true; // fail open rather than drop legitimate traffic
   return data === true;
+}
+
+// Best-effort client IP from the edge proxy headers.
+function clientIp(req: Request): string {
+  const xff = req.headers.get('x-forwarded-for');
+  if (xff) return xff.split(',')[0].trim();
+  return req.headers.get('x-real-ip') || 'unknown';
 }
 
 // Asset file patterns
@@ -138,7 +145,14 @@ serve(async (req) => {
       return new Response(JSON.stringify({ error: 'Valid siteId is required' }),
         { status: 400, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
     }
-    if (!await checkRateLimit(supabase, siteId)) {
+    // Two-dimensional throttle: per-site (blunt dashboard pollution) AND per-IP
+    // (stop one source rotating siteId to flood many tenants). Either tripping = 429.
+    const ip = clientIp(req);
+    const [siteOk, ipOk] = await Promise.all([
+      checkRateLimit(supabase, `aibot:${siteId}`, 600),
+      checkRateLimit(supabase, `aibot-ip:${ip}`, 1200),
+    ]);
+    if (!siteOk || !ipOk) {
       return new Response(JSON.stringify({ error: 'Rate limit exceeded' }),
         { status: 429, headers: { ...corsHeaders, 'Content-Type': 'application/json', 'Retry-After': '60' } });
     }

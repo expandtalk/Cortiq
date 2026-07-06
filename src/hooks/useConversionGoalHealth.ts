@@ -48,10 +48,13 @@ export function useConversionGoalHealth(siteId: string) {
 
       const totalSessions = sessionCount || 1;
 
-      // Count conversion events per goal selector in last 30 days
+      // Count conversion events per goal in last 30 days.
+      // record-conversion (the only writer of conversion_events) stores event_name
+      // + event_type and never element_selector, so match primarily on event_name ==
+      // goal.name; keep element_selector as a fallback for any legacy click-based rows.
       const { data: convEvents } = await supabase
         .from('conversion_events')
-        .select('element_selector, created_at')
+        .select('event_name, element_selector, created_at')
         .eq('site_id', siteId)
         .gte('created_at', thirtyDaysAgo);
 
@@ -60,9 +63,10 @@ export function useConversionGoalHealth(siteId: string) {
       const hasDuplicatePrimary = primaryGoals.length > 1;
 
       return goals.map((goal): GoalHealth => {
+        const selectorHead = goal.selector ? goal.selector.split(',')[0].trim() : '';
         const matching = (convEvents || []).filter(e =>
-          e.element_selector && goal.selector &&
-          e.element_selector.includes(goal.selector.split(',')[0].trim())
+          (e.event_name && e.event_name === goal.name) ||
+          (e.element_selector && selectorHead && e.element_selector.includes(selectorHead))
         );
 
         const count = matching.length;
