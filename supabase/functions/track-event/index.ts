@@ -186,10 +186,29 @@ Deno.serve(async (req) => {
 
     console.log('Tracking event inserted successfully:', event.id);
 
+    // Bridge page views into the dashboard's analytics model (page_views /
+    // tracking_sessions). The client posts page views here as content_type='page',
+    // but the dashboard reads page_views, keyed by the real sites.id — which
+    // ingest_pageview resolves from the URL's domain. Best-effort: never fail the
+    // event if the bridge errors.
+    if (body.content_type === 'page' && body.event_type === 'view') {
+      try {
+        await supabase.rpc('ingest_pageview', {
+          p_url: metadata.url ?? null,
+          p_session: body.session_id ?? null,
+          p_device: metadata.device_type ?? null,
+          p_referrer: metadata.referrer ?? null,
+          p_viewed_at: body.timestamp ? new Date(body.timestamp).toISOString() : new Date().toISOString(),
+        });
+      } catch (bridgeErr) {
+        console.error('page_view bridge failed (non-fatal):', bridgeErr);
+      }
+    }
+
     return new Response(
-      JSON.stringify({ 
-        success: true, 
-        event_id: event.id 
+      JSON.stringify({
+        success: true,
+        event_id: event.id
       }),
       { status: 200, headers: { ...corsHeaders, 'Content-Type': 'application/json' } }
     );
