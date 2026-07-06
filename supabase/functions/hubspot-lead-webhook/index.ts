@@ -26,11 +26,36 @@ async function sha256Hex(value: string): Promise<string> {
     .join('');
 }
 
+// Constant-time string compare — avoids leaking the secret via response timing.
+function timingSafeEqual(a: string, b: string): boolean {
+  if (a.length !== b.length) return false;
+  let diff = 0;
+  for (let i = 0; i < a.length; i++) diff |= a.charCodeAt(i) ^ b.charCodeAt(i);
+  return diff === 0;
+}
+
+async function hmacSha256Base64(secret: string, message: string): Promise<string> {
+  const enc = new TextEncoder();
+  const key = await crypto.subtle.importKey('raw', enc.encode(secret), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
+  const mac = await crypto.subtle.sign('HMAC', key, enc.encode(message));
+  return btoa(String.fromCharCode(...new Uint8Array(mac)));
+}
+
 async function verifyHubSpotSignature(req: Request, body: string, secret: string): Promise<boolean> {
-  // HubSpot v1 signature: SHA-256(clientSecret + requestBody)
+  // Prefer v3 (HMAC-SHA256 over method+uri+body+timestamp, base64) when present.
+  const v3 = req.headers.get('x-hubspot-signature-v3');
+  const ts = req.headers.get('x-hubspot-request-timestamp');
+  if (v3 && ts) {
+    const tsNum = Number(ts);
+    // Reject stale requests (>5 min) to blunt replay.
+    if (!Number.isFinite(tsNum) || Math.abs(Date.now() - tsNum) > 5 * 60 * 1000) return false;
+    const expected = await hmacSha256Base64(secret, `${req.method}${req.url}${body}${ts}`);
+    return timingSafeEqual(v3, expected);
+  }
+  // Fall back to v1: SHA-256(clientSecret + requestBody).
   const expected = await sha256Hex(secret + body);
   const received = req.headers.get('x-hubspot-signature') || '';
-  return received === expected;
+  return timingSafeEqual(received, expected);
 }
 
 Deno.serve(async (req) => {
@@ -62,20 +87,30 @@ Deno.serve(async (req) => {
     // Resolve site_id from URL param or body (body.site_id is used for wizard test pings via supabase.functions.invoke)
     const resolvedSiteId = siteId || (body._test ? body.site_id : null);
 
-    // Test ping from wizard — no real data processing
-    if (body._test === true && resolvedSiteId) {
-      const { data: site } = await supabase
-        .from('sites')
-        .select('id')
-        .eq('id', resolvedSiteId)
-        .single();
-      if (!site) {
-        return new Response(JSON.stringify({ error: 'Site not found' }), {
-          status: 404,
-          headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    // Test ping from the setup wizard. This path has no HubSpot signature, so it must
+    // NOT reveal whether an arbitrary site_id exists to anonymous callers. Require the
+    // caller's Supabase session and verify they own the site (the wizard invokes with
+    // the user's JWT). Unauthenticated callers get a uniform 401 either way.
+    if (body._test === true) {
+      const authHeader = req.headers.get('Authorization') ?? '';
+      const userClient = createClient(
+        Deno.env.get('SUPABASE_URL') ?? '',
+        Deno.env.get('SUPABASE_ANON_KEY') ?? '',
+        { global: { headers: { Authorization: authHeader } } },
+      );
+      const { data: { user } } = await userClient.auth.getUser();
+      if (!user) {
+        return new Response(JSON.stringify({ error: 'Unauthorized' }), {
+          status: 401, headers: { ...corsHeaders, 'Content-Type': 'application/json' },
         });
       }
-      return new Response(JSON.stringify({ ok: true }), {
+      const { data: owned } = await userClient
+        .from('sites')
+        .select('id')
+        .eq('id', resolvedSiteId ?? '')
+        .eq('user_id', user.id)
+        .maybeSingle();
+      return new Response(JSON.stringify({ ok: !!owned }), {
         headers: { ...corsHeaders, 'Content-Type': 'application/json' },
       });
     }
@@ -156,6 +191,8 @@ Deno.serve(async (req) => {
         const hasGclid = !!ce.gclid;
         const uploadStatus = hasGclid ? 'pending' : 'skipped_no_gclid';
 
+        // Atomic claim: only update if still unclassified, so two concurrent webhook
+        // deliveries can't both classify (and later double-upload) the same lead.
         await supabase
           .from('conversion_events')
           .update({
@@ -164,7 +201,8 @@ Deno.serve(async (req) => {
             quality_classified_at: new Date().toISOString(),
             upload_status: uploadStatus,
           })
-          .eq('id', ce.id);
+          .eq('id', ce.id)
+          .is('quality_classified_at', null);
       }
     }
 

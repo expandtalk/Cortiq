@@ -80,6 +80,16 @@ Deno.serve(async (req) => {
       });
     }
 
+    // P2-5 recovery: reclaim rows stuck in 'uploading' from a previous run that crashed
+    // between claim and the final status write. Anything claimed >30 min ago (or with no
+    // claim timestamp, i.e. pre-migration) is stale — return it to 'pending' for retry.
+    const staleCutoff = new Date(Date.now() - 30 * 60 * 1000).toISOString();
+    await supabase
+      .from('conversion_events')
+      .update({ upload_status: 'pending' })
+      .eq('upload_status', 'uploading')
+      .or(`upload_claimed_at.lt.${staleCutoff},upload_claimed_at.is.null`);
+
     // Accept either a site_id param or process all sites with pending uploads
     const url = new URL(req.url);
     const targetSiteId = url.searchParams.get('site_id');
@@ -126,7 +136,7 @@ Deno.serve(async (req) => {
       const candidateIds = candidates.map(c => c.id);
       const { data: pending } = await supabase
         .from('conversion_events')
-        .update({ upload_status: 'uploading' })
+        .update({ upload_status: 'uploading', upload_claimed_at: new Date().toISOString() })
         .in('id', candidateIds)
         .eq('upload_status', 'pending')
         .select('id, gclid, hashed_email, quality_value, quality_classified_at, created_at');

@@ -110,7 +110,10 @@ Deno.serve(async (req) => {
         event_type: 'form_submission',
         event_name: eventName || 'Conversion',
         event_value: typeof eventValue === 'number' ? eventValue : null,
-        hashed_email: hashedEmail ?? null,
+        // GDPR: only persist the hashed email (used for Google Ads / HubSpot matching)
+        // when marketing consent was given — same gate as gclid. The conversion itself
+        // is still recorded without it.
+        hashed_email: consent ? (hashedEmail ?? null) : null,
         gclid,
         click_id_consent_given: consent,
         upload_status: uploadStatus,
@@ -120,6 +123,12 @@ Deno.serve(async (req) => {
       .single();
 
     if (error) {
+      // 23505 = unique_violation on uq_conversion_events_dedup: a duplicate submit in
+      // the same session for the same event. Treat as success (idempotent) — the first
+      // submit already recorded the conversion; don't double-count.
+      if ((error as { code?: string }).code === '23505') {
+        return json({ success: true, deduped: true, upload_status: uploadStatus });
+      }
       console.error('record-conversion insert failed:', error.message);
       return json({ error: 'Failed to record conversion' }, 500);
     }
