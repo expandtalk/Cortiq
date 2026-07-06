@@ -18,34 +18,22 @@ export function useLeadQualityPipeline(siteId: string) {
   return useQuery({
     queryKey: ['lead-quality-pipeline', siteId],
     queryFn: async (): Promise<LeadQualityStats> => {
-      const thirtyDaysAgo = new Date(Date.now() - 30 * 24 * 60 * 60 * 1000).toISOString();
-
-      const { data, error } = await supabase
-        .from('conversion_events')
-        .select('upload_status, lead_quality, uploaded_to_ads_at')
-        .eq('site_id', siteId)
-        .gte('created_at', thirtyDaysAgo);
-
+      // Aggregated server-side (get_lead_quality_pipeline RPC) instead of pulling raw rows.
+      const { data, error } = await supabase.rpc('get_lead_quality_pipeline', { p_site_id: siteId, p_days: 30 });
       if (error) throw error;
 
-      const events = data || [];
-      const classified = events.filter(e => e.lead_quality !== null);
-      const uploaded = events.filter(e => e.upload_status === 'uploaded');
-      const lastUpload = uploaded
-        .sort((a, b) => (b.uploaded_to_ads_at || '').localeCompare(a.uploaded_to_ads_at || ''))
-        .find(e => e.uploaded_to_ads_at);
-
+      const r = (Array.isArray(data) ? data[0] : data) ?? {};
       return {
-        totalClassified: classified.length,
-        pending: events.filter(e => e.upload_status === 'pending').length,
-        uploaded: uploaded.length,
-        skippedNoConsent: events.filter(e => e.upload_status === 'skipped_no_consent').length,
-        skippedNoGclid: events.filter(e => e.upload_status === 'skipped_no_gclid').length,
-        failed: events.filter(e => e.upload_status === 'failed').length,
-        lastUploadAt: lastUpload?.uploaded_to_ads_at ?? null,
-        priorityCount: classified.filter(e => e.lead_quality === 'Priority').length,
-        qualifiedCount: classified.filter(e => e.lead_quality === 'Qualified').length,
-        challengeCount: classified.filter(e => e.lead_quality === 'Challenge').length,
+        totalClassified: Number(r.total_classified ?? 0),
+        pending: Number(r.pending ?? 0),
+        uploaded: Number(r.uploaded ?? 0),
+        skippedNoConsent: Number(r.skipped_no_consent ?? 0),
+        skippedNoGclid: Number(r.skipped_no_gclid ?? 0),
+        failed: Number(r.failed ?? 0),
+        lastUploadAt: r.last_upload_at ?? null,
+        priorityCount: Number(r.priority_count ?? 0),
+        qualifiedCount: Number(r.qualified_count ?? 0),
+        challengeCount: Number(r.challenge_count ?? 0),
       };
     },
     staleTime: 5 * 60 * 1000,
