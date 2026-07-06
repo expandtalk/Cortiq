@@ -493,12 +493,21 @@ async function callClaude(
     },
     body: JSON.stringify({
       model,
-      max_tokens: 4096,
-      system: `You are an analytics assistant for CortIQ, an AI-native web analytics platform.
+      max_tokens: 8192,
+      // cache_control on the system block caches the stable tools+system prefix
+      // (Anthropic caches in tools → system order), cutting input cost/latency on the
+      // multi-turn tool loop where that prefix is resent every iteration.
+      system: [
+        {
+          type: 'text',
+          text: `You are an analytics assistant for CortIQ, an AI-native web analytics platform.
 You have access to real-time data about the user's website. Always fetch data before answering questions about metrics.
 Be concise and data-driven. Format numbers clearly (e.g., 1,247 sessions, 34.2% bounce rate).
 When presenting findings, highlight what's notable or unexpected.
 Today's date context: use the last 7 days as default window unless asked otherwise.`,
+          cache_control: { type: 'ephemeral' },
+        },
+      ],
       messages,
       tools: TOOLS,
     }),
@@ -530,6 +539,16 @@ async function runConversation(
     outputTokens += claudeRes.usage?.output_tokens ?? 0;
 
     const toolBlocks = claudeRes.content.filter(b => b.type === 'tool_use');
+
+    // Truncated by the token ceiling — return what we have with a clear marker rather
+    // than looping or silently dropping the tail.
+    if (claudeRes.stop_reason === 'max_tokens') {
+      const text = claudeRes.content.filter(b => b.type === 'text').map(b => b.text ?? '').join('');
+      return {
+        response: (text ? text + '\n\n' : '') + '_(Response truncated — ask me to continue or narrow the question.)_',
+        toolsUsed, inputTokens, outputTokens,
+      };
+    }
 
     if (toolBlocks.length === 0 || claudeRes.stop_reason === 'end_turn') {
       const text = claudeRes.content
@@ -644,6 +663,20 @@ Deno.serve(async (req: Request) => {
       return new Response(
         JSON.stringify({ error: 'No Anthropic API key configured. Add it in Settings → Integrations.' }),
         { status: 422, headers: { 'Content-Type': 'application/json', ...corsHeaders } },
+      );
+    }
+
+    // Per-user rate limit (distinct from the monthly cost cap): blunt runaway usage /
+    // accidental loops. 30 assistant turns per user per hour.
+    const { data: underRate, error: rateErr } = await serviceClient.rpc('check_rate_limit', {
+      p_key: `ai-assistant:${user.id}`,
+      p_max_count: 30,
+      p_window_sec: 3600,
+    });
+    if (!rateErr && underRate === false) {
+      return new Response(
+        JSON.stringify({ error: 'Too many requests. Please wait a bit before asking again.' }),
+        { status: 429, headers: { 'Content-Type': 'application/json', ...corsHeaders } },
       );
     }
 
