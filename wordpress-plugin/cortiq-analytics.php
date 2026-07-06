@@ -3,7 +3,7 @@
  * Plugin Name: CortIQ Analytics
  * Plugin URI: https://cortiq.se
  * Description: Analytics for the agentic web. Track AI agents (ChatGPT Browser, Perplexity, Claude, Gemini) and human visitors — cookie-free, GDPR-compliant, with heatmaps, session recording and A/B testing.
- * Version: 5.1.0
+ * Version: 5.2.0
  * Author: CortIQ
  * Author URI: https://cortiq.se
  * Requires at least: 5.6
@@ -20,9 +20,11 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( defined( 'CORTIQ_LOADED' ) ) return;
 define( 'CORTIQ_LOADED', true );
 
-define( 'CORTIQ_VERSION',    '5.1.0' );
+define( 'CORTIQ_VERSION',    '5.2.0' );
 define( 'CORTIQ_OPTION_KEY', 'cortiq_options' );
 define( 'CORTIQ_CDN',        'https://cortiq.se' );
+// Supabase Edge Functions base — used for the GDPR consent ledger (store-consent).
+define( 'CORTIQ_API',        'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1' );
 
 // ─────────────────────────────────────────────────────────────────────────────
 // Helpers
@@ -212,6 +214,9 @@ function cortiq_cookie_banner() {
 
 <script>
 (function(){
+  var CQ_API = '<?php echo esc_js( CORTIQ_API ); ?>';
+  var CQ_SITE_ID = '<?php echo esc_js( $opts['site_id'] ); ?>';
+  var CQ_TRACKING_ID = '<?php echo esc_js( $opts['tracking_id'] ); ?>';
   var KEY = 'site_cookie_consent';
   var overlay   = document.getElementById('cq-overlay');
   var chkPref   = document.getElementById('cq-preferences');
@@ -240,6 +245,26 @@ function cortiq_cookie_banner() {
     };
     localStorage.setItem(KEY,JSON.stringify(c));
     window.dispatchEvent(new CustomEvent('siteConsentUpdated',{detail:c}));
+    // GDPR Art. 7: record server-side proof of consent (the source of truth). The
+    // backend resolves the site by page domain, so this lands under the right site.
+    try {
+      fetch(CQ_API + '/store-consent', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        keepalive: true,
+        body: JSON.stringify({
+          site_id: CQ_SITE_ID || undefined,
+          tracking_id: CQ_TRACKING_ID || undefined,
+          session_id: c.consentId,
+          page_url: location.href,
+          consent_types: { necessary:true, analytics:anal, marketing:mark, preferences:pref },
+          source: 'cookie_banner',
+          gpc_signal: (navigator.globalPrivacyControl === true),
+          policy_version: POLICY_VERSION,
+          locale: (navigator.language || 'sv').substring(0,10)
+        })
+      }).catch(function(){});
+    } catch(e){}
     overlay.style.display='none';
     reopen.style.display='block';
     showDetails(c);

@@ -25,6 +25,7 @@ interface ConsentRequest {
   locale?: string;
   gpc_signal?: boolean;
   policy_version?: string;
+  page_url?: string; // used to resolve the site by domain (most reliable)
 }
 
 serve(async (req) => {
@@ -57,7 +58,16 @@ serve(async (req) => {
 
     let site_id = requestData.site_id;
 
-    // If site_id is not provided but tracking_id is, try to resolve it
+    // Prefer resolving the site by the page's domain — the most reliable signal, and
+    // consistent with how page views are attributed. Overrides a supplied site_id so a
+    // misconfigured tag (e.g. a company id in the site_id field) still logs consent
+    // under the correct site.
+    if (requestData.page_url) {
+      const { data: domainSite } = await supabase.rpc('resolve_site_by_domain', { p_url: requestData.page_url });
+      if (domainSite) site_id = domainSite as string;
+    }
+
+    // If site_id is still not resolved but tracking_id is, try to resolve it
     if (!site_id && requestData.tracking_id) {
       console.log('Resolving site_id from tracking_id:', requestData.tracking_id);
       
