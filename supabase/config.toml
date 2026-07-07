@@ -50,6 +50,12 @@ verify_jwt = false
 [functions.cloudflare-analytics]
 verify_jwt = true
 
+# Fas-2 push endpoint (Cloudflare Worker). verify_jwt=false because a Worker can't send a
+# Supabase JWT; it authenticates with the CLOUDFLARE_INGEST_SECRET shared secret (fail-closed
+# in code). Deployed version currently stays JWT-gated (dormant) until Fas-2 is activated.
+[functions.cloudflare-ingest]
+verify_jwt = false
+
 # Called from the tracking script with no JWT; authenticates by validating site_id
 # exists/active + per-site rate limit under the service role. Must be public or the
 # gateway rejects it with UNAUTHORIZED_NO_AUTH_HEADER before the function runs.

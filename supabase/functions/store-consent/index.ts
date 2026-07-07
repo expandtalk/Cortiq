@@ -43,6 +43,20 @@ serve(async (req) => {
       Deno.env.get('SUPABASE_SERVICE_ROLE_KEY') ?? ''
     );
 
+    // Defense-in-depth: if a browser Origin is present it must resolve to a registered
+    // site — blocks cross-site junk POSTed to the consent ledger. A missing Origin
+    // (server-to-server) is allowed and still guarded by the site check + rate limit below.
+    const origin = req.headers.get('Origin');
+    if (origin) {
+      let ourl = origin;
+      try { ourl = new URL(origin).href; } catch { /* keep raw */ }
+      const { data: originSite } = await supabase.rpc('resolve_site_by_domain', { p_url: ourl });
+      if (!originSite) {
+        return new Response(JSON.stringify({ success: false, error: 'Origin not a registered site' }),
+          { status: 403, headers: { ...corsHeaders, 'Content-Type': 'application/json' } });
+      }
+    }
+
     const requestData: ConsentRequest = await req.json();
     console.log('Received consent request:', JSON.stringify(requestData, null, 2));
 

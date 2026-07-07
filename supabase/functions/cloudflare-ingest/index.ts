@@ -154,14 +154,11 @@ const siteCache = new Map<string, string | null>();
 async function resolveSiteId(supabase: ReturnType<typeof createClient>, domain: string): Promise<string | null> {
   if (siteCache.has(domain)) return siteCache.get(domain)!;
 
-  const { data } = await supabase
-    .from('sites')
-    .select('id')
-    .ilike('site_url', `%${domain}%`)
-    .limit(1)
-    .maybeSingle();
-
-  const id = data?.id ?? null;
+  // Resolve by domain using the shared RPC (handles www + IDN normalization), consistent
+  // with the rest of the pipeline. (The old `site_url` column does not exist.)
+  const url = domain.startsWith('http') ? domain : `https://${domain}`;
+  const { data } = await supabase.rpc('resolve_site_by_domain', { p_url: url });
+  const id = (data as string) ?? null;
   siteCache.set(domain, id);
   return id;
 }
@@ -174,12 +171,18 @@ serve(async (req) => {
     return new Response(null, { headers: corsHeaders });
   }
 
-  // Optional shared secret: if CLOUDFLARE_INGEST_SECRET is set AND the caller
-  // provides x-ingest-key, they must match. Callers without a key are allowed
-  // (domain-based authorization — only registered domains get data stored).
+  // Fail closed: this push endpoint is DISABLED until a shared secret is configured,
+  // and every request must present it (x-ingest-key). Prevents anonymous junk being
+  // written to cloudflare_traffic for any registered domain.
   const ingestSecret = Deno.env.get('CLOUDFLARE_INGEST_SECRET');
   const providedKey  = req.headers.get('x-ingest-key') ?? '';
-  if (ingestSecret && providedKey && providedKey !== ingestSecret) {
+  if (!ingestSecret) {
+    return new Response(JSON.stringify({ error: 'ingest disabled: CLOUDFLARE_INGEST_SECRET not set' }), {
+      status: 503,
+      headers: { ...corsHeaders, 'Content-Type': 'application/json' },
+    });
+  }
+  if (providedKey !== ingestSecret) {
     return new Response(JSON.stringify({ error: 'unauthorized' }), {
       status: 401,
       headers: { ...corsHeaders, 'Content-Type': 'application/json' },
