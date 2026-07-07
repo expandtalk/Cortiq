@@ -11,6 +11,7 @@ import { useGDPRSettings, useUpdateGDPRSettings } from '@/hooks/useGDPR';
 import { supabase } from '@/integrations/supabase/client';
 import { toast } from 'sonner';
 import type { Site } from '@/types/dashboard';
+import { ConsentImpact } from '@/components/dashboard/ConsentImpact';
 
 interface CMPDashboardProps {
   selectedSite: Site;
@@ -130,8 +131,9 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
       </div>
 
       <Tabs defaultValue="overview" className="space-y-6">
-        <TabsList className="grid w-full grid-cols-4">
+        <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="overview">Overview</TabsTrigger>
+          <TabsTrigger value="impact">Impact</TabsTrigger>
           <TabsTrigger value="configuration">Configuration</TabsTrigger>
           <TabsTrigger value="monitoring">Monitoring</TabsTrigger>
           <TabsTrigger value="testing">Testing</TabsTrigger>
@@ -229,6 +231,10 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
               </CardContent>
             </Card>
           )}
+        </TabsContent>
+
+        <TabsContent value="impact" className="space-y-6">
+          <ConsentImpact selectedSite={selectedSite} />
         </TabsContent>
 
         <TabsContent value="configuration" className="space-y-6">
