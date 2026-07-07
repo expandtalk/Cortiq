@@ -3,7 +3,7 @@
  * Plugin Name: CortIQ Analytics
  * Plugin URI: https://cortiq.se
  * Description: Analytics for the agentic web. Track AI agents (ChatGPT Browser, Perplexity, Claude, Gemini) and human visitors — cookie-free, GDPR-compliant, with heatmaps, session recording and A/B testing.
- * Version: 5.3.1
+ * Version: 5.3.2
  * Author: CortIQ
  * Author URI: https://cortiq.se
  * Requires at least: 5.6
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( defined( 'CORTIQ_LOADED' ) ) return;
 define( 'CORTIQ_LOADED', true );
 
-define( 'CORTIQ_VERSION',    '5.3.1' );
+define( 'CORTIQ_VERSION',    '5.3.2' );
 define( 'CORTIQ_OPTION_KEY', 'cortiq_options' );
 define( 'CORTIQ_CDN',        'https://cortiq.se' );
 // Supabase Edge Functions base — used for the GDPR consent ledger (store-consent).
@@ -314,8 +314,12 @@ function cortiq_cookie_banner() {
 .cq-btn-secondary:hover{color:#e2e8f0;border-color:var(--cq-accent)}
 #cq-reopen{display:none;position:fixed;bottom:20px;left:20px;z-index:99997;width:26px;height:26px;border-radius:50%;border:none;background:var(--cq-accent);color:#fff;cursor:pointer;font-size:16px;line-height:26px;text-align:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.3);opacity:.92;font-family:inherit}
 #cq-reopen:hover{opacity:1}
-/* Minimal-consent state: hollow icon = a soft, non-nagging invitation to reconsider */
-#cq-reopen.cq-min{background:transparent;border:1.5px solid var(--cq-accent);color:var(--cq-accent);opacity:.8;line-height:23px}
+/* Minimal-consent state: a hollow pill with a small label — a discreet, STATIC (no
+   animation, no red dot) invitation to reconsider. Full consent stays a plain icon. */
+#cq-reopen.cq-min{width:auto;height:auto;min-width:26px;border-radius:16px;padding:6px 12px;background:transparent;border:1.5px solid var(--cq-accent);color:var(--cq-accent);opacity:.85;font-size:14px;line-height:1}
+#cq-reopen.cq-min:hover{opacity:1}
+#cq-reopen .cq-reopen-label{display:none}
+#cq-reopen.cq-min .cq-reopen-label{display:inline;margin-left:6px;font-size:13px;font-weight:600;vertical-align:middle}
 </style>
 
 <div id="cq-overlay">
@@ -370,7 +374,7 @@ function cortiq_cookie_banner() {
   </div>
 </div>
 
-<button id="cq-reopen" title="<?php echo esc_attr( $t['reopen'] ); ?>">🍪</button>
+<button id="cq-reopen" title="<?php echo esc_attr( $t['reopen'] ); ?>">🍪<span class="cq-reopen-label">Cookies</span></button>
 
 <script>
 (function(){
