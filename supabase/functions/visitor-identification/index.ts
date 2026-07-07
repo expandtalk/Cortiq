@@ -326,7 +326,7 @@ serve(async (req) => {
     // SECURITY: Verify site_id exists and is active
     const { data: site, error: siteError } = await supabase
       .from('sites')
-      .select('id, is_active, fingerprint_salt')
+      .select('id, is_active, fingerprint_salt, tracking_mode')
       .eq('id', requestData.siteId)
       .single();
 
@@ -340,6 +340,21 @@ serve(async (req) => {
             'Access-Control-Allow-Origin': '*'
           }
         }
+      );
+    }
+
+    // Cookieless / consent-exempt sites must never be fingerprinted or profiled across
+    // visits. The client already skips this call in cookieless mode; enforce it here too
+    // so a misconfigured or forged client cannot create a device profile for such a site.
+    if ((site as { tracking_mode?: string }).tracking_mode === 'cookieless') {
+      return new Response(
+        JSON.stringify({
+          success: true,
+          visitor: null,
+          mode: 'cookieless',
+          message: 'Cookieless site: visitor identification skipped by design.',
+        }),
+        { status: 200, headers: { 'Content-Type': 'application/json', 'Access-Control-Allow-Origin': '*' } }
       );
     }
 

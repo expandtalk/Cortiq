@@ -22,6 +22,9 @@
   const API_KEY = config.apiKey;
   const CONTENT_TYPE = config.contentType || 'page';
   const PLATFORM = config.platform || 'web';
+  // Cookieless / consent-exempt mode (CNIL audience-measurement exemption): no device
+  // fingerprint, no cross-visit identity, no client-side storage — runs without consent.
+  const COOKIELESS = config.cookieless === true;
 
   if (!SITE_ID) {
     console.error('CortIQ Tracking: Missing siteId in window.cortiqConfig');
@@ -32,12 +35,22 @@
   let VISITOR_ID = null;
   let VISITOR_PROFILE = null;
   let IDENTIFICATION_COMPLETE = false;
+  let MEMORY_SESSION_ID = null; // in-memory session id used in cookieless mode
 
   // Stable per-session identifier. Deliberately NOT a device fingerprint — a
   // random UUID persisted for the tab session. This runs before any consent, so
   // it must not fingerprint. The canvas/WebGL fingerprint is computed only later,
   // and only with explicit consent (see identifyVisitor).
   function getOrCreateSessionId() {
+    // Cookieless mode: keep the id in memory only — no sessionStorage, nothing written
+    // to the visitor's device — so it never persists beyond the current page context.
+    if (COOKIELESS) {
+      if (!MEMORY_SESSION_ID) {
+        try { MEMORY_SESSION_ID = 'sess_' + crypto.randomUUID(); }
+        catch (_) { MEMORY_SESSION_ID = 'sess_' + Math.random().toString(36).slice(2) + Date.now().toString(36); }
+      }
+      return MEMORY_SESSION_ID;
+    }
     try {
       const existing = sessionStorage.getItem('cortiq_session_id');
       if (existing) return existing;
@@ -371,6 +384,9 @@
 
   // Check if visitor has given analytics consent
   function hasAnalyticsConsent() {
+    // Cookieless mode is consent-exempt (no device storage, no fingerprint), so all of
+    // CortIQ's own aggregate collection is permitted without a consent record.
+    if (COOKIELESS) return true;
     try {
       const stored = localStorage.getItem('site_cookie_consent');
       if (stored && JSON.parse(stored).analytics === true) return true;
@@ -497,7 +513,11 @@
   // Run the analytics pipeline (visitor identification, pageview, interaction
   // tracking). Only called once analytics consent is present.
   async function startAnalytics() {
-    await identifyVisitor();
+    // Cookieless mode skips visitor identification entirely — no device fingerprint and
+    // no cross-visit profile, which is exactly what keeps it consent-exempt.
+    if (!COOKIELESS) {
+      await identifyVisitor();
+    }
     trackPageView();
     setupClickTracking();
     setupConversionTracking();
