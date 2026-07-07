@@ -42,6 +42,7 @@ const integrationItems: IntegrationItem[] = [
 
   // Analytics
   { key: 'heatmap', name: 'CortIQ Visual Analytics', category: 'analytics', enabledField: 'heatmap_tracking_enabled', description: 'Internal heatmap tracking', riskLevel: 'low' },
+  { key: 'cloudflare', name: 'Cloudflare Web Analytics', category: 'analytics', enabledField: 'cloudflare_enabled', configField: 'cloudflare_zone_id', placeholder: 'Zone ID', description: 'Edge, cookie-free — sees ALL traffic incl. AI crawlers. Needs the CLOUDFLARE_API_TOKEN project secret.', riskLevel: 'low' },
   { key: 'google-analytics', name: 'Google Analytics', category: 'analytics', enabledField: 'ga_integration_enabled', configField: 'ga_measurement_id', placeholder: 'G-XXXXXXXXXX', riskLevel: 'medium' },
   { key: 'hotjar', name: 'Hotjar', category: 'analytics', enabledField: 'hotjar_enabled', configField: 'hotjar_site_id', placeholder: 'Site ID', riskLevel: 'medium' },
   { key: 'clarity', name: 'Microsoft Clarity', category: 'analytics', enabledField: 'microsoft_clarity_enabled', configField: 'microsoft_clarity_project_id', placeholder: 'Project ID', riskLevel: 'medium' },

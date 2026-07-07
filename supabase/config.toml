@@ -45,6 +45,11 @@ verify_jwt = false
 [functions.track-event]
 verify_jwt = false
 
+# Owner-triggered from the dashboard (requires a logged-in session); pulls Cloudflare
+# edge analytics via the CLOUDFLARE_API_TOKEN project secret.
+[functions.cloudflare-analytics]
+verify_jwt = true
+
 # Called from the tracking script with no JWT; authenticates by validating site_id
 # exists/active + per-site rate limit under the service role. Must be public or the
 # gateway rejects it with UNAUTHORIZED_NO_AUTH_HEADER before the function runs.

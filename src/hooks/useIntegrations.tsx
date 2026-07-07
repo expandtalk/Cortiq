@@ -7,6 +7,10 @@ export type IntegrationConfig = {
   // Tracking mode: cookieless (consent-exempt) vs full (fingerprint + returning-visitor)
   tracking_mode?: 'cookieless' | 'full';
 
+  // Cloudflare edge analytics (pull model)
+  cloudflare_enabled?: boolean;
+  cloudflare_zone_id?: string;
+
   // Heatmap Analytics
   heatmap_tracking_enabled?: boolean;
   
