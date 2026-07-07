@@ -15,7 +15,9 @@ import { BingWebmasterSetup } from '@/components/dashboard/BingWebmasterSetup';
 import { GoogleSiteKitIntegration } from '@/components/dashboard/GoogleSiteKitIntegration';
 import { TikTokIntegration } from '@/components/dashboard/integrations/TikTokIntegration';
 import { HubSpotIntegrationWizard } from '@/components/dashboard/HubSpotIntegrationWizard';
+import { DetectedTools } from '@/components/dashboard/integrations/DetectedTools';
 import { useIntegrations, useUpdateIntegrations, type IntegrationItem } from '@/hooks/useIntegrations';
+import { toast } from 'sonner';
 import type { Site } from '@/types/dashboard';
 
 interface ExternalIntegrationsTabProps {
@@ -261,6 +263,11 @@ export function ExternalIntegrationsTab({ selectedSite }: ExternalIntegrationsTa
     });
   };
 
+  const handleEnableDetected = (enabledField: string, label: string) => {
+    updateIntegrations.mutate({ siteId: selectedSite.id, config: { [enabledField]: true } });
+    toast.success(`${label} enabled — now shown in the cookie banner`);
+  };
+
   const wordpressItems = integrationItems.filter(item => item.category === 'wordpress');
   const analyticsItems = integrationItems.filter(item => item.category === 'analytics');
   const marketingItems = integrationItems.filter(item => item.category === 'marketing');
@@ -285,6 +292,8 @@ export function ExternalIntegrationsTab({ selectedSite }: ExternalIntegrationsTa
           the cookie banner. Disabled tools are not shown to visitors, reducing complexity.
         </AlertDescription>
       </Alert>
+
+      <DetectedTools selectedSite={selectedSite} siteData={siteData} onEnable={handleEnableDetected} />
 
       <div className="space-y-6">
         {/* WordPress Integrations */}
