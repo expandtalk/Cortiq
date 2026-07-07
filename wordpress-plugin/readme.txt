@@ -3,7 +3,7 @@ Contributors: cortiq
 Tags: analytics, ai-tracking, heatmap, cookie-free, gdpr, chatgpt, session-recording
 Requires at least: 5.6
 Tested up to: 6.8
-Stable tag: 5.3.0
+Stable tag: 5.3.1
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -96,6 +96,10 @@ The tracking script is loaded with `defer` so it does not block rendering. Cooki
 Yes. Add `data-cortiq-mask` to any input or element. The field content is replaced with asterisks in the recording. See the [GDPR guide](https://github.com/expandtalk/cortiq/blob/main/GDPR.md) for details.
 
 == Changelog ==
+
+= 5.3.1 =
+* Banner: close (X) button. Dismissing saves "necessary only" — closing never implies consent (EDPB).
+* Two more banner languages: Français and Português (now English, Svenska, Deutsch, Français, Português).
 
 = 5.3.0 =
 * Cookieless mode: consent-exempt audience measurement (no device storage, no fingerprint, no cross-visit profile) — removes the Statistics toggle from the banner. Choose Cookieless or Full per site under Tracking mode.

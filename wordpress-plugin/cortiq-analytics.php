@@ -3,7 +3,7 @@
  * Plugin Name: CortIQ Analytics
  * Plugin URI: https://cortiq.se
  * Description: Analytics for the agentic web. Track AI agents (ChatGPT Browser, Perplexity, Claude, Gemini) and human visitors — cookie-free, GDPR-compliant, with heatmaps, session recording and A/B testing.
- * Version: 5.3.0
+ * Version: 5.3.1
  * Author: CortIQ
  * Author URI: https://cortiq.se
  * Requires at least: 5.6
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( defined( 'CORTIQ_LOADED' ) ) return;
 define( 'CORTIQ_LOADED', true );
 
-define( 'CORTIQ_VERSION',    '5.3.0' );
+define( 'CORTIQ_VERSION',    '5.3.1' );
 define( 'CORTIQ_OPTION_KEY', 'cortiq_options' );
 define( 'CORTIQ_CDN',        'https://cortiq.se' );
 // Supabase Edge Functions base — used for the GDPR consent ledger (store-consent).
@@ -67,9 +67,11 @@ function cortiq_banner_lang( $opts ) {
         $loc = strtolower( (string) get_locale() );
         if ( 0 === strpos( $loc, 'sv' ) ) return 'sv';
         if ( 0 === strpos( $loc, 'de' ) ) return 'de';
+        if ( 0 === strpos( $loc, 'fr' ) ) return 'fr';
+        if ( 0 === strpos( $loc, 'pt' ) ) return 'pt';
         return 'en';
     }
-    return in_array( $choice, array( 'en', 'sv', 'de' ), true ) ? $choice : 'en';
+    return in_array( $choice, array( 'en', 'sv', 'de', 'fr', 'pt' ), true ) ? $choice : 'en';
 }
 
 function cortiq_banner_strings( $lang ) {
@@ -94,6 +96,7 @@ function cortiq_banner_strings( $lang ) {
             'consent_date'   => 'Consent date',
             'consent_id'     => 'Consent ID',
             'categories'     => 'Categories',
+            'close'          => 'Close',
         ),
         'sv' => array(
             'title'          => '🍪 Cookie-inställningar',
@@ -115,6 +118,7 @@ function cortiq_banner_strings( $lang ) {
             'consent_date'   => 'Samtyckesdatum',
             'consent_id'     => 'Samtyckes-ID',
             'categories'     => 'Kategorier',
+            'close'          => 'Stäng',
         ),
         'de' => array(
             'title'          => '🍪 Cookie-Einstellungen',
@@ -136,6 +140,51 @@ function cortiq_banner_strings( $lang ) {
             'consent_date'   => 'Einwilligungsdatum',
             'consent_id'     => 'Einwilligungs-ID',
             'categories'     => 'Kategorien',
+            'close'          => 'Schließen',
+        ),
+        'fr' => array(
+            'title'          => '🍪 Paramètres des cookies',
+            'intro'          => 'Nous voulons comprendre ce que les lecteurs apprécient et vous proposer un contenu pertinent. Choisissez ce que vous autorisez.',
+            'necessary'      => 'Nécessaires',
+            'necessary_desc' => 'Requis au fonctionnement du site. Toujours actifs.',
+            'preferences'    => 'Préférences',
+            'preferences_desc' => 'Mémorise vos choix comme la langue et la mise en page.',
+            'statistics'     => 'Statistiques',
+            'statistics_desc' => 'Nous aide à voir quelles pages et quels contenus plaisent.',
+            'marketing'      => 'Marketing',
+            'marketing_desc' => 'Utilisé pour afficher des publicités pertinentes et mesurer les campagnes.',
+            'show_details'   => 'Afficher les détails',
+            'hide_details'   => 'Masquer les détails',
+            'accept_all'     => 'Tout accepter',
+            'only_necessary' => 'Nécessaires uniquement',
+            'save'           => 'Enregistrer la sélection',
+            'reopen'         => 'Paramètres des cookies',
+            'consent_date'   => 'Date du consentement',
+            'consent_id'     => 'ID de consentement',
+            'categories'     => 'Catégories',
+            'close'          => 'Fermer',
+        ),
+        'pt' => array(
+            'title'          => '🍪 Definições de cookies',
+            'intro'          => 'Queremos perceber o que os leitores gostam e mostrar-lhe conteúdo relevante. Escolha o que permite.',
+            'necessary'      => 'Necessários',
+            'necessary_desc' => 'Necessários para o funcionamento do site. Sempre ativos.',
+            'preferences'    => 'Preferências',
+            'preferences_desc' => 'Memoriza escolhas como idioma e esquema.',
+            'statistics'     => 'Estatísticas',
+            'statistics_desc' => 'Ajuda-nos a ver que páginas e conteúdos as pessoas preferem.',
+            'marketing'      => 'Marketing',
+            'marketing_desc' => 'Usado para mostrar anúncios relevantes e medir campanhas.',
+            'show_details'   => 'Mostrar detalhes',
+            'hide_details'   => 'Ocultar detalhes',
+            'accept_all'     => 'Aceitar tudo',
+            'only_necessary' => 'Apenas necessários',
+            'save'           => 'Guardar seleção',
+            'reopen'         => 'Definições de cookies',
+            'consent_date'   => 'Data do consentimento',
+            'consent_id'     => 'ID de consentimento',
+            'categories'     => 'Categorias',
+            'close'          => 'Fechar',
         ),
     );
     return isset( $s[ $lang ] ) ? $s[ $lang ] : $s['en'];
@@ -234,8 +283,10 @@ function cortiq_cookie_banner() {
 <style>
 #cq-overlay,#cq-reopen{--cq-accent:<?php echo $accent; ?>}
 #cq-overlay{display:none;position:fixed;inset:0;background:rgba(0,0,0,.55);z-index:99998;align-items:flex-end;justify-content:center;padding:0}
-#cq-box{background:#1e1e2e;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;width:100%;max-width:640px;border-radius:12px 12px 0 0;border-top:1px solid var(--cq-accent);box-shadow:0 -8px 40px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto}
-#cq-box h2{margin:0;font-size:16px;font-weight:700;color:#e2e8f0}
+#cq-box{background:#1e1e2e;color:#e2e8f0;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;font-size:14px;width:100%;max-width:640px;border-radius:12px 12px 0 0;border-top:1px solid var(--cq-accent);box-shadow:0 -8px 40px rgba(0,0,0,.5);max-height:90vh;overflow-y:auto;position:relative}
+.cq-close{position:absolute;top:8px;right:10px;background:none;border:none;color:#94a3b8;font-size:22px;line-height:1;cursor:pointer;padding:4px 9px;font-family:inherit;z-index:1;border-radius:6px}
+.cq-close:hover{color:#e2e8f0;background:#2d2d45}
+#cq-box h2{margin:0;font-size:16px;font-weight:700;color:#e2e8f0;padding-right:28px}
 #cq-box p{margin:8px 0 0;font-size:13px;color:#94a3b8;line-height:1.5}
 .cq-head{padding:20px 20px 12px}
 .cq-cats{padding:0 20px}
@@ -269,6 +320,7 @@ function cortiq_cookie_banner() {
 
 <div id="cq-overlay">
   <div id="cq-box" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr( $t['title'] ); ?>">
+    <button class="cq-close" id="cq-close" type="button" aria-label="<?php echo esc_attr( $t['close'] ); ?>" title="<?php echo esc_attr( $t['close'] ); ?>">&times;</button>
     <div class="cq-head">
       <h2><?php echo esc_html( $t['title'] ); ?></h2>
       <p><?php echo esc_html( $t['intro'] ); ?></p>
@@ -418,6 +470,14 @@ function cortiq_cookie_banner() {
   };
   reopen.onclick=function(){ overlay.style.display='flex'; reopen.style.display='none'; };
 
+  // Close (X): dismissing the banner must NOT imply consent (EDPB) — it saves the
+  // GDPR-safe default of necessary only, so the banner is answered and won't nag.
+  var closeBtn=document.getElementById('cq-close');
+  if(closeBtn){ closeBtn.onclick=function(){
+    chkPref.checked=false; if(chkAnal){ chkAnal.checked=false; } chkMark.checked=false;
+    save(false,false,false);
+  }; }
+
   var existing;
   try{ existing=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
   // Show the banner only if there's no fresh decision. A saved choice (even reject) is
@@ -547,7 +607,7 @@ function cortiq_sanitize_options( $input ) {
     $clean['accent_color']     = $ac ? $ac : '#6366f1';
     $clean['tracking_mode']    = ( isset( $input['tracking_mode'] ) && 'cookieless' === $input['tracking_mode'] ) ? 'cookieless' : 'full';
     $bl = isset( $input['banner_language'] ) ? $input['banner_language'] : 'auto';
-    $clean['banner_language']  = in_array( $bl, array( 'auto', 'en', 'sv', 'de' ), true ) ? $bl : 'auto';
+    $clean['banner_language']  = in_array( $bl, array( 'auto', 'en', 'sv', 'de', 'fr', 'pt' ), true ) ? $bl : 'auto';
     $clean['consent_mode']     = ( isset( $input['consent_mode'] ) && 'advanced' === $input['consent_mode'] ) ? 'advanced' : 'basic';
     return $clean;
 }
@@ -683,6 +743,8 @@ function cortiq_settings_page() {
                             <option value="en"   <?php selected( 'en',   $opts['banner_language'] ); ?>>English</option>
                             <option value="sv"   <?php selected( 'sv',   $opts['banner_language'] ); ?>>Svenska</option>
                             <option value="de"   <?php selected( 'de',   $opts['banner_language'] ); ?>>Deutsch</option>
+                            <option value="fr"   <?php selected( 'fr',   $opts['banner_language'] ); ?>>Français</option>
+                            <option value="pt"   <?php selected( 'pt',   $opts['banner_language'] ); ?>>Português</option>
                         </select>
                         <p class="description">Language for the cookie banner. Auto follows your site's WordPress language.</p>
                     </td>
