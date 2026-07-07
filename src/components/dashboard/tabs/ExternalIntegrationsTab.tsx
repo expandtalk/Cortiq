@@ -22,34 +22,46 @@ interface ExternalIntegrationsTabProps {
   selectedSite: Site;
 }
 
+// Risk badge styling (explicit light-bg + dark-text pairs so they're readable in both themes).
+const RISK_BADGE: Record<'low' | 'medium' | 'high', { label: string; className: string }> = {
+  low:    { label: 'Low risk',    className: 'bg-green-100 text-green-800 border-green-200' },
+  medium: { label: 'Medium risk', className: 'bg-amber-100 text-amber-800 border-amber-200' },
+  high:   { label: 'High risk',   className: 'bg-red-100 text-red-800 border-red-200' },
+};
+// Which banner consent category governs each integration category.
+const CONSENT_CATEGORY: Record<string, string> = {
+  analytics: 'Statistics', marketing: 'Marketing', tag_manager: 'Marketing',
+  automation: 'Marketing', wordpress: 'Necessary',
+};
+
 const integrationItems: IntegrationItem[] = [
   // WordPress & CMS
-  { key: 'sitekit', name: 'Google Site Kit', category: 'wordpress', enabledField: 'sitekit_integration_enabled', description: 'Auto-detects and synchronizes Site Kit data', isWordPress: true },
+  { key: 'sitekit', name: 'Google Site Kit', category: 'wordpress', enabledField: 'sitekit_integration_enabled', description: 'Auto-detects and synchronizes Site Kit data', isWordPress: true, riskLevel: 'low' },
 
   // Analytics
-  { key: 'heatmap', name: 'CortIQ Visual Analytics', category: 'analytics', enabledField: 'heatmap_tracking_enabled', description: 'Internal heatmap tracking' },
-  { key: 'google-analytics', name: 'Google Analytics', category: 'analytics', enabledField: 'ga_integration_enabled', configField: 'ga_measurement_id', placeholder: 'G-XXXXXXXXXX' },
-  { key: 'hotjar', name: 'Hotjar', category: 'analytics', enabledField: 'hotjar_enabled', configField: 'hotjar_site_id', placeholder: 'Site ID' },
-  { key: 'clarity', name: 'Microsoft Clarity', category: 'analytics', enabledField: 'microsoft_clarity_enabled', configField: 'microsoft_clarity_project_id', placeholder: 'Project ID' },
-  { key: 'mixpanel', name: 'Mixpanel', category: 'analytics', enabledField: 'mixpanel_enabled', configField: 'mixpanel_token', placeholder: 'Token' },
-  
-  // Marketing  
-  { key: 'google-ads', name: 'Google Ads Remarketing', category: 'marketing', enabledField: 'google_ads_enabled', configField: 'google_ads_conversion_id', placeholder: 'Conversion ID', secondaryConfigField: 'google_ads_developer_token', secondaryPlaceholder: 'Developer Token (för Enhanced Conversions)' },
-  { key: 'facebook', name: 'Facebook/Instagram Pixel', category: 'marketing', enabledField: 'facebook_pixel_enabled', configField: 'facebook_pixel_id', placeholder: 'Pixel ID', secondaryConfigField: 'facebook_conversion_api_token', secondaryPlaceholder: 'Conversions API Access Token' },
-  { key: 'tiktok', name: 'TikTok Pixel', category: 'marketing', enabledField: 'tiktok_pixel_enabled', configField: 'tiktok_pixel_id', placeholder: 'C9XXXXXXXXXXXXX', secondaryConfigField: 'tiktok_events_api_token', secondaryPlaceholder: 'Events API Access Token', highRisk: true },
-  { key: 'linkedin', name: 'LinkedIn Insight', category: 'marketing', enabledField: 'linkedin_insight_enabled', configField: 'linkedin_partner_id', placeholder: 'Partner ID', secondaryConfigField: 'linkedin_conversion_api_token', secondaryPlaceholder: 'Conversions API Access Token' },
-  { key: 'shopify', name: 'Shopify Customer Events', category: 'marketing', enabledField: 'shopify_enabled', configField: 'shopify_store_url', placeholder: 'mystore.myshopify.com', secondaryConfigField: 'shopify_access_token', secondaryPlaceholder: 'Admin API Access Token' },
-  { key: 'hubspot', name: 'HubSpot', category: 'marketing', enabledField: 'hubspot_enabled', configField: 'hubspot_hub_id', placeholder: 'Hub ID' },
-  
+  { key: 'heatmap', name: 'CortIQ Visual Analytics', category: 'analytics', enabledField: 'heatmap_tracking_enabled', description: 'Internal heatmap tracking', riskLevel: 'low' },
+  { key: 'google-analytics', name: 'Google Analytics', category: 'analytics', enabledField: 'ga_integration_enabled', configField: 'ga_measurement_id', placeholder: 'G-XXXXXXXXXX', riskLevel: 'medium' },
+  { key: 'hotjar', name: 'Hotjar', category: 'analytics', enabledField: 'hotjar_enabled', configField: 'hotjar_site_id', placeholder: 'Site ID', riskLevel: 'medium' },
+  { key: 'clarity', name: 'Microsoft Clarity', category: 'analytics', enabledField: 'microsoft_clarity_enabled', configField: 'microsoft_clarity_project_id', placeholder: 'Project ID', riskLevel: 'medium' },
+  { key: 'mixpanel', name: 'Mixpanel', category: 'analytics', enabledField: 'mixpanel_enabled', configField: 'mixpanel_token', placeholder: 'Token', riskLevel: 'medium' },
+
+  // Marketing
+  { key: 'google-ads', name: 'Google Ads Remarketing', category: 'marketing', enabledField: 'google_ads_enabled', configField: 'google_ads_conversion_id', placeholder: 'Conversion ID', secondaryConfigField: 'google_ads_developer_token', secondaryPlaceholder: 'Developer Token (för Enhanced Conversions)', riskLevel: 'high' },
+  { key: 'facebook', name: 'Facebook/Instagram Pixel', category: 'marketing', enabledField: 'facebook_pixel_enabled', configField: 'facebook_pixel_id', placeholder: 'Pixel ID', secondaryConfigField: 'facebook_conversion_api_token', secondaryPlaceholder: 'Conversions API Access Token', riskLevel: 'high' },
+  { key: 'tiktok', name: 'TikTok Pixel', category: 'marketing', enabledField: 'tiktok_pixel_enabled', configField: 'tiktok_pixel_id', placeholder: 'C9XXXXXXXXXXXXX', secondaryConfigField: 'tiktok_events_api_token', secondaryPlaceholder: 'Events API Access Token', highRisk: true, riskLevel: 'high' },
+  { key: 'linkedin', name: 'LinkedIn Insight', category: 'marketing', enabledField: 'linkedin_insight_enabled', configField: 'linkedin_partner_id', placeholder: 'Partner ID', secondaryConfigField: 'linkedin_conversion_api_token', secondaryPlaceholder: 'Conversions API Access Token', riskLevel: 'medium' },
+  { key: 'shopify', name: 'Shopify Customer Events', category: 'marketing', enabledField: 'shopify_enabled', configField: 'shopify_store_url', placeholder: 'mystore.myshopify.com', secondaryConfigField: 'shopify_access_token', secondaryPlaceholder: 'Admin API Access Token', riskLevel: 'low' },
+  { key: 'hubspot', name: 'HubSpot', category: 'marketing', enabledField: 'hubspot_enabled', configField: 'hubspot_hub_id', placeholder: 'Hub ID', riskLevel: 'medium' },
+
   // Tag Managers
-  { key: 'gtm', name: 'Google Tag Manager', category: 'tag_manager', enabledField: 'gtm_enabled', configField: 'gtm_container_id', placeholder: 'GTM-XXXXXXX' },
-  { key: 'adobe-tm', name: 'Adobe Tag Manager', category: 'tag_manager', enabledField: 'adobe_tag_manager_enabled', configField: 'adobe_container_id', placeholder: 'Container ID' },
-  
+  { key: 'gtm', name: 'Google Tag Manager', category: 'tag_manager', enabledField: 'gtm_enabled', configField: 'gtm_container_id', placeholder: 'GTM-XXXXXXX', riskLevel: 'high' },
+  { key: 'adobe-tm', name: 'Adobe Tag Manager', category: 'tag_manager', enabledField: 'adobe_tag_manager_enabled', configField: 'adobe_container_id', placeholder: 'Container ID', riskLevel: 'high' },
+
   // Automation
-  { key: 'pardot', name: 'Salesforce Pardot', category: 'automation', enabledField: 'salesforce_pardot_enabled', configField: 'salesforce_account_id', placeholder: 'Account ID' },
-  { key: 'eloqua', name: 'Oracle Eloqua', category: 'automation', enabledField: 'oracle_eloqua_enabled', configField: 'oracle_site_id', placeholder: 'Site ID' },
-  { key: 'activecampaign', name: 'ActiveCampaign', category: 'automation', enabledField: 'activecampaign_enabled', configField: 'activecampaign_account', placeholder: 'Account' },
-  { key: 'marketo', name: 'Marketo', category: 'automation', enabledField: 'marketo_enabled', configField: 'marketo_munchkin_id', placeholder: 'Munchkin ID' },
+  { key: 'pardot', name: 'Salesforce Pardot', category: 'automation', enabledField: 'salesforce_pardot_enabled', configField: 'salesforce_account_id', placeholder: 'Account ID', riskLevel: 'medium' },
+  { key: 'eloqua', name: 'Oracle Eloqua', category: 'automation', enabledField: 'oracle_eloqua_enabled', configField: 'oracle_site_id', placeholder: 'Site ID', riskLevel: 'medium' },
+  { key: 'activecampaign', name: 'ActiveCampaign', category: 'automation', enabledField: 'activecampaign_enabled', configField: 'activecampaign_account', placeholder: 'Account', riskLevel: 'medium' },
+  { key: 'marketo', name: 'Marketo', category: 'automation', enabledField: 'marketo_enabled', configField: 'marketo_munchkin_id', placeholder: 'Munchkin ID', riskLevel: 'medium' },
 ];
 
 function IntegrationSection({ title, icon: Icon, items, siteData, onUpdate, selectedSite }: {
@@ -180,6 +192,14 @@ function IntegrationSection({ title, icon: Icon, items, siteData, onUpdate, sele
                       <Label className="font-medium">{item.name}</Label>
                       {item.isActive && <CheckCircle className="h-4 w-4 text-green-600" />}
                       {item.isWordPress && <Badge variant="outline" className="text-xs">WordPress</Badge>}
+                      {item.riskLevel && (
+                        <Badge variant="outline" className={`text-xs ${RISK_BADGE[item.riskLevel].className}`}>
+                          {RISK_BADGE[item.riskLevel].label}
+                        </Badge>
+                      )}
+                      {CONSENT_CATEGORY[item.category] && (
+                        <Badge variant="outline" className="text-xs">{CONSENT_CATEGORY[item.category]}</Badge>
+                      )}
                     </div>
                     {item.description && (
                       <p className="text-sm text-muted-foreground">{item.description}</p>

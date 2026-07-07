@@ -131,4 +131,6 @@ export interface IntegrationItem {
   isActive?: boolean;
   isWordPress?: boolean;
   highRisk?: boolean;
+  // Compliance risk from out-of-EU transfer, cookie lifetime and data sensitivity.
+  riskLevel?: 'low' | 'medium' | 'high';
 }
