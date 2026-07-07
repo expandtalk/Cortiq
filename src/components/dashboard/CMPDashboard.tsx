@@ -20,6 +20,7 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
   const { data: gdprSettings } = useGDPRSettings(selectedSite.id);
   const updateGDPRSettings = useUpdateGDPRSettings();
   const [serverSideConfig, setServerSideConfig] = useState<any>((selectedSite as any).server_side_tracking_config || {});
+  const [trackingMode, setTrackingMode] = useState<string>((selectedSite as any).tracking_mode || 'full');
   const [consentStats, setConsentStats] = useState<any>(null);
   const [recentValidations, setRecentValidations] = useState<any[]>([]);
 
@@ -79,6 +80,17 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
     } catch (error) {
       console.error('Error updating server-side config:', error);
       toast.error('Error updating configuration');
+    }
+  };
+
+  const updateTrackingMode = async (mode: 'cookieless' | 'full') => {
+    try {
+      await supabase.from('sites').update({ tracking_mode: mode } as any).eq('id', selectedSite.id);
+      setTrackingMode(mode);
+      toast.success(mode === 'cookieless' ? 'Switched to cookieless (consent-exempt)' : 'Switched to full tracking');
+    } catch (error) {
+      console.error('Error updating tracking mode:', error);
+      toast.error('Could not update tracking mode');
     }
   };
 
@@ -220,6 +232,37 @@ export function CMPDashboard({ selectedSite }: CMPDashboardProps) {
         </TabsContent>
 
         <TabsContent value="configuration" className="space-y-6">
+          <Card>
+            <CardHeader>
+              <CardTitle>Tracking mode</CardTitle>
+              <CardDescription>How CortIQ measures this site (server source of truth).</CardDescription>
+            </CardHeader>
+            <CardContent className="space-y-4">
+              <div className="flex items-center justify-between">
+                <div className="space-y-0.5 pr-4">
+                  <Label>Cookieless (consent-exempt)</Label>
+                  <p className="text-sm text-muted-foreground">
+                    No device storage, no fingerprint, no cross-visit profile. Removes the
+                    Statistics consent toggle from the banner. Recommended for privacy-first sites.
+                  </p>
+                </div>
+                <Switch
+                  checked={trackingMode === 'cookieless'}
+                  onCheckedChange={(checked) => updateTrackingMode(checked ? 'cookieless' : 'full')}
+                />
+              </div>
+              <Alert>
+                <Shield className="h-4 w-4" />
+                <AlertDescription>
+                  {trackingMode === 'cookieless'
+                    ? 'Cookieless: CortIQ analytics run without consent. GA4 and marketing tools still require consent.'
+                    : 'Full: device fingerprint + returning-visitor profiling. Requires analytics consent.'}
+                  {' '}Make sure the tracking script sends the matching mode — in the WordPress plugin, set Tracking mode to the same value.
+                </AlertDescription>
+              </Alert>
+            </CardContent>
+          </Card>
+
           <Card>
             <CardHeader>
               <CardTitle>Server-Side Tracking Configuration</CardTitle>

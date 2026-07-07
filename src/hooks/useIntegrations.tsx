@@ -4,6 +4,9 @@ import { useToast } from '@/hooks/use-toast';
 import type { Site } from '@/types/dashboard';
 
 export type IntegrationConfig = {
+  // Tracking mode: cookieless (consent-exempt) vs full (fingerprint + returning-visitor)
+  tracking_mode?: 'cookieless' | 'full';
+
   // Heatmap Analytics
   heatmap_tracking_enabled?: boolean;
   
