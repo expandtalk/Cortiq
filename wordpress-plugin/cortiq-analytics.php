@@ -3,7 +3,7 @@
  * Plugin Name: CortIQ Analytics
  * Plugin URI: https://cortiq.se
  * Description: Analytics for the agentic web. Track AI agents (ChatGPT Browser, Perplexity, Claude, Gemini) and human visitors — cookie-free, GDPR-compliant, with heatmaps, session recording and A/B testing.
- * Version: 5.2.3
+ * Version: 5.3.0
  * Author: CortIQ
  * Author URI: https://cortiq.se
  * Requires at least: 5.6
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( defined( 'CORTIQ_LOADED' ) ) return;
 define( 'CORTIQ_LOADED', true );
 
-define( 'CORTIQ_VERSION',    '5.2.3' );
+define( 'CORTIQ_VERSION',    '5.3.0' );
 define( 'CORTIQ_OPTION_KEY', 'cortiq_options' );
 define( 'CORTIQ_CDN',        'https://cortiq.se' );
 // Supabase Edge Functions base — used for the GDPR consent ledger (store-consent).
@@ -40,6 +40,9 @@ function cortiq_defaults() {
         'anonymize_ip'          => true,
         'excluded_roles'        => array( 'administrator' ),
         'accent_color'          => '#6366f1',
+        'tracking_mode'         => 'full',   // 'cookieless' (consent-exempt) | 'full'
+        'banner_language'       => 'auto',   // 'auto' (WP locale) | 'en' | 'sv' | 'de'
+        'consent_mode'          => 'basic',  // GA4 Consent Mode: 'basic' | 'advanced'
     );
 }
 
@@ -52,6 +55,90 @@ function cortiq_options() {
     }
 
     return wp_parse_args( $saved, cortiq_defaults() );
+}
+
+// ─────────────────────────────────────────────────────────────────────────────
+// i18n — banner strings (flat dictionary; add a language = add a key)
+// ─────────────────────────────────────────────────────────────────────────────
+
+function cortiq_banner_lang( $opts ) {
+    $choice = isset( $opts['banner_language'] ) ? $opts['banner_language'] : 'auto';
+    if ( 'auto' === $choice ) {
+        $loc = strtolower( (string) get_locale() );
+        if ( 0 === strpos( $loc, 'sv' ) ) return 'sv';
+        if ( 0 === strpos( $loc, 'de' ) ) return 'de';
+        return 'en';
+    }
+    return in_array( $choice, array( 'en', 'sv', 'de' ), true ) ? $choice : 'en';
+}
+
+function cortiq_banner_strings( $lang ) {
+    $s = array(
+        'en' => array(
+            'title'          => '🍪 Cookie settings',
+            'intro'          => 'We want to understand what readers enjoy, and show you relevant content. Choose what you allow.',
+            'necessary'      => 'Necessary',
+            'necessary_desc' => 'Required for the site to work. Always on.',
+            'preferences'    => 'Preferences',
+            'preferences_desc' => 'Remembers choices like language and layout.',
+            'statistics'     => 'Statistics',
+            'statistics_desc' => 'Helps us see which pages and content people like.',
+            'marketing'      => 'Marketing',
+            'marketing_desc' => 'Used to show relevant ads and measure campaigns.',
+            'show_details'   => 'Show details',
+            'hide_details'   => 'Hide details',
+            'accept_all'     => 'Accept all',
+            'only_necessary' => 'Only necessary',
+            'save'           => 'Save selection',
+            'reopen'         => 'Cookie settings',
+            'consent_date'   => 'Consent date',
+            'consent_id'     => 'Consent ID',
+            'categories'     => 'Categories',
+        ),
+        'sv' => array(
+            'title'          => '🍪 Cookie-inställningar',
+            'intro'          => 'Vi vill förstå vad läsarna gillar och visa dig relevant innehåll. Välj vad du tillåter.',
+            'necessary'      => 'Nödvändiga',
+            'necessary_desc' => 'Krävs för att sajten ska fungera. Alltid på.',
+            'preferences'    => 'Preferenser',
+            'preferences_desc' => 'Kommer ihåg val som språk och layout.',
+            'statistics'     => 'Statistik',
+            'statistics_desc' => 'Hjälper oss se vilka sidor och innehåll besökarna gillar.',
+            'marketing'      => 'Marknadsföring',
+            'marketing_desc' => 'Används för att visa relevanta annonser och mäta kampanjer.',
+            'show_details'   => 'Visa detaljer',
+            'hide_details'   => 'Dölj detaljer',
+            'accept_all'     => 'Acceptera alla',
+            'only_necessary' => 'Endast nödvändiga',
+            'save'           => 'Spara val',
+            'reopen'         => 'Cookie-inställningar',
+            'consent_date'   => 'Samtyckesdatum',
+            'consent_id'     => 'Samtyckes-ID',
+            'categories'     => 'Kategorier',
+        ),
+        'de' => array(
+            'title'          => '🍪 Cookie-Einstellungen',
+            'intro'          => 'Wir möchten verstehen, was Leser mögen, und Ihnen relevante Inhalte zeigen. Wählen Sie, was Sie erlauben.',
+            'necessary'      => 'Notwendig',
+            'necessary_desc' => 'Für den Betrieb der Website erforderlich. Immer aktiv.',
+            'preferences'    => 'Präferenzen',
+            'preferences_desc' => 'Merkt sich Einstellungen wie Sprache und Layout.',
+            'statistics'     => 'Statistik',
+            'statistics_desc' => 'Hilft uns zu sehen, welche Seiten und Inhalte gefallen.',
+            'marketing'      => 'Marketing',
+            'marketing_desc' => 'Für relevante Werbung und die Messung von Kampagnen.',
+            'show_details'   => 'Details anzeigen',
+            'hide_details'   => 'Details ausblenden',
+            'accept_all'     => 'Alle akzeptieren',
+            'only_necessary' => 'Nur notwendige',
+            'save'           => 'Auswahl speichern',
+            'reopen'         => 'Cookie-Einstellungen',
+            'consent_date'   => 'Einwilligungsdatum',
+            'consent_id'     => 'Einwilligungs-ID',
+            'categories'     => 'Kategorien',
+        ),
+    );
+    return isset( $s[ $lang ] ) ? $s[ $lang ] : $s['en'];
 }
 
 // ─────────────────────────────────────────────────────────────────────────────
@@ -114,6 +201,9 @@ function cortiq_enqueue() {
         'apiKey'      => $opts['tracking_id'],
         'contentType' => 'page',
         'platform'    => 'web',
+        // Cookieless mode: spa-tracking.js runs consent-exempt (no fingerprint, no
+        // device storage) and needs no Statistics consent toggle.
+        'cookieless'  => ( 'cookieless' === $opts['tracking_mode'] ),
     ) );
     wp_add_inline_script( 'cortiq-tracking', 'window.cortiqConfig = ' . $config . ';', 'before' );
 
@@ -135,6 +225,11 @@ function cortiq_cookie_banner() {
     $opts = cortiq_options();
     if ( empty( $opts['gdpr_enabled'] ) ) return;
     $accent = $opts['accent_color'] ? esc_attr( $opts['accent_color'] ) : '#6366f1';
+    $t      = cortiq_banner_strings( cortiq_banner_lang( $opts ) );
+    // Show the Statistics toggle only when something actually needs analytics consent:
+    // GA4, or full (fingerprint) mode. In cookieless mode CortIQ's own analytics are
+    // consent-exempt, so with no GA4 there is nothing to consent to under Statistics.
+    $show_statistics = ( 'cookieless' !== $opts['tracking_mode'] ) || ! empty( $opts['ga4_id'] );
     ?>
 <style>
 #cq-overlay,#cq-reopen{--cq-accent:<?php echo $accent; ?>}
@@ -168,73 +263,85 @@ function cortiq_cookie_banner() {
 .cq-btn-secondary:hover{color:#e2e8f0;border-color:var(--cq-accent)}
 #cq-reopen{display:none;position:fixed;bottom:20px;left:20px;z-index:99997;width:26px;height:26px;border-radius:50%;border:none;background:var(--cq-accent);color:#fff;cursor:pointer;font-size:16px;line-height:26px;text-align:center;padding:0;box-shadow:0 1px 4px rgba(0,0,0,.3);opacity:.92;font-family:inherit}
 #cq-reopen:hover{opacity:1}
+/* Minimal-consent state: hollow icon = a soft, non-nagging invitation to reconsider */
+#cq-reopen.cq-min{background:transparent;border:1.5px solid var(--cq-accent);color:var(--cq-accent);opacity:.8;line-height:23px}
 </style>
 
 <div id="cq-overlay">
-  <div id="cq-box" role="dialog" aria-modal="true" aria-label="Cookie settings">
+  <div id="cq-box" role="dialog" aria-modal="true" aria-label="<?php echo esc_attr( $t['title'] ); ?>">
     <div class="cq-head">
-      <h2>🍪 Cookie settings</h2>
-      <p>We use cookies to analyse traffic, remember preferences and personalise content. Choose which categories you allow below.</p>
+      <h2><?php echo esc_html( $t['title'] ); ?></h2>
+      <p><?php echo esc_html( $t['intro'] ); ?></p>
     </div>
 
     <div class="cq-cats">
       <div class="cq-cat">
         <div class="cq-cat-info">
-          <div class="cq-cat-name">Necessary</div>
-          <div class="cq-cat-desc">Required for the site to function. Cannot be disabled.</div>
+          <div class="cq-cat-name"><?php echo esc_html( $t['necessary'] ); ?></div>
+          <div class="cq-cat-desc"><?php echo esc_html( $t['necessary_desc'] ); ?></div>
         </div>
         <label class="cq-toggle"><input type="checkbox" id="cq-necessary" checked disabled><span class="cq-slider"></span></label>
       </div>
       <div class="cq-cat">
         <div class="cq-cat-info">
-          <div class="cq-cat-name">Preferences</div>
-          <div class="cq-cat-desc">Remembers settings like language, region and layout.</div>
+          <div class="cq-cat-name"><?php echo esc_html( $t['preferences'] ); ?></div>
+          <div class="cq-cat-desc"><?php echo esc_html( $t['preferences_desc'] ); ?></div>
         </div>
         <label class="cq-toggle"><input type="checkbox" id="cq-preferences"><span class="cq-slider"></span></label>
       </div>
+      <?php if ( $show_statistics ) : ?>
       <div class="cq-cat">
         <div class="cq-cat-info">
-          <div class="cq-cat-name">Statistics</div>
-          <div class="cq-cat-desc">Helps us understand how visitors use the site (page views, heatmaps, session data).</div>
+          <div class="cq-cat-name"><?php echo esc_html( $t['statistics'] ); ?></div>
+          <div class="cq-cat-desc"><?php echo esc_html( $t['statistics_desc'] ); ?></div>
         </div>
         <label class="cq-toggle"><input type="checkbox" id="cq-analytics"><span class="cq-slider"></span></label>
       </div>
+      <?php endif; ?>
       <div class="cq-cat">
         <div class="cq-cat-info">
-          <div class="cq-cat-name">Marketing</div>
-          <div class="cq-cat-desc">Used to show relevant ads and measure ad campaign performance.</div>
+          <div class="cq-cat-name"><?php echo esc_html( $t['marketing'] ); ?></div>
+          <div class="cq-cat-desc"><?php echo esc_html( $t['marketing_desc'] ); ?></div>
         </div>
         <label class="cq-toggle"><input type="checkbox" id="cq-marketing"><span class="cq-slider"></span></label>
       </div>
     </div>
 
-    <button class="cq-details-toggle" onclick="document.getElementById('cq-details').style.display=document.getElementById('cq-details').style.display==='block'?'none':'block';this.querySelector('span').textContent=document.getElementById('cq-details').style.display==='block'?'Hide details':'Show details'">
-      ▸ <span>Show details</span>
-    </button>
+    <button class="cq-details-toggle" id="cq-details-toggle" type="button">▸ <span><?php echo esc_html( $t['show_details'] ); ?></span></button>
     <dl class="cq-details" id="cq-details"></dl>
 
     <div class="cq-btns">
-      <button class="cq-btn cq-btn-primary" id="cq-accept-all">Accept all</button>
-      <button class="cq-btn cq-btn-secondary" id="cq-reject">Only necessary</button>
-      <button class="cq-btn cq-btn-secondary" id="cq-save">Save selection</button>
+      <button class="cq-btn cq-btn-primary" id="cq-accept-all"><?php echo esc_html( $t['accept_all'] ); ?></button>
+      <button class="cq-btn cq-btn-secondary" id="cq-reject"><?php echo esc_html( $t['only_necessary'] ); ?></button>
+      <button class="cq-btn cq-btn-secondary" id="cq-save"><?php echo esc_html( $t['save'] ); ?></button>
     </div>
   </div>
 </div>
 
-<button id="cq-reopen" title="Cookie settings">🍪</button>
+<button id="cq-reopen" title="<?php echo esc_attr( $t['reopen'] ); ?>">🍪</button>
 
 <script>
 (function(){
   var CQ_API = '<?php echo esc_js( CORTIQ_API ); ?>';
   var CQ_SITE_ID = '<?php echo esc_js( $opts['site_id'] ); ?>';
   var CQ_TRACKING_ID = '<?php echo esc_js( $opts['tracking_id'] ); ?>';
+  var CQ_T = <?php echo wp_json_encode( array(
+    'show'  => $t['show_details'], 'hide' => $t['hide_details'],
+    'nec'   => $t['necessary'],    'pref' => $t['preferences'],
+    'stat'  => $t['statistics'],   'mark' => $t['marketing'],
+    'cdate' => $t['consent_date'], 'cid'  => $t['consent_id'], 'cats' => $t['categories'],
+  ) ); ?>;
+  var POLICY_VERSION = '1';
+  var MAX_AGE = 365*24*60*60*1000; // re-ask after ~12 months (consent renewed by ~13)
   var KEY = 'site_cookie_consent';
-  var overlay   = document.getElementById('cq-overlay');
-  var chkPref   = document.getElementById('cq-preferences');
-  var chkAnal   = document.getElementById('cq-analytics');
-  var chkMark   = document.getElementById('cq-marketing');
-  var details   = document.getElementById('cq-details');
-  var reopen    = document.getElementById('cq-reopen');
+  var overlay = document.getElementById('cq-overlay');
+  var chkPref = document.getElementById('cq-preferences');
+  var chkAnal = document.getElementById('cq-analytics'); // absent when Statistics is hidden (cookieless, no GA4)
+  var chkMark = document.getElementById('cq-marketing');
+  var details = document.getElementById('cq-details');
+  var reopen  = document.getElementById('cq-reopen');
+  var dToggle = document.getElementById('cq-details-toggle');
+  var locale  = (navigator.language || 'sv');
 
   function genId(){
     var arr=new Uint8Array(33);
@@ -244,67 +351,86 @@ function cortiq_cookie_banner() {
 
   function fmt(ts){
     var d=new Date(ts);
-    return d.toLocaleDateString('sv-SE',{day:'numeric',month:'short',year:'numeric'})+
-      ' - '+d.toLocaleTimeString('sv-SE')+' '+
-      (d.toLocaleTimeString('en-US',{timeZoneName:'short'}).split(' ').pop()||'');
+    try { return d.toLocaleDateString(locale,{day:'numeric',month:'short',year:'numeric'})+' '+d.toLocaleTimeString(locale); }
+    catch(e){ return d.toISOString(); }
+  }
+
+  // Reopen icon: hollow when the visitor is on necessary-only — a soft, non-nagging cue
+  // that they can reconsider, without pulsing dots or notification badges.
+  function iconState(c){
+    var full = c && (c.preferences || c.analytics || c.marketing);
+    reopen.className = full ? '' : 'cq-min';
   }
 
   function save(pref,anal,mark){
-    var c={
-      necessary:true, preferences:pref, analytics:anal, marketing:mark,
-      timestamp:Date.now(), consentId:genId(), policyVersion:POLICY_VERSION
-    };
-    localStorage.setItem(KEY,JSON.stringify(c));
+    var c={ necessary:true, preferences:pref, analytics:anal, marketing:mark,
+      timestamp:Date.now(), consentId:genId(), policyVersion:POLICY_VERSION };
+    try { localStorage.setItem(KEY,JSON.stringify(c)); } catch(e){}
+    // GA4 Consent Mode + spa-tracking listen for this event.
     window.dispatchEvent(new CustomEvent('siteConsentUpdated',{detail:c}));
-    // GDPR Art. 7: record server-side proof of consent (the source of truth). The
-    // backend resolves the site by page domain, so this lands under the right site.
+    // GDPR Art. 7: record server-side proof of consent. The backend resolves the site
+    // by page domain, so this lands under the right site.
     try {
       fetch(CQ_API + '/store-consent', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        keepalive: true,
+        method:'POST', headers:{'Content-Type':'application/json'}, keepalive:true,
         body: JSON.stringify({
-          site_id: CQ_SITE_ID || undefined,
-          tracking_id: CQ_TRACKING_ID || undefined,
-          session_id: c.consentId,
-          page_url: location.href,
-          consent_types: { necessary:true, analytics:anal, marketing:mark, preferences:pref },
-          source: 'cookie_banner',
-          gpc_signal: (navigator.globalPrivacyControl === true),
-          policy_version: POLICY_VERSION,
-          locale: (navigator.language || 'sv').substring(0,10)
+          site_id: CQ_SITE_ID || undefined, tracking_id: CQ_TRACKING_ID || undefined,
+          session_id: c.consentId, page_url: location.href,
+          consent_types:{ necessary:true, analytics:anal, marketing:mark, preferences:pref },
+          source:'cookie_banner', gpc_signal:(navigator.globalPrivacyControl===true),
+          policy_version: POLICY_VERSION, locale: locale.substring(0,10)
         })
       }).catch(function(){});
     } catch(e){}
     overlay.style.display='none';
     reopen.style.display='block';
-    showDetails(c);
+    iconState(c); showDetails(c);
   }
 
   function showDetails(c){
     if(!c) return;
-    details.innerHTML=
-      '<dt>Consent date</dt><dd>'+fmt(c.timestamp)+'</dd>'+
-      '<dt>Consent ID</dt><dd>'+c.consentId+'</dd>'+
-      '<dt>Categories</dt><dd>Necessary'+(c.preferences?', Preferences':'')+(c.analytics?', Statistics':'')+(c.marketing?', Marketing':'')+'</dd>';
+    var cats = CQ_T.nec
+      + (c.preferences?', '+CQ_T.pref:'')
+      + (c.analytics?', '+CQ_T.stat:'')
+      + (c.marketing?', '+CQ_T.mark:'');
+    details.innerHTML =
+      '<dt>'+CQ_T.cdate+'</dt><dd>'+fmt(c.timestamp)+'</dd>'+
+      '<dt>'+CQ_T.cid+'</dt><dd>'+c.consentId+'</dd>'+
+      '<dt>'+CQ_T.cats+'</dt><dd>'+cats+'</dd>';
   }
 
-  document.getElementById('cq-accept-all').onclick=function(){ chkPref.checked=chkAnal.checked=chkMark.checked=true; save(true,true,true); };
-  document.getElementById('cq-reject').onclick=function(){ chkPref.checked=chkAnal.checked=chkMark.checked=false; save(false,false,false); };
-  document.getElementById('cq-save').onclick=function(){ save(chkPref.checked,chkAnal.checked,chkMark.checked); };
+  if(dToggle){ dToggle.onclick=function(){
+    var open=details.style.display==='block';
+    details.style.display=open?'none':'block';
+    var span=dToggle.querySelector('span'); if(span){ span.textContent=open?CQ_T.show:CQ_T.hide; }
+  }; }
+
+  document.getElementById('cq-accept-all').onclick=function(){
+    chkPref.checked=true; if(chkAnal){ chkAnal.checked=true; } chkMark.checked=true;
+    save(true, !!chkAnal, true);
+  };
+  document.getElementById('cq-reject').onclick=function(){
+    chkPref.checked=false; if(chkAnal){ chkAnal.checked=false; } chkMark.checked=false;
+    save(false,false,false);
+  };
+  document.getElementById('cq-save').onclick=function(){
+    save(chkPref.checked, chkAnal?chkAnal.checked:false, chkMark.checked);
+  };
   reopen.onclick=function(){ overlay.style.display='flex'; reopen.style.display='none'; };
 
-  var POLICY_VERSION = '1';
   var existing;
   try{ existing=JSON.parse(localStorage.getItem(KEY)); }catch(e){}
-  if(!existing || existing.policyVersion !== POLICY_VERSION){
+  // Show the banner only if there's no fresh decision. A saved choice (even reject) is
+  // respected for ~12 months — no nagging.
+  var fresh = existing && existing.policyVersion===POLICY_VERSION && ((Date.now()-(existing.timestamp||0)) < MAX_AGE);
+  if(!fresh){
     overlay.style.display='flex';
   } else {
     chkPref.checked=!!existing.preferences;
-    chkAnal.checked=!!existing.analytics;
+    if(chkAnal){ chkAnal.checked=!!existing.analytics; }
     chkMark.checked=!!existing.marketing;
     reopen.style.display='block';
-    showDetails(existing);
+    iconState(existing); showDetails(existing);
   }
 })();
 </script>
@@ -327,46 +453,58 @@ function cortiq_ga4_output() {
         if ( array_intersect( $roles, (array) $user->roles ) ) return;
     }
 
-    $ga4_id  = esc_js( $opts['ga4_id'] );
-    $gdpr_on = ! empty( $opts['gdpr_enabled'] );
+    $ga4_id   = esc_js( $opts['ga4_id'] );
+    $gdpr_on  = ! empty( $opts['gdpr_enabled'] );
+    $advanced = ( 'advanced' === $opts['consent_mode'] );
     ?>
 <!-- Google Analytics 4 via CortIQ (Consent Mode v2) -->
 <script>
-window.dataLayer=window.dataLayer||[];
-function gtag(){dataLayer.push(arguments);}
-<?php if ( $gdpr_on ) : ?>
-// Default: deny until the cookie banner grants consent
-gtag('consent','default',{
-  analytics_storage:'denied',
-  ad_storage:'denied',
-  ad_user_data:'denied',
-  ad_personalization:'denied',
-  wait_for_update:2000
-});
-// Listen for CortIQ banner consent event
-window.addEventListener('siteConsentUpdated',function(e){
-  var granted=e.detail&&e.detail.analytics?'granted':'denied';
-  gtag('consent','update',{
-    analytics_storage:granted,
-    ad_storage:e.detail&&e.detail.marketing?'granted':'denied',
-    ad_user_data:e.detail&&e.detail.marketing?'granted':'denied',
-    ad_personalization:e.detail&&e.detail.marketing?'granted':'denied'
-  });
-});
-// Also check localStorage on load (returning visitors who already consented)
 (function(){
-  try{
-    var c=JSON.parse(localStorage.getItem('site_cookie_consent')||'null');
-    if(c&&c.analytics){
-      gtag('consent','update',{analytics_storage:'granted'});
-    }
-  }catch(e){}
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){ dataLayer.push(arguments); }
+  window.gtag = window.gtag || gtag;
+  var GA_ID    = '<?php echo $ga4_id; ?>';
+  var GDPR     = <?php echo $gdpr_on ? 'true' : 'false'; ?>;
+  var ADVANCED = <?php echo $advanced ? 'true' : 'false'; ?>;
+
+  if ( GDPR ) {
+    // Deny by default until the banner grants consent (Consent Mode v2).
+    gtag('consent','default',{ analytics_storage:'denied', ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied', wait_for_update:2000 });
+  }
+  gtag('js', new Date());
+
+  var loaded = false;
+  function loadGA(){
+    if ( loaded ) return; loaded = true;
+    gtag('config', GA_ID);
+    var s = document.createElement('script');
+    s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID;
+    document.head.appendChild(s);
+  }
+  function hasAnalytics(){
+    try { var c = JSON.parse(localStorage.getItem('site_cookie_consent') || 'null'); return !!(c && c.analytics); }
+    catch(e){ return false; }
+  }
+
+  // Basic (default): GA4 does not load until analytics consent — cleanest legally.
+  // Advanced (or GDPR off): GA4 loads now and sends cookieless pings until consent.
+  if ( !GDPR || ADVANCED || hasAnalytics() ) {
+    loadGA();
+    if ( hasAnalytics() ) { gtag('consent','update',{ analytics_storage:'granted' }); }
+  }
+
+  window.addEventListener('siteConsentUpdated', function(e){
+    var d = e.detail || {};
+    gtag('consent','update',{
+      analytics_storage: d.analytics ? 'granted' : 'denied',
+      ad_storage:        d.marketing ? 'granted' : 'denied',
+      ad_user_data:      d.marketing ? 'granted' : 'denied',
+      ad_personalization:d.marketing ? 'granted' : 'denied'
+    });
+    if ( d.analytics ) { loadGA(); }
+  });
 })();
-<?php endif; ?>
-gtag('js',new Date());
-gtag('config','<?php echo $ga4_id; ?>');
 </script>
-<script async src="https://www.googletagmanager.com/gtag/js?id=<?php echo esc_attr( $opts['ga4_id'] ); ?>"></script>
     <?php
 }
 
@@ -407,6 +545,10 @@ function cortiq_sanitize_options( $input ) {
     // Validate the banner accent colour; sanitize_hex_color() returns '' if invalid.
     $ac = isset( $input['accent_color'] ) ? sanitize_hex_color( trim( (string) $input['accent_color'] ) ) : '';
     $clean['accent_color']     = $ac ? $ac : '#6366f1';
+    $clean['tracking_mode']    = ( isset( $input['tracking_mode'] ) && 'cookieless' === $input['tracking_mode'] ) ? 'cookieless' : 'full';
+    $bl = isset( $input['banner_language'] ) ? $input['banner_language'] : 'auto';
+    $clean['banner_language']  = in_array( $bl, array( 'auto', 'en', 'sv', 'de' ), true ) ? $bl : 'auto';
+    $clean['consent_mode']     = ( isset( $input['consent_mode'] ) && 'advanced' === $input['consent_mode'] ) ? 'advanced' : 'basic';
     return $clean;
 }
 
@@ -512,6 +654,54 @@ function cortiq_settings_page() {
                                    <?php checked( ! empty( $opts['anonymize_ip'] ) ); ?> />
                             Anonymize IP addresses
                         </label>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Tracking mode</th>
+                    <td>
+                        <label style="display:block;margin-bottom:8px">
+                            <input type="radio" name="<?php echo CORTIQ_OPTION_KEY; ?>[tracking_mode]" value="cookieless"
+                                   <?php checked( 'cookieless', $opts['tracking_mode'] ); ?> />
+                            <strong>Cookieless</strong> — consent-exempt audience measurement. No device storage, no fingerprint,
+                            no cross-visit profile. The <em>Statistics</em> category is removed from the banner (unless GA4 is set).
+                        </label>
+                        <label style="display:block">
+                            <input type="radio" name="<?php echo CORTIQ_OPTION_KEY; ?>[tracking_mode]" value="full"
+                                   <?php checked( 'full', $opts['tracking_mode'] ); ?> />
+                            <strong>Full</strong> — device fingerprint + returning-visitor profiling. Requires analytics consent.
+                        </label>
+                        <p class="description">Cookieless lets CortIQ measure without a Statistics consent toggle. You decide the legal basis for your site.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row"><label for="cortiq_banner_language">Banner language</label></th>
+                    <td>
+                        <select id="cortiq_banner_language" name="<?php echo CORTIQ_OPTION_KEY; ?>[banner_language]">
+                            <option value="auto" <?php selected( 'auto', $opts['banner_language'] ); ?>>Auto (WordPress locale)</option>
+                            <option value="en"   <?php selected( 'en',   $opts['banner_language'] ); ?>>English</option>
+                            <option value="sv"   <?php selected( 'sv',   $opts['banner_language'] ); ?>>Svenska</option>
+                            <option value="de"   <?php selected( 'de',   $opts['banner_language'] ); ?>>Deutsch</option>
+                        </select>
+                        <p class="description">Language for the cookie banner. Auto follows your site's WordPress language.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">GA4 Consent Mode</th>
+                    <td>
+                        <label style="display:block;margin-bottom:8px">
+                            <input type="radio" name="<?php echo CORTIQ_OPTION_KEY; ?>[consent_mode]" value="basic"
+                                   <?php checked( 'basic', $opts['consent_mode'] ); ?> />
+                            <strong>Basic</strong> — GA4 loads only after the visitor accepts Statistics. Cleanest legally.
+                        </label>
+                        <label style="display:block">
+                            <input type="radio" name="<?php echo CORTIQ_OPTION_KEY; ?>[consent_mode]" value="advanced"
+                                   <?php checked( 'advanced', $opts['consent_mode'] ); ?> />
+                            <strong>Advanced</strong> — GA4 loads immediately and sends cookieless pings; Google models the gaps.
+                        </label>
+                        <p class="description">Only affects sites with a GA4 ID.</p>
                     </td>
                 </tr>
 
