@@ -3,7 +3,7 @@
  * Plugin Name: CortIQ Analytics
  * Plugin URI: https://cortiq.se
  * Description: Analytics for the agentic web. Track AI agents (ChatGPT Browser, Perplexity, Claude, Gemini) and human visitors — cookie-free, GDPR-compliant, with heatmaps, session recording and A/B testing.
- * Version: 5.3.3
+ * Version: 5.3.4
  * Author: CortIQ
  * Author URI: https://cortiq.se
  * Requires at least: 5.6
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( defined( 'CORTIQ_LOADED' ) ) return;
 define( 'CORTIQ_LOADED', true );
 
-define( 'CORTIQ_VERSION',    '5.3.3' );
+define( 'CORTIQ_VERSION',    '5.3.4' );
 define( 'CORTIQ_OPTION_KEY', 'cortiq_options' );
 define( 'CORTIQ_CDN',        'https://cortiq.se' );
 // Supabase Edge Functions base — used for the GDPR consent ledger (store-consent).
@@ -46,6 +46,7 @@ function cortiq_defaults() {
         'policy_version'        => '1',      // change to re-prompt every visitor
         'reprompt_cooldown_days'=> 365,      // how long a saved choice is respected before re-asking
         'consent_region'        => 'eea',    // 'eea' (region-scoped defaults) | 'global'
+        'geo_gating'            => false,    // show the banner only to EEA/UK/CH visitors
     );
 }
 
@@ -392,6 +393,7 @@ function cortiq_cookie_banner() {
   ) ); ?>;
   var POLICY_VERSION = '<?php echo esc_js( $opts['policy_version'] ); ?>';
   var MAX_AGE = <?php echo max( 1, intval( $opts['reprompt_cooldown_days'] ) ); ?>*24*60*60*1000; // re-ask cooldown (days)
+  var GEO_GATING = <?php echo ! empty( $opts['geo_gating'] ) ? 'true' : 'false'; ?>;
   var KEY = 'site_cookie_consent';
   var overlay = document.getElementById('cq-overlay');
   var chkPref = document.getElementById('cq-preferences');
@@ -490,8 +492,17 @@ function cortiq_cookie_banner() {
   // Show the banner only if there's no fresh decision. A saved choice (even reject) is
   // respected for ~12 months — no nagging.
   var fresh = existing && existing.policyVersion===POLICY_VERSION && ((Date.now()-(existing.timestamp||0)) < MAX_AGE);
+  function showBanner(){
+    if(!GEO_GATING){ overlay.style.display='flex'; return; }
+    // Geo-gated: only show inside the EEA/UK/CH; elsewhere no cookie banner is required.
+    // Fail-safe: show the banner on any error.
+    fetch(CQ_API + '/geo-check').then(function(r){ return r.json(); }).then(function(g){
+      if(g && g.in_scope === false){ reopen.style.display='block'; }
+      else { overlay.style.display='flex'; }
+    }).catch(function(){ overlay.style.display='flex'; });
+  }
   if(!fresh){
-    overlay.style.display='flex';
+    showBanner();
   } else {
     chkPref.checked=!!existing.preferences;
     if(chkAnal){ chkAnal.checked=!!existing.analytics; }
@@ -631,6 +642,7 @@ function cortiq_sanitize_options( $input ) {
     $cd = isset( $input['reprompt_cooldown_days'] ) ? intval( $input['reprompt_cooldown_days'] ) : 365;
     $clean['reprompt_cooldown_days'] = ( $cd >= 1 && $cd <= 400 ) ? $cd : 365;
     $clean['consent_region']   = ( isset( $input['consent_region'] ) && 'global' === $input['consent_region'] ) ? 'global' : 'eea';
+    $clean['geo_gating']       = ! empty( $input['geo_gating'] );
     return $clean;
 }
 
@@ -736,6 +748,15 @@ function cortiq_settings_page() {
                                    <?php checked( ! empty( $opts['anonymize_ip'] ) ); ?> />
                             Anonymize IP addresses
                         </label>
+                        <br>
+                        <label>
+                            <input type="checkbox"
+                                   name="<?php echo CORTIQ_OPTION_KEY; ?>[geo_gating]"
+                                   value="1"
+                                   <?php checked( ! empty( $opts['geo_gating'] ) ); ?> />
+                            Show the cookie banner only to EEA / UK / Switzerland visitors
+                        </label>
+                        <p class="description">Visitors outside the EEA/UK/CH won't see the banner (no consent required there). Cookie-free CortIQ tracking still runs.</p>
                     </td>
                 </tr>
 

@@ -56,6 +56,10 @@ verify_jwt = true
 [functions.cloudflare-ingest]
 verify_jwt = false
 
+# Public geo lookup for banner gating (reads Cloudflare CF-IPCountry). No auth needed.
+[functions.geo-check]
+verify_jwt = false
+
 # Called from the tracking script with no JWT; authenticates by validating site_id
 # exists/active + per-site rate limit under the service role. Must be public or the
 # gateway rejects it with UNAUTHORIZED_NO_AUTH_HEADER before the function runs.
