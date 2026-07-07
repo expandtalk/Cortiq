@@ -7,6 +7,7 @@ import { DateRangePicker } from '@/components/dashboard/DateRangePicker';
 import { AIInsightsWidget } from '@/components/dashboard/AIInsightsWidget';
 import { RealTimeWidget } from '@/components/dashboard/RealTimeWidget';
 import { DashboardCard } from '@/components/dashboard/DashboardCard';
+import { SetupHealthCheck } from '@/components/dashboard/SetupHealthCheck';
 import { Activity } from 'lucide-react';
 import type { Analytics } from '@/types/dashboard';
 import { DateRange } from 'react-day-picker';
@@ -25,25 +26,29 @@ export function OverviewTab({ analytics, siteId, selectedSite, dateRange }: Over
 
   if (!analytics) {
     return (
-      <div className="flex flex-col items-center justify-center text-center py-20 animate-fade-in">
-        <div className="rounded-full bg-muted p-4 mb-4">
-          <Activity className="h-8 w-8 text-muted-foreground" />
+      <div className="space-y-6 animate-fade-in">
+        <SetupHealthCheck siteId={selectedSite.id} />
+        <div className="flex flex-col items-center justify-center text-center py-16">
+          <div className="rounded-full bg-muted p-4 mb-4">
+            <Activity className="h-8 w-8 text-muted-foreground" />
+          </div>
+          <h3 className="text-lg font-semibold mb-2">No data yet</h3>
+          <p className="text-muted-foreground max-w-md mb-1">
+            We haven't received any tracking events for this site. Verify the CortIQ
+            snippet is installed before the closing <code className="bg-muted px-1 rounded text-xs">&lt;/body&gt;</code> tag.
+          </p>
+          <p className="text-muted-foreground text-sm">
+            Your first visit should appear here within about a minute.
+          </p>
         </div>
-        <h3 className="text-lg font-semibold mb-2">No data yet</h3>
-        <p className="text-muted-foreground max-w-md mb-1">
-          We haven't received any tracking events for this site. Verify the CortIQ
-          snippet is installed before the closing <code className="bg-muted px-1 rounded text-xs">&lt;/body&gt;</code> tag.
-        </p>
-        <p className="text-muted-foreground text-sm">
-          Your first visit should appear here within about a minute.
-        </p>
       </div>
     );
   }
 
   return (
     <div className="space-y-6 animate-fade-in">
-      
+      <SetupHealthCheck siteId={selectedSite.id} />
+
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
         {/* Left Column - Main Charts */}
         <div className="lg:col-span-2 space-y-6">
