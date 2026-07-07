@@ -78,7 +78,9 @@ Deno.serve(async (req) => {
         );
       }
       company = companyByKey;
-    } else if (apiKey.startsWith('tk_')) {
+    } else {
+      // Fall back to a site's own tracking_id (any key format — tk_ or legacy base64).
+      // Lets the Site ID + Tracking ID shown in the dashboard authenticate directly.
       const { data: site } = await supabase
         .from('sites')
         .select('id, user_id, is_active')
