@@ -125,12 +125,15 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
                   <div className="bg-gray-900 text-green-400 p-3 rounded text-sm font-mono overflow-x-auto">
                     {`<!-- Add to your template or layout file -->
 <script>
-  window.heatmapAnalytics = {
-    trackingId: '${selectedSite?.tracking_id || 'din-tracking-id'}',
-    apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/'
+  window.cortiqConfig = {
+    apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
+    siteId: '${selectedSite?.id || 'your-site-id'}',
+    apiKey: '${selectedSite?.tracking_id || 'your-tracking-id'}',
+    contentType: 'page',
+    platform: 'web'
   };
 </script>
-<script src="https://itsäkerhet.com/tracking-script.js" async></script>`}
+<script src="https://cortiq.se/spa-tracking.js" defer></script>`}
                   </div>
                   
                   <h4 className="font-medium">2. API integration for content management</h4>
@@ -151,11 +154,11 @@ Content-Type: application/json
                   
                   <h4 className="font-medium">3. Configuration for popular CMS</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-                    <div className="bg-white p-3 rounded border">
+                    <div className="bg-muted text-foreground p-3 rounded border">
                       <strong className="text-blue-600">Strapi</strong>
                       <p className="text-sm mt-1">Use the plugin system to integrate tracking into all pages automatically</p>
                     </div>
-                    <div className="bg-white p-3 rounded border">
+                    <div className="bg-muted text-foreground p-3 rounded border">
                       <strong className="text-green-600">Contentful</strong>
                       <p className="text-sm mt-1">Integrate via webhooks and custom delivery API</p>
                     </div>
@@ -176,13 +179,14 @@ Content-Type: application/json
                     {`<!-- AEM Component Template (HTL) -->
 <div data-sly-use.analytics="com.expandtalk.analytics.AnalyticsComponent">
   <script data-sly-unwrap>
-    window.heatmapAnalytics = {
-      trackingId: '\${analytics.trackingId}',
-      aemPagePath: '\${currentPage.path}',
-      apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1/'
+    window.cortiqConfig = {
+      apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
+      siteId: '\${analytics.siteId}',
+      apiKey: '\${analytics.trackingId}',
+      contentType: 'page', platform: 'web'
     };
   </script>
-  <script src="https://itsäkerhet.com/tracking-script.js" async></script>
+  <script src="https://cortiq.se/spa-tracking.js" defer></script>
 </div>`}
                   </div>
                   
@@ -208,7 +212,7 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                   </div>
                   
                   <h4 className="font-medium">3. Adobe Analytics Bridge</h4>
-                  <div className="bg-white p-3 rounded border">
+                  <div className="bg-muted text-foreground p-3 rounded border">
                     <p className="text-sm">
                       <strong>Hybrid-approach:</strong> Använd vårt system för heatmaps och detaljerad användarinteraktion, 
                       medan Adobe Analytics hanterar högre nivå-metrics. Data kan synkroniseras via API.

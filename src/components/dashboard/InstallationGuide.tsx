@@ -44,26 +44,24 @@ export function InstallationGuide({ selectedSite }: InstallationGuideProps) {
       </CardHeader>
       <CardContent className="space-y-4">
         <div>
-          <Label>Complete Tracking (Recommended)</Label>
-          <div className="bg-gray-100 p-4 rounded-md font-mono text-sm mt-2">
-            {`<!-- Unified AI Tracking (Search + Bots + Citations + UTM/Paid Ads) -->
-<script 
-  src="${window.location.origin}/ai-tracking-unified.js"
-  data-site-id="${selectedSite.id}"
-  data-supabase-url="https://cxmkdtgfocgbfizawlwa.supabase.co"
-  defer>
+          <Label>Tracking snippet (Recommended)</Label>
+          <div className="bg-muted text-foreground p-4 rounded-md font-mono text-xs mt-2 overflow-x-auto whitespace-pre-wrap break-all">
+            {`<!-- CortIQ Analytics -->
+<script>
+  window.cortiqConfig = {
+    apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
+    siteId: '${selectedSite.id}',
+    apiKey: '${selectedSite.tracking_id}',
+    contentType: 'page',
+    platform: 'web'
+  };
 </script>
-
-<!-- Standard Tracking (Heatmaps, Sessions, Page Views) -->
-<script 
-  src="${window.location.origin}/tracking-script.js" 
-  data-tracking-id="${selectedSite.tracking_id}">
-</script>`}
+<script src="https://cortiq.se/spa-tracking.js" defer></script>`}
           </div>
           <p className="text-xs text-muted-foreground mt-2">
-            ✅ GDPR-compliant • Cookie-free fingerprinting • Tracks AI search traffic (ChatGPT, Perplexity, Claude, Gemini) •
-            Detects AI bots (GPTBot, ClaudeBot, PerplexityBot) • Tracks citations via UTM •
-            <strong>Paid Ads tracking with UTM parameters</strong> (utm_source, utm_medium, utm_campaign, utm_term, utm_content)
+            ✅ One script — heatmaps, sessions, page views, AI search traffic (ChatGPT, Perplexity, Claude, Gemini),
+            AI bot detection (GPTBot, ClaudeBot, PerplexityBot), citations and UTM/paid-ads tracking.
+            GDPR-compliant and cookie-free. The script reads <code>window.cortiqConfig</code>, so keep it directly above the script tag.
           </p>
         </div>
 
@@ -77,7 +75,8 @@ export function InstallationGuide({ selectedSite }: InstallationGuideProps) {
               <li>Download the plugin from above</li>
               <li>Install the plugin on your WordPress website</li>
               <li>Go to Settings → CortIQ</li>
-              <li>Enter your Tracking ID: <code className="bg-gray-100 px-1 rounded">{selectedSite.tracking_id}</code></li>
+              <li>Enter your Site ID: <code className="bg-muted text-foreground px-1 rounded">{selectedSite.id}</code></li>
+              <li>Enter your Tracking ID: <code className="bg-muted text-foreground px-1 rounded">{selectedSite.tracking_id}</code></li>
               <li>Enable GDPR compatibility if needed</li>
             </ol>
           </div>
