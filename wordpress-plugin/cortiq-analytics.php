@@ -3,7 +3,7 @@
  * Plugin Name: CortIQ Analytics
  * Plugin URI: https://cortiq.se
  * Description: Analytics for the agentic web. Track AI agents (ChatGPT Browser, Perplexity, Claude, Gemini) and human visitors — cookie-free, GDPR-compliant, with heatmaps, session recording and A/B testing.
- * Version: 5.3.2
+ * Version: 5.3.3
  * Author: CortIQ
  * Author URI: https://cortiq.se
  * Requires at least: 5.6
@@ -20,7 +20,7 @@ if ( ! defined( 'ABSPATH' ) ) exit;
 if ( defined( 'CORTIQ_LOADED' ) ) return;
 define( 'CORTIQ_LOADED', true );
 
-define( 'CORTIQ_VERSION',    '5.3.2' );
+define( 'CORTIQ_VERSION',    '5.3.3' );
 define( 'CORTIQ_OPTION_KEY', 'cortiq_options' );
 define( 'CORTIQ_CDN',        'https://cortiq.se' );
 // Supabase Edge Functions base — used for the GDPR consent ledger (store-consent).
@@ -43,6 +43,9 @@ function cortiq_defaults() {
         'tracking_mode'         => 'full',   // 'cookieless' (consent-exempt) | 'full'
         'banner_language'       => 'auto',   // 'auto' (WP locale) | 'en' | 'sv' | 'de'
         'consent_mode'          => 'basic',  // GA4 Consent Mode: 'basic' | 'advanced'
+        'policy_version'        => '1',      // change to re-prompt every visitor
+        'reprompt_cooldown_days'=> 365,      // how long a saved choice is respected before re-asking
+        'consent_region'        => 'eea',    // 'eea' (region-scoped defaults) | 'global'
     );
 }
 
@@ -387,8 +390,8 @@ function cortiq_cookie_banner() {
     'stat'  => $t['statistics'],   'mark' => $t['marketing'],
     'cdate' => $t['consent_date'], 'cid'  => $t['consent_id'], 'cats' => $t['categories'],
   ) ); ?>;
-  var POLICY_VERSION = '1';
-  var MAX_AGE = 365*24*60*60*1000; // re-ask after ~12 months (consent renewed by ~13)
+  var POLICY_VERSION = '<?php echo esc_js( $opts['policy_version'] ); ?>';
+  var MAX_AGE = <?php echo max( 1, intval( $opts['reprompt_cooldown_days'] ) ); ?>*24*60*60*1000; // re-ask cooldown (days)
   var KEY = 'site_cookie_consent';
   var overlay = document.getElementById('cq-overlay');
   var chkPref = document.getElementById('cq-preferences');
@@ -532,8 +535,16 @@ function cortiq_ga4_output() {
   var ADVANCED = <?php echo $advanced ? 'true' : 'false'; ?>;
 
   if ( GDPR ) {
-    // Deny by default until the banner grants consent (Consent Mode v2).
-    gtag('consent','default',{ analytics_storage:'denied', ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied', wait_for_update:2000 });
+    // Deny by default until the banner grants consent (Consent Mode v2). All six v2
+    // signals; security_storage is always granted (strictly necessary).
+    var consentDefaults={ ad_storage:'denied', ad_user_data:'denied', ad_personalization:'denied', analytics_storage:'denied', functionality_storage:'denied', personalization_storage:'denied', security_storage:'granted', wait_for_update:500 };
+<?php if ( 'eea' === $opts['consent_region'] ) : ?>
+    // Region-scoped: visitors OUTSIDE the EEA/UK/CH are not gated by these defaults.
+    consentDefaults.region=['AT','BE','BG','HR','CY','CZ','DK','EE','FI','FR','DE','GR','HU','IS','IE','IT','LV','LI','LT','LU','MT','NL','NO','PL','PT','RO','SK','SI','ES','SE','GB','CH'];
+<?php endif; ?>
+    gtag('consent','default',consentDefaults);
+    gtag('set','ads_data_redaction',true); // redact ad-click IDs while denied
+    gtag('set','url_passthrough',true);    // preserve gclid/dclid in URLs without cookies
   }
   gtag('js', new Date());
 
@@ -563,7 +574,9 @@ function cortiq_ga4_output() {
       analytics_storage: d.analytics ? 'granted' : 'denied',
       ad_storage:        d.marketing ? 'granted' : 'denied',
       ad_user_data:      d.marketing ? 'granted' : 'denied',
-      ad_personalization:d.marketing ? 'granted' : 'denied'
+      ad_personalization:d.marketing ? 'granted' : 'denied',
+      functionality_storage:   d.preferences ? 'granted' : 'denied',
+      personalization_storage: d.preferences ? 'granted' : 'denied'
     });
     if ( d.analytics ) { loadGA(); }
   });
@@ -613,6 +626,11 @@ function cortiq_sanitize_options( $input ) {
     $bl = isset( $input['banner_language'] ) ? $input['banner_language'] : 'auto';
     $clean['banner_language']  = in_array( $bl, array( 'auto', 'en', 'sv', 'de', 'fr', 'pt' ), true ) ? $bl : 'auto';
     $clean['consent_mode']     = ( isset( $input['consent_mode'] ) && 'advanced' === $input['consent_mode'] ) ? 'advanced' : 'basic';
+    $pv = isset( $input['policy_version'] ) ? substr( sanitize_text_field( $input['policy_version'] ), 0, 20 ) : '1';
+    $clean['policy_version']   = ( '' !== $pv ) ? $pv : '1';
+    $cd = isset( $input['reprompt_cooldown_days'] ) ? intval( $input['reprompt_cooldown_days'] ) : 365;
+    $clean['reprompt_cooldown_days'] = ( $cd >= 1 && $cd <= 400 ) ? $cd : 365;
+    $clean['consent_region']   = ( isset( $input['consent_region'] ) && 'global' === $input['consent_region'] ) ? 'global' : 'eea';
     return $clean;
 }
 
@@ -768,6 +786,34 @@ function cortiq_settings_page() {
                             <strong>Advanced</strong> — GA4 loads immediately and sends cookieless pings; Google models the gaps.
                         </label>
                         <p class="description">Only affects sites with a GA4 ID.</p>
+                    </td>
+                </tr>
+
+                <tr>
+                    <th scope="row">Consent scope &amp; policy</th>
+                    <td>
+                        <p style="margin:0 0 10px">
+                            <label for="cortiq_consent_region"><strong>Geo scope for consent defaults</strong></label><br>
+                            <select id="cortiq_consent_region" name="<?php echo CORTIQ_OPTION_KEY; ?>[consent_region]">
+                                <option value="eea"    <?php selected( 'eea',    $opts['consent_region'] ); ?>>EEA + UK + Switzerland (region-scoped)</option>
+                                <option value="global" <?php selected( 'global', $opts['consent_region'] ); ?>>Global (apply everywhere)</option>
+                            </select>
+                            <span class="description"> Region-scoped means visitors outside the EEA/UK/CH aren't gated by Consent Mode defaults.</span>
+                        </p>
+                        <p style="margin:0 0 10px">
+                            <label for="cortiq_policy_version"><strong>Policy version</strong></label><br>
+                            <input id="cortiq_policy_version" type="text"
+                                   name="<?php echo CORTIQ_OPTION_KEY; ?>[policy_version]"
+                                   value="<?php echo esc_attr( $opts['policy_version'] ); ?>" style="max-width:120px" />
+                            <span class="description"> Change this to re-prompt every visitor (e.g. after updating your cookie/privacy policy).</span>
+                        </p>
+                        <p style="margin:0">
+                            <label for="cortiq_cooldown"><strong>Re-ask cooldown (days)</strong></label><br>
+                            <input id="cortiq_cooldown" type="number" min="1" max="400"
+                                   name="<?php echo CORTIQ_OPTION_KEY; ?>[reprompt_cooldown_days]"
+                                   value="<?php echo esc_attr( $opts['reprompt_cooldown_days'] ); ?>" style="max-width:90px" />
+                            <span class="description"> How long a saved choice (incl. reject) is respected before asking again. Default 365.</span>
+                        </p>
                     </td>
                 </tr>
 

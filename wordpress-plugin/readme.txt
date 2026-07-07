@@ -3,7 +3,7 @@ Contributors: cortiq
 Tags: analytics, ai-tracking, heatmap, cookie-free, gdpr, chatgpt, session-recording
 Requires at least: 5.6
 Tested up to: 6.8
-Stable tag: 5.3.2
+Stable tag: 5.3.3
 Requires PHP: 7.4
 License: GPLv2 or later
 License URI: https://www.gnu.org/licenses/gpl-2.0.html
@@ -96,6 +96,10 @@ The tracking script is loaded with `defer` so it does not block rendering. Cooki
 Yes. Add `data-cortiq-mask` to any input or element. The field content is replaced with asterisks in the recording. See the [GDPR guide](https://github.com/expandtalk/cortiq/blob/main/GDPR.md) for details.
 
 == Changelog ==
+
+= 5.3.3 =
+* GA4 Consent Mode v2 hardened: all six signals (adds functionality/personalization/security_storage), region-scoped defaults (EEA+UK+CH — visitors elsewhere aren't gated), ads_data_redaction + url_passthrough.
+* New settings: geo scope for consent defaults, policy version (change to re-prompt everyone), and re-ask cooldown (days).
 
 = 5.3.2 =
 * Reopen control: for visitors on necessary-only it becomes a small labelled "Cookies" pill — a discreet, static invitation to reconsider (no animation, no notification dots). Full-consent visitors keep the plain icon.
