@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Link, useLocation } from "react-router-dom";
 import { BarChart3, Menu, ChevronDown, Github } from "lucide-react";
@@ -21,7 +21,13 @@ const TOP_NAV = [
 export default function PublicNavigation() {
   const [mobileMenuOpen, setMobileMenuOpen] = useState(false);
   const [featuresOpen, setFeaturesOpen] = useState(false);
+  const [mounted, setMounted] = useState(false);
   const location = useLocation();
+
+  // Mount the radix Sheet only client-side. Its internal useLayoutEffect produced
+  // server/client differences that threw hydration errors (#418/#423) during prerender;
+  // rendering a plain button until mounted keeps SSR and the first client render identical.
+  useEffect(() => { setMounted(true); }, []);
 
   return (
     <nav className="glass border-b border-border/20 sticky top-0 z-50">
@@ -108,6 +114,7 @@ export default function PublicNavigation() {
         {/* Mobile Menu */}
         <div className="flex md:hidden items-center space-x-2">
           <ThemeToggle />
+          {mounted ? (
           <Sheet open={mobileMenuOpen} onOpenChange={setMobileMenuOpen}>
             <SheetTrigger asChild>
               <Button variant="ghost" size="icon">
@@ -186,6 +193,11 @@ export default function PublicNavigation() {
               </div>
             </SheetContent>
           </Sheet>
+          ) : (
+            <Button variant="ghost" size="icon" aria-label="Open menu">
+              <Menu className="h-6 w-6" />
+            </Button>
+          )}
         </div>
       </div>
     </nav>
