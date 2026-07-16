@@ -7,6 +7,7 @@ import { InstallationGuide } from '@/components/dashboard/InstallationGuide';
 import { AddSiteForm } from '@/components/dashboard/AddSiteForm';
 import { SiteSelector } from '@/components/dashboard/SiteSelector';
 import { AgentMacroManager } from '@/components/dashboard/AgentMacroManager';
+import { DeleteSiteDialog } from '@/components/dashboard/DeleteSiteDialog';
 import PluginDownloader from '@/components/PluginDownloader';
 import { useSites } from '@/hooks/useSites';
 import { useNavigate } from 'react-router-dom';
@@ -14,10 +15,11 @@ import type { Site } from '@/types/dashboard';
 
 interface SetupTabProps {
   selectedSite: Site | null;
+  onSiteDeleted?: () => void;
 }
 
-export function SetupTab({ selectedSite }: SetupTabProps) {
-  const { sites, setSelectedSite, loadSites } = useSites();
+export function SetupTab({ selectedSite, onSiteDeleted }: SetupTabProps) {
+  const { sites, setSelectedSite, loadSites, deleteSite } = useSites();
   const navigate = useNavigate();
 
   // Derive from THIS deployment's env/origin — never hardcode cortiq.se / the origin
@@ -55,11 +57,25 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <SiteSelector 
+              <SiteSelector
                 sites={sites}
                 selectedSite={selectedSite}
                 onSiteSelect={setSelectedSite}
               />
+              {selectedSite && (
+                <div className="mt-4 pt-4 border-t border-destructive/20">
+                  <p className="text-sm text-muted-foreground mb-2">
+                    Danger zone — permanently delete{' '}
+                    <span className="font-medium text-foreground">{selectedSite.domain}</span>{' '}
+                    and all of its data.
+                  </p>
+                  <DeleteSiteDialog
+                    site={selectedSite}
+                    deleteSite={deleteSite}
+                    onDeleted={() => { loadSites(); onSiteDeleted?.(); }}
+                  />
+                </div>
+              )}
             </CardContent>
           </Card>
         )}

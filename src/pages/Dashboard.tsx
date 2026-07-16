@@ -45,6 +45,7 @@ export default function Dashboard() {
             selectedSite={selectedSite}
             analytics={analytics}
             dateRange={dateRange}
+            onSiteDeleted={() => { setSelectedSite(null); loadSites(); }}
           />
         ) : (
           <div className="text-center py-12">
