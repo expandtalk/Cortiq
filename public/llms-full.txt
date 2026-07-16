@@ -114,8 +114,7 @@ REST API documented at https://cortiq.se/api (OpenAPI/Swagger). Supports:
 
 ## What CortIQ Does NOT Include
 
-- Scroll heatmaps (click heatmaps only)
-- Attention maps
+- Spatial mouse-movement / attention overlay maps (click maps + scroll-depth funnels are supported)
 - Multivariate testing (A/B only, two variants)
 - Visual editor for A/B tests
 - Mobile app
