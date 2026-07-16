@@ -228,13 +228,35 @@ Deno.serve(async (req) => {
       let pageUrl: string | null = metadata.url ?? null;
       if (pageUrl) { try { pageUrl = new URL(pageUrl).href; } catch { /* keep raw */ } }
       try {
-        await supabase.rpc('ingest_pageview', {
-          p_url: pageUrl,
-          p_session: body.session_id ?? null,
-          p_device: metadata.device_type ?? null,
-          p_referrer: metadata.referrer ?? null,
-          p_viewed_at: body.timestamp ? new Date(body.timestamp).toISOString() : new Date().toISOString(),
-        });
+        // TENANT GUARD: ingest_pageview routes purely by the URL's domain. Without an
+        // ownership check, any caller with a valid credential could set metadata.url to
+        // another customer's domain and forge page views into that tenant's dashboard.
+        // Resolve the domain-matched site and confirm it belongs to the authenticated
+        // company (companies.id == sites.user_id) before bridging.
+        const { data: resolvedSiteId } = await supabase.rpc('resolve_site_by_domain', { p_url: pageUrl });
+        let ownedByCaller = false;
+        if (resolvedSiteId) {
+          const { data: siteRow } = await supabase
+            .from('sites')
+            .select('user_id')
+            .eq('id', resolvedSiteId)
+            .maybeSingle();
+          ownedByCaller = !!siteRow && siteRow.user_id === company.id;
+        }
+
+        if (ownedByCaller) {
+          await supabase.rpc('ingest_pageview', {
+            p_url: pageUrl,
+            p_session: body.session_id ?? null,
+            p_device: metadata.device_type ?? null,
+            p_referrer: metadata.referrer ?? null,
+            p_viewed_at: body.timestamp ? new Date(body.timestamp).toISOString() : new Date().toISOString(),
+          });
+        } else if (resolvedSiteId) {
+          console.warn('page_view bridge: domain-resolved site not owned by caller; skipping', {
+            company_id: company.id, resolved_site: resolvedSiteId,
+          });
+        }
       } catch (bridgeErr) {
         console.error('page_view bridge failed (non-fatal):', bridgeErr);
       }
