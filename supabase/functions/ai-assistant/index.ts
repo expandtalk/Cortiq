@@ -412,17 +412,19 @@ async function executeTool(
     }
 
     case 'cortiq_ai_bot_analysis': {
-      const { data } = await supabase.from('ai_bot_traffic').select('bot_name, bot_type, bot_category, js_executed, probe_triggered').eq('site_id', siteId).gte('created_at', since).lt('created_at', until).limit(100000);
+      const { data } = await supabase.from('ai_bot_traffic').select('bot_name, bot_type, request_type, js_executed, probe_triggered').eq('site_id', siteId).gte('created_at', since).lt('created_at', until).limit(100000);
+      // request_type = authoritative 3-way classification (training|agentic|citation, fallback 'unknown').
+      // The legacy bot_category column is dead data (always 'other') — do not read it.
       const botMap = new Map<string, { type: string; category: string; requests: number; js_exec: number; probes: number }>();
       for (const b of data ?? []) {
         const key = String(b.bot_name || 'unknown');
-        const e = botMap.get(key) ?? { type: String(b.bot_type || 'unknown'), category: String(b.bot_category || ''), requests: 0, js_exec: 0, probes: 0 };
+        const e = botMap.get(key) ?? { type: String(b.bot_type || 'unknown'), category: String(b.request_type || 'unknown'), requests: 0, js_exec: 0, probes: 0 };
         e.requests++;
         if (b.js_executed) e.js_exec++;
         if (b.probe_triggered) e.probes++;
         botMap.set(key, e);
       }
-      return { bots: [...botMap.entries()].sort((a, b) => b[1].requests - a[1].requests).slice(0, limit).map(([bot_name, v]) => ({ bot_name, bot_type: v.type, requests: v.requests, js_capable_pct: pct(v.js_exec, v.requests), probe_rate_pct: pct(v.probes, v.requests) })), window: { since, until } };
+      return { bots: [...botMap.entries()].sort((a, b) => b[1].requests - a[1].requests).slice(0, limit).map(([bot_name, v]) => ({ bot_name, bot_type: v.type, category: v.category, requests: v.requests, js_capable_pct: pct(v.js_exec, v.requests), probe_rate_pct: pct(v.probes, v.requests) })), window: { since, until } };
     }
 
     case 'cortiq_ai_agent_journey': {

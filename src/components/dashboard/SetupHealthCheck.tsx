@@ -54,12 +54,18 @@ export function SetupHealthCheck({ siteId }: { siteId: string }) {
           status: (consents || 0) > 0 ? 'ok' : cookieless ? 'na' : 'warn',
           detail: (consents || 0) > 0
             ? `${consents} consent records / 30d (Art. 7 proof)`
-            : cookieless ? 'Not needed — cookieless mode is consent-exempt' : 'No consent recorded yet',
+            : cookieless
+              ? 'Aggregate cookieless measurement needs no consent log — but clicks, scroll & heatmaps still require consent. Verify your installed script is actually in cookieless mode.'
+              : 'No consent recorded yet',
         },
         {
-          label: 'Tracking mode',
+          // This reflects the DASHBOARD setting only. The dashboard cannot observe the
+          // deployed script/plugin's mode, so we must not assert compliance from it alone.
+          label: 'Tracking mode (dashboard setting)',
           status: 'ok',
-          detail: cookieless ? 'Cookieless (consent-exempt, banner-free statistics)' : 'Full (fingerprint + returning-visitor, needs consent)',
+          detail: cookieless
+            ? 'Set to Cookieless. Confirm your installed snippet/plugin is also set to cookieless — otherwise full-mode fingerprinting runs without a consent log.'
+            : 'Set to Full (fingerprint + returning-visitor profiling, requires consent).',
         },
         {
           label: 'Google Analytics 4',

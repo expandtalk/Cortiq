@@ -59,6 +59,7 @@ interface DashboardTabsProps {
   selectedSite: Site;
   analytics: Analytics | null;
   dateRange?: import('react-day-picker').DateRange;
+  onSiteDeleted?: () => void;
 }
 
 type NavOption = { value: string; label: string; icon: React.ComponentType<{ className?: string }> };
@@ -143,7 +144,7 @@ const SETTINGS_OPTIONS: NavOption[] = [
   { value: 'agent-registry',    label: 'Agent Registry',           icon: Server },
 ];
 
-function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTabsProps) {
+function DashboardTabsInner({ selectedSite, analytics, dateRange, onSiteDeleted }: DashboardTabsProps) {
   // Active tab lives in the URL (?tab=) so it deep-links, survives refresh, and works
   // with the browser back button. Falls back to 'overview' when absent.
   const [searchParams, setSearchParams] = useSearchParams();
@@ -418,7 +419,7 @@ function DashboardTabsInner({ selectedSite, analytics, dateRange }: DashboardTab
 
       <TabsContent value="setup" className="space-y-6">
         <TabErrorBoundary tabName="Setup">
-          <SetupTab selectedSite={selectedSite} />
+          <SetupTab selectedSite={selectedSite} onSiteDeleted={onSiteDeleted} />
         </TabErrorBoundary>
       </TabsContent>
 

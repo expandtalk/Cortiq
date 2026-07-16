@@ -93,6 +93,7 @@ Requests should be submitted to: [daniel@expandtalk.se](mailto:daniel@expandtalk
 | Supabase, Inc. | Database hosting, edge functions | EU (AWS eu-north-1, Stockholm) | [Supabase DPA](https://supabase.com/privacy) |
 | Google LLC | GA4 server-side (optional, only if Customer configures GA4) | EU/US (SCCs in place) | [Google DPA](https://business.safety.google/adsprocessorterms/) |
 | Amazon Web Services, Inc. | Cloud infrastructure (via Supabase) | EU (eu-north-1) | [AWS DPA](https://aws.amazon.com/agreement/) |
+| Cloudflare, Inc. | Edge web analytics (aggregate, cookie-free) and geo lookup for consent-banner gating — optional, only if the Customer enables the Cloudflare integration | US (EU-US Data Privacy Framework certified; SCCs) | [Cloudflare DPA](https://www.cloudflare.com/cloudflare-customer-dpa/) |
 
 CortIQ will notify the Customer at least 30 days in advance of any intended change to the sub-processor list. The Customer may object to a new sub-processor within 14 days of notification; if no resolution is reached, either party may terminate the service agreement.
 
@@ -100,7 +101,11 @@ CortIQ will notify the Customer at least 30 days in advance of any intended chan
 
 ## 7. International transfers
 
-All personal data is stored and processed within the European Economic Area (EEA) by default. No transfers outside the EEA occur unless the Customer configures an optional Google Analytics integration, in which case Google Standard Contractual Clauses (SCCs) apply.
+All personal data is stored and processed within the European Economic Area (EEA) by default. Transfers outside the EEA occur only where the Customer enables an optional integration:
+
+- **Google Analytics** — Google Standard Contractual Clauses (SCCs) apply.
+- **Cloudflare edge analytics / geo lookup** — Cloudflare processes visitor IP addresses at its edge to derive country and aggregate traffic statistics. Transfers rely on Cloudflare's EU-US Data Privacy Framework certification and SCCs (Art. 46 GDPR). Cloudflare's EU data-localization options may be configured to keep processing within the EEA.
+- **AI features (Anthropic) and advertising uploads (Google Ads, HubSpot)** — SCCs and, where applicable, EU-US DPF, together with pseudonymisation and data minimisation.
 
 ---
 

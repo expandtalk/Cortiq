@@ -34,6 +34,26 @@ export function useSites() {
     }
   };
 
+  const deleteSite = async (site: Site): Promise<boolean> => {
+    try {
+      const { error } = await supabase.from('sites').delete().eq('id', site.id);
+      if (error) throw error;
+      toast({
+        title: "✅ Website deleted",
+        description: `${site.domain} and all its data were removed.`,
+      });
+      return true;
+    } catch (error) {
+      console.error('Error deleting site:', error);
+      toast({
+        title: "❌ Error",
+        description: error instanceof Error ? error.message : "Could not delete the website",
+        variant: "destructive",
+      });
+      return false;
+    }
+  };
+
   useEffect(() => {
     loadSites();
   }, []);
@@ -43,6 +63,7 @@ export function useSites() {
     selectedSite,
     setSelectedSite,
     loadSites,
+    deleteSite,
     loading
   };
 }

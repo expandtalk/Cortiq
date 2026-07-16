@@ -460,7 +460,7 @@ async function executeTool(
           { table: 'user_interactions', description: 'Clicks, scrolls, interactions. Columns: interaction_type, element_tag, element_class, element_id, element_text, x_coordinate, y_coordinate, session_id, page_view_id, created_at' },
           { table: 'heatmap_data', description: 'Click heatmap grid. Columns: url, grid_x (0-100), grid_y (0-100), device_type, interaction_type, site_id, created_at' },
           { table: 'ai_search_traffic', description: 'AI platform visits. Columns: ai_platform, created_at, site_id (table may be empty)' },
-          { table: 'ai_bot_traffic', description: 'Bot traffic. Columns: bot_name, bot_type, bot_category, js_executed, probe_triggered, session_id, site_id, created_at' },
+          { table: 'ai_bot_traffic', description: 'Bot traffic. Columns: bot_name, bot_type, request_type (AUTHORITATIVE AI classification: training|agentic|citation), js_executed, probe_triggered, session_id, site_id, created_at. NOTE: the legacy column bot_category is deprecated (always "other") — always use request_type for training/agentic/citation.' },
           { table: 'form_sessions', description: 'Form interactions. Columns: form_id, form_type, device_type, session_id, completed_at, abandoned_at, completion_time, error_count, fields_completed, total_fields, started_at, site_id' },
           { table: 'funnel_analytics', description: 'Funnel steps. Columns: funnel_id, step_index, step_name, sessions_entered, sessions_completed, drop_off_rate, date' },
         ],
@@ -930,16 +930,19 @@ async function executeTool(
     case 'cortiq_ai_bot_analysis': {
       const { data, error } = await supabase
         .from('ai_bot_traffic')
-        .select('bot_name, bot_type, bot_category, js_executed, probe_triggered')
+        .select('bot_name, bot_type, request_type, js_executed, probe_triggered')
         .eq('site_id', siteId)
         .gte('created_at', since)
         .lt('created_at', until)
         .limit(100000);
       if (error) throw new Error(error.message);
-      const botMap = new Map<string, { type: string; requests: number; js_exec: number; probes: number; threats: number[] }>();
+      // request_type is the authoritative 3-way classification written at ingest
+      // (training|agentic|citation, fallback 'unknown'). The old bot_category column
+      // is legacy dead data (always 'other') — do not read it.
+      const botMap = new Map<string, { type: string; category: string; requests: number; js_exec: number; probes: number }>();
       for (const b of data ?? []) {
         const key = String(b.bot_name || 'unknown');
-        const e = botMap.get(key) ?? { type: String(b.bot_type || 'unknown'), category: String(b.bot_category || ''), requests: 0, js_exec: 0, probes: 0 };
+        const e = botMap.get(key) ?? { type: String(b.bot_type || 'unknown'), category: String(b.request_type || 'unknown'), requests: 0, js_exec: 0, probes: 0 };
         e.requests++;
         if (b.js_executed) e.js_exec++;
         if (b.probe_triggered) e.probes++;
@@ -952,7 +955,7 @@ async function executeTool(
           .map(([bot_name, v]) => ({
             bot_name,
             bot_type: v.type,
-            bot_category: v.category,
+            category: v.category, // training | agentic | citation | unknown
             requests: v.requests,
             js_capable_pct: pct(v.js_exec, v.requests),
             probe_rate_pct: pct(v.probes, v.requests),

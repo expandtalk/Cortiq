@@ -194,6 +194,35 @@ const Privacy = () => {
                   <li>4. Used only for aggregated statistics & security</li>
                 </ul>
               </div>
+
+              <div className="bg-primary/5 p-4 rounded-lg mt-4">
+                <p className="text-sm text-muted-foreground mb-3">
+                  <strong className="text-foreground">Cookieless JavaScript audience measurement (optional banner-free mode):</strong>
+                </p>
+                <p className="text-sm text-muted-foreground mb-2">
+                  When a site runs in cookieless mode, a lightweight script measures aggregate audience
+                  statistics — page-view counts and referrer source — using a session identifier held only
+                  in memory for the duration of the visit. Nothing is stored on your device, there is no
+                  device fingerprinting, and there is no cross-visit or cross-site identification.
+                </p>
+                <ul className="text-sm text-muted-foreground space-y-1 ml-4">
+                  <li>✓ In-memory session id only — never written to cookies or device storage</li>
+                  <li>✓ Aggregate page-view counts + referrer source</li>
+                  <li>✓ No fingerprint, no returning-visitor profile, no cross-site tracking</li>
+                </ul>
+                <p className="text-sm text-muted-foreground mt-3">
+                  <strong className="text-foreground">Legal Basis:</strong> ePrivacy Art. 5.3 read with the
+                  EDPB/CNIL audience-measurement exemption + legitimate interest (GDPR Art. 6.1.f). Because it
+                  is strictly first-party, aggregate, and stores nothing on your device, no cookie banner is
+                  required for this base measurement.
+                </p>
+                <p className="text-sm text-muted-foreground mt-2">
+                  <strong className="text-foreground">Behavioural data always requires consent:</strong> clicks,
+                  scroll depth, heatmaps and conversion capture (including a hashed email) are collected only
+                  after you grant analytics consent (GDPR Art. 6.1.a) — in every mode, including cookieless.
+                  See section 5.
+                </p>
+              </div>
             </CardContent>
           </Card>
 
@@ -322,6 +351,7 @@ const Privacy = () => {
                 <li>• <strong>Anthropic</strong> (AI assistant &amp; GEO analysis, USA) — when you use AI features, relevant analytics results are sent to the Claude API to generate answers.</li>
                 <li>• <strong>Google Ads</strong> (Enhanced Conversions for Leads, USA) — when the operator enables conversion feedback and marketing consent was given, a SHA-256 hash of the email plus the ad click ID (gclid) and conversion value are uploaded. The raw email never leaves the browser.</li>
                 <li>• <strong>HubSpot</strong> (CRM lead-quality feedback, USA/EU) — when the operator connects HubSpot, lead-quality signals are exchanged to enrich conversion measurement.</li>
+                <li>• <strong>Cloudflare</strong> (edge web analytics &amp; geo lookup, USA — EU-US DPF certified) — when the operator enables the Cloudflare integration, Cloudflare processes visitor IP addresses at its edge to derive country and aggregate, cookie-free traffic statistics.</li>
               </ul>
               <div className="bg-accent/5 p-4 rounded-lg mt-4">
                 <p className="text-sm text-muted-foreground">
@@ -340,15 +370,16 @@ const Privacy = () => {
             </CardHeader>
             <CardContent className="space-y-3 text-muted-foreground">
               <p className="leading-relaxed">
-                Some recipients above (Anthropic, Google, HubSpot) process data in the United States.
-                Where personal data is transferred outside the EU/EEA, we rely on the European
-                Commission's Standard Contractual Clauses (Art. 46 GDPR) and, where applicable, the
-                recipient's certification under the EU–US Data Privacy Framework, together with
+                Some recipients above (Anthropic, Google, HubSpot, Cloudflare) process data in the
+                United States. Where personal data is transferred outside the EU/EEA, we rely on the
+                European Commission's Standard Contractual Clauses (Art. 46 GDPR) and, where applicable,
+                the recipient's certification under the EU–US Data Privacy Framework, together with
                 supplementary measures such as pseudonymisation (hashing) and data minimisation.
               </p>
               <p className="text-sm">
-                Analytics infrastructure (Supabase) is hosted in the EU. AI and advertising features
-                that involve US transfers are optional and consent- or operator-gated.
+                Core analytics infrastructure (Supabase) is hosted in the EU. AI, advertising and
+                Cloudflare edge-analytics features that may involve US transfers are optional and
+                consent- or operator-gated.
               </p>
             </CardContent>
           </Card>

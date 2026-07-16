@@ -81,23 +81,13 @@
 
   <body>
     <div id="root"><!--app-html--></div>
-    
-    <!-- CortIQ self-tracking (dogfooding). spa-tracking.js reads window.cortiqConfig.
-         Cookieless: consent-exempt, banner-free — the flagship mode, running on our own
-         marketing site. siteId + apiKey are cortiq.se's own public, rate-limited client
-         ingest keys (not secrets). -->
-    <script>
-      window.cortiqConfig = {
-        apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
-        siteId: '1174dce9-ca03-4660-b6b2-41c3d3632954',
-        apiKey: '7wUAo/uexTyQBjK82GtlUC4NfiqqC2pYfEjzAuOpkHo=',
-        contentType: 'page',
-        platform: 'web',
-        cookieless: true
-      };
-    </script>
-    <script src="/spa-tracking.js" defer></script>
-    
+
+    <!-- CortIQ self-tracking (dogfooding) intentionally disabled 2026-07-16.
+         The previous hardcoded key was rotated out (dead). Re-enable by giving cortiq.se
+         its OWN company + ingest-only key (NOT a read-capable account key), then inject
+         window.cortiqConfig from VITE_CORTIQ_* env vars — never hardcode a credential
+         here (it ships in public client JS). See AUDIT-TASKS.md P1-7 / P3. -->
+
     <!-- PWA Manifest -->
     <link rel="manifest" href="/manifest.json" />
     

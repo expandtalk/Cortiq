@@ -77,6 +77,7 @@ CortIQ detects AI browsers (ChatGPT Browser, Perplexity Comet, Claude Browser, G
 |-----------|------|----------|-----|
 | Supabase | Database, edge functions | EU (AWS eu-north-1) | [DPA](https://supabase.com/privacy) |
 | Google (optional) | GA4 if configured | EU/US | [DPA](https://business.safety.google/adsprocessorterms/) |
+| Cloudflare (optional) | Edge web analytics (aggregate, cookie-free) + geo lookup for banner gating, if the Cloudflare integration is enabled | US (EU-US DPF; SCCs) | [DPA](https://www.cloudflare.com/cloudflare-customer-dpa/) |
 
 CortIQ does not sell or share visitor data with third parties for advertising.
 

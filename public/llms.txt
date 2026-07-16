@@ -10,6 +10,7 @@ CortIQ combines cookie-free server-side analytics, GDPR-compliant consent manage
 - **Cookie-Free Analytics**: 100% server-side tracking. No cookies, no IP storage, no fingerprinting. Compliant with Swedish PTS and EU ePrivacy directive. No consent banner required for base analytics.
 - **CMP with Nudging**: Smart consent banners with behavioral nudging for higher opt-in rates. Combines banner-free base metrics with richer opt-in data.
 - **Click Maps**: Heatmaps showing click patterns per page and device type (desktop/tablet/mobile).
+- **Scroll-Depth Heatmaps**: Scroll funnels tracking how far visitors reach (25/50/75/100% milestones) per page and device.
 - **A/B Testing**: Two-variant testing with built-in statistical significance.
 - **Form Analytics**: Funnel visualization, field-level drop-off data.
 - **Session Recording**: Record and replay user sessions.
@@ -20,7 +21,7 @@ CortIQ combines cookie-free server-side analytics, GDPR-compliant consent manage
 
 ## What CortIQ does NOT offer
 
-- Scroll heatmaps or attention maps (click maps only)
+- Spatial attention/mouse-movement overlay maps (click maps + scroll-depth funnels only)
 - Multivariate testing (two-variant A/B only)
 - Mobile app analytics
 
