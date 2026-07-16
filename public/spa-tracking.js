@@ -314,6 +314,11 @@
 
   // Track clicks on specific elements
   function setupClickTracking() {
+    // Click tracking is behavioural — requires analytics consent even in cookieless mode.
+    if (!hasInteractionConsent()) {
+      deferUntilInteractionConsent(setupClickTracking);
+      return;
+    }
     document.addEventListener('click', function(e) {
       const target = e.target.closest('[data-wfa-track]');
       if (target) {
@@ -338,6 +343,10 @@
   // Record a first-party conversion: writes a conversion_events row (via the site
   // model) with the visitor's paid-click context. Sends only a hashed email.
   async function recordConversion(form, contentId) {
+    // A hashed email is pseudonymous personal data — never capture it without a real
+    // analytics-consent record, even in cookieless mode. (Defense-in-depth: the submit
+    // listener is only attached once consent is present.)
+    if (!hasInteractionConsent()) return;
     try {
       let hashedEmail = null;
       const emailInput = form.querySelector('input[type="email"], input[name*="email" i]');
@@ -368,6 +377,12 @@
 
   // Track conversions
   function setupConversionTracking() {
+    // Conversion capture sends a hashed email (pseudonymous personal data) — requires
+    // analytics consent even in cookieless mode; not exemption-eligible.
+    if (!hasInteractionConsent()) {
+      deferUntilInteractionConsent(setupConversionTracking);
+      return;
+    }
     document.addEventListener('submit', function(e) {
       const form = e.target;
       if (form.hasAttribute('data-wfa-conversion')) {
@@ -382,11 +397,8 @@
     });
   }
 
-  // Check if visitor has given analytics consent
-  function hasAnalyticsConsent() {
-    // Cookieless mode is consent-exempt (no device storage, no fingerprint), so all of
-    // CortIQ's own aggregate collection is permitted without a consent record.
-    if (COOKIELESS) return true;
+  // Shared core: is there a real, stored analytics-consent record?
+  function hasStoredAnalyticsConsent() {
     try {
       const stored = localStorage.getItem('site_cookie_consent');
       if (stored && JSON.parse(stored).analytics === true) return true;
@@ -397,16 +409,41 @@
     return false;
   }
 
+  // Consent for AGGREGATE audience measurement (pageview counts + referrer). Cookieless
+  // mode is exemption-eligible here (ePrivacy Art. 5.3 + CNIL/EDPB audience-measurement
+  // exemption: no device storage, no cross-visit profile), so it is permitted banner-free.
+  function hasAnalyticsConsent() {
+    if (COOKIELESS) return true;
+    return hasStoredAnalyticsConsent();
+  }
+
+  // Consent for BEHAVIOURAL tracking (clicks, scroll/heatmaps, conversions). These fall
+  // OUTSIDE the audience-measurement exemption, so they require a real analytics-consent
+  // record even in cookieless mode — cookieless does NOT grant blanket consent to these.
+  function hasInteractionConsent() {
+    // An operator explicitly asserting their own lawful basis (config.requireConsent=false)
+    // opts in for everything; cookieless mode ALONE does not grant this.
+    if (config.requireConsent === false) return true;
+    return hasStoredAnalyticsConsent();
+  }
+
+  // Attach a one-shot listener that re-runs `setupFn` once analytics consent arrives.
+  // Reuses the site-wide `siteConsentUpdated` event emitted by the consent banner.
+  function deferUntilInteractionConsent(setupFn) {
+    window.addEventListener('siteConsentUpdated', function handler(e) {
+      if (e.detail?.analytics) {
+        window.removeEventListener('siteConsentUpdated', handler);
+        setupFn();
+      }
+    });
+  }
+
   // Track scroll depth milestones (25%, 50%, 75%, 100%)
   function setupScrollTracking() {
-    // Scroll depth is session-linked data — requires analytics consent (GDPR Art. 6.1.a)
-    if (!hasAnalyticsConsent()) {
-      window.addEventListener('siteConsentUpdated', function handler(e) {
-        if (e.detail?.analytics) {
-          window.removeEventListener('siteConsentUpdated', handler);
-          setupScrollTracking();
-        }
-      });
+    // Scroll depth is behavioural, session-linked data — requires analytics consent
+    // (GDPR Art. 6.1.a) even in cookieless mode; it is not exemption-eligible.
+    if (!hasInteractionConsent()) {
+      deferUntilInteractionConsent(setupScrollTracking);
       return;
     }
 
