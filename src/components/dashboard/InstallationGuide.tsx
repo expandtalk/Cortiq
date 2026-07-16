@@ -17,6 +17,12 @@ interface InstallationGuideProps {
 }
 
 export function InstallationGuide({ selectedSite }: InstallationGuideProps) {
+  // Derive endpoints from THIS deployment's env/origin so the copied snippet points at
+  // the instance the user actually runs. Hardcoding cortiq.se / the origin Supabase would
+  // pipe a self-hoster's visitor data into the origin project — never hardcode these.
+  const apiBase = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
+  const scriptSrc = `${window.location.origin}/spa-tracking.js`;
+
   if (!selectedSite) {
     return (
       <Card>
@@ -49,14 +55,14 @@ export function InstallationGuide({ selectedSite }: InstallationGuideProps) {
             {`<!-- CortIQ Analytics -->
 <script>
   window.cortiqConfig = {
-    apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
+    apiUrl: '${apiBase}',
     siteId: '${selectedSite.id}',
     apiKey: '${selectedSite.tracking_id}',
     contentType: 'page',
     platform: 'web'
   };
 </script>
-<script src="https://cortiq.se/spa-tracking.js" defer></script>`}
+<script src="${scriptSrc}" defer></script>`}
           </div>
           <p className="text-xs text-muted-foreground mt-2">
             ✅ One script — heatmaps, sessions, page views, AI search traffic (ChatGPT, Perplexity, Claude, Gemini),

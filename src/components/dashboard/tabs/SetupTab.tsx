@@ -20,6 +20,11 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
   const { sites, setSelectedSite, loadSites } = useSites();
   const navigate = useNavigate();
 
+  // Derive from THIS deployment's env/origin — never hardcode cortiq.se / the origin
+  // Supabase, or self-hosters ship data into the origin project.
+  const apiBase = `${import.meta.env.VITE_SUPABASE_URL}/functions/v1`;
+  const scriptSrc = `${window.location.origin}/spa-tracking.js`;
+
   return (
     <div className="space-y-6">
       {/* Site Management Section */}
@@ -126,23 +131,23 @@ export function SetupTab({ selectedSite }: SetupTabProps) {
                     {`<!-- Add to your template or layout file -->
 <script>
   window.cortiqConfig = {
-    apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
+    apiUrl: '${apiBase}',
     siteId: '${selectedSite?.id || 'your-site-id'}',
     apiKey: '${selectedSite?.tracking_id || 'your-tracking-id'}',
     contentType: 'page',
     platform: 'web'
   };
 </script>
-<script src="https://cortiq.se/spa-tracking.js" defer></script>`}
+<script src="${scriptSrc}" defer></script>`}
                   </div>
-                  
+
                   <h4 className="font-medium">2. API integration for content management</h4>
                   <div className="bg-gray-900 text-green-400 p-3 rounded text-sm font-mono overflow-x-auto">
-                    {`// REST API för cookiefree analytics
+                    {`// REST API for cookie-free analytics
 GET /wp-json/heatmap/v2/cookiefree-analytics
-Headers: X-API-Key: din-api-nyckel
+Headers: X-API-Key: your-api-key
 
-// För GDPR-kompatibel tracking
+// For GDPR-compliant tracking
 POST /wp-json/heatmap/v2/track-gdpr
 Content-Type: application/json
 {
@@ -180,13 +185,13 @@ Content-Type: application/json
 <div data-sly-use.analytics="com.expandtalk.analytics.AnalyticsComponent">
   <script data-sly-unwrap>
     window.cortiqConfig = {
-      apiUrl: 'https://cxmkdtgfocgbfizawlwa.supabase.co/functions/v1',
+      apiUrl: '${apiBase}',
       siteId: '\${analytics.siteId}',
       apiKey: '\${analytics.trackingId}',
       contentType: 'page', platform: 'web'
     };
   </script>
-  <script src="https://cortiq.se/spa-tracking.js" defer></script>
+  <script src="${scriptSrc}" defer></script>
 </div>`}
                   </div>
                   
@@ -200,11 +205,11 @@ public class AnalyticsServiceImpl implements AnalyticsService {
     private ConfigurationAdmin configAdmin;
     
     public String getTrackingId() {
-        return "${selectedSite?.tracking_id || 'konfigurera-tracking-id'}";
+        return "${selectedSite?.tracking_id || 'configure-tracking-id'}";
     }
-    
+
     public void trackEvent(String eventType, Map<String, Object> data) {
-        // GDPR-kompatibel event tracking
+        // GDPR-compliant event tracking
         HttpClient client = HttpClient.newBuilder().build();
         // Implementation...
     }
@@ -214,8 +219,8 @@ public class AnalyticsServiceImpl implements AnalyticsService {
                   <h4 className="font-medium">3. Adobe Analytics Bridge</h4>
                   <div className="bg-muted text-foreground p-3 rounded border">
                     <p className="text-sm">
-                      <strong>Hybrid-approach:</strong> Använd vårt system för heatmaps och detaljerad användarinteraktion, 
-                      medan Adobe Analytics hanterar högre nivå-metrics. Data kan synkroniseras via API.
+                      <strong>Hybrid approach:</strong> Use CortIQ for heatmaps and detailed user interaction,
+                      while Adobe Analytics handles higher-level metrics. Data can be synchronized via API.
                     </p>
                   </div>
                   
@@ -251,12 +256,12 @@ public class AnalyticsServiceImpl implements AnalyticsService {
       {/* Agent Browser Macros */}
       {selectedSite && <AgentMacroManager siteId={selectedSite.id} />}
 
-      {/* Version 2.0 Features - Moved to end */}
+      {/* WordPress plugin — latest release */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Zap className="h-5 w-5 text-orange-500" />
-            🆕 Latest updates - Version 2.0
+            🆕 WordPress plugin — v5.3.4
           </CardTitle>
         </CardHeader>
         <CardContent className="space-y-3">
@@ -264,41 +269,37 @@ public class AnalyticsServiceImpl implements AnalyticsService {
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Google Analytics 4 Integration</strong> - Full GA4 synchronization
+                <strong>Cookieless mode</strong> — consent-exempt, banner-free statistics (per-site toggle)
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Improved Admin Interface</strong> - All settings in one place
+                <strong>GA4 Consent Mode v2</strong> — deny-by-default with all six v2 signals
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Enhanced E-commerce</strong> - Korrelera köpbeteende med heatmaps
+                <strong>Geo-gating</strong> — optionally show the consent banner only in the EEA/UK/CH
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Performance optimization</strong> - Even faster and more efficient
+                <strong>Internationalized banner</strong> — English, Swedish, German, French, Portuguese
               </div>
             </div>
             <div className="flex items-start gap-2">
               <span className="text-green-500">✅</span>
               <div>
-                <strong>Correct CortIQ branding</strong> - No confusion
-              </div>
-            </div>
-            <div className="flex items-start gap-2">
-              <span className="text-orange-500">🍪</span>
-              <div>
-                <strong>Version 2.0 - Red theme = Cookie management!</strong> Remove old versions first.
-                This version includes advanced GDPR cookie management with categorized consents.
+                <strong>GDPR-safe UX</strong> — static reopen pill, banner close (X) saves necessary-only, reject respected for the full cooldown
               </div>
             </div>
           </div>
+          <p className="text-xs text-muted-foreground">
+            Always remove any older CortIQ / Heatmap plugin before activating this one.
+          </p>
         </CardContent>
       </Card>
     </div>
